@@ -27,8 +27,11 @@ const faqs = [
       "No. Ascella structures and governs execution while working alongside internal teams and embedded pods.",
   },
 ];
+
 export default function Faq() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
 
   const toggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -36,11 +39,11 @@ export default function Faq() {
 
 
   return (
-    <section className="px-30 p-1 0 lg:py-30 grid lg:grid-cols-3 auto-rows-fr">
+    <section className="px-20 lg:px-50 p-1 0 lg:py-30 grid md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
       <div className="flex flex-col gap-4 py-10 max-w-2xs">
         <PlusHeading text="FAQs" size="lg" />
         <h1 className="text-3xl">
-          Frequently <br /> Asked Questions
+          Frequently Asked Questions
         </h1>
         <p className="font-extralight text-white/50">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit ipsa id nobis rerum praesentium quos beatae minima asperiores possimus.
@@ -49,51 +52,76 @@ export default function Faq() {
 
       {faqs.map((faq, index) => {
         const isOpen = activeIndex === index;
+        const isHovered = hoveredIndex === index;
+        const isExpanded = isOpen || (!isOpen && isHovered);
+
 
         return (
           <div
             key={index}
-            className="group relative flex p-10 border border-color text-left overflow-hidden justify-between"
+            onMouseEnter={() => {
+              if (activeIndex !== index) setHoveredIndex(index);
+            }}
+            onMouseLeave={() => {
+              if (activeIndex !== index) setHoveredIndex(null);
+            }}
+
+
+            className={`group relative min-h-80 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}
+        `}
           >
             <Image
               src="/FaqCube.svg"
               alt="FAQ Cube"
               width={180}
               height={180}
-              className={`absolute bottom-10 right-0 z-0 pointer-events-none 
-                transition-opacity duration-300 ${isOpen ? "opacity-10" : "opacity-15"} group-hover:opacity-10`}  
-
+              className={`absolute top-20 right-1 pointer-events-none transition-opacity duration-500
+            ${isExpanded ? "opacity-10" : "opacity-15"}
+          `}
             />
-            <div className="relative z-10 w-3/4 h-40">
+
+            <div className="relative z-10 h-full p-6  lg:mr-15">
+              {/* bottom question */}
               <h2
-                className={`
-                          absolute left-0 bottom-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-                          ${isOpen ? "-translate-y-24": "translate-y-0"}
-                          group-hover:-translate-y-24
-                        `}
+                className={`lg:absolute lg:bottom-10 lg:left-10 lg:right-20 text-md lg:text-lg font-medium transition-all duration-500 ease-out ${isExpanded? "lg:opacity-0 lg:translate-y-2 lg:pointer-events-none":"opacity-100 translate-y-0"}`}>
+                {faq.question}
+              </h2>
+              {/* top question */}
+              <h2
+                className={`hidden lg:block lg:absolute lg:top-10 lg:left-10 lg:right-20 text-xl font-medium transition-all duration-500 ease-out ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
               >
                 {faq.question}
               </h2>
-
-
-              <p
-                className={`absolute left-0 bottom-0 text-sm text-white/50 tight transition-all duration-400 ease-in-out  ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"} group-hover:opacity-100 group-hover:translate-y-0`}
-              >
+ 
+              <div
+                className={`overflow-hidden transition-all duration-500 ${isExpanded ? "max-h-96" : "max-h-0"}`}></div>
+              <p className={`absolute bottom-10 left-10 right-20 text-sm text-white/50 transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
                 {faq.answer}
               </p>
+
+
+
             </div>
+
+            {/* Arrow */}
             <button
-              type="button"
-              onClick={() => toggle(index)}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggle(index);
+              }}
               aria-expanded={isOpen}
-              aria-label="Toggle answer"
-              className="flex "
+              className={`absolute top-6 right-6 z-20 transition-transform duration-500
+      ${isOpen ? "rotate-90" : ""}
+    `}
             >
               <Arrow />
             </button>
+
+
           </div>
         );
       })}
+
 
 
 

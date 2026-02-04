@@ -10,7 +10,7 @@ const navLinks = [
 
 const Navbar = () => {
   return (
-    <header className="mx-auto max-w-7xl px-6 h-16 w-full">
+    <header className="mx-auto max-w-7xl px-6 py-3  h-20 w-full ">
       <div className="flex justify-between">
         <Link href="/" className="flex-center gap-2">
           <Image

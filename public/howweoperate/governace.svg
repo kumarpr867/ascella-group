@@ -1,0 +1,15 @@
+<svg width="101" height="134" viewBox="0 0 101 134" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="81.1606" cy="66.7321" r="13.9286" transform="rotate(90 81.1606 66.7321)" stroke="white"/>
+<circle cx="81.1608" cy="66.7321" r="9.91964" transform="rotate(90 81.1608 66.7321)" fill="white" fill-opacity="0.09"/>
+<circle cx="20.29" cy="19.3884" r="10.7723" transform="rotate(90 20.29 19.3884)" stroke="white"/>
+<circle cx="20.29" cy="66.2812" r="10.7723" transform="rotate(90 20.29 66.2812)" stroke="white"/>
+<circle cx="20.29" cy="113.174" r="10.7723" transform="rotate(90 20.29 113.174)" stroke="white"/>
+<circle cx="81.1606" cy="66.7321" r="19.3393" transform="rotate(90 81.1606 66.7321)" stroke="white" stroke-opacity="0.22" stroke-dasharray="2 2"/>
+<circle cx="19.8393" cy="19.8393" r="19.3393" transform="rotate(90 19.8393 19.8393)" stroke="white" stroke-opacity="0.22" stroke-dasharray="2 2"/>
+<circle cx="19.8393" cy="66.7321" r="19.3393" transform="rotate(90 19.8393 66.7321)" stroke="white" stroke-opacity="0.22" stroke-dasharray="2 2"/>
+<circle cx="19.8393" cy="113.625" r="19.3393" transform="rotate(90 19.8393 113.625)" stroke="white" stroke-opacity="0.22" stroke-dasharray="2 2"/>
+<line x1="61.3214" y1="67.2321" x2="31.5625" y2="67.2321" stroke="white"/>
+<line x1="46.8927" y1="20.3393" x2="31.5623" y2="20.3393" stroke="white"/>
+<line x1="46.8927" y1="114.125" x2="31.5623" y2="114.125" stroke="white"/>
+<line x1="46.9464" y1="19.8348" x2="46.9464" y2="113.621" stroke="white"/>
+</svg>
