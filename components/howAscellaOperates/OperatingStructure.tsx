@@ -13,30 +13,42 @@ export default function OperatingStructure() {
       </div>
       <div className="border-t border-color">
         <div className="mx-2 sm:mx-6 md:mx-10 lg:mx-24 px-2 py-6 md:px-8 md:py-10 border-x border-color">
-          <div className="text-gray-300 flex flex-wrap justify-between gap-2 text-xs sm:text-sm md:text-base">
+          <div className="text-sm text-gray-300 flex flex-wrap justify-between gap-2 text-xs sm:text-sm md:text-base">
             <span className="text-white">Governance</span>
             <span>Accountability</span>
             <span>Assemble Pods</span>
+            <span>Performance</span>
             <span>Embed Security</span>
             <span>Controlled Execution</span>
             <span className="text-white">Outcome Stability</span>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center mt-6 gap-4">
-            <span>
-              <Image src={'/howweoperate/governace.svg'} alt={''} width={80} height={80} className="w-16 h-16 sm:w-20 sm:h-20" />
-            </span>
-            <div className="flex flex-row flex-wrap items-center border border-color gap-2 p-2 rounded-md">
+          <div className="flex flex-cols flex-center items-center m-10">
+            <div className="flex w-full justify-evenly items-center">
               <span>
-                <Image src={'/howweoperate/accountability.svg'} alt={''} width={70} height={70} className="w-12 h-12 sm:w-16 sm:h-16" />
+                <Image src={'/howAscellaOperates/governace.svg'} alt={''} width={100} height={100} />
               </span>
+              <div className="flex flex-center line h-0.5 w-10  bg-gray-400"></div>
+              <div className="flex w-full items-center justify-between border border-color p-6">
+                <span>
+                  <Image src={'/howAscellaOperates/accountability.svg'} alt={''} width={100} height={100} />
+                </span>
+                <span>
+                  <Image src={'/howAscellaOperates/pods.png'} alt={''} width={100} height={100} />
+                </span>
+                <span>
+                  <Image src={'/howAscellaOperates/performance.png'} alt={''} width={100} height={100} />
+                </span>
+                <span>
+                  <Image src={'/howAscellaOperates/security.png'} alt={''} width={100} height={100} />
+                </span>
+                <span>
+                  <Image src={'/howAscellaOperates/execution.png'} alt={''} width={100} height={100} />
+                </span>
+              </div>
+              
+              <div className="flex flex-center line h-0.5 w-15 bg-gray-400"></div>
               <span>
-                <Image src={'/howweoperate/pods.png'} alt={''} width={70} height={70} className="w-12 h-12 sm:w-16 sm:h-16" />
-              </span>
-              <span>
-                <Image src={'/howweoperate/security.png'} alt={''} width={70} height={70} className="w-12 h-12 sm:w-16 sm:h-16" />
-              </span>
-              <span>
-                <Image src={'/howweoperate/execution.png'} alt={''} width={70} height={70} className="w-12 h-12 sm:w-16 sm:h-16" />
+                <Image src={'/howweoperate/outcome.png'} alt={''} width={100} height={100} />
               </span>
             </div>
             <span>

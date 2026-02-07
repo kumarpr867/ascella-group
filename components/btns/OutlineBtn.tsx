@@ -8,7 +8,7 @@ interface Props {
 export default function OutlineBtn({
   text = "Button",
   size = "md",
-  color = "#FFFFFF", 
+  color = "#9E9E9E", 
   className = "",
 }: Props) {
   const sizes = {

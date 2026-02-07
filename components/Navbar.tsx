@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Operating Model", href: "/operating-model" },
+  { label: "Operating Model", href: "/how-ascella-operates" },
   { label: "Execution Arms", href: "/execution-arms" },
-  { label: "Organisations", href: "/organisations" },
+  { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
 ];
 

@@ -38,8 +38,8 @@ body {
     @apply scroll-smooth;
   }
 
-  html,
-  body {
+  /* html, */
+  body{
     @apply bg-black text-white antialiased;
     overflow-y: scroll;
 

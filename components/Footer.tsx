@@ -21,7 +21,7 @@ const footerSections: FooterSection[] = [
         title: "Contact",
         items: [
             "hq@ascellagroup.com",
-            "Ascella",
+            "Ascella.in",
             "Organisations",
         ],
         bordered: true,
