@@ -1,68 +1,111 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-montserrat: "Montserrat", sans-serif;
+  --color-background: var(--color-black);
+  --color-foreground: var(--color-white);
 }
 
 :root {
+  /* Colors */
   --color-black: #000000;
-  --color-white: #FFFFFF;
-  --color-gray-100: #CFCFCF;
-  --color-gray-200: #9E9E9E;
-  --color-gray-300: #6E6E6E;
-  --color-gray-400: #3D3D3D;
-  --color-gray-500: #0D0D0D;
+  --color-white: #ffffff;
+  --color-gray-100: #cfcfcf;
+  --color-gray-200: #9e9e9e;
+  --color-gray-300: #6e6e6e;
+  --color-gray-400: #3d3d3d;
+  --color-gray-500: #0d0d0d;
 
+  /* Typography */
   --font-primary: var(--font-montserrat);
-}
 
-* {
-  box-sizing: border-box;
-}
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
-html,
-body {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  font-family: var(--font-primary);
-  font-weight: 400;
-  margin: 0;
-  padding: 0;
-}
+  --lh-heading-tight: 1.2;
+  --lh-heading: 1.3;
+  --lh-body: 1.6;
 
+  --ls-tight: -0.02em;
+  --ls-normal: 0em;
+}
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
   html {
     @apply scroll-smooth;
   }
 
-  /* html, */
-  body{
+  body {
     @apply bg-black text-white antialiased;
+    font-family: var(--font-primary);
     overflow-y: scroll;
 
     -ms-overflow-style: none;
     scrollbar-width: none;
-
   }
 
-  html::-webkit-scrollbar,
   body::-webkit-scrollbar {
     display: none;
   }
-}
 
-a {
-  color: inherit;
-  text-decoration: none;
+  h1 {
+    @apply text-5xl;
+    font-weight: var(--font-weight-bold);
+    line-height: var(--lh-heading-tight);
+    letter-spacing: var(--ls-tight);
+  }
+
+  h2 {
+    @apply text-4xl;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--lh-heading-tight);
+    letter-spacing: var(--ls-tight);
+  }
+
+  h3 {
+    @apply text-3xl;
+    font-weight: var(--font-weight-medium);
+    line-height: var(--lh-heading);
+  }
+
+  h4 {
+    @apply text-2xl;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--lh-heading);
+  }
+
+  h5 {
+    @apply text-xl;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--lh-heading);
+  }
+
+  h6 {
+    @apply text-lg;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--lh-heading);
+  }
+
+  p {
+    @apply text-base;
+    font-weight: var(--font-weight-regular);
+    line-height: var(--lh-body);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 @layer utilities {
   .border-color {
     border-color: var(--color-gray-400);
-    ;
   }
 
   .flex-center {
