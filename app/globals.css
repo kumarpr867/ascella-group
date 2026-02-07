@@ -53,48 +53,43 @@
     display: none;
   }
 
-  h1 {
-    @apply text-5xl;
-    font-weight: var(--font-weight-bold);
-    line-height: var(--lh-heading-tight);
-    letter-spacing: var(--ls-tight);
-  }
+  @layer base {
+    h1 {
+      font-size: 64px;
+      font-weight: var(--font-weight-regular);
+      line-height: 1;
+    }
 
-  h2 {
-    @apply text-4xl;
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--lh-heading-tight);
-    letter-spacing: var(--ls-tight);
-  }
+    h2 {
+      font-size:48px;
+      font-weight: var(--font-weight-regular);
+      line-height: 1;
+    }
 
-  h3 {
-    @apply text-3xl;
-    font-weight: var(--font-weight-medium);
-    line-height: var(--lh-heading);
-  }
+    h3 {
+      font-size: 36px;
+      font-weight: var(--font-weight-medium);
+      line-height: 1;
+    }
 
-  h4 {
-    @apply text-2xl;
-    font-weight: var(--font-weight-regular);
-    line-height: var(--lh-heading);
-  }
+    h4 {
+      font-size: 24px;
+      font-weight: var(--font-weight-medium);
+      line-height: 1;
+    }
 
-  h5 {
-    @apply text-xl;
-    font-weight: var(--font-weight-regular);
-    line-height: var(--lh-heading);
-  }
+    h5 {
+      font-size:  20px;
+      font-weight: var(--font-weight-medium);
+      line-height: 1;
+    }
 
-  h6 {
-    @apply text-lg;
-    font-weight: var(--font-weight-regular);
-    line-height: var(--lh-heading);
-  }
-
-  p {
-    @apply text-base;
-    font-weight: var(--font-weight-regular);
-    line-height: var(--lh-body);
+    p {
+      font-size: 1rem;
+      /* 16px */
+      font-weight: var(--font-weight-regular);
+      line-height: var(--lh-body);
+    }
   }
 
   a {
@@ -110,5 +105,25 @@
 
   .flex-center {
     @apply flex items-center justify-center;
+  }
+
+  .text-b1 {
+    font-size:16px;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-b2 {
+    font-size: 14px;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-b3 {
+    font-size: 12px;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-b4 {
+    font-size: 8px;
+    font-weight: var(--font-weight-regular);
   }
 }
