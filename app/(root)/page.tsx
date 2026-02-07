@@ -1,5 +1,5 @@
 import Hero from "@/components/landingPage/Hero";
-import ExecutionProblemSection from "@/components/landingPage/ExecutionProblem";
+import ExecutionProblemSection from "@/components/landingPage/ExecutionReality";
 import Programme from "@/components/landingPage/Programme";
 import Ownership from "@/components/landingPage/Ownership";
 import Arms from "@/components/landingPage/Arms";

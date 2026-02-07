@@ -110,8 +110,7 @@ export default function Faq() {
                 toggle(index);
               }}
               aria-expanded={isOpen}
-              className={`absolute top-6 right-6 z-20 transition-transform duration-500
-      ${isOpen ? "rotate-90" : ""}
+              className={`absolute top-6 right-6 z-20 transition-transform duration-500 ${isOpen ? "rotate-90" : ""}
     `}
             >
               <Arrow />

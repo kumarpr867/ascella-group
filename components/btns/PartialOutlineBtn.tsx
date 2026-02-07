@@ -1,6 +1,7 @@
 "use client";
 const PartialOutlineBtn = ({
-  text = "Explore More",
+    text = "Explore More",
+  size = "md",
   bgColor = "bg-black",
   textColor = "text-white",
   hoverBgColor = "hover:bg-gray-100",
@@ -8,10 +9,16 @@ const PartialOutlineBtn = ({
   borderColor = "border-gray-400",
   hoverBorderColor = "group-hover:border-gray-100",
 }) => {
+  const sizeClasses =
+    size === "sm"
+      ? "px-2 py-1 text-sm"
+      : "px-3 py-1.5 text-lg";
+
   return (
     <button
       className={`
-        group relative px-3 py-1.5 text-lg tracking-wide
+        group relative inline-flex items-center
+        ${sizeClasses} tracking-wide
         ${bgColor} ${textColor}
         ${hoverBgColor} ${hoverTextColor}
         transition-colors duration-300 overflow-hidden

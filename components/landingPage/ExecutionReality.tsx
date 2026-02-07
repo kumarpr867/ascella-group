@@ -63,7 +63,7 @@ const items: ProblemItem[] = [
 export default function ExecutionProblemSection() {
     return (
         <section className="py-24">
-            <div className="border-b border-gray-400 xl:px-30">
+            <div className="border-b border-gray-400 lg:px-20">
                 <div className="flex flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
                     <p className="max-w-md text-sm leading-relaxed">
                         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
@@ -78,13 +78,13 @@ export default function ExecutionProblemSection() {
                 </div>
             </div>
 
-            <div className="border-b border-gray-400">
+            <div className="border-b border-gray-400 lg:px-20">
                 <div className="flex items-center gap-3 py-8 px-20 tracking-widest uppercase ">
                     <PlusHeading text="Execution Policy" size="xl"/> 
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400">
+            <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400 lg:px-20">
                 {items.map((item, index) => (
                     <div
                         key={item.title}
