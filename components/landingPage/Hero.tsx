@@ -38,12 +38,8 @@ export default function Hero() {
 
       <div className="absolute inset-x-0 bottom-[22vh] z-5">
         <div className="mx-auto max-w-7xl px-6 flex justify-between gap-12">
-          <div>
-            <p className="text-5xl text-gray-300">A Unified</p>
-            <h1 className="text-5xl font-medium  ">
-              Operating Group
-            </h1>
-          </div>
+          <h2 className="text-gray-300">A Unified <br /><span className="text-white"> Operating Group
+          </span> </h2>
 
           <div className="flex flex-col justify-end gap-4 max-w-90 text-gray-200 text-right ">
             <p className="text-b2">
