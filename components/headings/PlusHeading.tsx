@@ -2,59 +2,56 @@
 
 import React from 'react';
 
-type Size = 'sm' | 'md' | 'lg' | 'xl';
+type Size = 'b1' | 'b2' | 'b3';
 
 type PlusHeadingProps = {
   text: string;
   size?: Size;
-  plusSize?: Size | string;
+  plusSize?: 'sm' | 'md' | 'lg' | string;
 };
 
-const sizeClasses: Record<Size, string> = {
-  sm: 'text-sm',
-  md: 'text-md',
-  lg: 'text-lg',
-  xl: 'text-xl',
+const textSizeClasses: Record<Size, string> = {
+  b1: 'text-b1',
+  b2: 'text-b2',
+  b3: 'text-b3',
 };
 
-const plusSizeClasses: Record<Size, string> = {
+const plusSizeClasses = {
   sm: 'w-2 h-2',
-  md: 'w-5 h-5',
-  lg: 'w-6 h-6',
-  xl: 'w-7 h-7',
+  md: 'w-3 h-3',
+  lg: 'w-4 h-4',
 };
 
 const PlusHeading: React.FC<PlusHeadingProps> = ({
   text,
-  size = 'md',
-  plusSize,
+  size = 'b2',
+  plusSize = 'md',
 }) => {
   const resolvedPlusSize =
-    plusSize && plusSize in plusSizeClasses
-      ? plusSizeClasses[plusSize as Size]
-      : plusSize ?? plusSizeClasses[size];
+    plusSize in plusSizeClasses
+      ? plusSizeClasses[plusSize as keyof typeof plusSizeClasses]
+      : plusSize;
 
   return (
-    <h2 className="group flex items-center gap-4 cursor-default">
+    <div className="group flex items-center gap-3 cursor-default">
       {/* Plus Icon */}
       <span
         className={`
-          relative
-          flex items-center justify-center
-          transition-all duration-400 ease-out
-          group-hover:rotate-180
-          group-hover:scale-125
+          relative flex items-center justify-center
           ${resolvedPlusSize}
+          transition-transform duration-300 ease-out
+          group-hover:rotate-180
+          group-hover:scale-150
         `}
       >
-        <span className="absolute w-full h-0.5 bg-white" />
-        <span className="absolute h-full w-0.5 bg-white" />
+        <span className="absolute w-full h-px bg-current" />
+        <span className="absolute h-full w-px bg-current" />
       </span>
 
-      <span className={`${sizeClasses[size]} font-light`}>
+      <span className={`${textSizeClasses[size]} font-normal`}>
         {text}
       </span>
-    </h2>
+    </div>
   );
 };
 

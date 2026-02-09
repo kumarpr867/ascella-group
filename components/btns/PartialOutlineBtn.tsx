@@ -11,8 +11,8 @@ const PartialOutlineBtn = ({
 }) => {
   const sizeClasses =
     size === "sm"
-      ? "px-2 py-1 text-sm"
-      : "px-3 py-1.5 text-lg";
+      ? "px-3 py-2 text-b3"
+      : "px-5 py-2 text-b2";
 
   return (
     <button
@@ -29,7 +29,7 @@ const PartialOutlineBtn = ({
       {/* Top Left */}
       <span
         className={`
-          absolute top-0 left-0 w-4 h-4
+          absolute top-0 left-0 w-2 h-2
           border-t border-l
           ${borderColor} ${hoverBorderColor}
           group-hover:w-6 group-hover:h-6
@@ -40,7 +40,7 @@ const PartialOutlineBtn = ({
       {/* Top Right */}
       <span
         className={`
-          absolute top-0 right-0 w-4 h-4
+          absolute top-0 right-0 w-2 h-2
           border-t border-r
           ${borderColor} ${hoverBorderColor}
           group-hover:w-6 group-hover:h-6
@@ -51,7 +51,7 @@ const PartialOutlineBtn = ({
       {/* Bottom Left */}
       <span
         className={`
-          absolute bottom-0 left-0 w-4 h-4
+          absolute bottom-0 left-0 w-2 h-2
           border-b border-l
           ${borderColor} ${hoverBorderColor}
           group-hover:w-6 group-hover:h-6
@@ -62,7 +62,7 @@ const PartialOutlineBtn = ({
       {/* Bottom Right */}
       <span
         className={`
-          absolute bottom-0 right-0 w-4 h-4
+          absolute bottom-0 right-0 w-2 h-2
           border-b border-r
           ${borderColor} ${hoverBorderColor}
           group-hover:w-6 group-hover:h-6

@@ -4,45 +4,45 @@ export default function Programme () {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="flex px-6 py-8 lg:px-10 lg:py-10 mx-4 lg:mx-25 border-x border-color">
-                    <h2 className="text-gray-300 text-2xl sm:text-3xl lg:text-4xl leading-snug">
+                <div className="flex px-6 py-8 lg:px-10 lg:py-10 mx-5 lg:mx-25 border-x border-color">
+                    <h3 className="text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
-                        embedding operating discipline before scale introduces complexity.
-                    </h2>
+                        embedding operating <br />discipline before scale introduces complexity.
+                    </h3>
                 </div>
             </div>
 
-            <div className="border-x border-color mx-4 lg:mx-25">
+            <div className="border-x border-color mx-5 lg:mx-25">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
                     <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">
                         {[
                             {
-                                title: "One Operating Authority",
+                                title: "Central Decision Engine",
                                 subtitle:
-                                    "Ascella Group functions as the single controlling entity across security, technology, workforce, and operational execution",
+                                    "A single decision authority receives inputs, sets priorities, and signs off on trade offs.",
                                 body:
-                                    "Strategic direction, prioritisation, and decision-making remain centralised—ensuring alignment across all moving parts and eliminating fragmented leadership.",
+                                    "Roles and responsibilities map to outcomes, not tasks. Escalation follows a clear path so issues reach the right level fast. This reduces overlap and speeds delivery.",
                             },
                             {
-                                title: "One Operating Authority",
+                                title: "Named Accountability",
                                 subtitle:
-                                    "Ascella Group functions as the single controlling entity across security, technology, workforce, and operational execution",
+                                    "Every critical control has an accountable person and a documented remit.",
                                 body:
-                                    "Strategic direction, prioritisation, and decision-making remain centralised—ensuring alignment across all moving parts and eliminating fragmented leadership.",
+                                    "Work packages include named owners, acceptance criteria, and delivery milestones. Status becomes factual, not noisy, because responsibility is visible. That visibility shortens feedback loops and limits scope creep.",
                             },
                             {
-                                title: "One Operating Authority",
+                                title: "Control Gates",
                                 subtitle:
-                                    "Ascella Group functions as the single controlling entity across security, technology, workforce, and operational execution",
+                                    "Release and change gates require explicit approvals tied to risk and impact.",
                                 body:
-                                    "Strategic direction, prioritisation, and decision-making remain centralised—ensuring alignment across all moving parts and eliminating fragmented leadership.",
+                                    "Each gate has standard evidence, owners, and timelines. Decisions either progress work or resolve blockers before impact widens. The result is steadier operations and fewer emergency escalations.",
                             },
                         ].map((item, i) => (
                             <div key={i} className="border-b border-color p-6 lg:p-10 last:border-0">
-                                <h3 className="text-2xl lg:text-4xl pb-3">{item.title}</h3>
-                                <p className="text-sm pb-2 text-gray-300">{item.subtitle}</p>
-                                <p className="text-sm text-gray-200">{item.body}</p>
+                                <h5 className="pb-10">{item.title}</h5>
+                                <p className="text-b2 pb-2 md:pr-48">{item.subtitle}</p>
+                                <p className="text-b2 text-gray-200">{item.body}</p>
                             </div>
                         ))}
                     </div>
@@ -103,12 +103,11 @@ export default function Programme () {
             </div>
 
             <div className="w-full border-y border-color">
-                <div className="mx-4 lg:mx-25 border-x border-color">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 lg:p-10">
-                        <PartialOutlineBtn />
-                        <p className="max-w-xl text-left sm:text-right leading-relaxed text-sm lg:text-base">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Aenean commodo ligula eget dolor.
+                <div className="mx-5 lg:mx-25 border-x border-color">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-6 lg:p-10">
+                        <PartialOutlineBtn text="See How It Works" />
+                        <p className="max-w-xl text-left  leading-relaxed text-b3 md:pl-60">
+                            Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>
                     </div>
                 </div>

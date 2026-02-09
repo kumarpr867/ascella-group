@@ -10,10 +10,10 @@ type ProblemItem = {
 
 const items: ProblemItem[] = [
     {
-        title: "Fragmented Vendors",
-        subHeading: "Multiple partners. No real ownership.",
+        title: "Diffuse Ownership",
+        subHeading: "No single accountable owner",
         description:
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+            "Work moves across roles and partners without a clear decision holder, forcing coordination to replace authority and causing outcomes to drift despite visible activity.",
         icon: (
             <svg width="122" height="122" viewBox="0 0 122 122" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="49" y="0.5" width="24" height="121" stroke="white" />
@@ -23,10 +23,10 @@ const items: ProblemItem[] = [
         ),
     },
     {
-        title: "Diluted Accountability",
-        subHeading: "Everyone executes. No one is responsible.",
+        title: "Priority Drift",
+        subHeading: "Effort without shared direction",
         description:
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+            "Teams execute against local goals instead of common outcomes. Work advances in parallel but pulls in different directions. Results weaken as alignment stays informal.",
         icon: (
             <svg width="123" height="123" viewBox="0 0 123 123" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="0.5" y="0.5" width="122" height="122" stroke="white" />
@@ -40,10 +40,10 @@ const items: ProblemItem[] = [
         ),
     },
     {
-        title: "Operational Fragility",
-        subHeading: "Systems fail quietly as complexity increases.",
+        title: "Leadership Drain",
+        subHeading: "Focus lost to coordination",
         description:
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.    ",
+            "Senior leaders spend time resolving handoffs and conflicts. Strategic work gives way to operational fixes. Energy drains as execution lacks structure.",
         icon: (
             <svg width="124" height="123" viewBox="0 0 124 123" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="61.5" cy="61.5" r="61" stroke="white" />
@@ -63,28 +63,28 @@ const items: ProblemItem[] = [
 export default function ExecutionProblemSection() {
     return (
         <section className="py-24">
-            <div className="border-b border-gray-400 lg:px-20">
+            <div className="border-b border-gray-400 lg:px-15">
                 <div className="flex flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
-                    <p className="max-w-md text-sm leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                    <p className="max-w-md text-b3 leading-relaxed">
+                        Execution breaks when responsibility spreads across teams, vendors, and functions. Work continues, effort stays high, yet outcomes drift. Decisions slow, risks surface late, and delivery feels unstable. The failure sits in structure and ownership, not effort or intent.
                     </p>
 
-                    <h2 className="max-w-md text-right text-2xl md:text-3xl font-medium">
+                    <h3 className="max-w-lg text-right">
                         <span className="text-white">The Execution Problem </span>
-                        <span className="text-gray-200 font-normal">
+                        <span className="text-gray-200">
                             Modern Organisations Face
                         </span>
-                    </h2>
+                    </h3>
                 </div>
             </div>
 
-            <div className="border-b border-gray-400 lg:px-20">
+            <div className="border-b border-gray-400 lg:px-15">
                 <div className="flex items-center gap-3 py-8 px-20 tracking-widest uppercase ">
-                    <PlusHeading text="Execution Policy" size="xl"/> 
+                    <PlusHeading text="Execution Policy" size="b1" plusSize="lg"/> 
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400 lg:px-20">
+            <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400 lg:px-15">
                 {items.map((item, index) => (
                     <div
                         key={item.title}
@@ -94,16 +94,16 @@ export default function ExecutionProblemSection() {
                             {item.icon}
                         </div>
 
-                        <h3 className="text-2xl mb-2 mt-6 ">
+                        <h4 className="mb-2 mt-6 ">
                             {item.title}
-                        </h3>
+                        </h4>
 
                         <div className="w-10 h-px mb-4" />
-                        <p className="text-sm mb-4 text-gray-100 font-thin" >
+                        <p className="text-b1 mb-4 text-gray-100 font-thin" >
                             {item.subHeading}
                         </p>
 
-                        <p className="text-xs leading-relaxed">
+                        <p className="text-b3 leading-relaxed">
                             {item.description}
                         </p>
                     </div>

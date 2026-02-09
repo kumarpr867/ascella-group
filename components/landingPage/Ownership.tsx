@@ -8,26 +8,25 @@ export default function Ownership() {
   const sections = [
     {
       title: "Security & Risk Posture",
-      description: "We assume ownership of organisational risk by designing, governing, and enforcing security controls that reduce exposure and strengthen long-term resilience across systems, people, and processes.",
+      description: "Security and risk posture focuses on keeping organisational risk visible and controlled. Security decisions link directly to business priorities and acceptable risk levels. Each control has a clear owner, review cycle, and response plan. This reduces surprises and limits the impact of incidents when issues occur.",
       tag: "#Resilience",
       image: "/Security.png"
     },
     {
       title: "Technology Execution",
-      description: "We oversee the delivery of secure, scalable technology systems—ensuring architecture, engineering, and integrations perform reliably under growth, complexity, and regulatory pressure.",
+      description: "Technology execution ensures systems work reliably as change increases. Platforms follow clear build, release, and run standards. Ownership stays consistent across development and operations to avoid gaps. This keeps delivery steady and reduces failures during growth.",
       tag: "#Scalability",
       image: "/Technology.png"
     },
     {
         title: "Workforce Readiness",
-        description:" Workforce readiness prepares teams for real operating conditions. Roles and escalation paths stay clear before pressure hits. Training reflects actual scenarios instead of theory. Teams respond faster and make better decisions during incidents.",
+        description:"Workforce readiness prepares teams for real operating conditions. Roles and escalation paths stay clear before pressure hits. Training reflects actual scenarios instead of theory. Teams respond faster and make better decisions during incidents.",
         tag: "#Alignment",
         image:"/Workforce.png"
     },
     {
         title:"Operational Control",
-        description:"Operational control brings to daily execution. Decisions follow defined paths instead of informal coordination. Signals focus on risk, progress, and dependencies. Work becomes predictable and less reactive over time.",
-        tag:"#Governance",
+        description:"Operational control brings structure to daily execution. Decisions follow defined paths instead of informal coordination. Signals focus on risk, progress, and dependencies. Work becomes predictable and less reactive over time.",
         image:"/Operational.png"
     },
     {
@@ -39,28 +38,19 @@ export default function Ownership() {
   ];
 
   return (
-    <section className="relative bg-black text-white">
-      
-     
+    <section className="relative">    
       <div className="relative h-px w-full mt-30">
-       
-        <div className="mx-8 h-full bg-white/10" />
+        <div className="mx-8 h-full" />
       </div>
-
       <div className="mx-auto w-full relative">
-       
         <div className="grid grid-cols-[10%_25%_55%_10%] relative">
-          
-         
           <div className="absolute inset-0 flex pointer-events-none z-0">
-            <div className="h-full w-[10%] border-r border-white/10" />
-            <div className="h-full w-[25%] border-r border-white/10" />
-            <div className="h-full w-[55%] border-r border-white/10" />
+            <div className="h-full w-[10%] border-r border-color" />
+            <div className="h-full w-[25%] border-r border-color" />
+            <div className="h-full w-[55%] border-r border-color" />
           </div>
-
           
           <div className="z-10 h-full" />
-
         
           <aside className="relative z-10 p-12">
             <div className="sticky top-24">
@@ -98,13 +88,13 @@ export default function Ownership() {
                 
                 
                 <div className="w-full max-w-xl">
-                  <h3 className="text-4xl font-light mb-8 tracking-tight italic">
+                  <h3 className="text-4xl font-light mb-8 tracking-tight">
                     {item.title}
                   </h3>
                   <p className="text-white/50 text-base leading-relaxed mb-8">
                     {item.description}
                   </p>
-                  <div className="text-sm font-mono tracking-widest text-white/80">
+                  <div className="text-sm tracking-widest text-white/80">
                     {item.tag}
                   </div>
                 </div>

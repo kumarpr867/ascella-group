@@ -20,10 +20,10 @@ export default function WhoWeWorkWith() {
 
             {/* Title */}
             <div className="border-b border-color px-6 py-12 lg:px-8 lg:py-28">
-              <h1 className="text-4xl lg:text-5xl leading-tight">
-                Who We<br /> <span className="text-gray-200">Work With</span>
-              </h1>
-              <p className="mt-6 text-sm font-light max-w-xs">
+              <h2 className="leading">
+                Who We <span className="text-gray-200">Work With</span>
+              </h2>
+              <p className="mt-6 text-b2 font-light max-w-xs">
                 We work with organisations that require structured execution,
                 governance, & accountability at scale.
               </p>
@@ -52,20 +52,20 @@ export default function WhoWeWorkWith() {
                   strokeWidth="0.5"
                 />
                 <path
-                  d="M15.5 28L28 14M28 14H14M28 14V29"
+                  d="M15.5 28L28 14M28 14h24M28 14V29"
                   stroke="white"
                   strokeWidth="0.5"
                 />
               </svg>
 
-              <p className="text-sm">
+              <p className="text-b2">
                 Engagements are selective by design.
               </p>
             </div>
 
             {/* Paragraph */}
             <div className="border-b lg:border-l border-color px-6 py-8 lg:p-10 flex items-center">
-              <p className="text-sm text-gray-100 max-w-md">
+              <p className="text-b2 text-gray-100 max-w-md">
                 We partner with organisations where operational control,
                 risk management, and execution quality are business-critical.
               </p>
@@ -73,7 +73,7 @@ export default function WhoWeWorkWith() {
 
             {/* Scroll down */}
             <div className="px-6 py-10 lg:p-10 flex items-end">
-              <PlusHeading text="Scroll Down" size="md" />
+              <PlusHeading text="Scroll Down" size="b1" />
             </div>
 
             {/* Rock */}

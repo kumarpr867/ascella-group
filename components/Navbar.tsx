@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Execution Arms", href: "/execution-arms" },
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
+  { label: "Careers", href: "/careers" },
 ];
 
 const Navbar = () => {
