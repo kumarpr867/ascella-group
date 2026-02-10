@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 
 const Controlled = () => {
   return (
@@ -75,9 +76,11 @@ const Controlled = () => {
         {/* FOOTER SECTION (120px) */}
         <div className="h-[120px] flex items-center justify-between px-10 lg:px-24">
           {/* Button is now safely above the black mask */}
-          <button className="relative z-25 px-8 py-4 border border-white/20 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
-            Engage With Us <span className="ml-2 opacity-40">:::</span>
-          </button>
+          <Link href="/engageWithUs">
+            <button className="relative z-25 px-8 py-4 border border-white/20 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
+              Engage With Us <span className="ml-2 opacity-40">:::</span>
+            </button>
+          </Link>
 
           <p className="hidden md:block text-[9px] tracking-[0.1em] text-white/30 max-w-[320px] text-right uppercase leading-tight">
             The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.
