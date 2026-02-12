@@ -1,5 +1,43 @@
+"use client";
+
 import React from "react";
 import PlusHeading from "../headings/PlusHeading";
+import { motion, type Variants } from "motion/react";
+
+const container: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.18,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+
+const fadeUp: Variants = {
+    hidden: {
+        opacity: 0,
+        y: 28,
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.8,
+            ease: "easeOut",
+        },
+    },
+};
+
+const fadeIn: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { duration: 0.8 },
+    },
+};
+
 
 type ProblemItem = {
     title: string;
@@ -63,52 +101,92 @@ const items: ProblemItem[] = [
 export default function ExecutionProblemSection() {
     return (
         <section className="py-24">
-            <div className="border-b border-gray-400 lg:px-15">
+            <motion.div
+                className="border-b border-gray-400 lg:px-15"
+                variants={container}
+                style={{ willChange: "transform" }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+            >
                 <div className="flex flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
-                    <p className="max-w-md text-b3 leading-relaxed">
-                        Execution breaks when responsibility spreads across teams, vendors, and functions. Work continues, effort stays high, yet outcomes drift. Decisions slow, risks surface late, and delivery feels unstable. The failure sits in structure and ownership, not effort or intent.
-                    </p>
+                    <motion.p
+                        variants={fadeUp}
+                        style={{ willChange: "transform" }}
+                        className="max-w-md text-b3 leading-relaxed"
+                    >
+                        Execution breaks when responsibility spreads across teams, vendors, and
+                        functions...
+                    </motion.p>
 
-                    <h3 className="max-w-lg text-right">
+                    <motion.h3
+                        variants={fadeUp}
+                        style={{ willChange: "transform" }}
+                        className="max-w-lg text-right"
+                    >
                         <span className="text-white">The Execution Problem </span>
                         <span className="text-gray-200">
                             Modern Organisations Face
                         </span>
-                    </h3>
+                    </motion.h3>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="border-b border-gray-400 lg:px-15">
-                <div className="flex items-center gap-3 py-8 px-20 tracking-widest uppercase ">
-                    <PlusHeading text="Execution Policy" size="b1" plusSize="lg"/> 
-                </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400 lg:px-15">
+            <motion.div
+                className="border-b border-gray-400 lg:px-15"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+            >
+                <motion.div
+                    variants={fadeIn}
+                    style={{ willChange: "transform" }}
+                    className="flex items-center gap-3 py-8 px-20 tracking-widest uppercase"
+                >
+                    <PlusHeading text="Execution Policy" size="b1" plusSize="lg" />
+                </motion.div>
+            </motion.div>
+
+
+            <motion.div
+                className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-400 lg:px-15"
+                variants={container}
+                style={{ willChange: "transform" }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-80px" }}
+            >
+
                 {items.map((item, index) => (
-                    <div
+                    <motion.div
                         key={item.title}
+                        variants={fadeUp}
+                        style={{ willChange: "transform" }}
                         className={`px-20 py-25 min-h-105 flex flex-col border-gray-400 ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""}`}
                     >
-                        <div className="pb-10 border-b border-gray-400">
+                        <motion.div
+                            variants={fadeIn}
+                            style={{ willChange: "transform" }}
+                            className="pb-10 border-b border-gray-400"
+                        >
                             {item.icon}
-                        </div>
+                        </motion.div>
 
-                        <h4 className="mb-2 mt-6 ">
-                            {item.title}
-                        </h4>
+                        <h4 className="mb-2 mt-6">{item.title}</h4>
 
                         <div className="w-10 h-px mb-4" />
-                        <p className="text-b1 mb-4 text-gray-100 font-thin" >
+
+                        <p className="text-b1 mb-4 text-gray-100 font-thin">
                             {item.subHeading}
                         </p>
 
                         <p className="text-b3 leading-relaxed">
                             {item.description}
                         </p>
-                    </div>
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
         </section>
     );
 }

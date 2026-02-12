@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import PlusHeading from "../headings/PlusHeading";
 
-const SECTIONS = [
+type Section = {
+  id: string;
+  title: string;
+  content: React.ReactNode;
+};
+
+const SECTIONS: Section[] = [
   {
     id: "overview",
     title: "Overview",
@@ -26,103 +33,129 @@ const SECTIONS = [
       <>
         <p className="mb-4">In conventional models:</p>
         <p className="opacity-70 mb-4">
-          Execution is distributed. Accountability becomes unclear.
-          Risk increases.
+          Execution is distributed. Accountability becomes unclear. Risk increases.
         </p>
 
         <p className="mb-4 mt-6">In the Ascella model:</p>
         <p className="opacity-70">
-          Execution remains distributed, but accountability is singular.
-          Risk is controlled.
+          Execution remains distributed, but accountability is singular. Risk is controlled.
         </p>
       </>
     ),
   },
 ];
 
-export default function AccountabilitySection() {
-  const [active, setActive] = useState<string>("overview");
+function AccordionItem({
+  item,
+  active,
+  onToggle,
+  titleClass = "",
+  showContent = true,
+  isLast = false,
+}: {
+  item: Section;
+  active: string;
+  onToggle: (id: string) => void;
+  titleClass?: string;
+  showContent?: boolean;
+  isLast?: boolean;
+}) {
+  const isActive = active === item.id;
 
   return (
-    <section className="relative w-full py-24">
-      <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_240px_1.2fr] gap-16 px-6">
+    <motion.div
+      layout
+      className={`${isLast ? "" : "border-b border-color"}`}
+    >
+      <button
+        onClick={() => onToggle(item.id)}
+        className={`w-full text-left p-4 transition-colors ${titleClass}`}
+      >
+        {item.title}
+      </button>
 
-        <div className="flex items-end">
-          <div>
-            <h3 className="text-lg leading-tight">
-              The Single Accountability Principle
-            </h3>
-            <p className="text-sm opacity-60 mt-2 max-w-xs">
+      {showContent && (
+        <AnimatePresence>
+          {isActive && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden mt-4 text-b1 opacity-70 bg-gray-500 p-5"
+            >
+              {item.content}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
+    </motion.div>
+  );
+}
+
+
+export default function Accountability() {
+  const [active, setActive] = useState<string>("overview");
+
+  const toggle = (id: string) => {
+    setActive((prev) => (prev === id ? "" : id));
+  };
+
+  return (
+    <section className="border-b border-color">
+      <div className="py-10 px-10 lg:px-24 border-b border-color">
+        <PlusHeading text="Accountability Principle" size="b1" />
+      </div>
+      <div className=" px-10 lg:px-24">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px_1.2fr]">
+
+        <div className="flex flex-col justify-between ">
+          <div></div>
+          <div className="pb-10">
+            <h3>The Single Accountability Principle </h3>
+            <p className="text-b1 leading-tight mt-2 max-w-xs">
               A governance model designed to eliminate ownership gaps in execution.
             </p>
           </div>
         </div>
 
         <div className="space-y-4">
-          {SECTIONS.map((item) => {
-            const isActive = active === item.id;
+          {SECTIONS.map((item) => (
+            <AccordionItem
+              key={item.id}
+              item={item}
+              active={active}
+              onToggle={setActive}
+              showContent={false}
+              titleClass={active === item.id ? "text-white" : "text-gray-200"}
+            />
+          ))}
+        </div>
 
-            return (
-              <motion.div
-                key={item.id}
-                layout
-                className="border-b border-color pb-4"
-              >
-                <button
-                  onClick={() => setActive(item.id)}
-                  className={`w-full text-left transition-colors ${isActive ? "text-white" : "text-gray-200"}`}
-                >
-                  {item.title}
-                </button>
-
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden mt-2 text-sm opacity-70"
-                    >
-                      {item.content}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+        <div className="space-y-4 border-x border-color ">
+          {SECTIONS.map((item , index) => (
+            <AccordionItem
+              key={item.id}
+              item={item}
+              active={active}
+              onToggle={toggle}
+              isLast={index === SECTIONS.length - 1}
+            />
+          ))}
         </div>
       </div>
-
+</div>
+      {/* Mobile accordion */}
       <div className="lg:hidden mt-20 px-6 space-y-4">
-        {SECTIONS.map((item) => {
-          const isActive = active === item.id;
-
-          return (
-            <motion.div key={item.id} layout className="border-b border-color pb-4">
-              <button
-                onClick={() => setActive(isActive ? "" : item.id)}
-                className="w-full text-left text-lg"
-              >
-                {item.title}
-              </button>
-
-              <AnimatePresence>
-                {isActive && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden mt-4 text-sm opacity-70"
-                  >
-                    {item.content}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
+        {SECTIONS.map((item) => (
+          <AccordionItem
+            key={item.id}
+            item={item}
+            active={active}
+            onToggle={toggle}
+            titleClass="text-lg"
+          />
+        ))}
       </div>
     </section>
   );

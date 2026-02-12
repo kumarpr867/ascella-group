@@ -1,5 +1,8 @@
-import Image from "next/image"
-import PlusHeading from "../headings/PlusHeading"
+'use client';
+
+import Image from "next/image";
+import PlusHeading from "../headings/PlusHeading";
+import { motion } from "motion/react";
 
 const points = [
     {
@@ -68,15 +71,27 @@ const points = [
     }
 ]
 
-const HowWeOperate = () => {
+export default function HowWeOperate() {
     return (
         <section className="flex flex-center leading-tight gap-25 px-25 py-20">
-            <div className="flex flex-center">
+            <motion.div
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="flex flex-center">
                 <Image src="/HowWeOperate.png" alt="How We Operate" width={550} height={350} />
-            </div>
+            </motion.div>
+
             <div className="flex flex-col justify-between">
-                <div className="flex flex-col flex-start gap-4">
-                    <PlusHeading text="How We Operate" size="md" plusSize="lg" />
+                <motion.div
+                    initial={{ opacity: 0, y: 32 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className="flex flex-col gap-4"
+                >
+                    <PlusHeading text="How We Operate" />
                     <p className="font-light text-4xl text-white">
                         Control is designed in,<br />
                         not enforced later
@@ -84,22 +99,27 @@ const HowWeOperate = () => {
                     <p className="text-gray-100 font-light max-w-lg">
                         Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
                     </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                </motion.div>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
                     {points.map((point, index) => (
-                        <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
+                        <motion.li
+                            key={index}
+                            initial={{ opacity: 0, y: 32 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: index * 0.2, ease: 'easeOut' }}
+                            className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl"
+                        >
                             <div className="flex justify-between w-full">
-                                <div className="mb-4">{point.svg}</div>
-                                <span className="text-xl font-thin mb-2">{point.count}</span>
+                                <div aria-hidden="true">{point.svg}</div>
+                                <span className="text-xl font-thin">{point.count}</span>
                             </div>
-                            <h4 className="leading-tight font-light text-2xl mb-2">{point.heading}</h4>
+                            <h4 className="leading-tight font-light text-2xl">{point.heading}</h4>
                             <p className="text-gray-300 max-w-xs">{point.description}</p>
-                        </div>
+                        </motion.li>
                     ))}
-                </div>
+                </ul>
             </div>
         </section>
     )
 }
-
-export default HowWeOperate

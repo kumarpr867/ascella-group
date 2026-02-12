@@ -4,9 +4,9 @@ import Programme from "@/components/landingPage/Programme";
 import Ownership from "@/components/landingPage/Ownership";
 import Arms from "@/components/landingPage/Arms";
 import HowWeOperate from "@/components/landingPage/HowWeOperate";
-import Engagement from "@/components/landingPage/Engagement";
 import Faq from "@/components/Faq";
-import WhoWeWorkWith from "@/components/landingPage/whoWeWorkWith";
+import Engagement from "@/components/landingPage/Engagement";
+import WhoWeWorkWith from "@/components/landingPage/WhoWeWorkWith";
 
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
     <div>
       <Hero />
       <ExecutionProblemSection />
-      <Programme />
+      {/* <Programme /> */}
       <Ownership />
       <Arms /> 
       <HowWeOperate />

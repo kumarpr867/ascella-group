@@ -1,21 +1,71 @@
-import PartialOutlineBtn from "../btns/PartialOutlineBtn"
+"use client";
 
-export default function Programme () {
+import React from "react";
+import PartialOutlineBtn from "../btns/PartialOutlineBtn";
+import { motion, type Variants} from "motion/react";
+
+const container: Variants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.16,
+            delayChildren: 0.1,
+        },
+    },
+};
+
+const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.8, ease: "easeOut" },
+    },
+};
+
+const fadeIn: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { duration: 1 },
+    },
+};
+
+
+export default function Programme() {
     return (
         <section>
-            <div className="border-y border-color">
-                <div className="flex px-6 py-8 lg:px-10 lg:py-10 mx-5 lg:mx-25 border-x border-color">
+            <motion.div
+                className="border-y border-color"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-120px" }}
+            >
+                <motion.div
+                    variants={fadeUp}
+                    className="flex px-6 py-8 lg:px-10 lg:py-10 mx-5 lg:mx-25 border-x border-color"
+                >
                     <h3 className="text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
                         embedding operating <br />discipline before scale introduces complexity.
                     </h3>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
 
-            <div className="border-x border-color mx-5 lg:mx-25">
+
+            <motion.div
+                className="border-x border-color mx-5 lg:mx-25"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+            >
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
-                    <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">
+
+                    <motion.div
+                        className="flex flex-col border-b lg:border-b-0 lg:border-r border-color"
+                        variants={container}
+                    >
                         {[
                             {
                                 title: "Central Decision Engine",
@@ -39,14 +89,24 @@ export default function Programme () {
                                     "Each gate has standard evidence, owners, and timelines. Decisions either progress work or resolve blockers before impact widens. The result is steadier operations and fewer emergency escalations.",
                             },
                         ].map((item, i) => (
-                            <div key={i} className="border-b border-color p-6 lg:p-10 last:border-0">
+                            <motion.div
+                                key={i}
+                                variants={fadeUp}
+                                className="border-b border-color p-6 lg:p-10 last:border-0"
+                                style={{ willChange: "transform" }}
+                            >
                                 <h5 className="pb-10">{item.title}</h5>
                                 <p className="text-b2 pb-2 md:pr-48">{item.subtitle}</p>
                                 <p className="text-b2 text-gray-200">{item.body}</p>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
-                    <div className="flex items-center justify-center p-6 lg:p-10">
+                    </motion.div>
+                    <motion.div
+                        className="flex items-center justify-center p-6 lg:p-10"
+                        variants={fadeIn}
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+                    >
                         <svg viewBox="0 0 620 630"
                             className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-auto"
                             fill="none"
@@ -98,20 +158,32 @@ export default function Programme () {
                             </defs>
                         </svg>
 
-                    </div>
-                </div>
-            </div>
+                    </motion.div>
 
-            <div className="w-full border-y border-color">
-                <div className="mx-5 lg:mx-25 border-x border-color">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-6 lg:p-10">
+
+                </div>
+            </motion.div>
+
+            <motion.div
+                className="w-full border-y border-color"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+            >
+                <motion.div
+                    variants={fadeUp}
+                    className="mx-5 lg:mx-25 border-x border-color"
+                >
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 lg:p-10">
                         <PartialOutlineBtn text="See How It Works" />
-                        <p className="max-w-xl text-left  leading-relaxed text-b3 md:pl-60">
-                            Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
+                        <p className="max-w-xl text-left leading-relaxed text-b3 md:pl-60">
+                            Complexity grows faster than controls when scale outruns governance.
+                            Clear gates keep delivery steady as scope expands.
                         </p>
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
+
         </section >
     )
 }

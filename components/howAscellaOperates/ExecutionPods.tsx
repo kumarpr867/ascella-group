@@ -15,16 +15,16 @@ export default function ExecutionPods() {
               <Image src="/OperatingStructure/PodCircle.svg" alt={"cirlce image"} width={400} height={400} />
             </div>
             <div className="flex flex-col gap-2 p-20 w-3/4">
-              <h2 className="text-2xl">Operational Effect</h2>
-              <p className="text-gray-300 text-sm">Pods allow execution capacity to scale or  adapt without introducing new management layers, vendor complexity, or diffusion of accountability.</p>
+              <h5 className="text-2xl">Operational Effect</h5>
+              <p className="text-gray-300 text-b2">Pods allow execution capacity to scale or  adapt without introducing new management layers, vendor complexity, or diffusion of accountability.</p>
             </div>
           </div>
           <div className="flex flex-col gap-5 pr-15 py-10 max-w-1/2">
             <div>
-              <PlusHeading text="EXECUTION PODS" size="lg" />
+              <PlusHeading text="EXECUTION PODS" size="b1" />
             </div>
-            <h1 className="text-3xl">Execution pods provide<span className="text-gray-200"> flexible delivery without introducing fragmentation.</span></h1>
-            <p className="font-extralight text-sm">Execution is delivered through specialised pods assembled per engagement.Pods operate inside Ascella’s governance framework, not as independent units.This ensures flexibility in capability deployment while maintaining central oversight and accountability.</p>
+            <h3>Execution pods provide<span className="text-gray-200"> flexible delivery without introducing fragmentation.</span></h3>
+            <p className="font-extralight text-b2">Execution is delivered through specialised pods assembled per engagement.Pods operate inside Ascella’s governance framework, not as independent units.This ensures flexibility in capability deployment while maintaining central oversight and accountability.</p>
             <div className="p-10 z-10 bg-white/70 text-gray-500 rounded-xl flex flex-col gap-5">
               <div className="flex gap-5">
                 <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,19 +38,19 @@ export default function ExecutionPods() {
                   <rect x="14" y="7" width="7" height="7" fill="#3D3D3D" />
                   <rect x="21" width="7" height="7" fill="#3D3D3D" />
                 </svg>
-                <h2 className="text-xl font-semibold">In the Ascella model:</h2>
+                <h4>In the Ascella model:</h4>
               </div>
               <div className="md:w-sm">
-                <p className="mb-2 text-xl font-semibold">Small and accountable</p>
-                <p className="leading-5 text-sm">Pods remain intentionally compact to preserve clarity of ownership, communication, and responsibility.</p>
+                <h5 className="mb-2">Small and accountable</h5>
+                <p className="leading-5 text-b3">Pods remain intentionally compact to preserve clarity of ownership, communication, and responsibility.</p>
               </div>
               <div className="md:w-sm">
-                <p className="mb-2 text-xl font-semibold">Outcome-focused </p>
-                <p className="leading-5 text-sm">Each pod is aligned to defined objectives, performance indicators, and delivery expectations.</p>
+                <h5 className="mb-2">Outcome-focused </h5>
+                <p className="leading-5 text-b3">Each pod is aligned to defined objectives, performance indicators, and delivery expectations.</p>
               </div>
               <div className="md:w-sm">
-                <p className="mb-2 text-xl font-semibold">Aligned to central oversight</p>
-                <p className="leading-5 text-sm">Pods execute work while Ascella Group retains governance, measurement, and escalation control.</p>
+                <h5 className="mb-2">Aligned to central oversight</h5>
+                <p className="leading-5 text-b3">Pods execute work while Ascella Group retains governance, measurement, and escalation control.</p>
               </div>
             </div>
           </div>

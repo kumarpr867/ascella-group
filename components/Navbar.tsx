@@ -8,13 +8,16 @@ const navLinks = [
   { label: "Execution Arms", href: "/execution-arms" },
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
+  { label: "Careers", href: "/careers" },
+  { label: "JD-Page", href: "/JD-Page" },
+  { label: "JD-Apply", href: "/JD-Apply" },
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-black border-b border-[#1e1e1e]">
+    <header className="w-full bg-black ">
       {/* INNER CONTAINER */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-20">
         <div className="flex justify-between items-center h-full">
@@ -51,7 +54,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden flex items-center px-2 py-1 border border-white rounded text-white"
+            className="md:hidden flex items-center px-2 py-1 border border-color rounded text-white"
             onClick={() => setMenuOpen(v => !v)}
             aria-label="Open menu"
           >

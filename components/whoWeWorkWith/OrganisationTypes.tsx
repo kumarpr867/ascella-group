@@ -85,7 +85,7 @@ export default function OrganisationTypes() {
             </p>
           </Reveal>
           <Reveal variants={slideInFromRight(0.2)}>
-            <PlusHeading text="Organisation Types" size="lg" />
+            <PlusHeading text="Organisation Types">
             <p className="text-3xl max-w-2xl leading-snug mt-10">
               Ascella partners with organisations where operating structure, governance, and accountability determine long-term execution success.
             </p>

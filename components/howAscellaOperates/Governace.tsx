@@ -74,10 +74,10 @@ export default function Governace() {
     return (
         <section className="flex flex-col p-15 lg:p-25">
             <div className="flex flex-col gap-12 mb-20">
-                <div className="flex flex-col gap-5 max-w-2xl leading-relaxed">
-                    <PlusHeading text="GOVERNANCE & OVERSIGHT" size="xl" />
-                    <p className="2xl md:text-3xl">Governance is the operating system that keeps execution controlled, aligned, and auditable at scale. <span className="text-gray-300">It defines how decisions are made, how risks are surfaced, and how accountability is maintained. </span>
-                    </p>
+                <div className="flex flex-col gap-5 max-w-3xl leading-relaxed">
+                    <PlusHeading text="GOVERNANCE & OVERSIGHT" size="b1" />
+                    <h3>Governance is the operating system that keeps execution controlled, aligned, and auditable at scale. <span className="text-gray-300">It defines how decisions are made, how risks are surfaced, and how accountability is maintained. </span>
+                    </h3>
                 </div>
                 <div className="flex justify-between gap-48">
                     <p className="font-extralight text-sm">Ascella Group designs governance before execution begins. Decision rights, approval structures, escalation paths, and oversight mechanisms are established
@@ -92,11 +92,11 @@ export default function Governace() {
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="flex flex-col gap-5">
                         <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" width={80} height={80}/>
-                        <p className="text-gray-300" >Governance is designed in, not <br />  enforced later.</p>
+                        <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
                     </div>
                 </div>
                 <div className="flex flex-col justify-between">
-                        <h1 className="2xl md:text-3xl">Before execution</h1>
+                        <h3>Before execution</h3>
                         <p className="text-gray-300 font-light max-w-lg">
                             Begins, Ascella establishes
                         </p>
@@ -107,8 +107,8 @@ export default function Governace() {
                                     <div className="mb-4">{point.svg}</div>
                                     <span className="text-xl font-thin mb-2">{point.count}</span>
                                 </div>
-                                <h4 className="leading-tight text-xl mb-2">{point.heading}</h4>
-                                <p className="text-gray-300 text-sm max-w-xs">{point.description}</p>
+                                <h5 className="leading-tight mb-2">{point.heading}</h5>
+                                <p className="text-gray-300 text-b3 max-w-xs">{point.description}</p>
                             </div>
                         ))}
                     </div>
