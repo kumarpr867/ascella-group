@@ -14,17 +14,17 @@ const faqs = [
   {
     question: "Is Ascella a consulting firm?",
     answer:
-      "No. Ascella retains governance and accountability over execution rather than offering advisory-only support.",
+      "Ascella is not a consulting firm. Work does not stop at advice or recommendations. Responsibility extends into execution, governance, and outcomes.",
   },
   {
-    question: "Are services selected individually?",
+    question: "Is Ascella an agency or vendor?",
     answer:
-      "No. Engagements are structured around operating needs, not standalone service selection.",
+      "Ascella is not positioned as an agency or a service vendor. Execution happens under a single operating authority with ownership retained through delivery.",
   },
   {
     question: "Does Ascella replace internal teams?",
     answer:
-      "No. Ascella structures and governs execution while working alongside internal teams and embedded pods.",
+      "Ascella does not replace internal teams. It provides structure, decision clarity, and control so internal teams can execute more effectively.",
   },
 ];
 
@@ -39,12 +39,12 @@ export default function Faq() {
 
 
   return (
-    <section className="px-2 sm:px-6 md:px-10 lg:px-24 py-8 md:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-      <div className="flex flex-col gap-4 py-6 md:py-10 max-w-xs md:max-w-2xs">
-        <PlusHeading text="FAQs" size="lg" />
-        <h1 className="text-2xl md:text-3xl">Frequently Asked Questions</h1>
-        <p className="font-extralight text-white/50 text-xs md:text-base">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit ipsa id nobis rerum praesentium quos beatae minima asperiores possimus.
+    <section className="sm:px-6 md:px-10 md:py-20 lg:px-28 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+      <div className="flex flex-col gap-4 py-6   max-w-md md:max-w-xs">
+        <PlusHeading text="FAQs" size="b1" plusSize="lg" />
+        <h3>Frequently Asked Questions</h3>
+        <p className="text-b1">
+          Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
         </p>
       </div>
 
@@ -67,25 +67,25 @@ export default function Faq() {
             <Image
               src="/FaqCube.svg"
               alt="FAQ Cube"
-              width={120}
-              height={120}
-              className={`absolute top-10 right-1 pointer-events-none transition-opacity duration-500 ${isExpanded ? "opacity-10" : "opacity-15"}`}
+              width={200}
+              height={200}
+              className={`absolute top-20 right-1 pointer-events-none transition-opacity duration-500 ${isExpanded ? "opacity-10" : "opacity-15"}`}
             />
             <div className="relative z-10 h-full p-4 md:p-6 lg:mr-10">
               {/* bottom question */}
-              <h2
-                className={`md:absolute md:bottom-8 md:left-8 md:right-10 text-base md:text-lg font-medium transition-all duration-500 ease-out ${isExpanded? "md:opacity-0 md:translate-y-2 md:pointer-events-none":"opacity-100 translate-y-0"}`}
+              <h5
+                className={`md:absolute md:bottom-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded? "md:opacity-0 md:translate-y-2 md:pointer-events-none":"opacity-100 translate-y-0"}`}
               >
                 {faq.question}
-              </h2>
+              </h5>
               {/* top question */}
-              <h2
-                className={`hidden md:block md:absolute md:top-8 md:left-8 md:right-10 text-lg md:text-xl font-medium transition-all duration-500 ease-out ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
+              <h5
+                className={`hidden md:block md:absolute md:top-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
               >
                 {faq.question}
-              </h2>
+              </h5>
               <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? "max-h-96" : "max-h-0"}`}></div>
-              <p className={`absolute bottom-8 left-8 right-10 text-xs md:text-sm text-white/50 transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+              <p className={`absolute bottom-8 left-8 right-10 text-b1 text-white transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
                 {faq.answer}
               </p>
             </div>

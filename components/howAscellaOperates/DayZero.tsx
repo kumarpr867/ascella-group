@@ -1,3 +1,4 @@
+import { fill } from "three/src/extras/TextureUtils.js";
 import PlusHeading from "../headings/PlusHeading";
 
 type ProblemItem = {
@@ -10,7 +11,7 @@ const items: ProblemItem[] = [
   {
     title: "Architecture-Level Security",
     description:
-      "Security controls are built directly into system and platform design. Protection is engineered before deployment, not retrofitted after release.",
+      "Security controls are engineered directly into platform design and technical foundations so exposure reduces through structure rather than after release adjustments.",
     icon: (
       <svg width="109" height="111" viewBox="0 0 109 111" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="0.5" y="43.5" width="67" height="67" stroke="white" stroke-opacity="0.5" />
@@ -23,7 +24,7 @@ const items: ProblemItem[] = [
   {
     title: "Operational Security",
     description:
-      "Daily workflows embed security practices as standard operating procedure.Security becomes part of execution, not a separate process.",
+      "Daily workflows integrate security checkpoints, approval controls, and defined responsibility so protection remains part of execution instead of an external review step.",
     icon: (
       <svg width="122" height="124" viewBox="0 0 122 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M-0.00016284 37.6665C-0.000162969 39.1393 1.19374 40.3332 2.6665 40.3332C4.13926 40.3332 5.33317 39.1393 5.33317 37.6665C5.33317 36.1937 4.13926 34.9998 2.6665 34.9998C1.19374 34.9998 -0.000162711 36.1937 -0.00016284 37.6665ZM2.6665 37.6665L2.6665 38.1665L52.6665 38.1665L52.6665 37.6665L52.6665 37.1665L2.6665 37.1665L2.6665 37.6665Z" fill="white" fill-opacity="0.5" />
@@ -46,7 +47,7 @@ const items: ProblemItem[] = [
   },
   {
     title: "Continuous Risk Visibility",
-    description: "Threats, vulnerabilities, and compliance status remain continuously observable. Risk is surfaced early, not discovered late.",
+    description: "Threats, vulnerabilities, and compliance posture stay continuously observable through structured monitoring and review cycles so risk surfaces early and accountability remains clear.",
     icon: (
       <svg width="131" height="131" viewBox="0 0 131 131" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="65.5" cy="65.5" r="13" stroke="white" stroke-opacity="0.5" />
@@ -65,42 +66,60 @@ export default function DayZero() {
         <div className="">
           <PlusHeading text="SECURITY FROM DAY ZERO" />
         </div>
-        <h1 className="2xl md:text-4xl ">Security is embedded as a <span className="text-gray-200">foundational operating principle</span>, not an added layer.</h1>
-        <p className="font-light px-16">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+        <h3 className="font-light">Security operates as a core design principle embedded into governance, delivery, and oversight from the start.
+        </h3>
+        <p className="font-light text-b2 px-16">Protection is structured into decision paths, system design, and operational workflows before execution begins so risk does not accumulate silently as scale increases.</p>
         <div className="flex gap-5 border-b border-color pb-10">
           <div className="flex flex-col gap-3 flex-center">
-            <div className="bg-gray-200 w-15 h-15 rounded-sm"></div>
+            <div className="bg-white p-3 w-15 h-15 rounded-sm">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.69 18.37L23.83 17.37L22.83 15.64L21.38 16.13C21.0583 15.8603 20.6931 15.6472 20.3 15.5L20 14H18L17.7 15.49C17.3069 15.6372 16.9417 15.8503 16.62 16.12L15.17 15.63L14.17 17.36L15.31 18.36C15.2291 18.7761 15.2291 19.2039 15.31 19.62L14.17 20.62L15.17 22.35L16.62 21.86C16.9417 22.1297 17.3069 22.3428 17.7 22.49L18 24H20L20.3 22.51C20.6931 22.3628 21.0583 22.1497 21.38 21.88L22.83 22.37L23.83 20.64L22.69 19.64C22.7698 19.2204 22.7698 18.7896 22.69 18.37ZM19 21C18.6044 21 18.2178 20.8827 17.8889 20.6629C17.56 20.4432 17.3036 20.1308 17.1522 19.7654C17.0009 19.3999 16.9613 18.9978 17.0384 18.6098C17.1156 18.2219 17.3061 17.8655 17.5858 17.5858C17.8655 17.3061 18.2219 17.1156 18.6098 17.0384C18.9978 16.9613 19.3999 17.0009 19.7654 17.1522C20.1308 17.3036 20.4432 17.56 20.6629 17.8889C20.8827 18.2178 21 18.6044 21 19C20.9984 19.5299 20.7872 20.0377 20.4125 20.4125C20.0377 20.7872 19.5299 20.9984 19 21ZM23 11H1V1H23V11ZM3 9H21V3H3V9ZM13 5H4V7H13V5ZM16 5C15.8022 5 15.6089 5.05865 15.4444 5.16853C15.28 5.27841 15.1518 5.43459 15.0761 5.61732C15.0004 5.80004 14.9806 6.00111 15.0192 6.19509C15.0578 6.38907 15.153 6.56725 15.2929 6.70711C15.4327 6.84696 15.6109 6.9422 15.8049 6.98079C15.9989 7.01937 16.2 6.99957 16.3827 6.92388C16.5654 6.84819 16.7216 6.72002 16.8315 6.55557C16.9414 6.39112 17 6.19778 17 6C17 5.73478 16.8946 5.48043 16.7071 5.29289C16.5196 5.10536 16.2652 5 16 5ZM19 5C18.8022 5 18.6089 5.05865 18.4444 5.16853C18.28 5.27841 18.1518 5.43459 18.0761 5.61732C18.0004 5.80004 17.9806 6.00111 18.0192 6.19509C18.0578 6.38907 18.153 6.56725 18.2929 6.70711C18.4327 6.84696 18.6109 6.9422 18.8049 6.98079C18.9989 7.01937 19.2 6.99957 19.3827 6.92388C19.5654 6.84819 19.7216 6.72002 19.8315 6.55557C19.9414 6.39112 20 6.19778 20 6C20 5.73478 19.8946 5.48043 19.7071 5.29289C19.5196 5.10536 19.2652 5 19 5Z" fill="black" />
+                <path d="M12.294 21H3V15H13.26C13.8266 14.189 14.5587 13.5074 15.408 13H1V23H13.26C12.8336 22.389 12.5075 21.7138 12.294 21Z" fill="black" />
+                <path d="M4 19H12C12.0007 18.3226 12.0997 17.6489 12.294 17H4V19Z" fill="black" />
+              </svg>
+            </div>
             <span className="font-extralight">Architecture</span>
           </div>
           <div className="flex flex-col gap-3 flex-center">
-            <div className="bg-gray-200 w-15 h-15 rounded-sm"></div>
+            <div className="bg-white p-3 w-15 h-15 rounded-sm">
+              <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 21.5625H25.3125V4.6875H4.6875V21.5625H15ZM15 21.5625V25.3125M15 25.3125H9.375M15 25.3125H20.625M8.4375 15.9375L13.125 12.1875L15.9375 15L21.5625 10.3125" stroke="black" stroke-width="2" />
+              </svg>
+
+            </div>
             <span className="font-extralight">Operations</span>
           </div>
           <div className="flex flex-col gap-3 flex-center">
-            <div className="bg-gray-200 w-15 h-15 rounded-sm"></div>
+            <div className="bg-white p-2 w-15 h-15 rounded-sm">
+              <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.1666 9.20988L4.7706 25.5015H23.5627L21.2939 21.5668C21.9222 21.8936 22.6011 22.1122 23.302 22.2135L25.4029 25.8557C25.4651 25.9634 25.4979 26.0857 25.4978 26.2101C25.4978 26.3345 25.465 26.4566 25.4028 26.5643C25.3405 26.672 25.251 26.7615 25.1432 26.8236C25.0354 26.8857 24.9132 26.9183 24.7888 26.9182H3.54376C3.41943 26.9182 3.29728 26.8855 3.1896 26.8233C3.08193 26.7611 2.99251 26.6717 2.93034 26.564C2.86818 26.4564 2.83545 26.3342 2.83545 26.2099C2.83545 26.0855 2.86818 25.9634 2.93035 25.8557L13.5532 7.43763C13.6154 7.32996 13.7048 7.24055 13.8125 7.17839C13.9202 7.11622 14.0423 7.0835 14.1666 7.0835C14.291 7.0835 14.4131 7.11622 14.5208 7.17839C14.6285 7.24055 14.7179 7.32996 14.7801 7.43763L18.3359 13.6023C18.0727 14.2609 17.9226 14.9592 17.8918 15.6678L14.1666 9.20988Z" fill="black" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.2999 20.4757C22.9052 20.7317 23.5559 20.863 24.2131 20.8618C25.3472 20.8639 26.4468 20.4715 27.3234 19.7518L30.1015 22.5292L31.1696 21.461L28.3335 18.6248C28.8819 17.7792 29.1568 16.7852 29.1209 15.7779C29.085 14.7706 28.74 13.7988 28.1328 12.9943C27.5255 12.1898 26.6855 11.5917 25.7266 11.281C24.7677 10.9704 23.7365 10.9623 22.7729 11.2579C21.8093 11.5535 20.96 12.1385 20.3402 12.9334C19.7205 13.7283 19.3604 14.6946 19.3087 15.7012C19.257 16.7078 19.5164 17.7059 20.0515 18.5601C20.5866 19.4142 21.3716 20.083 22.2999 20.4757ZM20.8131 15.9509C20.8131 16.8526 21.1713 17.7174 21.8089 18.355C22.4466 18.9927 23.3114 19.3509 24.2131 19.3509C25.1148 19.3509 25.9796 18.9927 26.6173 18.355C27.2549 17.7174 27.6131 16.8526 27.6131 15.9509C27.6131 15.0491 27.2549 14.1843 26.6173 13.5467C25.9796 12.9091 25.1148 12.5509 24.2131 12.5509C23.3114 12.5509 22.4466 12.9091 21.8089 13.5467C21.1713 14.1843 20.8131 15.0491 20.8131 15.9509Z" fill="black" />
+                <path d="M13.2812 21.2856H15.0521V23.0564H13.2812V21.2856ZM14.1667 14.1987C13.6779 14.1987 13.2812 14.5954 13.2812 15.0841V18.98C13.2812 19.2148 13.3745 19.44 13.5406 19.6061C13.7066 19.7721 13.9318 19.8654 14.1667 19.8654C14.4015 19.8654 14.6267 19.7721 14.7928 19.6061C14.9588 19.44 15.0521 19.2148 15.0521 18.98V15.0841C15.0521 14.5954 14.6554 14.1987 14.1667 14.1987Z" fill="black" />
+              </svg>
+            </div>
             <span className="font-extralight">Risk Visibility</span>
           </div>
         </div>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-400">
-          {items.map((item, index) => (
-            <div
-              key={item.title}
-              className={`px-10 py-15 min-h-105 flex flex-col border-gray-400 ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""}`}
-            >
-              <div className="pb-10">
-                {item.icon}
-              </div>
-
-              <h3 className="text-2xl mb-6 mt-6 ">
-                {item.title}
-              </h3>
-              <p className="text-md leading-tight md:pr-10 font-extralight">
-                {item.description}
-              </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-400">
+        {items.map((item, index) => (
+          <div
+            key={item.title}
+            className={`px-10 py-15 min-h-105 flex flex-col border-gray-400 ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""}`}
+          >
+            <div className="pb-10">
+              {item.icon}
             </div>
-          ))}
-        </div>
+
+            <h5 className="mb-6 mt-6">
+              {item.title}
+            </h5>
+            <p className="text-b2 text-gray-300 leading-tight md:pr-10 font-extralight">
+              {item.description}
+            </p>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }

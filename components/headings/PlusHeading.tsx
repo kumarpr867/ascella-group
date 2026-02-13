@@ -24,7 +24,7 @@ const plusSizeClasses = {
 
 const PlusHeading: React.FC<PlusHeadingProps> = ({
   text,
-  size = 'b2',
+  size = 'b1',
   plusSize = 'md',
 }) => {
   const resolvedPlusSize =

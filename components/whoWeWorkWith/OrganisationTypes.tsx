@@ -19,11 +19,11 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   {
     title: "Regulated Industries",
     subHeading:
-      "Organisations operating under regulatory, compliance, and audit constraints.",
+      "Organisations operating under statutory oversight, audit scrutiny, and sector specific compliance obligations that require formal control environments.",
     engagementFocus:
-      "Embedding governance, security, and accountability structures that meet regulatory and operational requirements",
+      "Designing embedded governance, risk visibility, and control frameworks that withstand regulatory review and operational stress.",
     typicalNeed:
-      "Controlled execution environments where risk and compliance cannot be managed reactively.",
+      "Execution environments where compliance, risk management, and reporting standards are structurally integrated rather than reactively enforced.",
     icon: <svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="11.8936" y="6.53198" width="44.5745" height="44.5745" stroke="white" />
       <rect x="0.5" y="17.9255" width="44.5745" height="44.5745" stroke="white" />
@@ -34,11 +34,11 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   {
     title: "Venture-Backed Scale-Ups",
     subHeading:
-      "High-growth companies transitioning from founder-led execution to structured operations. ",
+      "High growth companies shifting from founder led coordination toward structured operating systems and accountable leadership layers.",
     engagementFocus:
-      "Introducing governance, accountability, and scalable operating structures without slowing momentum.",
+      "Installing scalable governance, decision discipline, and measurable delivery frameworks without constraining growth velocity.",
     typicalNeed:
-      "Moving from speed-driven execution to repeatable, controlled delivery.",
+      "Transitioning from rapid improvisation to repeatable, controlled execution capable of supporting expansion and investor expectations.",
     icon: <svg width="73" height="46" viewBox="0 0 73 46" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="27.5" y="0.5" width="44.5745" height="44.5745" rx="22.2872" stroke="white" />
       <rect x="0.5" y="0.925537" width="44.5745" height="44.5745" rx="22.2872" stroke="white" />
@@ -48,11 +48,11 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   {
     title: "Enterprises",
     subHeading:
-      "Large organisations managing complex teams, systems, and multi-layered operations.",
+      "Large organisations managing distributed teams, layered decision hierarchies, and complex cross functional dependencies.",
     engagementFocus:
-      "Maintaining alignment, oversight, and execution control across distributed structures.",
+      "Maintaining alignment, oversight continuity, and execution stability across business units, regions, and vendor ecosystems.",
     typicalNeed:
-      "Preventing execution drift as scale, process, and stakeholder layers increase.",
+      "Preserving clarity of ownership and operational coherence as scale, process depth, and stakeholder complexity increase.",
     icon: <svg width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="14.5" y="14.5" width="29" height="29" rx="14.5" stroke="white" />
       <rect x="17.5" y="22.5" width="19" height="19" rx="9.5" stroke="white" />
@@ -63,11 +63,11 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   {
     title: "Startups Programme",
     subHeading:
-      "Early-stage companies preparing for scale and operational maturity.",
+      "Early stage organisations preparing for structured growth, operational maturity, and investor grade governance foundations.",
     engagementFocus:
-      "Providing structured operating frameworks through a defined programme pathway.",
+      "Embedding disciplined operating models and accountability pathways through a defined programme architecture.",
     typicalNeed:
-      "Building execution discipline early to avoid structural debt later.",
+      "Establishing execution structure early to prevent fragmented ownership and structural weaknesses during scale.",
   },
 ];
 
@@ -81,13 +81,15 @@ export default function OrganisationTypes() {
         <div className="mb-20 flex justify-between items-center">
           <Reveal variants={slideInFromLeft(0.2)}>
             <p className="text-sm max-w-xs leading-loose">
-              Ascella works with organisations where execution quality depends on structure, not improvisation.
+              These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
+
             </p>
           </Reveal>
           <Reveal variants={slideInFromRight(0.2)}>
-            <PlusHeading text="Organisation Types">
+            <PlusHeading text="ORGANISATION TYPES" />
             <p className="text-3xl max-w-2xl leading-snug mt-10">
-              Ascella partners with organisations where operating structure, governance, and accountability determine long-term execution success.
+              Ascella partners with organisations where execution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
+
             </p>
           </Reveal>
         </div>
@@ -108,7 +110,7 @@ export default function OrganisationTypes() {
                   <h2 className={`text-2xl transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-40"}`}>
                     {type.title}
                   </h2>
-                  <h3 className="leading-tight text-gray-200">{type.subHeading}</h3>
+                  <h5 className="leading-snug text-gray-200">{type.subHeading}</h5>
                   <div>
                     <h4 className="text-sm">Engagement Focus</h4>
                     <p className="font-light text-gray-200 text-sm leading-tight pr-14">{type.engagementFocus}</p>

@@ -1,3 +1,4 @@
+import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import PrecisionGrid from "../textures/PrecisionGrid";
 import Image from "next/image";
 
@@ -13,30 +14,43 @@ export default function NotCapabilityProblem() {
                             <circle cx="21" cy="21" r="20.75" transform="matrix(-1 0 0 1 42 0)" fill="#0D0D0D" stroke="white" stroke-width="0.5" stroke-dasharray="3 3" />
                         </svg>
                         <span className="text-2xl leading-relaxed sm:leading-normal ">
-                            Execution is not a capability problem. <span className="text-gray-200"> It is a structure problem. Organisations succeed or fail based on how execution </span>is governed, aligned, and controlled at scale.</span>
+                            Execution is not a capability problem. <span className="text-gray-300"> It is a structure problem. Organisations succeed or fail based on how execution </span>is governed, aligned, and controlled at scale.</span>
                     </div>
                 </div>
-                <div className="relative grid grid-cols-2 h-24 sm:h-32 lg:h-40 w-full">
-
-                    <div className="relative h-32 w-full">
+                <div className="flex items-stretch">
+                    <div className="relative w-1/4 h-[300px]">
                         <Image
                             src="/howAscellaOperates/NotCapabilityProblem/left.svg"
                             alt=""
                             fill
-                            className="object-contain"
+                            className="object-cover"
                         />
                     </div>
 
-                    <div className="relative h-32 w-full">
+                    <div className="relative w-3/4 h-[300px] overflow-hidden">
                         <Image
                             src="/howAscellaOperates/NotCapabilityProblem/right.svg"
                             alt=""
                             fill
-                            className="object-contain"
+                            className="object-cover z-0"
                         />
+                        <div className="absolute inset-0 z-10 flex flex-col justify-center px-10">
+                            <div className="flex flex-col items-center">
+                                <p className="text-b1 max-w-md">
+                                    Execution fails when structure fails. Discover Ascella's execution arms
+                                    purpose-built to govern, align, and scale enterprise operations.
+                                </p>
+
+                                <div className="mt-6">
+                                    <PartialOutlineBtn text="View Execution Arms" bgColor="white" borderColor="black" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
+
             </div>
 
         </section>

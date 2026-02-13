@@ -14,26 +14,26 @@ export type EngagementSection = {
 export const SECTIONS : EngagementSection[] = [
   {
     label: "Operation",
-    title: "Operating structure design and oversight",
-    description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+    title: "Centralised operating authority",
+    description: "Operational authority is defined before delivery begins so ownership, governance, and performance measurement stay aligned across security, technology, workforce, and growth.",
     image: "/howAscellaOperates/engagementModels/operation.png",
   },
   {
     label: "Pod deployment",
-    title: "Embedded execution pod deployment",
-    description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+    title: "Outcome driven pods",
+    description: "Specialised pods are assembled against defined outcomes, operating within Ascella’s central governance model to prevent fragmentation and protect accountability at scale.",
     image: "/howAscellaOperates/engagementModels/pod.png",
   },
   {
     label: "Integration",
-    title: "Governance and accountability integration",
-    description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+    title: "Structured cross team alignment",
+    description: "Internal teams, vendors, and execution arms operate through shared decision paths and oversight mechanisms so coordination remains structured and responsibility never diffuses.",
     image: "/howAscellaOperates/engagementModels/integration.png",
   },
   {
     label: "Support",
-    title: "Scale-readiness and transformation support",
-    description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+    title: "Ongoing governance oversight",
+    description: "Ongoing oversight, performance review, and escalation control ensure delivery remains stable, auditable, and aligned to organisational objectives as complexity increases.",
     image: "/howAscellaOperates/engagementModels/support.png",
   },
 ];

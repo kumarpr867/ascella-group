@@ -6,8 +6,6 @@ export default function WhoWeWorkWith() {
     <section className="border-y border-color">
       <div className="mx-4 lg:mx-25">
         <div className="grid grid-cols-1 lg:grid-cols-2 border-x border-color">
-
-          {/* LEFT PANEL */}
           <div
             className="
               grid
@@ -24,8 +22,7 @@ export default function WhoWeWorkWith() {
                 Who We <span className="text-gray-200">Work With</span>
               </h2>
               <p className="mt-6 text-b2 font-light max-w-xs">
-                We work with organisations that require structured execution,
-                governance, & accountability at scale.
+                Ascella partners with organisations where execution quality, governance discipline, and accountable ownership are business-critical rather than optional.
               </p>
             </div>
 
@@ -34,29 +31,13 @@ export default function WhoWeWorkWith() {
 
             {/* Engagement note */}
             <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-6">
-              <svg
-                width="43"
-                height="43"
-                viewBox="0 0 43 43"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="0.25"
-                  y="0.25"
-                  width="42.5"
-                  height="42.5"
-                  rx="21.25"
-                  stroke="white"
-                  strokeOpacity="0.5"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M15.5 28L28 14M28 14h24M28 14V29"
-                  stroke="white"
-                  strokeWidth="0.5"
-                />
-              </svg>
+              <div className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
+                <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" stroke-width="1" />
+                </svg>
+
+              </div>
+
 
               <p className="text-b2">
                 Engagements are selective by design.
@@ -66,8 +47,8 @@ export default function WhoWeWorkWith() {
             {/* Paragraph */}
             <div className="border-b lg:border-l border-color px-6 py-8 lg:p-10 flex items-center">
               <p className="text-b2 text-gray-100 max-w-md">
-                We partner with organisations where operational control,
-                risk management, and execution quality are business-critical.
+                Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.
+
               </p>
             </div>
 

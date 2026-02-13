@@ -18,8 +18,8 @@ const points = [
             <rect x="7" width="7" height="7" fill="#3D3D3D" />
         </svg>,
         count: "01",
-        heading: "Decision and approval structures",
-        description: "Clear decision rights and approval pathways are defined to prevent delays and ambiguity."
+        heading: "Decision and approval design",
+        description: "Clear decision ownership, approval layers, and authority limits are established early so execution moves without confusion, delays, or overlapping mandates."
     },
     {
         svg: <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,8 +34,8 @@ const points = [
         </svg>
         ,
         count: "01",
-        heading: "Escalation and risk pathways",
-        description: "Structured escalation routes ensure risks are surfaced early and addressed through defined authority channels."
+        heading: "Escalation and risk control",
+        description: "Defined escalation routes and review checkpoints ensure risks surface quickly and reach accountable decision holders before impact spreads."
     },
     {
         svg: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,8 +50,8 @@ const points = [
         </svg>
         ,
         count: "01",
-        heading: "Performance measurement frameworks",
-        description: "KPIs and SLAs are agreed upfront to maintain visibility into progress, quality, and delivery health."
+        heading: "Performance and outcome tracking",
+        description: "KPIs, SLAs, and outcome thresholds are agreed at the outset to maintain visibility into progress, quality, and operational stability."
     },
     {
         svg: <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,8 +65,8 @@ const points = [
             <rect x="14" width="7" height="7" fill="#3D3D3D" />
         </svg>,
         count: "01",
-        heading: "Audit and compliance alignment",
-        description: "Governance frameworks align with regulatory, security, and audit requirements from the outset."
+        heading: "Compliance and oversight alignment",
+        description: "Governance structures are aligned with regulatory, audit, and security requirements from the start so delivery remains controlled under external scrutiny."
     }
 ]
 
@@ -76,14 +76,13 @@ export default function Governace() {
             <div className="flex flex-col gap-12 mb-20">
                 <div className="flex flex-col gap-5 max-w-3xl leading-relaxed">
                     <PlusHeading text="GOVERNANCE & OVERSIGHT" size="b1" />
-                    <h3>Governance is the operating system that keeps execution controlled, aligned, and auditable at scale. <span className="text-gray-300">It defines how decisions are made, how risks are surfaced, and how accountability is maintained. </span>
+                    <h3>Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
                     </h3>
                 </div>
                 <div className="flex justify-between gap-48">
-                    <p className="font-extralight text-sm">Ascella Group designs governance before execution begins. Decision rights, approval structures, escalation paths, and oversight mechanisms are established
-                        upfront, ensuring every activity operates within a defined and controlled environment.
+                    <p className="font-extralight text-sm">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
                     </p>
-                    <p>As organisations grow, execution spans multiple teams, external partners, and layered decision-making structures. Without governance, coordination becomes informal, accountability diffuses, and operational risk increases quietly over time.</p>
+                    <p>As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
                 </div>
             </div>
 

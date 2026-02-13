@@ -7,20 +7,20 @@ export default function ApplicationForm() {
         <section className="relative border-y border-color my-5">
 
             <div className="relative">
-                <div className="grid grid-cols-[96px_420px_1fr_96px] relative min-h-screen">
+                <div className="grid grid-cols-[10%_25%_55%_10%] relative min-h-screen">
 
                     {/* Vertical grid lines */}
-                    <div className="absolute inset-0 grid grid-cols-[96px_420px_1fr_96px] pointer-events-none z-0">
-                        <div className="border-r border-color" />
-                        <div className="border-r border-color" />
-                        <div className="border-r border-color" />
-                        <div />
+                    <div className="absolute inset-0 flex pointer-events-none z-0">
+                        <div className="h-full w-[10%] border-r border-color" />
+                        <div className="h-full w-[25%] border-r border-color" />
+                        <div className="h-full w-[55%] border-r border-color" />
                     </div>
 
+                    <div />
 
                     {/* LEFT COLUMN */}
 
-                   <aside className="relative col-start-2">
+                    <aside className="relative">
                         <div className="sticky top-0 w-full max-w-md">
                             <div className="border-b border-color p-5">
                                 <button className="mb-6 flex items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
@@ -79,7 +79,7 @@ export default function ApplicationForm() {
                     </aside>
 
                     {/* RIGHT COLUMN */}
-                    <main className="relative col-start-3 px-15 py-20">
+                    <main className="relative px-15 py-20">
                         <div>
                             <div className="max-w-lg">
                                 <h3 className="mb-10">Security Governance Lead</h3>
@@ -159,7 +159,7 @@ export default function ApplicationForm() {
                                 the Group’s accountability framework.
                             </Section>
                         </div>
-                    </main>
+                    </main>  
                 </div>
             </div>
 
@@ -196,7 +196,7 @@ function Textarea({ label, placeholder }: TextareaProps) {
             <textarea
                 rows={5}
                 placeholder={placeholder}
-                className="w-full  bg-gray-500 border border-color rounded-lg px-4 py-2 text-b2 text-gray-100 placeholder:text-gray-400 outline-none focus:border-gray-200 transition resize-none"
+                className="w-full  bg-gray-500 border border-color rounded-lg px-4 py-4 text-b2 text-gray-100 placeholder:text-gray-    300 outline-none focus:border-gray-200 transition resize-none"
             />
         </div>
     );

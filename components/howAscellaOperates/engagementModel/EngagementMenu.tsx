@@ -15,7 +15,7 @@ export default function EngagementMenu({
   onChange,
 }: Props) {
   return (
-    <nav className="menu mb-5 text-2xl flex flex-col gap-4 relative">
+    <nav className="menu mb-5 text-[36px] flex flex-col relative">
       {items.map(item => {
         const isActive = active === item;
 
@@ -32,18 +32,6 @@ export default function EngagementMenu({
             >
               {item}
             </span>
-
-            {isActive && (
-              <motion.span
-                layoutId="menu-underline"
-                className="absolute left-0 -bottom-1 h-[2px] w-full bg-white"
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 40,
-                }}
-              />
-            )}
           </button>
         );
       })}

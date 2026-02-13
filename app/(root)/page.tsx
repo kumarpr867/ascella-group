@@ -14,7 +14,7 @@ export default function Home() {
     <div>
       <Hero />
       <ExecutionProblemSection />
-      {/* <Programme /> */}
+      <Programme />
       <Ownership />
       <Arms /> 
       <HowWeOperate />

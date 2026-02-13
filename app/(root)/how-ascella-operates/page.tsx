@@ -19,9 +19,7 @@ export default function HowAscellaOperate() {
       <Governace />
       <ExecutionPods />
       <DayZero />
-      <EMII />
-      {/* <EngagementModel /> */}
-      {/* <Em3 /> */}
+      <EngagementModel />
       <Faq />
       <NotCapabilityProblem />
     </>

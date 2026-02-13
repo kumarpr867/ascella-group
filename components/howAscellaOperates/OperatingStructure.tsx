@@ -3,13 +3,18 @@ import Image from 'next/image';
 export default function OperatingStructure() {
   return (
     <section className="border-y border-color">
-      <div className="mx-2 sm:mx-6 md:mx-10 lg:mx-24 px-4 py-8 md:px-10 md:py-14 flex flex-col md:flex-row border-x border-color gap-8 md:gap-0">
+      <div className="relative sm:mx-6 md:mx-10 lg:mx-24 px-4 py-10 md:px-10 md:py-24 flex flex-col md:flex-row border-x border-color gap-8 md:gap-0">
         <div className="flex flex-col gap-5 pb-6 md:pb-10 w-full md:w-1/2">
-          <h2 className="text-gray-300">
-            <span className="text-white">An operating <br className='hidden sm:block'/> structure</span> designed to <br className='hidden sm:block'/>maintain control at scale.
+          <h2 >
+            A unified model built for accountable
+            <span className="text-gray-300"> execution at scale.</span>
           </h2>
-          <p className="text-b2 sm:text-sm">Governance, accountability, and execution structured before delivery begins.</p>
+          <p className="text-b2 w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
         </div>
+        <div className="absolute inset-0 flex justify-end pointer-events-none">
+          <div className="grid-bg w-1/2 h-full"></div>
+        </div>
+
       </div>
       <div className="border-t border-color">
         <div className="mx-2 sm:mx-6 md:mx-10 lg:mx-24 px-2 py-6 md:px-8 md:py-10 border-x border-color">
@@ -45,7 +50,7 @@ export default function OperatingStructure() {
                   <Image src={'/howAscellaOperates/execution.png'} alt={''} width={100} height={100} />
                 </span>
               </div>
-              
+
               <div className="flex flex-center line h-0.5 w-15 bg-gray-400"></div>
               <span>
                 <Image src={'/howweoperate/outcome.png'} alt={''} width={100} height={100} />

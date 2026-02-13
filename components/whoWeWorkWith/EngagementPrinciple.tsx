@@ -5,19 +5,17 @@ export default function EngagementPrinciple() {
   return (
     <section>
       <div className="px-6 py-12 lg:px-25 lg:py-25">
-        <PlusHeading text="Engagement Principle" size="md" />
+        <PlusHeading text="Engagement Principle" />
 
-        <p className="mt-6 max-w-3xl text-xl lg:text-3xl leading-tight">
-          Ascella engages selectively where <span className="text-gray-200">execution requires governance,
-            accountability, and operating control at scale.</span>
-        </p>
+        <h3 className="mt-6 leading-tight pr-96">
+          Ascella partners where<span className="text-gray-300"> structured execution, measurable ownership, and disciplined governance are essential to sustained performance at scale.
+          </span>
+        </h3>
 
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-2 border-y border-color min-h-130">
-
-
-        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 p-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-2 border-y border-color min-h-96">
+        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
@@ -29,25 +27,23 @@ export default function EngagementPrinciple() {
             <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
             <rect x="14" width="7" height="7" fill="#3D3D3D" />
           </svg>
-          <h3 className=" tracking-wide mt-5">
-            Engagements begin with clearly defined operating alignment and accountability structures.
-          </h3>
-          <p className="text-sm text-gray-200 max-w-xs">
-            Before any execution starts, expectations, decision rights, and oversight mechanisms are established to prevent ambiguity later in delivery.
+          <h5 className=" tracking-wide mt-5">
+            Engagements start with defined authority and operating clarity
+          </h5>
+          <p className="text-b3 text-gray-200 max-w-xs">
+            Scope, decision rights, escalation paths, and accountability structures are established before delivery begins to eliminate ambiguity and prevent fragmented execution.
           </p>
         </div>
 
-        <div className="border-b lg:border-r border-color flex items-center justify-center p-8">
+        <div className="relative border-b lg:border-r border-color flex items-center justify-center">
           <Image
             src="/whoWeWorkWith/one.png"
             alt="Abstract cube"
-            width={260}
-            height={260}
-            className="opacity-55"
+            fill={true}
           />
         </div>
 
-        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 p-12">
+        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" width="7" height="7" fill="#3D3D3D" />
@@ -60,25 +56,25 @@ export default function EngagementPrinciple() {
             <rect x="14" y="7" width="7" height="7" fill="#3D3D3D" />
           </svg>
 
-          <h3 className=" tracking-wide mt-5">
-            Ascella engages where complexity, risk, or scale require structured operating discipline.
-          </h3>
-          <p className="text-sm text-gray-200 max-w-xs">
-            Partnerships are formed when multi-team coordination, regulatory exposure, or growth introduce execution challenges that cannot be managed informally.
+          <h5 className=" tracking-wide mt-5">
+            Engagements are formed where complexity demands control
+
+          </h5>
+          <p className="text-b3 text-gray-200 max-w-xs">
+            Multi-team coordination, regulatory pressure, distributed vendors, or rapid growth create environments where informal execution introduces measurable risk.
+
           </p>
         </div>
 
-        <div className="border-b lg:border-r border-color flex items-center justify-center p-8">
+        <div className="relative border-b lg:border-r border-color flex items-center justify-center p-8">
           <Image
             src="/whoWeWorkWith/two.png"
             alt="Abstract structure"
-            width={260}
-            height={260}
-            className="opacity-55"
+            fill={true}
           />
         </div>
 
-        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 p-12">
+        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
@@ -92,22 +88,20 @@ export default function EngagementPrinciple() {
           </svg>
 
 
-          <h3 className=" tracking-wide mt-5">
-            Engagements are designed to create long-term control, not short-term delivery support.
-          </h3>
-          <p className="text-sm text-gray-200 max-w-xs">
-            The objective is to embed enduring governance and execution frameworks that remain effective as organisations evolve.
+          <h5 className=" tracking-wide mt-5">
+            Engagements are built for durable control, not temporary support
+          </h5>
+          <p className="text-b3 text-gray-200 max-w-xs">
+            Operating frameworks are designed to remain effective as scale increases, ensuring stability, resilience, and performance continuity over time.
           </p>
         </div>
 
 
-        <div className="border-b border-color flex items-center justify-center p-8">
+        <div className="relative border-b border-color flex items-center justify-center p-8">
           <Image
             src="/whoWeWorkWith/three.png"
             alt="Abstract layers"
-            width={260}
-            height={260}
-            className="opacity-55"
+            fill={true}
           />
         </div>
 

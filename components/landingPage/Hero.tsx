@@ -1,8 +1,8 @@
 "use client";
-import Image from "next/image";
 import PlusHeading from "../headings/PlusHeading";
 import OutlineBtn from "../btns/OutlineBtn";
 import { motion, type Variants } from "motion/react";
+import Globe3D from "./Globe3D";
 
 const fadeUp: Variants = {
   hidden: {
@@ -35,26 +35,13 @@ export default function Hero() {
       {/* Globe */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
-        animate={{
-          y: 0,
-          opacity: 1
-        }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
-        className="absolute inset-0 flex items-center justify-center pointer-events-none translate-y-[15vh] z-1"
+        className="absolute inset-0 flex items-center justify-center z-1"
       >
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 120, ease: "linear" }}
-        >
-          <Image
-            src="/globe.png"
-            alt="Globe"
-            width={800}
-            height={1}
-            priority
-            className="object-contain"
-          />
-        </motion.div>
+        <div className="w-[70vw] max-w-[900px] aspect-square">
+          <Globe3D />
+        </div>
       </motion.div>
 
 
@@ -129,7 +116,7 @@ export default function Hero() {
         />
 
         <motion.div
-          className="text-md mx-auto max-w-7xl px-6 pt-4 flex justify-between"
+          className="text-b3  px-24 pt-4 flex justify-between"
           variants={stagger}
           initial="hidden"
           animate="visible"
