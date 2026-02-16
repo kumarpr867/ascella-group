@@ -76,7 +76,7 @@ const ProgramEmbedded = () => {
           {/* Box 1 */}
           <div className={boxClass}>
             <div className="absolute top-10 left-10">
-              <img src="/group 1665 (2).svg" alt="icon" className="w-6 h-6" />
+              <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
             </div>
             
             <div className="space-y-6">
@@ -108,7 +108,7 @@ const ProgramEmbedded = () => {
           {/* Box 3 */}
           <div className={boxClass}>
             <div className="absolute top-10 left-10">
-              <img src="/group 1670.svg" alt="icon" className="w-6 h-6" />
+              <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
             </div>
 
             <div className="space-y-6">

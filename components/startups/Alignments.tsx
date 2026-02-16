@@ -71,7 +71,7 @@ const Alignments = () => {
         
         {/* Top Icon */}
         <div className="mb-10 flex justify-center">
-          <img src="/image (1).png" alt="Icon" className="w-24 h-24 object-contain" />
+          <img src="/image-1.png" alt="Icon" className="w-24 h-24 object-contain" />
         </div>
 
         {/* Form Content */}
