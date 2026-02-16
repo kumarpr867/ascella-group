@@ -9,7 +9,7 @@ type Particle = {
 };
 
 function Particles() {
-  const pointsRef = useRef<THREE.Points>(null);
+  const pointsRef = useRef<THREE.Points>(null!);
 
   // Generate particles once
   const particles = useMemo<Particle[]>(() => {
@@ -29,15 +29,15 @@ function Particles() {
     return temp;
   }, []);
 
-  // Convert positions to Float32Array
+  // Create Float32Array safely
   const positions = useMemo(() => {
     const array = new Float32Array(particles.length * 3);
 
-    particles.forEach((particle, i) => {
-      array[i * 3] = particle.position[0];
-      array[i * 3 + 1] = particle.position[1];
-      array[i * 3 + 2] = particle.position[2];
-    });
+    for (let i = 0; i < particles.length; i++) {
+      array[i * 3] = particles[i].position[0];
+      array[i * 3 + 1] = particles[i].position[1];
+      array[i * 3 + 2] = particles[i].position[2];
+    }
 
     return array;
   }, [particles]);
@@ -45,7 +45,6 @@ function Particles() {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        {/* ✅ FIXED VERSION (args required) */}
         <bufferAttribute
           attach="attributes-position"
           args={[positions, 3]}
@@ -55,7 +54,7 @@ function Particles() {
       <pointsMaterial
         size={0.05}
         color="#ffffff"
-        sizeAttenuation
+        sizeAttenuation={true}
         depthWrite={false}
       />
     </points>
