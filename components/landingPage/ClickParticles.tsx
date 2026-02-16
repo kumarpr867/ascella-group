@@ -53,12 +53,7 @@ export default function ClickParticles({ clickPoint }: { clickPoint: THREE.Vecto
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={positions}
-          count={particles.length}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial size={0.05} color="white" transparent />
     </points>
