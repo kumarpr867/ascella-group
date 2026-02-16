@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -6,22 +5,68 @@ import ContactSection from './ContactSection';
 
 const Contexts = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
-  return (
-    <div className="min-h-screen bg-black text-white pl-15 pr-15 font-sans">
-      {/* The Main Container with Grid Background */}
-      <div className="relative w-full border-t border-l border-b border-gray-800 min-h-[800px] flex overflow-hidden">
-        
-        {/* Custom Grid Overlay */}
-        <div 
-          className="absolute inset-x-0 inset-y-0 pointer-events-none opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(to right, #333 1px, transparent 1px), 
-                              linear-gradient(to bottom, #333 1px, transparent 1px)`,
-          }}
-        ></div>
 
-        {/* Left Section: Form */}
-        <div className="relative z-10 w-2/6 border-r border-gray-400 p-7 flex flex-col ">
+  // --- AAPKE DIYE HUYE SVGS (AS IT IS) ---
+
+  const Icon2 = () =>(
+    <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
+  <path d="M39.7154 12.4714L49.6871 29.7428L39.715 47.0156L19.7703 47.0153L9.7986 29.7438L19.7702 12.4702L39.7154 12.4714Z" stroke="#3D3D3D"/>
+  <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D"/>
+  <circle cx="29.5" cy="29.5" r="4" fill="white" stroke="#3D3D3D"/>
+</svg>
+  );
+  const Icon3 = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
+      <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D"/>
+      <circle cx="29.5" cy="29.5" r="19" stroke="#3D3D3D"/>
+      <path d="M29.5 10.5C30.0026 10.5 30.5951 10.8657 31.2246 11.8096C31.8416 12.7348 32.4174 14.1067 32.9082 15.8467C33.8879 19.32 34.5 24.1477 34.5 29.5C34.5 34.8523 33.8879 39.68 32.9082 43.1533C32.4174 44.8933 31.8416 46.2652 31.2246 47.1904C30.5951 48.1343 30.0026 48.5 29.5 48.5C28.9974 48.5 28.4049 48.1343 27.7754 47.1904C27.1584 46.2652 26.5826 44.8933 26.0918 43.1533C25.1121 39.68 24.5 34.8523 24.5 29.5C24.5 24.1477 25.1121 19.32 26.0918 15.8467C26.5826 14.1067 27.1584 12.7348 27.7754 11.8096C28.4049 10.8657 28.9974 10.5 29.5 10.5Z" stroke="#3D3D3D"/>
+      <path d="M10.5 29.5C10.5 28.9974 10.8657 28.4049 11.8096 27.7754C12.7348 27.1584 14.1067 26.5826 15.8467 26.0918C19.32 25.1121 24.1477 24.5 29.5 24.5C34.8523 24.5 39.68 25.1121 43.1533 26.0918C44.8933 26.5826 46.2652 27.1584 47.1904 27.7754C48.1343 28.4049 48.5 28.9974 48.5 29.5C48.5 30.0025 48.1343 30.5951 47.1904 31.2246C46.2652 31.8416 44.8933 32.4174 43.1533 32.9082C39.68 33.8879 34.8523 34.5 29.5 34.5C24.1477 34.5 19.32 33.8879 15.8467 32.9082C14.1067 32.4174 12.7348 31.8416 11.8096 31.2246C10.8657 30.5951 10.5 30.0026 10.5 29.5Z" stroke="#3D3D3D"/>
+    </svg>
+  );
+
+  const Icon4 = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
+      <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D"/>
+      <circle cx="24" cy="30" r="23.5" stroke="#3D3D3D"/>
+      <circle cx="17.5" cy="29.5" r="17" stroke="#3D3D3D"/>
+      <circle cx="10" cy="28" r="9.5" stroke="#3D3D3D"/>
+    </svg>
+  );
+
+  const Icon5 = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
+      <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D"/>
+      <path d="M29.5 9.5C30.1676 9.5 30.8925 9.92752 31.6299 10.9111C32.3606 11.8859 33.0398 13.3282 33.6191 15.1553C34.7761 18.804 35.5 23.8758 35.5 29.5C35.5 35.1242 34.7761 40.196 33.6191 43.8447C33.0398 45.6718 32.3606 47.1141 31.6299 48.0889C30.8925 49.0725 30.1676 49.5 29.5 49.5C28.8324 49.5 28.1075 49.0725 27.3701 48.0889C26.6394 47.1141 25.9602 45.6718 25.3809 43.8447C24.2239 40.196 23.5 35.1242 23.5 29.5C23.5 23.8758 24.2239 18.804 25.3809 15.1553C25.9602 13.3282 26.6394 11.8859 27.3701 10.9111C28.1075 9.92752 28.8324 9.5 29.5 9.5Z" stroke="#3D3D3D"/>
+      <path d="M9.5 29.5C9.5 28.8324 9.92752 28.1075 10.9111 27.3701C11.8859 26.6394 13.3282 25.9602 15.1553 25.3809C18.804 24.2239 23.8758 23.5 29.5 23.5C35.1242 23.5 40.196 24.2239 43.8447 25.3809C45.6718 25.9602 47.1141 26.6394 48.0889 27.3701C49.0725 28.1075 49.5 28.8324 49.5 29.5C49.5 30.1676 49.0725 30.8925 48.0889 31.6299C47.1141 32.3606 45.6718 33.0398 43.8447 33.6191C40.196 34.7761 35.1242 35.5 29.5 35.5C23.8758 35.5 18.804 34.7761 15.1553 33.6191C13.3282 33.0398 11.8859 32.3606 10.9111 31.6299C9.92752 30.8925 9.5 30.1676 9.5 29.5Z" stroke="#3D3D3D"/>
+      <path d="M15.3579 43.6422C14.8859 43.1701 14.6756 42.3552 14.8497 41.1383C15.0223 39.9323 15.5619 38.4322 16.4442 36.7306C18.2061 33.3325 21.2806 29.2343 25.2574 25.2574C29.2343 21.2805 33.3325 18.2061 36.7307 16.4441C38.4323 15.5618 39.9323 15.0223 41.1383 14.8497C42.3553 14.6755 43.1702 14.8858 43.6422 15.3579C44.1143 15.83 44.3246 16.6449 44.1504 17.8618C43.9779 19.0678 43.4383 20.5678 42.556 22.2695C40.794 25.6676 37.7196 29.7658 33.7427 33.7427C29.7658 37.7196 25.6676 40.794 22.2695 42.556C20.5679 43.4383 19.0678 43.9778 17.8618 44.1504C16.6449 44.3245 15.83 44.1142 15.3579 43.6422Z" stroke="#3D3D3D"/>
+      <path d="M43.642 43.6422C43.17 44.1142 42.3551 44.3245 41.1382 44.1504C39.9322 43.9778 38.4321 43.4383 36.7305 42.556C33.3324 40.794 29.2342 37.7196 25.2573 33.7427C21.2804 29.7658 18.206 25.6676 16.444 22.2695C15.5617 20.5678 15.0221 19.0678 14.8495 17.8618C14.6754 16.6449 14.8857 15.83 15.3578 15.3579C15.8298 14.8858 16.6447 14.6755 17.8617 14.8497C19.0677 15.0223 20.5677 15.5618 22.2693 16.4441C25.6675 18.2061 29.7657 21.2805 33.7426 25.2574C37.7194 29.2343 40.7939 33.3325 42.5558 36.7306C43.4381 38.4322 43.9777 39.9323 44.1503 41.1383C44.3244 42.3552 44.1141 43.1701 43.642 43.6422Z" stroke="#3D3D3D"/>
+    </svg>
+  );
+
+  const Icon6 = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
+      <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D"/>
+      <circle cx="30" cy="24" r="11.5" stroke="#3D3D3D"/>
+      <circle cx="37" cy="33" r="11.5" stroke="#3D3D3D"/>
+      <circle cx="22" cy="33" r="11.5" stroke="#3D3D3D"/>
+    </svg>
+  );
+
+  const boxBase = "w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start";
+  const textStyle = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
+  const overlayCardStyle = "w-full md:w-[289px] h-[109px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center";
+
+  return (
+    <div className="min-h-screen bg-black text-white  md:pl-25 md:pr-25 font-sans ">
+      
+      {/* Main Container */}
+      <div className="relative w-full border-t border-l border-b border-r border-[#3D3D3D] min-h-[800px] flex flex-col lg:flex-row overflow-hidden">
+        
+        {/* Background Grid */}
+        <div className="absolute inset-x-0 inset-y-0 pointer-events-none opacity-20 bg-grid-lines"></div>
+
+        {/* --- LEFT COLUMN (FORM) --- */}
+        <div className="relative z-10 w-full lg:w-2/6 border-b lg:border-b-0 lg:border-r border-[#3D3D3D] p-7 flex flex-col bg-black">
           <header className="max-w-md">
             <h5 className="text-2xl font-light mb-3">
               Provide operating context to <br /> initiate alignment.
@@ -30,49 +75,50 @@ const Contexts = () => {
               This form captures high-level operating information required to initiate an alignment conversation.
             </p>
           </header>
-           <div className="border-t border-gray-400 w-full"></div>
 
-          <div className=" pt-10">
-            <form className="grid grid-cols-2 gap-6 ">
+          <div className="border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7"></div>
+
+          <div className="pt-10">
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Full Name</label>
-                <input type="text" className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
+                <input type="text" className="bg-panel border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Organisation name</label>
-                <input type="text" className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
+                <input type="text" className="bg-panel border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs text-white">Role / position</label>
-                <input type="text" className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
+                <input type="text" className="bg-panel border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs text-white">Email address</label>
-                <input type="email" className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
+                <input type="email" className="bg-panel border border-gray-800 p-2 rounded focus:outline-none focus:border-gray-600" />
               </div>
               
-              <div className="col-span-2 flex flex-col gap-2">
+              <div className="md:col-span-2 flex flex-col gap-2">
                 <label className="text-xs text-white">Organisation type</label>
-                <select className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none appearance-none">
+                <select className="bg-panel border border-gray-800 p-2 rounded focus:outline-none appearance-none text-gray-400">
                   <option>Select...</option>
                 </select>
               </div>
 
-              <div className="col-span-2 flex flex-col gap-2">
+              <div className="md:col-span-2 flex flex-col gap-2">
                 <label className="text-xs text-white">Primary operating need</label>
-                <select className="bg-[#111] border border-gray-800 p-2 rounded focus:outline-none appearance-none">
+                <select className="bg-panel border border-gray-800 p-2 rounded focus:outline-none appearance-none text-gray-400">
                   <option>Select...</option>
                 </select>
               </div>
 
-              <div className="col-span-2 flex flex-col gap-2">
+              <div className="md:col-span-2 flex flex-col gap-2">
                 <textarea 
                   placeholder="Describe your current execution or operating challenge..."
-                  className="bg-[#111] border border-gray-800 p-3 rounded h-20 focus:outline-none focus:border-gray-600 resize-none"
+                  className="bg-panel border border-gray-800 p-3 rounded h-20 focus:outline-none focus:border-gray-600 resize-none"
                 ></textarea>
               </div>
 
-              <button className="col-span-1 mt-2 relative group w-max px-6 py-2">
+              <button className="col-span-1 mt-2 relative group w-max px-6 py-2 text-white">
                  <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white"></span>
                  <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white"></span>
                  <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white"></span>
@@ -81,173 +127,170 @@ const Contexts = () => {
               </button>
             </form>
             
-            {/* Horizontal Line under Submit */}
-            <div className="mt-11 border-t border-gray-400 w-full"></div>
-            
+            <div className="mt-10 border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7"></div>
           </div>
-          
         </div>
         
-
-        {/* Right Section: Content alignment */}
-        <div className="relative z-10 w-4/6 flex flex-col">
+        {/* --- RIGHT COLUMN --- */}
+        <div className="relative z-10 w-full lg:w-4/6 flex flex-col bg-black">
           
-          {/* Wrap top + grid in a right border so it stops below the boxes */}
-          <div className="border-r border-gray-400">
-          {/* Top Section (Engagement text) - Height matches the form above the line */}
-          <div className="h-[735px] relative p-15 flex flex-col justify-center">
+          {/* Hero Section */}
+          <div className="min-h-[500px] md:h-[735px] relative p-6 md:p-15 flex flex-col justify-center border-b border-[#3D3D3D]">
             <div className="absolute inset-0 z-0 opacity-15 overflow-hidden">
                <img src="/engagement1.png" alt="" className="w-full h-full object-cover" />
             </div>
-            <div className="relative z-10">
-              <h2 className="text-6xl font-normal leading-tight">
+            
+            <div className="relative z-10 mb-12">
+              <h2 className="text-4xl md:text-6xl font-normal leading-tight">
                 Engagement begins <br /> 
                 with <span className="text-gray-400">operating alignment.</span>
               </h2>
-              <p className="text-xl mt-4 font-light text-gray-400">Not delivery discussions.</p>
+              <p className="text-lg md:text-xl mt-4 font-light text-gray-400">Not delivery discussions.</p>
+            </div>
+
+            <div className="relative z-20 flex flex-col md:flex-row gap-4">
+              <div className={overlayCardStyle}>
+                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
+                <p className="text-[13px] leading-tight text-white font-light">
+                  The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.
+                </p>
+              </div>
+
+              <div className={overlayCardStyle}>
+                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
+                <p className="text-[13px] leading-tight text-white font-light">
+                  The objective is to determine whether a structured operating engagement is appropriate.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* This is the line that continues from the left side */}
-          <div className="border-t border-gray-400 w-full">
+          {/* Alignment Content Section */}
+          <div className="w-full">
+            <div className="px-6 md:px-12 pt-16 pb-15">
+               <h3 className="text-3xl md:text-4xl font-light">What alignment typically covers</h3>
+            </div>
+
+            <div className="flex flex-wrap border-t border-[#3D3D3D]">
+              <div className={`${boxBase} md:border-r border-[#3D3D3D] items-center justify-center pt-12 overflow-hidden`}>
+                <img src="/alignment.png" alt="Alignment Symbol" className="w-[293px] h-[257px]" />
+              </div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
+                <Icon2 />
+                <p className={textStyle}>Operating structure and decision ownership</p>
+              </div>
+              <div className={`${boxBase} pt-26`}>
+                <Icon4 />
+                <p className={textStyle}>Accountability and escalation models</p>
+              </div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
+                <Icon5 />
+                <p className={textStyle}>Current execution challenges <br /> and constraints</p>
+              </div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
+                <Icon3 />
+                <p className={textStyle}>Risk, regulatory, and security considerations</p>
+              </div>
+              <div className={`${boxBase} pt-26`}>
+                <Icon6 />
+                <p className={textStyle}>Readiness for governed execution</p>
+              </div>
+            </div>
+          </div>
+
+          {/* --- ACCORDION SECTION (HOVER & DOT UPDATED) --- */}
+          <div className="border-t border-[#3D3D3D] w-full">
+            <div className="px-6 md:px-12 py-12">
+              <div className="flex items-center gap-4 text-xs text-gray-400 mb-8">
+                <span className="text-lg">✚</span>
+                <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
+              </div>
+              <h3 className="text-3xl md:text-5xl font-light max-w-2xl leading-[1.1]">
+                Each engagement progresses through a defined alignment pathway.
+              </h3>
+            </div>
+
+            <div className="border-t border-[#3D3D3D]">
+              <div 
+                onMouseEnter={() => setOpenAccordion('01')}
+                className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${openAccordion === '01' ? 'bg-[#0A0C10]' : 'hover:bg-[#050505]'}`}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="max-w-xl">
+                    <h4 className={`text-xl md:text-2xl font-light transition-colors ${openAccordion === '01' ? 'text-white' : 'text-gray-500'}`}>
+                        Review and context assessment 
+                        {openAccordion === '01' && <span className="text-white ml-2">•</span>}
+                    </h4>
+                    <div className={`overflow-hidden transition-all duration-500 ${openAccordion === '01' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                      <p className="text-sm text-white leading-relaxed">Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.</p>
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-light tracking-tighter transition-colors ${openAccordion === '01' ? 'text-white' : 'text-gray-500'}`}>[01]</div>
+                </div>
+              </div>
+
+              <div 
+                onMouseEnter={() => setOpenAccordion('02')}
+                className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${openAccordion === '02' ? 'bg-[#0A0C10]' : 'hover:bg-[#050505]'}`}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="max-w-xl">
+                    <h4 className={`text-xl md:text-2xl font-light transition-colors ${openAccordion === '02' ? 'text-white' : 'text-gray-500'}`}>
+                        Alignment conversation
+                        {openAccordion === '02' && <span className="text-white ml-2">•</span>}
+                    </h4>
+                    <div className={`overflow-hidden transition-all duration-500 ${openAccordion === '02' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                      <p className="text-sm text-white leading-relaxed">Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.</p>
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-light tracking-tighter transition-colors ${openAccordion === '02' ? 'text-white' : 'text-gray-500'}`}>[02]</div>
+                </div>
+              </div>
+
+              <div 
+                onMouseEnter={() => setOpenAccordion('03')}
+                className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${openAccordion === '03' ? 'bg-[#0A0C10]' : 'hover:bg-[#050505]'}`}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="max-w-xl">
+                    <h4 className={`text-xl md:text-2xl font-light transition-colors ${openAccordion === '03' ? 'text-white' : 'text-gray-500'}`}>
+                        Engagement pathway definition
+                        {openAccordion === '03' && <span className="text-white ml-2">•</span>}
+                    </h4>
+                    <div className={`overflow-hidden transition-all duration-500 ${openAccordion === '03' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+                      <p className="text-sm text-white leading-relaxed">Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.</p>
+                    </div>
+                  </div>
+                  <div className={`text-2xl font-light tracking-tighter transition-colors ${openAccordion === '03' ? 'text-white' : 'text-gray-500'}`}>[03]</div>
+                </div>
+              </div>
+
+              <div className="py-8 px-6 md:px-12">
+                <p className="text-sm text-gray-300 font-light">No engagement proceeds without operating alignment.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-[#3D3D3D]">
+            <ContactSection
+              title="Single point of contact for engagement coordination"
+              subtitle="All engagement coordination is managed centrally."
+              email={{ value: 'ag@ascella.in\nhello@ascellagroup.com' }}
+              contact={{ values: ['+91 94545 10860', '+91 94699 40969'] }}
+              location={{ 
+                address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh',
+                postalCode: '160022'
+              }}
+              workHours={{ hours: 'Mon - Sat: 9:00 - 18:00' }}
+            />
+          </div>
+
+          {/* --- NEW: HORIZONTAL GRID DECOR (SAME AS IMAGE) --- */}
+          <div className="w-full border-t border-[#3D3D3D] flex h-16">
+           
             
-            {/* Title - positioned with distance from the line */}
-            <div className="px-12 pt-16 pb-15">
-               <h3 className="text-4xl font-light">What alignment typically covers</h3>
-            </div>
-
-            {/* 2x3 Grid */}
-            <div className="grid grid-cols-3 border-t border-gray-400">
-              {/* Box 1: Image */}
-              <div className="aspect-square border-r border-b border-gray-800 flex items-center justify-center p-12">
-                 <img src="/alignment-symbol.png" alt="Alignment Symbol" className="w-full h-auto" />
-              </div>
-              
-              {/* Box 2: Operating Structure */}
-              <div className="aspect-square border-r border-b border-gray-800 p-10 flex flex-col justify-center">
-                 <div className="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center mb-6">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                 </div>
-                 <p className="text-sm text-gray-300 leading-relaxed">Operating structure and decision ownership</p>
-              </div>
-
-              {/* Box 3: Accountability */}
-              <div className="aspect-square border-b border-gray-800 p-10 flex flex-col justify-center">
-                 <div className="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center mb-6">
-                    <span className="text-gray-400">⊕</span>
-                 </div>
-                 <p className="text-sm text-gray-300 leading-relaxed">Accountability and escalation models</p>
-              </div>
-
-              {/* Box 4: Execution */}
-              <div className="aspect-square border-r border-gray-800 p-10 flex flex-col justify-center">
-                 <div className="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center mb-6 text-gray-400">◎</div>
-                 <p className="text-sm text-gray-300 leading-relaxed">Current execution challenges and constraints</p>
-              </div>
-
-              {/* Box 5: Risk */}
-              <div className="aspect-square border-r border-gray-800 p-10 flex flex-col justify-center">
-                 <div className="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center mb-6 text-gray-400">⚛</div>
-                 <p className="text-sm text-gray-300 leading-relaxed">Risk, regulatory, and security considerations</p>
-              </div>
-
-              {/* Box 6: Readiness */}
-              <div className="aspect-square p-10 flex flex-col justify-center">
-                 <div className="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center mb-6 text-gray-400">⦾</div>
-                 <p className="text-sm text-gray-300 leading-relaxed">Readiness for governed execution</p>
-              </div>
-            </div>
+            <div className="w-1/6"></div>
           </div>
-          {/* end bordered top+grid */}
-          </div>
-
-          {/* What happens next section */}
-          <div className=" border-t border-l  border-gray-400">
-            <div className="pl-12  py-10">
-              <div className="flex items-center gap-4 text-sm text-gray-400 mb-6">
-                <span className="text-xl">✚</span>
-                <span className="uppercase tracking-widest">WHAT HAPPENS NEXT</span>
-              </div>
-
-              <h3 className="text-4xl font-light max-w-2xl">Each engagement progresses through a defined alignment pathway.</h3>
-            </div>
-
-            <div className="border-t border-gray-400">
-              <div>
-                {/* Accordion Item 1 */}
-                <div 
-                  onClick={() => setOpenAccordion(openAccordion === '01' ? '' : '01')}
-                  className={`border-b border-gray-400 py-6 pl-12 pr-12 cursor-pointer transition-colors ${
-                    openAccordion === '01' ? 'bg-gray-900' : 'hover:bg-gray-950'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="max-w-xl">
-                      <h4 className="text-xl font-light">Review and context assessment <span className="text-white">•</span></h4>
-                      {openAccordion === '01' && (
-                        <p className="text-sm text-gray-400 mt-2">Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.</p>
-                      )}
-                    </div>
-                    <div className="text-2xl font-mono tracking-wider text-white">[01]</div>
-                  </div>
-                </div>
-
-                {/* Accordion Item 2 */}
-                <div 
-                  onClick={() => setOpenAccordion(openAccordion === '02' ? '' : '02')}
-                  className={`border-b border-gray-400 py-6 pl-12 pr-12 cursor-pointer transition-colors ${
-                    openAccordion === '02' ? 'bg-gray-900' : 'hover:bg-gray-950'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="max-w-xl">
-                      <h4 className="text-xl font-light text-gray-400">Alignment conversation</h4>
-                      {openAccordion === '02' && (
-                        <p className="text-sm text-gray-400 mt-2">Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.</p>
-                      )}
-                    </div>
-                    <div className="text-2xl font-mono tracking-wider text-gray-400">[02]</div>
-                  </div>
-                </div>
-
-                {/* Accordion Item 3 */}
-                <div 
-                  onClick={() => setOpenAccordion(openAccordion === '03' ? '' : '03')}
-                  className={`border-b border-gray-400 py-6 pl-12 pr-12 cursor-pointer transition-colors ${
-                    openAccordion === '03' ? 'bg-gray-900' : 'hover:bg-gray-950'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="max-w-xl">
-                      <h4 className="text-xl font-light text-gray-400">Engagement pathway definition</h4>
-                      {openAccordion === '03' && (
-                        <p className="text-sm text-gray-400 mt-2">Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.</p>
-                      )}
-                    </div>
-                    <div className="text-2xl font-mono tracking-wider text-gray-400">[03]</div>
-                  </div>
-                </div>
-
-                <div className=" border-gray-400  py-4 pl-12 pr-12">
-                  <p className="text-sm text-gray-100">No engagement proceeds without operating alignment.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Section */}
-          <ContactSection
-            title="Single point of contact for engagement coordination"
-            subtitle="All engagement coordination is managed centrally."
-            email={{ label: 'Email', value: 'ag@ascella.in\nhello@ascellagroup.com' }}
-            contact={{ label: 'Contact', values: ['+91 94545 10860', '+91 94699 40969'] }}
-            location={{ 
-              label: 'Location', 
-              address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh',
-              postalCode: '160022'
-            }}
-            workHours={{ label: 'Work Hours', hours: 'Mon - Sat: 9:00 - 18:00' }}
-          />
 
         </div>
       </div>

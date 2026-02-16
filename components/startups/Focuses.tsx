@@ -32,28 +32,25 @@ const focusData: FocusItem[] = [
 ];
 
 export default function Focuses() {
-  // Setting the first item as active by default to match the image
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
-    <section className="w-full bg-black text-white py-20 font-sans selection:bg-white selection:text-black">
-      {/* Top Grid Border */}
+    <section className="w-full bg-black text-white selection:bg-white selection:text-black font-['Montserrat',sans-serif]">
+      
+      {/* Top Edge-to-Edge Line */}
       <div className="w-full border-t border-white/10" />
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        {/* Header Row: 12-column grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 py-16 items-start">
-          {/* Left Column: Lorem/Body Text */}
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 pt-20">
+        {/* Header Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-20 items-start">
           <div className="md:col-span-3">
-            <p className="text-[11px] leading-relaxed text-neutral-500 uppercase tracking-widest max-w-[240px]">
+            <p className="text-[10px] leading-relaxed text-neutral-500 uppercase tracking-[0.2em] max-w-[220px] font-medium">
               Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. 
-              Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.
             </p>
           </div>
 
-          {/* Right Column: Main Headline */}
-          <div className="md:col-start-6 md:col-span-7 text-right md:text-left">
-            <h2 className="text-3xl md:text-5xl font-light tracking-tight leading-[1.1]">
+          <div className="md:col-start-6 md:col-span-7">
+            <h2 className="text-4xl md:text-[52px] font-light tracking-tight leading-[1.05]">
               <span className="block text-white">The programme focuses on</span>
               <span className="block text-neutral-500">
                 embedding operating discipline before scale introduces complexity.
@@ -61,63 +58,75 @@ export default function Focuses() {
             </h2>
           </div>
         </div>
+      </div>
 
-        {/* List Section */}
-        <div className="mt-12">
-          {focusData.map((item, index) => {
-            const isActive = activeIndex === index;
-            
-            return (
-              <div 
-                key={item.id}
-                onClick={() => setActiveIndex(index)}
-                className="group cursor-pointer border-t border-white/10 last:border-b last:border-white/10 transition-colors duration-500"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-12 py-8 md:py-12 items-center text-center">
+      {/* Accordion / List Section with Edge-to-Edge Borders */}
+      <div className="w-full">
+        {focusData.map((item, index) => {
+          const isActive = activeIndex === index;
+          
+          return (
+            <div 
+              key={item.id}
+              onMouseEnter={() => setActiveIndex(index)}
+              className="group cursor-pointer border-b border-white/10 transition-all duration-700 ease-in-out w-full"
+            >
+              {/* Content Container (Centered) */}
+              <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+                <div className="grid w-full grid-cols-1 md:grid-cols-12 py-10 md:py-14 items-center">
                   
-                  {/* Left Index */}
-                  <div className="hidden md:block md:col-span-1 text-left">
-                    <span className={`text-sm font-mono tracking-tighter ${isActive ? 'text-white' : 'text-neutral-600'}`}>
+                  {/* Left ID */}
+                  <div className="hidden md:block md:col-span-2">
+                    <span className={`text-2xl font-light transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-20'}`}>
                       [{item.id}]
                     </span>
                   </div>
 
-                  {/* Center Title Area */}
-                  <div className="md:col-span-10 flex flex-col items-center justify-center space-y-6">
-                    <div className="flex items-center justify-center space-x-4">
-                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
-                      <h3 className={`text-2xl md:text-4xl tracking-tight transition-all duration-500 ${
-                        isActive ? 'text-white font-normal' : 'text-neutral-700 font-light hover:text-neutral-400'
-                      }`}>
+                  {/* Main Content Area */}
+                  <div className="md:col-span-8 flex flex-col items-center">
+                    <div className="flex items-center space-x-6">
+                      {/* Left Dot */}
+                      <span className={`w-1 h-1 rounded-full bg-cyan-400 transition-all duration-500 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+                      
+                      <h3 className={`text-3xl md:text-[36px] transition-all duration-500 ease-out leading-none
+                        ${isActive 
+                          ? 'text-white font-normal' 
+                          : 'text-neutral-700 font-light hover:text-neutral-500'}`}
+                        style={{ 
+                          letterSpacing: '-2.52px', 
+                        }}
+                      >
                         {item.title}
                       </h3>
-                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
+
+                      {/* Right Dot */}
+                      <span className={`w-1 h-1 rounded-full bg-cyan-400 transition-all duration-500 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
                     </div>
 
-                    {/* Active Description */}
-                    {isActive && (
-                      <p className="max-w-md text-sm md:text-base text-neutral-500 leading-relaxed mx-auto px-4">
+                    {/* Animated Description */}
+                    <div className={`overflow-hidden transition-all duration-700 ease-in-out ${isActive ? 'max-h-40 opacity-100 mt-8' : 'max-h-0 opacity-0 mt-0'}`}>
+                      <p className="max-w-md text-center text-sm md:text-[13px] text-neutral-400 leading-relaxed font-light tracking-wide px-4 border-l border-r border-white/5">
                         {item.description}
                       </p>
-                    )}
+                    </div>
                   </div>
 
-                  {/* Right Index (Mirrored) */}
-                  <div className="hidden md:block md:col-span-1 text-right">
-                    <span className={`text-sm font-mono tracking-tighter ${isActive ? 'text-white' : 'text-neutral-600'}`}>
+                  {/* Right ID */}
+                  <div className="hidden md:block md:col-span-2 text-right">
+                    <span className={`text-2xl font-light transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-20'}`}>
                       [{item.id}]
                     </span>
                   </div>
 
-                  {/* Mobile Mobile Index (shown only on small screens) */}
-                  <div className="md:hidden mt-4">
-                     <span className="text-xs font-mono text-neutral-600">[{item.id}]</span>
+                  {/* Mobile ID */}
+                  <div className="md:hidden mt-4 text-center">
+                     <span className="text-xs text-neutral-600">[{item.id}]</span>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

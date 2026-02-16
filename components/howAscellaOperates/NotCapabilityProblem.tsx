@@ -4,6 +4,7 @@ import Image from "next/image";
 
 export default function NotCapabilityProblem() {
     return (
+<<<<<<< HEAD
         <section className="m-20 xl:m-28">
             <div className="mx-10 lg:mx-25 overflow-hidden">
                 <div className="relative bg-gray-500">
@@ -16,6 +17,14 @@ export default function NotCapabilityProblem() {
                         <span className="text-2xl leading-relaxed sm:leading-normal ">
                             Execution is not a capability problem. <span className="text-gray-300"> It is a structure problem. Organisations succeed or fail based on how execution </span>is governed, aligned, and controlled at scale.</span>
                     </div>
+=======
+        <section className="m-20 xl:m-30">
+
+            <div className="relative  overflow-hidden">
+                
+                <div className="bg-gray-400 m-10">
+                    <p className="">Execution is not a capability problem. It is a structure problem. Organisations succeed or fail based on how execution is governed, aligned, and controlled at scale.</p>
+>>>>>>> c178cdc (working on same looks like UI)
                 </div>
                 <div className="flex items-stretch">
                     <div className="relative w-1/4 h-[300px]">

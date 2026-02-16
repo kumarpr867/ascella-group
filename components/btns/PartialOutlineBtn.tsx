@@ -26,7 +26,7 @@ const PartialOutlineBtn = ({
     >
       {text}
 
-      {/* Top Left */}
+      
       <span
         className={`
           absolute top-0 left-0 w-2 h-2
@@ -37,7 +37,7 @@ const PartialOutlineBtn = ({
         `}
       />
 
-      {/* Top Right */}
+      
       <span
         className={`
           absolute top-0 right-0 w-2 h-2
@@ -48,7 +48,7 @@ const PartialOutlineBtn = ({
         `}
       />
 
-      {/* Bottom Left */}
+      
       <span
         className={`
           absolute bottom-0 left-0 w-2 h-2
@@ -59,7 +59,7 @@ const PartialOutlineBtn = ({
         `}
       />
 
-      {/* Bottom Right */}
+      
       <span
         className={`
           absolute bottom-0 right-0 w-2 h-2

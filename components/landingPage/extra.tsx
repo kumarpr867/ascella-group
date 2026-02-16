@@ -23,7 +23,7 @@ export default function ExecutionArms() {
 
   return (
     <section className="w-full flex flex-col items-center justify-center py-24">
-      {/* Heading */}
+      
       <div className="text-center max-w-3xl mb-16">
         <span className="uppercase text-xs tracking-[0.3em] text-gray-200">
           Execution Arms
@@ -36,7 +36,7 @@ export default function ExecutionArms() {
 
       <div className="relative w-full max-w-6xl border border-gray-400 rounded-2xl overflow-hidden bg-linear-to-br from-black to-gray-500">
         <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] min-h-105">
-          {/* Sidebar */}
+          
           <aside className="border-r border-gray-400 p-8 flex flex-col justify-between">
             <div>
               <h4 className="text-sm tracking-widest text-gray-200 mb-6">
@@ -65,7 +65,7 @@ export default function ExecutionArms() {
             </button>
           </aside>
 
-          {/* Content */}
+          
           <div className="relative p-10 flex flex-col justify-between">
             <div>
               <span className="text-xs text-gray-300">
@@ -81,7 +81,7 @@ export default function ExecutionArms() {
               </p>
             </div>
 
-            {/* Image */}
+            
             <div className="absolute right-6 bottom-6 w-[320px] md:w-95 opacity-90">
               <Image
                 src={slides[active].image}
@@ -92,7 +92,7 @@ export default function ExecutionArms() {
               />
             </div>
 
-            {/* Pagination dots */}
+            
             <div className="absolute bottom-6 left-10 flex gap-2">
               {slides.map((_, idx) => (
                 <button

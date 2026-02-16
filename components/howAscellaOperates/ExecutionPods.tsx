@@ -28,15 +28,15 @@ export default function ExecutionPods() {
             <div className="p-10 z-10 bg-white/70 text-gray-500 rounded-xl flex flex-col gap-5">
               <div className="flex gap-5">
                 <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="28" y="7" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-                  <rect y="14" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="7" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="14" y="7" width="7" height="7" fill="#3D3D3D" />
-                  <rect x="21" width="7" height="7" fill="#3D3D3D" />
+                  <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+                  <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+                  <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+                  <rect x="28" y="7" width="7" height="7" className="fill-gray-400" />
+                  <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+                  <rect y="14" width="7" height="7" className="fill-gray-400" />
+                  <rect x="7" width="7" height="7" className="fill-gray-400" />
+                  <rect x="14" y="7" width="7" height="7" className="fill-gray-400" />
+                  <rect x="21" width="7" height="7" className="fill-gray-400" />
                 </svg>
                 <h4>In the Ascella model:</h4>
               </div>

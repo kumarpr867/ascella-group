@@ -122,6 +122,7 @@ export default function JobsSection() {
 
   return (
     <section className="my-5">
+<<<<<<< HEAD
       <div className="relative">
         <div className="flex flex-wrap justify-center items-center gap-10 my-10">
           {companies.map((company) => (
@@ -141,6 +142,25 @@ export default function JobsSection() {
       </div>
 
 
+=======
+      
+      <div className="flex items-center justify-between gap-6 border-b  border-color px-25 pb-4 mb-14">
+        {companies.map((company) => (
+          <button
+            key={company}
+            onClick={() => setActiveCompany(company)}
+            className={`text-b1 transition ${activeCompany === company
+              ? "text-white scale-[1.1]"
+              : "text-white/50 hover:text-white"
+              }`}
+          >
+            {company}
+          </button>
+        ))}
+      </div>
+
+      
+>>>>>>> c178cdc (working on same looks like UI)
       <div className="space-y-20 mx-auto max-w-7xl">
         <AnimatePresence>
           {Object.entries(groupedJobs).map(([company, jobs]) => (

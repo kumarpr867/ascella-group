@@ -3,134 +3,100 @@ import React from "react";
 type ContactSectionProps = {
   title: string;
   subtitle: string;
-  email?: {
-    label: string;
-    value: string;
-  };
-  contact?: {
-    label: string;
-    values: string[];
-  };
-  location?: {
-    label: string;
-    address: string;
-    postalCode: string;
-  };
-  workHours?: {
-    label: string;
-    hours: string;
-  };
+  email?: { value: string };
+  contact?: { values: string[] };
+  location?: { address: string; postalCode: string };
+  workHours?: { hours: string };
 };
 
+const Isometric3DBox = ({ className, opacity = 1, style }: { className?: string; opacity?: number; style?: React.CSSProperties }) => (
+  <svg 
+    className={`${className} transform rotate-180`} 
+    width="128" height="75" viewBox="0 0 128 75" 
+    fill="none" xmlns="http://www.w3.org/2000/svg"
+    style={{ opacity, ...style }}
+  >
+    <path d="M1 37.5V45L63.5 82L63.5 74.5L1 37.5Z" fill="white" fillOpacity="0.08" stroke="white" strokeOpacity="0.05" />
+    <path d="M127 37.5V45L63.5 82L63.5 74.5L127 37.5Z" fill="white" fillOpacity="0.12" stroke="white" strokeOpacity="0.05" />
+    <path d="M0.993164 37.498L16.251 46.3672L63.5049 74.4209L110.751 47.3418L127.011 37.5137C116.274 31.4326 100.696 22.4984 87.6855 14.9199C70.7188 4.91406 63.9238 0.624023 63.9238 0.624023L0.993164 37.498Z" stroke="white" strokeOpacity="0.12" />
+  </svg>
+);
+
 const ContactSection: React.FC<ContactSectionProps> = ({
-  title,
-  subtitle,
-  email,
-  contact,
-  location,
-  workHours,
+  title, subtitle, email, contact, location, workHours,
 }) => {
   return (
-    <div className="border-t border-l border-r border-gray-400 text-white">
-      {/* HEADER */}
-      <div className="relative border-b border-gray-400">
+    <div className="w-full bg-black text-white font-sans border-x border-zinc-900 overflow-hidden">
+      
+      {/* ROW 1: Header Section */}
+      <div className="relative h-[500px] border-y border-zinc-900 flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-[0.04]" 
+          style={{ backgroundImage: `linear-gradient(30deg, #555 1px, transparent 1px), linear-gradient(-30deg, #555 1px, transparent 1px)`, backgroundSize: '64px 110px' }} 
+        />
+        <div className="relative z-10 pl-16 pointer-events-none">
+          <h2 className="text-[52px] font-light mb-4 tracking-tighter leading-tight max-w-2xl">{title}</h2>
+          <p className="text-zinc-600 text-lg font-light max-w-sm">{subtitle}</p>
+        </div>
 
-  {/* OVERLAP HORIZONTAL LINE */}
-  <span
-    className="
-      absolute
-      top-0
-      left-0
-      right-0
-      h-px
-      bg-gray-400
-      z-20
-    "
-  />
-
-  <div className="pl-12 pr-15 py-50">
-
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-6 h-6 border border-gray-500 rounded-full flex items-center justify-center">
-              <span className="w-2 h-2 border border-gray-500 rotate-45" />
-            </span>
+        {/* Isometric Overlays (Top Layer) - 12 Boxes Attached */}
+        <div className="absolute inset-0 z-20 pointer-events-none">
+          <div className="absolute top-[10%] left-[2%]">
+            <Isometric3DBox className="absolute top-0 left-0 scale-125" opacity={0.5} />
+            <Isometric3DBox className="absolute top-[37px] left-[63px]" opacity={0.4} />
+            <Isometric3DBox className="absolute top-[74px] left-[126px]" opacity={0.3} />
+            {[...Array(9)].map((_, i) => (
+              <Isometric3DBox 
+                key={i}
+                className="absolute" 
+                style={{ top: `${(i+3)*37}px`, left: `${(i+3)*63}px` }} 
+                opacity={0.03} 
+              />
+            ))}
           </div>
-
-          <h2 className="text-4xl font-light mb-3">{title}</h2>
-          <p className="text-sm text-gray-400">{subtitle}</p>
         </div>
       </div>
 
-      {/* GRID */}
-      <div className="border-t border-gray-400">
-        <div className="grid grid-cols-3">
-          {/* LEFT COLUMN */}
-          <div className="relative border-r border-gray-400 pl-12 pr-8 py-8">
-            {email && (
-              <div className="relative pb-8">
-                {/* FULL WIDTH DIVIDER */}
-                <span className="absolute left-[-48px] right-[-32px] bottom-0 h-px bg-gray-400" />
-
-                <p className="text-xs text-gray-400 mb-2">
-                  {email.label}
-                </p>
-                {email.value.split("\n").map((line, idx) => (
-                  <p key={idx} className="text-sm">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            )}
-
-            {contact && (
-              <div className="pt-8">
-                <p className="text-xs text-gray-400 mb-2">
-                  {contact.label}
-                </p>
-                {contact.values.map((value, idx) => (
-                  <p key={idx} className="text-sm">
-                    {value}
-                  </p>
-                ))}
-              </div>
-            )}
+      {/* ROW 2: Uniform 256x271 Grid Boxes */}
+      <div className="flex flex-wrap md:flex-nowrap justify-center bg-black border-b border-zinc-900">
+        
+        {/* LEFT COLUMN (256x271) */}
+        <div className="border-r border-zinc-900/50 flex flex-col overflow-hidden" style={{ width: '256px', height: '271px' }}>
+          <div className="flex-1 p-6 flex flex-col justify-center border-b border-zinc-900/30">
+            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
+            <div className="text-[13px] font-light truncate">{email?.value ? email.value.split("\n")[0] : ''}</div>
           </div>
-
-          {/* CENTER COLUMN (FIXED CONTACT IMAGE) */}
-          <div className="relative border-r border-gray-400 flex items-center justify-center">
-            <div className="animate-float">
-              <img
-                src="/contact.png"
-                alt="Single Point Contact"
-                className="w-[128px] h-[75px]"
-              />
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN */}
-          <div className="p-8 pr-15">
-            {location && (
-              <div className="mb-8">
-                <p className="text-xs text-gray-400 mb-2">
-                  {location.label}
-                </p>
-                <p className="text-sm">{location.address}</p>
-                <p className="text-sm text-gray-400">
-                  {location.postalCode}
-                </p>
-              </div>
-            )}
-
-            {workHours && (
-              <div>
-                <p className="text-xs text-gray-400 mb-2">
-                  {workHours.label}
-                </p>
-                <p className="text-sm">{workHours.hours}</p>
-              </div>
-            )}
+          <div className="flex-1 p-6 flex flex-col justify-center">
+            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
+            <div className="text-[13px] font-light space-y-0.5">{(contact?.values ?? []).slice(0, 2).map((v, i) => <p key={i}>{v}</p>)}</div>
           </div>
         </div>
+
+        {/* CENTER COLUMN (256x271) */}
+        <div className="flex items-center justify-center border-r border-zinc-900/50 bg-[#030303]" style={{ width: '256px', height: '271px' }}>
+          <div 
+            style={{
+              width: '100%',
+              height: '100%',
+              border: '1px solid #3D3D3D',
+              backgroundImage: `linear-gradient(0deg, rgba(0, 0, 0, 0.54) 0%, rgba(0, 0, 0, 0.54) 100%), linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.04) 100%), url('/Rectangle 9476.svg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          />
+        </div>
+
+        {/* RIGHT COLUMN (256x271) */}
+        <div className="flex flex-col overflow-hidden" style={{ width: '256px', height: '271px' }}>
+          <div className="flex-1 p-6 flex flex-col justify-center border-b border-zinc-900/30">
+            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Location</span>
+            <p className="text-[12px] font-light leading-snug">{location?.address ? `${location.address.substring(0, 50)}...` : ''}</p>
+          </div>
+          <div className="flex-1 p-6 flex flex-col justify-center">
+            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
+            <p className="text-[13px] font-light">{workHours?.hours}</p>
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ const CurrentOpenings = () => {
   return (
     <div className="relative min-h-screen bg-black text-white p-5 pb-32 overflow-hidden flex flex-col items-start">
       
-      {/* Background Image: Strictly on the LEFT side */}
+      
       <div className="absolute left-[-140px] top-[20%] w-3/4 h-full opacity-30 pointer-events-none z-0">
         <Image 
           src="/current.png" 
@@ -48,7 +48,7 @@ const CurrentOpenings = () => {
         />
       </div>
 
-      {/* 1. Header Section - mb-5 for 50% less gap */}
+      
       <div className="relative z-10 mb-12 w-full max-w-5xl">
         <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-6">
           Roles & Opportunities
@@ -63,7 +63,7 @@ const CurrentOpenings = () => {
         </div>
       </div>
 
-      {/* 2. Grid Container - RIGHT aligned with padding */}
+      
       <div className="relative z-10 w-full flex justify-end pr-[150px]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> 
           {gridData.map((item) => (

@@ -8,7 +8,6 @@ export default function Arms() {
   const [index, setIndex] = useState(0);
   const total = content.length;
 
-
   useEffect(() => {
     const id = setInterval(() => {
       setIndex((prev) => (prev + 1) % total);
@@ -17,12 +16,12 @@ export default function Arms() {
   }, [total]);
 
   return (
-    <section className="w-full flex flex-col items-center justify-center py-24 px-4 bg-black">
+    <section className="w-full flex flex-col items-center justify-center py-24 px-4 bg-black font-sans">
       
-      
+      {/* Upper Header */}
       <div className="text-center max-w-3xl mb-16">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M7 0V14M0 7H14" stroke="white" strokeWidth="1.5"/>
           </svg>
           <span className="uppercase text-[10px] tracking-[0.4em] text-white font-medium">
@@ -35,22 +34,22 @@ export default function Arms() {
         </h2>
       </div>
 
-     
-      <div className="w-full max-w-7xl bg-white rounded-[24px] overflow-hidden flex shadow-2xl min-h-[680px] p-2">
+      {/* Main Container */}
+      <div className="w-full max-w-7xl bg-white rounded-[32px] overflow-hidden flex shadow-2xl min-h-[720px] p-2">
         
-        
+        {/* Navigation Sidebar */}
         <aside className="w-[320px] p-12 flex flex-col justify-between">
           <div>
-            <h2 className="text-[14px] font-bold tracking-[0.2em] text-black mb-12 uppercase">
+            <h2 className="text-[12px] font-bold tracking-[0.2em] text-black mb-12 uppercase">
               Execution Arms
             </h2>
-            <nav className="flex flex-col gap-5">
+            <nav className="flex flex-col gap-6">
               {content.map((item, i) => (
                 <button
                   key={item.id}
                   onClick={() => setIndex(i)}
-                  className={`text-left text-[16px] transition-all duration-300 ${
-                    i === index ? "text-black font-semibold translate-x-2" : "text-gray-400 hover:text-gray-600"
+                  className={`text-left text-[15px] transition-all duration-300 ${
+                    i === index ? "text-black font-semibold translate-x-2" : "text-gray-400 hover:text-gray-900"
                   }`}
                 >
                   {item.title}
@@ -59,102 +58,110 @@ export default function Arms() {
             </nav>
           </div>
 
-          <div className="mt-auto">
-            <p className="text-[11px] text-gray-400 leading-relaxed mb-6 max-w-[220px]">
-              All execution arms operate under Ascella Group governance.
-            </p>
-            <button className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3 text-[13px] font-medium text-black transition-all hover:bg-black hover:text-white">
-              See How Works Delivers
-              <span className="grid grid-cols-2 gap-0.5 opacity-60 group-hover:opacity-100">
-                <div className="w-1 h-1 bg-current rounded-full"></div>
-                <div className="w-1 h-1 bg-current rounded-full"></div>
-                <div className="w-1 h-1 bg-current rounded-full"></div>
-                <div className="w-1 h-1 bg-current rounded-full"></div>
-              </span>
-            </button>
-          </div>
+       <div className="mt-auto flex flex-col gap-6">
+  {/* Governance Text */}
+  <p className="text-[12px] leading-relaxed text-gray-400 max-w-[240px]">
+    All execution arms operate under 
+    <span className="text-black font-medium"> Ascella Group governance</span>.
+  </p>
+
+  {/* Button */}
+  <button className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
+    See How Works Delivers
+    <span className="opacity-80   transition-all">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect width="2" height="2" fill="currentColor" />
+        <rect y="6" width="2" height="2" fill="currentColor" />
+        <rect x="6" y="6" width="2" height="2" fill="currentColor" />
+        <rect x="6" width="2" height="2" fill="currentColor" />
+        <rect x="12" y="6" width="2" height="2" fill="currentColor" />
+        <rect x="6" y="12" width="2" height="2" fill="currentColor" />
+        <rect x="12" y="12" width="2" height="2" fill="currentColor" />
+      </svg>
+    </span>
+  </button>
+</div>
         </aside>
 
-       
+        {/* Content Area */}
         <div className="flex-1 bg-white flex p-1">
-          <div className="relative w-full h-full bg-[#0D0D0D] rounded-[20px] overflow-hidden flex">
+          <div className="relative w-full h-full bg-[#0F0F0F] rounded-[24px] overflow-hidden flex">
             
-           
+            {/* Left Side: Text Content */}
             <div className="w-full md:w-1/2 relative z-10 p-16 flex flex-col justify-between">
-           
               <div className="text-3xl font-light">
                 <span className="text-white">0{index + 1}</span>
                 <span className="text-white/20">/0{total}</span>
               </div>
 
-              
               <AnimatePresence mode="wait">
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.4 }}
-                  className="mb-12"
                 >
-                  <h1 className="text-4xl font-normal text-white mb-8 tracking-tight leading-tight">
+                  <h1 className="text-4xl font-normal text-white mb-6 tracking-tight">
                     {content[index].title}
                   </h1>
-
-                  <div className="space-y-6 max-w-sm">
-                    <p className="text-white/50 text-[15px] leading-relaxed">
+                  <div className="space-y-4 max-w-sm">
+                    <p className="text-white/40 text-[15px] leading-relaxed">
                       {content[index].description}
                     </p>
-                    {content[index].outcome && (
-                      <div className="pt-4 border-t border-white/10">
-                        <p className="text-[15px]">
-                          <span className="text-white/90 font-medium">Outcome: </span>
-                          <span className="text-white/50 font-light">
-                            {content[index].outcome}
-                          </span>
-                        </p>
-                      </div>
-                    )}
+                   
+                      <p className="text-[14px]">
+                        <span className="text-white/80 font-Montserrat">Outcome: </span>
+                        <span className="text-white/80 font-Montserrat">
+                          {content[index].outcome}
+                        </span>
+                      </p>
+                    
                   </div>
                 </motion.div>
               </AnimatePresence>
-
-            
-              <div className="flex items-center gap-3">
-                {content.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setIndex(i)}
-                    className={`rounded-full transition-all duration-300 ${
-                      i === index ? "w-3 h-3 bg-white" : "w-2 h-2 border border-white/40 hover:border-white"
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
 
-           
-            <div className="hidden md:flex flex-1 items-center justify-center p-8 relative overflow-hidden">
-              
-               <div className="absolute inset-0 opacity-10 pointer-events-none" 
-                    style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
+            {/* Right Side: Image/Graphics Side (Updated based on screenshot) */}
+            <div className="hidden md:flex flex-1 p-1">
+               <div className="w-full h-full bg-black rounded-[12px] relative flex flex-col items-center justify-end px-[33px] py-[36px]">
+                  
+                  {/* Image Container with Animation */}
+                  <div className="flex-1 w-full flex items-center justify-center">
+                    <AnimatePresence mode="wait">
+                      <motion.div 
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.1 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="w-full h-full flex items-center justify-center"
+                      >
+                        <img 
+                          src={content[index].image} 
+                          alt={content[index].title}
+                          className="max-w-full max-h-[80%] object-contain select-none"
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Pagination Dots (Bottom Indicators) */}
+                  <div className="flex gap-2.5 mt-auto">
+                    {content.map((_, i) => (
+                      <div 
+                        key={i}
+                        className={`w-3.5 h-3.5 rounded-full border transition-all duration-300 ${
+                          i === index 
+                            ? "bg-white border-white" 
+                            : "bg-transparent border-white/20 hover:border-white/40"
+                        }`}
+                      />
+                    ))}
+                  </div>
                </div>
-               
-            
-               <motion.div 
-                 key={index}
-                 initial={{ opacity: 0, scale: 0.9 }}
-                 animate={{ opacity: 1, scale: 1 }}
-                 transition={{ duration: 0.5 }}
-                 className="relative z-10 w-full h-full flex items-center justify-center"
-               >
-                 
-                 <div className="w-4/5 aspect-video border border-white/20 rounded-lg bg-white/5 backdrop-blur-sm flex items-center justify-center">
-                    <span className="text-white/20 text-xs uppercase tracking-widest">Illustration Asset</span>
-                 </div>
-               </motion.div>
             </div>
-
+               
           </div>
         </div>
       </div>

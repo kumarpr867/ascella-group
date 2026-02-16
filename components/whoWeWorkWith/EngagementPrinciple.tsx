@@ -18,14 +18,14 @@ export default function EngagementPrinciple() {
         <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" width="7" height="7" className="fill-gray-400" />
+            <rect y="14" width="7" height="7" className="fill-gray-400" />
+            <rect width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" width="7" height="7" className="fill-gray-400" />
           </svg>
           <h5 className=" tracking-wide mt-5">
             Engagements start with defined authority and operating clarity
@@ -46,14 +46,14 @@ export default function EngagementPrinciple() {
         <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="28" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="7" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect y="21" width="7" height="7" className="fill-gray-400" />
+            <rect y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="28" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="7" width="7" height="7" className="fill-gray-400" />
           </svg>
 
           <h5 className=" tracking-wide mt-5">
@@ -77,14 +77,14 @@ export default function EngagementPrinciple() {
         <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-20 py-20">
 
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" width="7" height="7" className="fill-gray-400" />
+            <rect y="14" width="7" height="7" className="fill-gray-400" />
+            <rect width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" width="7" height="7" className="fill-gray-400" />
           </svg>
 
 
@@ -108,12 +108,5 @@ export default function EngagementPrinciple() {
       </div>
 
     </section>
-    // <section className="border-b border-color">
-    //   <div className="mx-4 lg:mx-25">
-
-
-
-    //   </div>
-    // </section>
   )
 }

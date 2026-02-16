@@ -7,16 +7,16 @@ import { motion } from "motion/react";
 const points = [
     {
         svg: <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="35" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="6" width="7" height="7" fill="#3D3D3D" />
-            <rect y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="35" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" y="6" width="7" height="7" className="fill-gray-400" />
+            <rect y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="7" width="7" height="7" className="fill-gray-400" />
         </svg>,
         count: "01",
         heading: "Governance-led execution",
@@ -24,14 +24,14 @@ const points = [
     },
     {
         svg: <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="27" y="7" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="27" y="7" width="7" height="7" className="fill-gray-400" />
         </svg>
         ,
         count: "01",
@@ -40,14 +40,14 @@ const points = [
     },
     {
         svg: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
+            <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" width="7" height="7" className="fill-gray-400" />
         </svg>
         ,
         count: "01",
@@ -56,14 +56,14 @@ const points = [
     },
     {
         svg: <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
+            <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+            <rect x="28" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect y="14" width="7" height="7" className="fill-gray-400" />
+            <rect width="7" height="7" className="fill-gray-400" />
+            <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
+            <rect x="14" width="7" height="7" className="fill-gray-400" />
         </svg>,
         count: "01",
         heading: "Security-first by default",

@@ -22,7 +22,7 @@ const Navbar = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-20">
         <div className="flex justify-between items-center h-full">
           
-          {/* Logo */}
+          
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/logo.png"
@@ -34,7 +34,7 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Desktop Nav */}
+          
           <nav className="hidden md:flex items-center font-medium">
             <div className="w-px mx-3 h-5 rotate-30 bg-gray-400/40"></div>
             {navLinks.map((link, index) => (
@@ -52,7 +52,7 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          
           <button
             className="md:hidden flex items-center px-2 py-1 border border-color rounded text-white"
             onClick={() => setMenuOpen(v => !v)}
@@ -63,7 +63,7 @@ const Navbar = () => {
             </svg>
           </button>
 
-          {/* Connect CTA */}
+          
           <Link
             href="/connect"
             className="hidden md:flex group items-center gap-3 font-medium text-white ml-6"
@@ -74,11 +74,11 @@ const Navbar = () => {
                 width="20"
                 height="20"
                 viewBox="0 0 14 14"
-                className="rounded-sm bg-white p-1 transition-transform group-hover:scale-[1.4]"
+                className="rounded-sm bg-white p-1 transition-transform group-hover:scale-[1.4] text-dark"
               >
                 <path
                   d="M3 11L11 3M11 3H5M11 3V9"
-                  stroke="#000"
+                  stroke="currentColor"
                   strokeWidth="1.5"
                   fill="none"
                   strokeLinecap="round"
@@ -90,9 +90,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      
       {menuOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-black border-t border-[#1e1e1e] z-50">
+          <div className="md:hidden absolute top-16 left-0 w-full bg-default border-t border-subtle z-50">
           {navLinks.map(link => (
             <Link
               key={link.href}

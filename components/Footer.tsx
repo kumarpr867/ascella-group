@@ -65,7 +65,7 @@ const Footer = () => {
             <div className="border-x border-color mx-2 sm:mx-6 lg:mx-24 ">
                 {/* Bottom section */}
                 <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
-                    {/* Left */}
+                    
                     <div className="max-w-2xl w-full">
                         <div className="flex flex-col mb-10 md:mb-20">
                             <h2 className="text-2xl md:text-3xl lg:text-5xl leading-tight mb-2">
@@ -113,10 +113,10 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Edge-to-edge horizontal line */}
+            
             <div className="w-full border-t border-color"></div>
 
-            {/* 15px pure black gap below the line */}
+            
             <div className="h-[70px] bg-black w-full"></div>
         </footer>
     )

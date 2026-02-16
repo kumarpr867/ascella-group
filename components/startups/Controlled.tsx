@@ -6,61 +6,40 @@ const Controlled = () => {
   return (
     <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col">
       
-      {/* ─── 1. EDGE-TO-EDGE GRID LINES ─── */}
-      {/* Topmost Horizontal Line */}
+      {/* Horizontal Line */}
       <div className="absolute top-0 left-0 w-full h-px bg-white/10 z-50" />
       
-      {/* Vertical Line Left (Margin) */}
+      {/* Left Vertical Line */}
       <div className="absolute top-0 left-2 sm:left-4 lg:left-24 w-px h-full bg-white/10 z-50" />
       
-      {/* Vertical Line Right (Margin) */}
+      {/* Right Vertical Line */}
       <div className="absolute top-0 right-2 sm:right-4 lg:right-24 w-px h-full bg-white/10 z-50" />
 
-      {/* Row Separator Lines */}
+      {/* Grid Sub-lines */}
       <div className="absolute top-[100px] left-0 w-full h-px bg-white/10 z-50" />
       <div className="absolute bottom-[120px] left-0 w-full h-px bg-white/10 z-50" />
 
-
-      {/* ─── 2. BLACK MASKING PANELS (To hide globe in margins) ─── */}
-      {/* Left Mask: Engage with us ke neeche wala portion cover karne ke liye */}
+      {/* Side Masks */}
       <div className="absolute top-0 left-0 w-2 sm:w-4 lg:w-24 h-full bg-black z-20" />
       
-      {/* Right Mask: Symmetry ke liye */}
       <div className="absolute top-0 right-0 w-2 sm:w-4 lg:w-24 h-full bg-black z-20" />
       
-      {/* Bottom Mask: Taaki footer ke peeche image na dikhe agar niche ja rahi ho */}
       <div className="absolute bottom-0 left-0 w-full h-[120px] bg-black z-20 border-t border-white/10" />
 
+      {/* Decorative Globe Overlay */}
+      <div className="absolute z-10 pointer-events-none opacity-50 globe-decor" />
 
-      {/* ─── 3. GLOBE IMAGE (Between the lines) ─── */}
-      <div 
-        className="absolute z-10 pointer-events-none opacity-50"
-        style={{
-          width: '761.33px',
-          height: '677.03px',
-          bottom: '-50px', 
-          left: '-150px', 
-          transform: 'rotate(158.67deg)', 
-          backgroundImage: `url('/globe2.png')`,
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-
-
-      {/* ─── 4. CONTENT LAYER (Above masks and image) ─── */}
+      {/* Main Content Layer */}
       <div className="relative z-40 flex flex-col h-screen">
         
-        {/* TOP SECTION (100px) */}
         <div className="h-[100px] w-full" />
 
-        {/* MIDDLE SECTION (Headline) */}
-        <div className="flex-grow flex flex-col justify-center items-end px-10 lg:px-80">
+        <div className="flex-grow flex flex-col justify-center items-end lg:px-80">
           <div className="max-w-3xl text-right">
-            <h1 className="text-[40px] md:text-[56px] lg:text-[64px] leading-[1.1] font-light ">
+            <h2 className="text-[30px] md:text-[42px] lg:text-[48px] leading-[1.1] font-light ">
               Controlled execution <br />
-              units for <h1 className="text-white/40 font-extralight">complex operating environments</h1>
-            </h1>
+              units for <span className="text-white/40 font-extralight">complex <br />operating environments</span>
+            </h2>
             
             <div className="mt-12 flex items-center justify-end gap-6 group cursor-pointer">
               <p className="text-[10px] md:text-xs text-white/60 max-w-[220px] leading-relaxed uppercase tracking-widest">
@@ -73,11 +52,11 @@ const Controlled = () => {
           </div>
         </div>
 
-        {/* FOOTER SECTION (120px) */}
-        <div className="h-[120px] flex items-center justify-between px-10 lg:px-24">
-          {/* Button is now safely above the black mask */}
+        {/* Footer Container - Padding-left increased to push button right of the line */}
+        <div className="h-[120px] flex items-center justify-between p-5 px-10 lg:pl-32 lg:pr-24 lg: pl-10 relative z-50">
+          
           <Link href="/engageWithUs">
-            <button className="relative z-25 px-8 py-4 border border-white/20 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
+            <button className="relative z-25 justify-center px-8 py-4 border border-white/20 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
               Engage With Us <span className="ml-2 opacity-40">:::</span>
             </button>
           </Link>

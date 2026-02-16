@@ -16,7 +16,7 @@ export default function WhoWeWorkWith() {
             "
           >
 
-            {/* Title */}
+            
             <div className="border-b border-color px-6 py-12 lg:px-8 lg:py-28">
               <h2 className="leading">
                 Who We <span className="text-gray-200">Work With</span>
@@ -26,14 +26,14 @@ export default function WhoWeWorkWith() {
               </p>
             </div>
 
-            {/* Empty cell (desktop only) */}
+            
             <div className="hidden lg:block border-l border-b border-color" />
 
-            {/* Engagement note */}
+            
             <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-6">
               <div className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
                 <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" stroke-width="1" />
+                  <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="1" />
                 </svg>
 
               </div>
@@ -44,7 +44,7 @@ export default function WhoWeWorkWith() {
               </p>
             </div>
 
-            {/* Paragraph */}
+            
             <div className="border-b lg:border-l border-color px-6 py-8 lg:p-10 flex items-center">
               <p className="text-b2 text-gray-100 max-w-md">
                 Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.
@@ -52,12 +52,12 @@ export default function WhoWeWorkWith() {
               </p>
             </div>
 
-            {/* Scroll down */}
+            
             <div className="px-6 py-10 lg:p-10 flex items-end">
               <PlusHeading text="Scroll Down" size="b1" />
             </div>
 
-            {/* Rock */}
+            
             <div className="lg:border-l border-color px-6 py-10 lg:p-10 flex items-end justify-end">
               <Image
                 src="/whoWeWorkWith/rock.png"
@@ -69,7 +69,7 @@ export default function WhoWeWorkWith() {
             </div>
           </div>
 
-          {/* RIGHT PANEL */}
+          
           <div className="flex items-center justify-center p-10 lg:p-20">
             <Image
               src="/whoWeWorkWith/sphere.png"

@@ -1,44 +1,18 @@
 "use client"
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import * as THREE from 'three';
-
-const DottedCircle = ({ radius }: { radius: number }) => {
-  const points = useMemo(() => {
-    const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, 2 * Math.PI, false, 0);
-    return curve.getPoints(100);
-  }, [radius]);
-
-  const lineGeometry = useMemo(() => new THREE.BufferGeometry().setFromPoints(points), [points]);
-
-  return (
-    <lineSegments geometry={lineGeometry}>
-      <lineDashedMaterial 
-        color="#ffffff" 
-        dashSize={0.05} 
-        gapSize={0.1} 
-        transparent 
-        opacity={0.2} 
-        scale={1} 
-      />
-    </lineSegments>
-  );
-};
 
 const RadarScene = () => {
   return (
     <group scale={1.1}>
-      {/* 1. Outer Solid Boundary Ring */}
       <mesh>
         <ringGeometry args={[3, 3.005, 100]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
       </mesh>
 
-      {/* 2. Nested Circles */}
       <DottedCircle radius={1.2} />
       <DottedCircle radius={2.2} />
 
-      {/* 3. Center Target Indicator */}
       <mesh>
         <circleGeometry args={[0.04, 32]} />
         <meshBasicMaterial color="#ffffff" />
@@ -48,28 +22,22 @@ const RadarScene = () => {
         <meshBasicMaterial color="#ffffff" transparent opacity={0.4} />
       </mesh>
 
-      {/* 4. Vertical Center Lines (Top and Bottom) */}
-      {/* Top Vertical */}
       <mesh position={[0, 1.5, 0]}>
         <planeGeometry args={[0.008, 3]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
       </mesh>
-      {/* Bottom Vertical */}
       <mesh position={[0, -1.5, 0]}>
         <planeGeometry args={[0.008, 3]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
       </mesh>
 
-      {/* 5. The 60 Degree Dotted Grid Line */}
       <group rotation={[0, 0, (60 * Math.PI) / 180]}>
         <mesh position={[0, 0, 0]}>
           <planeGeometry args={[0.01, 6]} />
-          {/* Using a material that looks like a dotted line for the diagonal */}
           <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
         </mesh>
       </group>
 
-      {/* 6. Static Sweep Line (Matching the Image) */}
       <group rotation={[0, 0, (15 * Math.PI) / 180]}>
         <mesh position={[0, 1.5, 0]}>
           <planeGeometry args={[0.015, 3]} />
@@ -77,7 +45,6 @@ const RadarScene = () => {
         </mesh>
       </group>
 
-      {/* 7. Other Diagonal Faint Grid Lines */}
       {[135, -45].map((angle) => (
         <group key={angle} rotation={[0, 0, (angle * Math.PI) / 180]}>
           <mesh position={[0, 0, 0]}>
@@ -87,7 +54,6 @@ const RadarScene = () => {
         </group>
       ))}
 
-      {/* 8. Pod Squares (Positions from Image) */}
       <mesh position={[1.8, 1.2, 0]}>
         <boxGeometry args={[0.07, 0.07, 0.07]} />
         <meshBasicMaterial color="#ffffff" />
@@ -106,13 +72,11 @@ const RadarScene = () => {
 
 const Delivery = () => {
   return (
-    <div style={styles.pageWrapper}>
-      {/* Top Grid Line */}
-      <div style={styles.horizontalLine} />
+    <div className="bg-default text-default min-h-screen w-full flex flex-col overflow-hidden">
+      <div className="w-full h-px bg-white/15" />
 
       <div style={styles.mainContainer}>
         <div style={styles.contentWrapper}>
-          
           <div style={styles.leftSide}>
             <h1 style={styles.headline}>
               Delivery is organised through governed pods under central oversight.
@@ -134,23 +98,20 @@ const Delivery = () => {
               <RadarScene />
             </Canvas>
           </div>
-          
         </div>
       </div>
 
-      {/* Bottom Grid Line */}
       <div style={styles.horizontalLine} />
-        {/* Margin Bottom as requested */}
-         <div className="w-full border-t border-white/10" />
-      <div className="w-full h-24 bg-black" />
+      <div className="w-full border-t border-white/10" />
+      <div className="w-full h-24 bg-default" />
     </div>
   );
 };
 
 const styles = {
   pageWrapper: { 
-    backgroundColor: '#000', 
-    color: '#fff', 
+    backgroundColor: 'var(--color-black)', 
+    color: 'var(--color-white)', 
     minHeight: '100vh', 
     display: 'flex', 
     flexDirection: 'column' as const,
@@ -198,7 +159,7 @@ const styles = {
     letterSpacing: '-0.01em'
   },
   description: { 
-    color: '#888', 
+    color: 'var(--color-gray-300)', 
     maxWidth: '440px', 
     lineHeight: '1.6',
     marginBottom: 'auto',
@@ -211,7 +172,7 @@ const styles = {
     paddingBottom: '80px' 
   },
   arrowIcon: { 
-    border: '1px solid #ffffff40', 
+    border: '1px solid rgba(255,255,255,0.25)', 
     borderRadius: '50%', 
     width: '44px', 
     height: '44px', 
@@ -224,6 +185,25 @@ const styles = {
     fontSize: '18px', 
     fontWeight: '400' 
   }
+};
+
+const DottedCircle: React.FC<{ radius: number }> = ({ radius }) => {
+  const dots = 48;
+  return (
+    <group>
+      {Array.from({ length: dots }).map((_, i) => {
+        const theta = (i / dots) * Math.PI * 2;
+        const x = Math.cos(theta) * radius;
+        const y = Math.sin(theta) * radius;
+        return (
+          <mesh key={i} position={[x, y, 0]}>
+            <circleGeometry args={[0.02, 8]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
 };
 
 export default Delivery;

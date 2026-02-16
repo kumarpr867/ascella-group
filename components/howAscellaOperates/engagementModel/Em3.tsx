@@ -25,7 +25,7 @@ export default function Em3() {
 
     const section = SECTIONS.find((s) => s.label === active)!;
 
-    // 🔹 Parallax
+    
     const sectionRef = useRef<HTMLDivElement>(null);
     const reduceMotion = useReducedMotion();
 
@@ -42,10 +42,10 @@ export default function Em3() {
         ? 0
         : useTransform(scrollYProgress, [0, 1], [12, -12]);
 
-    //   // 🔹 Auto rotate
-    //   newFunction();
+    
+    
 
-    // 🔹 Resume on scroll
+    
     useEffect(() => {
         const onScroll = () => setIsPaused(false);
         window.addEventListener("scroll", onScroll, { passive: true });
@@ -71,7 +71,7 @@ export default function Em3() {
 
     return (
         <section className="m-20 xl:m-30">
-            {/* Header */}
+            
             <header className="flex flex-col gap-6 md:w-1/2 mb-20">
                 <PlusHeading text="ENGAGEMENT MODELS" size="md" />
                 <h1 className="text-3xl leading-tight">
@@ -87,10 +87,10 @@ export default function Em3() {
                 </p>
             </header>
 
-            {/* Content */}
+            
             <div ref={sectionRef} className="relative h-[300vh]">
                 <div className="sticky top-24 flex justify-between items-start gap-12">
-                    {/* Text */}
+                    
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={section.label}
@@ -106,7 +106,7 @@ export default function Em3() {
                         </motion.div>
                     </AnimatePresence>
 
-                    {/* Image */}
+                    
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={section.image}
@@ -129,7 +129,7 @@ export default function Em3() {
                         </motion.div>
                     </AnimatePresence>
 
-                    {/* Menu */}
+                    
                     <nav className="menu text-2xl flex flex-col gap-2">
                         {MENU_ITEMS.map((item) => (
                             <button

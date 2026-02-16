@@ -19,7 +19,7 @@ export default function EMII() {
 
   const section = SECTIONS.find((s) => s.label === active)!;
 
-  // Auto-rotate sections every 5 seconds
+  
   useEffect(() => {
     if (isPaused) return;
 
@@ -34,20 +34,20 @@ export default function EMII() {
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  // Resume auto-rotation on scroll
+  
   useEffect(() => {
     const handleScroll = () => setIsPaused(false);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle manual click
+  
   const handleClick = (item: EngagementLabel) => {
     if (active === item) {
-      // Clicking the active section resumes rotation
+      
       setIsPaused(false);
     } else {
-      // Clicking a different section pauses rotation
+      
       setActive(item);
       setIsPaused(true);
     }
@@ -55,7 +55,7 @@ export default function EMII() {
 
   return (
     <section className="m-20 xl:m-30">
-      {/* Header */}
+      
       <header className="flex flex-col gap-6 md:w-1/2 mb-20">
         <PlusHeading text="ENGAGEMENT MODELS" size="b1" />
         <h1 className="text-3xl leading-tight">
@@ -71,9 +71,9 @@ export default function EMII() {
         </p>
       </header>
 
-      {/* Content */}
+      
       <div className="flex justify-between items-start">
-        {/* Text */}
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={section.label}
@@ -88,7 +88,7 @@ export default function EMII() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Image */}
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={section.image}
@@ -110,7 +110,7 @@ export default function EMII() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Menu */}
+        
         <nav className="menu mb-5 text-2xl flex flex-col gap-2">
           {MENU_ITEMS.map((item) => (
             <button

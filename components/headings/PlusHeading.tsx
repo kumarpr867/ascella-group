@@ -34,7 +34,7 @@ const PlusHeading: React.FC<PlusHeadingProps> = ({
 
   return (
     <div className="group flex items-center gap-3 cursor-default">
-      {/* Plus Icon */}
+      
       <span
         className={`
           relative flex items-center justify-center

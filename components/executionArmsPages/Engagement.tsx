@@ -2,17 +2,18 @@
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import Link from 'next/link';
 
-// Three.js Background Component
 function Scene() {
   const points = useRef<THREE.Points>(null);
+  const count = 40;
+  
   const [particles] = useMemo(() => {
-    const count = 40;
     const positions = new Float32Array(count * count * 3);
     for (let i = 0; i < count; i++) {
       for (let j = 0; j < count; j++) {
-        positions[(i * count + j) * 3] = (i - count / 2) * 0.5;
-        positions[(i * count + j) * 3 + 1] = (j - count / 2) * 0.5;
+        positions[(i * count + j) * 3] = (i - count / 2) * 0.7;
+        positions[(i * count + j) * 3 + 1] = (j - count / 2) * 0.7;
         positions[(i * count + j) * 3 + 2] = 0;
       }
     }
@@ -20,13 +21,13 @@ function Scene() {
   }, []);
 
   useFrame((state) => {
-    const time = state.clock.getElapsedTime();
+    const time = state.clock.getElapsedTime() * 0.4;
     if (points.current) {
       const pos = (points.current.geometry as THREE.BufferGeometry).attributes.position as THREE.BufferAttribute;
-      for (let i = 0; i < 40 * 40; i++) {
+      for (let i = 0; i < count * count; i++) {
         const x = pos.array[i * 3];
         const y = pos.array[i * 3 + 1];
-        pos.array[i * 3 + 2] = Math.sin(x * 0.3 + time) * Math.cos(y * 0.3 + time) * 0.8;
+        pos.array[i * 3 + 2] = Math.sin(x * 0.5 + time) * Math.cos(y * 0.5 + time) * 0.5;
       }
       pos.needsUpdate = true;
     }
@@ -37,78 +38,83 @@ function Scene() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[particles, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.06} color="#ffffff" transparent opacity={0.2} sizeAttenuation />
+      <pointsMaterial size={0.05} color="#ffffff" transparent opacity={0.15} sizeAttenuation />
     </points>
   );
 }
 
 export default function Engagement() {
+  // Using the renamed file to avoid 404 encoding issues
+  const bgImage = "/engagement-bg.png";
+
   return (
-    <section className="relative w-full bg-black text-white overflow-hidden">
+    <section className="relative w-full bg-black text-white overflow-hidden border-t border-white/20">
       
+      {/* MASTER VERTICAL LINES */}
+      <div className="absolute inset-y-0 left-[7px] sm:left-[15px] lg:left-[95px] w-px bg-white/20 z-20" />
+      <div className="absolute inset-y-0 right-[7px] sm:right-[15px] lg:right-[95px] w-px bg-white/20 z-20" />
+
       <div className="relative z-10 w-full flex flex-col">
         
-        {/* ROW 1 */}
-        <div className="w-full h-[100px] border-b border-white/15">
-          <div className="mx-2 sm:mx-4 lg:mx-24 h-full border-x border-white/15" />
-        </div>
+        {/* TOP SPACER BOX */}
+        <div className="w-full h-[100px] border-b border-white/20" />
 
-        {/* ROW 2: Center Box */}
-        <div className="w-full h-[650px] border-b border-white/15 relative">
+        {/* MID CONTENT BOX */}
+        <div className="w-full min-h-[583px] border-b border-white/20 relative">
           
-          {/* Background Canvas */}
-          <div className="absolute inset-0 mx-2 sm:mx-4 lg:mx-24 z-0 pointer-events-none">
-             <Canvas camera={{ position: [0, 0, 15], fov: 50 }}>
-                <Scene />
-             </Canvas>
-          </div>
-
-          {/* Master Container: Isko Center rakha hai */}
-          <div className="relative z-10 mx-2 sm:mx-4 lg:mx-24 h-full border-x border-white/15 flex items-center justify-center">
+          <div className="relative mx-[7px] sm:mx-[15px] lg:mx-[95px] h-full min-h-[583px] overflow-hidden">
             
-            {/* Content Wrapper: Iske andar sab Left Align hoga lekin ye khud center mein hai */}
-            <div className="flex flex-col items-start text-left max-w-4xl px-6 md:px-20">
-              
-              {/* DIV 1: Sub-header */}
+            {/* Background Image Container */}
+            <div 
+              className="absolute inset-0 z-0 opacity-60 bg-neutral-900" 
+              style={{
+                backgroundImage: `url("${bgImage}")`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                filter: 'blur(1px)',
+              }}
+            />
+
+            {/* Particles */}
+            <div className="absolute inset-0 z-1 pointer-events-none opacity-30">
+               <Canvas camera={{ position: [0, 0, 15], fov: 50 }}>
+                  <Scene />
+               </Canvas>
+            </div>
+
+            {/* UI Content */}
+            <div className="relative z-10 flex flex-col items-start justify-center h-full min-h-[583px] px-10 md:pl-32 lg:pl-44 py-16">
               <div className="w-full mb-4">
-                <p className="text-sm md:text-base text-white/70 tracking-wide font-light">
+                <h5 className="text-sm md:text-base text-white/70 tracking-widest font-light">
                   Ready to Engage Ascella Group?
-                </p>
+                </h5>
               </div>
 
-              {/* DIV 2: Main Headline */}
               <div className="w-full mb-10">
-                <h1 className="text-[32px] md:text-[48px] lg:text-[56px] leading-[1.15] font-light">
-                  Engagement begins with{' '}
-                  <span className="text-white/40">
+                <h1 className="text-[28px] md:text-[42px] lg:text-[52px] leading-[1.1] font-light max-w-3xl">
+                  Engagement begins with{' '} 
+                  <span className="text-white/30">
                     alignment of operating structure and accountability.
                   </span>
                 </h1>
               </div>
 
-              {/* DIV 3: Button */}
               <div className="w-full">
-                <button className="flex items-center gap-4 px-8 py-4 border border-white/30 text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-500 group">
-                  Engage With Us 
-                  <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-                </button>
+                <Link href="/engageWithUs">
+                  <button className="group relative px-8 py-4 border border-white/30 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all duration-500">
+                    Engage With Us 
+                    <span className="inline-block ml-4 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
+                  </button>
+                </Link>
               </div>
-
             </div>
           </div>
         </div>
 
-        {/* ROW 3 */}
-        <div className="w-full h-[100px]">
-          <div className="mx-2 sm:mx-4 lg:mx-24 h-full border-x border-white/15" />
-        </div>
-
+        {/* BOTTOM SPACER BOX */}
+        <div className="w-full h-[100px] border-b border-white/20" />
       </div>
-
-      {/* Edge-to-edge lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-white/15" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-white/15" />
-
     </section>
   );
 }

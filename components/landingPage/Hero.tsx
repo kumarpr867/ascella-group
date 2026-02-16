@@ -45,7 +45,7 @@ export default function Hero() {
       </motion.div>
 
 
-      {/* Bottom mask */}
+      
       <div className="absolute inset-x-0 bottom-0 h-[50vh] bg-linear-to-t from-black via-black/80 to-transparent z-2 pointer-events-none" />
 
       {/* Top info row */}

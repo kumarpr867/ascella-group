@@ -7,7 +7,7 @@ type PrecisionGridProps = {
 
 export default function PrecisionGrid({
   size = 80,
-  lineColor = "#333",
+  lineColor = "var(--color-gray-400)",
   opacity = 0.25,
   fade = "radial",
 }: PrecisionGridProps) {

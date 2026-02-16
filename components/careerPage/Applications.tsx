@@ -4,10 +4,10 @@ const Applications: React.FC = () => {
   return (
     <div className="bg-black text-white min-h-screen font-sans flex flex-col items-center">
       
-      {/* 1. Top Horizontal Grid Line (Starts from 0 to Full Width) */}
+      
       <div className="w-full h-[1px] bg-zinc-800/50  mb-10"></div>
 
-      {/* Header Section */}
+      
       <div className="w-full max-w-5xl mb-16 self-start pl-30">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-5 h-5 border border-zinc-500 flex items-center justify-center rotate-45">
@@ -26,17 +26,17 @@ const Applications: React.FC = () => {
         </p>
       </div>
 
-      {/* Main Flowchart Container */}
+      
       <div className="flex flex-col items-center w-full max-w-6xl px-4 pb-20">
         
-        {/* Step 1: Initial Flow */}
+        
         <Pill label="Application" active />
         <VerticalLine height="h-10" />
         <Pill label="Submit application" />
         <VerticalLine height="h-10" />
         <Pill label="Initial review" />
         
-        {/* Section 1 - Branches */}
+        
         <div className="w-full">
           <ConnectorSVG />
           <div className="grid grid-cols-3 gap-12">
@@ -48,7 +48,7 @@ const Applications: React.FC = () => {
 
         <VerticalLine height="h-24" />
 
-        {/* Step 2: Mid Flow */}
+        
         <Pill label="Structured conversations" />
 
         <div className="w-full">
@@ -62,7 +62,7 @@ const Applications: React.FC = () => {
 
         <VerticalLine height="h-24" />
 
-        {/* Step 3: Final Flow */}
+        
         <Pill label="Final alignment" />
         
         <div className="w-full">
@@ -77,7 +77,7 @@ const Applications: React.FC = () => {
         <VerticalLine height="h-20" />
         <Pill label="Onboarding" />
         
-        {/* Onboarding Details */}
+        
         <div className="mt-6 flex flex-col items-center w-full max-w-[380px]">
           <VerticalLine height="h-8" />
           <div className="bg-zinc-900/20 border border-zinc-800/60 p-6 rounded-lg w-full backdrop-blur-sm">
@@ -98,23 +98,23 @@ const Applications: React.FC = () => {
   );
 };
 
-// --- Helper Components ---
+ 
 
 const ConnectorSVG: React.FC = () => (
   <svg className="w-full h-16" viewBox="0 0 1200 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Central connection from above */}
-    <line x1="600" y1="0" x2="600" y2="24" stroke="#3f3f46" strokeWidth="1"/>
     
-    {/* The horizontal bridge with rounded corners */}
-    <path d="M200 48 V 40 Q 200 24 216 24 H 584 Q 600 24 600 24 H 984 Q 1000 24 1000 40 V 48" 
-          stroke="#3f3f46" strokeWidth="1" fill="none" />
+    <line x1="600" y1="0" x2="600" y2="24" className="stroke-gray-400" strokeWidth="1"/>
     
-    {/* Middle straight line */}
-    <line x1="600" y1="24" x2="600" y2="64" stroke="#3f3f46" strokeWidth="1"/>
     
-    {/* Side tips to hit the pills below */}
-    <line x1="200" y1="48" x2="200" y2="64" stroke="#3f3f46" strokeWidth="1"/>
-    <line x1="1000" y1="48" x2="1000" y2="64" stroke="#3f3f46" strokeWidth="1"/>
+        <path d="M200 48 V 40 Q 200 24 216 24 H 584 Q 600 24 600 24 H 984 Q 1000 24 1000 40 V 48" 
+          className="stroke-gray-400" strokeWidth="1" fill="none" />
+    
+    
+    <line x1="600" y1="24" x2="600" y2="64" className="stroke-gray-400" strokeWidth="1"/>
+    
+    
+    <line x1="200" y1="48" x2="200" y2="64" className="stroke-gray-400" strokeWidth="1"/>
+    <line x1="1000" y1="48" x2="1000" y2="64" className="stroke-gray-400" strokeWidth="1"/>
   </svg>
 );
 
