@@ -20,59 +20,6 @@ const points = [
             </svg>
         ),
         count: "01",
-<<<<<<< HEAD
-        heading: "Decision and approval design",
-        description: "Clear decision ownership, approval layers, and authority limits are established early so execution moves without confusion, delays, or overlapping mandates."
-    },
-    {
-        svg: <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="27" y="7" width="7" height="7" fill="#3D3D3D" />
-        </svg>
-        ,
-        count: "01",
-        heading: "Escalation and risk control",
-        description: "Defined escalation routes and review checkpoints ensure risks surface quickly and reach accountable decision holders before impact spreads."
-    },
-    {
-        svg: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-        </svg>
-        ,
-        count: "01",
-        heading: "Performance and outcome tracking",
-        description: "KPIs, SLAs, and outcome thresholds are agreed at the outset to maintain visibility into progress, quality, and operational stability."
-    },
-    {
-        svg: <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-        </svg>,
-        count: "01",
-        heading: "Compliance and oversight alignment",
-        description: "Governance structures are aligned with regulatory, audit, and security requirements from the start so delivery remains controlled under external scrutiny."
-    }
-]
-=======
         heading: "Decision and approval structures",
         description: "Clear decision rights and approval pathways are defined to prevent delays and ambiguity.",
     },
@@ -131,7 +78,6 @@ const points = [
         description: "Governance frameworks align with regulatory, security, and audit requirements from the outset.",
     },
 ];
->>>>>>> c178cdc (working on same looks like UI)
 
 export default function Governace() {
     return (

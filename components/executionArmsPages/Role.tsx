@@ -50,18 +50,18 @@ const SectionHeader = ({ title }: { title: string }) => (
 );
 
 // Animation Variants for synchronized sliding
-const containerVariants = {
+const containerVariants: any = {
   initial: { opacity: 0, x: 50 },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     x: 0,
-    transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1], staggerChildren: 0.05 }
+    transition: { duration: 0.8, ease: "easeOut", staggerChildren: 0.05 },
   },
-  exit: { 
-    opacity: 0, 
-    x: -50, 
-    transition: { duration: 0.6, ease: "easeInOut" } 
-  }
+  exit: {
+    opacity: 0,
+    x: -50,
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
 };
 
 export default function Role() {

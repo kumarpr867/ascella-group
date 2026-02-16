@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 
 const ExecutionTogether = () => {
-  const [hoveredId, setHoveredId] = useState(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const executionArms = [
     {
