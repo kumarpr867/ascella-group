@@ -4,7 +4,7 @@ import Image from "next/image"
 export default function Engagement (){
     return (
         <section className="flex flex-col">
-            <div className="border-y border-color ">
+            <div className=" border-y border-color ">
                 <div className="mx-25 py-15 border-x border-color"></div>
             </div>
             <div className="flex flex-col mx:15 lg:mx-25 p-15 border-x border-color">

@@ -24,14 +24,14 @@ const SLIDES = [
     deployedText: "When organisations require embedded expertise delivered through accountable structures, without creating internal dependency or unmanaged overhead.",
     mainTitle: "Ascella Staffing",
     mainDesc: "Role-aligned talent deployment, pod formation, team integration, and workforce performance alignment within Ascella’s governance framework.",
-    image: { src: "/images/staffing1.png", rotate: 10, scale: 1.3 }
+    image: { src: "/images/staffing1.png", rotate: -5.28, scale: .8 }
   },
   {
     roleTitle: "Market-facing execution arm responsible for structured external engagement and growth operations.",
     deployedText: "When organisations require disciplined market engagement and growth execution without compromising internal operational control.",
     mainTitle: "Ascella Engage",
     mainDesc: "Demand execution systems, brand positioning structures, sales enablement frameworks, and revenue operations alignment.",
-    image: { src: "/images/engage1.png", rotate: -35, scale: 0.9 }
+    image: { src: "/images/engage1.png", rotate: -30, scale: 0.6 }
   },
   {
     roleTitle: "Internal enablement and operations execution arm responsible for strengthening organisational infrastructure.",

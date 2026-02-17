@@ -9,15 +9,15 @@ const navLinks = [
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
   { label: "Careers", href: "/careers" },
-  { label: "JD-Page", href: "/JD-Page" },
-  { label: "JD-Apply", href: "/JD-Apply" },
+  // { label: "JD-Page", href: "/JD-Page" },
+  // { label: "JD-Apply", href: "/JD-Apply" },
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-black ">
+    <header className="sticky top-0 w-full bg-black z-50">
       {/* INNER CONTAINER */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-20">
         <div className="flex justify-between items-center h-full">
@@ -46,7 +46,7 @@ const Navbar = () => {
                   {link.label}
                 </Link>
                 {index !== navLinks.length - 1 && (
-                  <div className="w-px mx-3 h-5 rotate-30 bg-gray-400/40"></div>
+                  <div className="w-px mx-3 h-5 rotate-30 bg-white/40"></div>
                 )}
               </div>
             ))}
@@ -74,7 +74,7 @@ const Navbar = () => {
                 width="20"
                 height="20"
                 viewBox="0 0 14 14"
-                className="rounded-sm bg-white p-1 transition-transform group-hover:scale-[1.4] text-dark"
+                className="rounded-sm bg-white p-1 transition-transform group-hover:scale-[1.4] text-black"
               >
                 <path
                   d="M3 11L11 3M11 3H5M11 3V9"

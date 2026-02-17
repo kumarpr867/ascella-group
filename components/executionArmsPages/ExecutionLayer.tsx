@@ -50,7 +50,7 @@ const ExecutionLayer = () => {
           </div>
 
           <div className="relative z-10">
-            <div className="mb-8">
+            <div className="mb-4">
               <span className="relative inline-block border bg-blur border-white/30 px-4 py-1 text-[10px] tracking-widest uppercase text-white/60 font-medium bg-black/50">
 
   <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white"></span>
@@ -60,11 +60,11 @@ const ExecutionLayer = () => {
      Execution Layer
     </span>
             </div>
-            <h2 className="text-5xl lg:text-5xl font-semibold leading-[1.1] mb-8 tracking-tight max-w-4xl">
-              Controlled execution <br /> units for <span className="text-neutral-500 font-normal">complex <br />operating environments</span>
+            <h2 className="text-4xl lg:text-5xl font-Montserrat leading-[1.1] mb-4 tracking-tight max-w-3xl">
+              Controlled execution <br /> units for <span className="text-neutral-500 ">complex <br />operating environments</span>
             </h2>
-            <p className="text-sm text-neutral-500 max-w-lg leading-relaxed">
-              Execution arms deliver specialised work across security, technology, operations, and growth.
+            <p className="text-sm  max-w-lg leading-relaxed">
+              Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
             </p>
           </div>
         </div>
@@ -87,27 +87,27 @@ const ExecutionLayer = () => {
         <div className="col-span-1 border-t border-r border-white/10 flex">
            {categories.map((cat, i) => (
             <div key={i} className="flex-1 flex items-center justify-center border-r border-white/10 last:border-r-0 hover:bg-white/5 cursor-pointer transition-colors group">
-               <span className="text-[10px] tracking-[0.2em] uppercase text-neutral-500 group-hover:text-white">{cat}</span>
+               <h5 className="text-[10px] tracking-[0.2em] uppercase  group-hover:text-white">{cat}</h5>
             </div>
           ))}
         </div>
 
         <div className="border-t border-r border-white/10 grid grid-cols-3 h-full">
            <div className="flex flex-col justify-center px-4 border-r border-white/10">
-              <span className="text-[8px] uppercase text-neutral-600 mb-1">Execution Arms</span>
+              <span className="text-[8px] uppercase  mb-1">Execution Arms</span>
               <span className="text-xl font-light">05.</span>
            </div>
            <div className="flex flex-col justify-center px-4 border-r border-white/10">
-              <span className="text-[8px] uppercase text-neutral-600 mb-1">Governance Authority</span>
-              <span className="text-xl font-light italic">Single.</span>
+              <span className="text-[8px] uppercase  mb-1">Governance Authority</span>
+              <span className="text-xl ">Single.</span>
            </div>
            <div className="flex flex-col justify-center px-4">
-              <span className="text-[8px] uppercase text-neutral-600 mb-1">Oversight & Accountability</span>
-              <span className="text-xl font-light italic">Continuous.</span>
+              <span className="text-[8px] uppercase  mb-1">Oversight & Accountability</span>
+              <span className="text-xl ">Continuous.</span>
            </div>
         </div>
 
-        <div className="border-t border-white/10 bg-neutral-900/40"></div>
+        <div className="border-t border-white/10 "></div>
 
         {/* Footer Row */}
         <div className="col-span-4 border-t border-white/10"></div>

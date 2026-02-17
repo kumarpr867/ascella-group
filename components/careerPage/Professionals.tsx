@@ -15,16 +15,16 @@ const Professionals = () => {
               <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white" />
               <div className="absolute left-1/2 top-0 w-[1px] h-full bg-white" />
             </div>
-            <span className="text-[11px] tracking-[0.25em] uppercase opacity-60 font-medium">
+            <span className="text-[16px] tracking-[0.25em] uppercase opacity-60 ">
               Who this is for
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-light leading-[1.1] max-w-5xl tracking-tight">
+          <h3 className="text-4xl md:text-4xl lg:text-5xl leading-[1.1] max-w-4xl tracking-tight">
             Ascella is suited for <span className="text-white">professionals</span>{" "}
             <span className="opacity-20">
               who operate effectively within structured execution environments
             </span>
-          </h2>
+          </h3>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ const Professionals = () => {
                 </svg>
               </div>
               <div className="mt-10 text-center">
-                <p className="text-[13px] opacity-60 leading-relaxed max-w-[200px]">
+                <p className="text-[14px] opacity-60 leading-relaxed max-w-[200px]">
                   Value clear ownership and accountability
                 </p>
               </div>
@@ -62,7 +62,7 @@ const Professionals = () => {
                 </svg>
               </div>
               <div className="mt-10 text-center">
-                <p className="text-[13px] opacity-60 leading-relaxed max-w-[200px]">
+                <p className="text-[14px] opacity-60 leading-relaxed max-w-[200px]">
                   Prefer structured operating models over ad-hoc delivery
                 </p>
               </div>
@@ -78,8 +78,8 @@ const Professionals = () => {
   <circle cx="132.5" cy="66.5" r="4.5" fill="white"/>
 </svg>
               </div>
-              <div className="mt-10 text-center">
-                <p className="text-[13px] opacity-60 leading-relaxed max-w-[200px]">
+              <div className="mt-8 text-center">
+                <p className="text-[14px] opacity-60 leading-relaxed max-w-[200px]">
                   Are comfortable working within governance and oversight frameworks
                 </p>
               </div>
@@ -101,7 +101,7 @@ const Professionals = () => {
 
   {/* --- Content (Text) --- */}
   <div className="relative z-10 flex items-center justify-center h-full">
-    <p className="text-2xl font-light text-center leading-relaxed text-white">
+    <p className="text-2xl  text-center leading-relaxed text-white">
       Structure enables clarity.
     </p>
   </div>
@@ -121,7 +121,7 @@ const Professionals = () => {
 </svg>
               </div>
               <div className="mt-10 text-center">
-                <p className="text-[13px] opacity-60 leading-relaxed max-w-[200px]">
+                <p className="text-[14px] opacity-60 leading-relaxed max-w-[200px]">
                   Prioritize execution quality over speed alone
                 </p>
               </div>
@@ -138,7 +138,7 @@ const Professionals = () => {
 </svg>
               </div>
               <div className="mt-10 text-center">
-                <p className="text-[13px] opacity-60 leading-relaxed max-w-[200px]">
+                <p className="text-[14px] opacity-60 leading-relaxed max-w-[200px]">
                   Operate confidently across multidisciplinary teams
                 </p>
               </div>

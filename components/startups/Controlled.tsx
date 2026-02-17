@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const Controlled = () => {
   return (
-    <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col border border-white/20">
+    <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col ">
       
       {/* --- EDGE-TO-EDGE GRID LINES --- */}
       
@@ -50,17 +50,19 @@ const Controlled = () => {
         <div className="h-[100px] w-full" />
 
         <div className="flex-grow flex flex-col justify-center items-end px-10 lg:px-40">
-          <div className="max-w-4xl text-right">
-            <h2 className="text-[32px] md:text-[50px] lg:text-[64px] leading-[1.05] font-light tracking-tight">
+          <div className="max-w-4xl pr-45">
+            <h2 className="text-[20px] md:text-[40px] lg:text-[48px] leading-[1.05]  tracking-tight">
               Controlled execution <br />
-              units for <span className="text-white/30 font-extralight italic">complex <br />operating environments</span>
+              
             </h2>
+            <h2 className=" pl-25">units for <span className="text-white/30 ">complex</span></h2>
+            <h2 className=" pl-25 text-white/30">Opetating Environments</h2>
             
-            <div className="mt-16 flex items-center justify-end gap-8 group cursor-pointer">
-              <p className="text-[10px] md:text-xs text-white/50 max-w-[200px] leading-relaxed uppercase tracking-[0.2em] text-right">
-                Early-stage execution succeeds or fails based on operating structure.
+            <div className="mt-8 flex items-center justify-end gap-8 group cursor-pointer">
+              <p className="text-[10px] text-white/50 max-w-[300px] leading-relaxed uppercase tracking-[0.2em] text-left">
+               Early-stage execution succeeds or fails based on operating structure.
               </p>
-              <div className="w-14 h-14 border border-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-700">
+              <div className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-700">
                 <span className="text-2xl font-light">↓</span>
               </div>
             </div>
@@ -68,14 +70,14 @@ const Controlled = () => {
         </div>
 
         {/* Footer Area */}
-        <div className="h-[120px] flex items-center justify-between px-10 lg:px-32 relative z-50">
+        <div className="h-[100px] flex items-center justify-between px-8 lg:px-32 relative z-50">
           <Link href="/engageWithUs">
             <button className="relative px-8 py-4 border border-white/10 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
-              Engage With Us <span className="ml-2 opacity-30">:::</span>
+              Engage With Us <span className="ml-2 opacity-30 ">:::</span>
             </button>
           </Link>
 
-          <p className="hidden md:block text-[9px] tracking-[0.15em] text-white/20 max-w-[320px] text-right uppercase leading-tight">
+          <p className="hidden md:block text-[9px] tracking-[0.15em]  max-w-[320px] text-right uppercase leading-tight">
             The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.
           </p>
         </div>

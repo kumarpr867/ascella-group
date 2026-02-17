@@ -174,17 +174,17 @@ const Introduction = () => {
         <div className="w-full md:w-[56%] flex flex-col justify-center space-y-10 md:space-y-14 lg:space-y-16 py-2 md:py-10">
           
           <section className="space-y-4 sm:space-y-6">
-            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-light leading-tight">
-              Execution arms are structured units <span className="text-gray-400">designed to deliver specialised expertise without fragmenting accountability.</span> 
-            </h1>
-            <p className="text-gray-400 text-xs xs:text-sm max-w-lg leading-relaxed">
+            <h3 className="text-2xl xs:text-3xl sm:text-3xl md:text-4xl  leading-tight">
+              Execution arms are structured units <span className="text-gray-300">designed to deliver specialised expertise without fragmenting accountability.</span> 
+            </h3>
+            <p className=" text-xs xs:text-sm max-w-lg leading-relaxed">
               They enable organisations to access security, technology, operations, and growth 
               capabilities in deployable formats — while maintaining a single governing 
               authority over execution.
             </p>
           </section>
 
-          <section className="space-y-4 sm:space-y-6">
+          <section className="space-y-3 sm:space-y-8">
             <div className="relative w-7 h-7 sm:w-8 sm:h-8 opacity-70">
                   <svg xmlns="http://www.w3.org/2000/svg" width="75" height="70" viewBox="0 0 75 70" fill="none">
   <foreignObject x="42.9" y="-4.1" width="40.2" height="53.2"><div style={{backdropFilter: "blur(4.05px)", clipPath: "url(#bgblur_0_193_5133_clip_path)", height: "100%", width: "100%"}}></div></foreignObject><path data-figma-bg-blur-radius="8.1" d="M51 4L75 16.58V41L51 28.42V4Z" fill="white" fill-opacity="0.16"/>
@@ -198,17 +198,17 @@ const Introduction = () => {
 </clipPath></defs>
                </svg>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-light">Why Execution Arms Exist</h2>
-            <div className="text-gray-400 text-xs xs:text-sm max-w-lg space-y-2 sm:space-y-3">
+            <h3 className="text-xl sm:text-2xl md:text-3xl ">Why Execution Arms Exist</h3>
+            <div className="text-gray-400 text-xs xs:text-sm max-w-lg space-y-2 sm:space-y-2">
               <p>Modern organisations require specialised expertise across security, technology, operations, and growth.</p>
               <p>Execution arms provide this expertise in structured, deployable units without creating independent silos or external vendor dependency.</p>
             </div>
             <p className="text-xs sm:text-sm font-medium text-white pt-2"># Security, Technology, Operations</p>
           </section>
 
-          <section className="space-y-4 sm:space-y-6 pt-8 sm:pt-10 border-t border-white/10">
+          <section className="space-y-2 sm:space-y-3 pt-4 sm:pt- ">
   {/* Replaced square div with SVG Container */}
-  <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
+  <div className="w-10 h-10 sm:w-10 sm:h-10 flex items-center justify-center">
    <svg xmlns="http://www.w3.org/2000/svg" width="76" height="95" viewBox="0 0 76 95" fill="none">
   <foreignObject x="-7" y="45" width="90" height="57"><div style={{backdropFilter: "blur(3.5px)", clipPath: "url(#bgblur_0_193_5155_clip_path)", height: "100%", width: "100%"}}></div></foreignObject><path data-figma-bg-blur-radius="7" d="M38 95L76 73.5L38 52L0 73.5L38 95Z" fill="white" fill-opacity="0.47"/>
   <path d="M38 0L0 21.3333V56L38 34.6667V0Z" fill="#D9D9D9" fill-opacity="0.57"/>
@@ -225,15 +225,17 @@ const Introduction = () => {
 </svg>
   </div>
 
-  <h2 className="text-xl sm:text-2xl md:text-3xl font-light">Why They Are Not Independent</h2>
+  <h3 className="text-xl sm:text-2xl md:text-3xl ">Why They Are Not Independent</h3>
   
-  <p className="text-gray-400 text-xs xs:text-sm max-w-lg">
-    They function inside Ascella Group's governance framework, accountability structure, and oversight mechanisms.
+  <p className="text-gray-300  xs:text-sm max-w-lg">
+   Execution arms do not operate autonomously. <br />
+   <span >They function inside Ascella Group’s governance framework, accountability structure, and oversight mechanisms.</span>
+
   </p>
   
   <div className="pt-2">
-    <p className="text-white text-base sm:text-lg font-light leading-tight"># Delivery is distributed.</p>
-    <p className="text-white text-base sm:text-lg font-light leading-tight">Accountability remains central.</p>
+    <h5 className="text-white text-base sm:text-lg  "># Delivery is distributed.</h5>
+    <h5 className="text-white text-base sm:text-lg  ">Accountability remains central.</h5>
   </div>
 </section>
 

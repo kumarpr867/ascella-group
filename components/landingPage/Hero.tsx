@@ -37,10 +37,12 @@ export default function Hero() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
-        className="absolute inset-0 flex items-center justify-center z-1"
+        className="absolute inset-0 flex items-center justify-center z-1 overflow-hidden"
       >
-        <div className="w-[70vw] max-w-[900px] aspect-square">
-          <Globe3D />
+        <div className="w-screen max-w-none h-screen flex items-center justify-center">
+          <div className="w-full h-full">
+            <Globe3D />
+          </div>
         </div>
       </motion.div>
 
@@ -55,7 +57,7 @@ export default function Hero() {
         animate="visible"
         variants={stagger}
       >
-        <div className="mx-auto max-w-7xl px-6 flex justify-between">
+        <div className="mx-auto max-w-7xl px-6 md:px-8 flex justify-between">
           <motion.div variants={fadeUp} className="space-y-1 text-md">
             <PlusHeading text="Clear Ownership" />
             <PlusHeading text="Calm Execution" />
@@ -74,7 +76,7 @@ export default function Hero() {
         animate="visible"
         variants={stagger}
       >
-        <div className="mx-auto max-w-7xl px-6 flex justify-between gap-12">
+        <div className="mx-auto max-w-7xl px-6 md:px-8 flex justify-between gap-12">
 
           <motion.h2 variants={fadeUp} className="text-gray-300">
             A Unified <br />
@@ -116,7 +118,7 @@ export default function Hero() {
         />
 
         <motion.div
-          className="text-b3  px-24 pt-4 flex justify-between"
+          className="text-b3 px-6 md:px-24 pt-4 flex justify-between"
           variants={stagger}
           initial="hidden"
           animate="visible"

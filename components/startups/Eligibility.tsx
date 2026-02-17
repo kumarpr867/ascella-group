@@ -73,7 +73,7 @@ export default function Eligibility() {
           <div className="bg-white-05 border border-fff10 backdrop-blur-md rounded-2xl p-8 md:p-10 shadow-2xl">
             <div className="flex gap-4 mb-8">
               
-              <div className="grid grid-cols-3 gap-1 h-fit pt-1 opacity-40">
+              <div className="grid grid-cols-3 gap-1 h-fit pt-1  bg-blur opacity-40">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="w-1.5 h-1.5 bg-white" />
                 ))}
@@ -93,8 +93,8 @@ export default function Eligibility() {
                     index !== criteria.length - 1 ? "border-b border-fff10" : ""
                   }`}
                 >
-                  <span className="text-gray-500 font-mono text-sm mr-8">{item.id}</span>
-                  <span className="text-gray-200 text-base md:text-lg font-light">
+                  <span className=" font-mono text-sm mr-8">{item.id}</span>
+                  <span className=" text-base md:text-lg font-light">
                     {item.text}
                   </span>
                 </div>
