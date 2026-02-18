@@ -49,10 +49,28 @@ const CloseIcon = () => (
   </svg>
 );
 
-// ── Hamburger icon ──
+// ── Custom Menu Icon (corner brackets + X pattern) ──
 const MenuIcon = () => (
-  <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M4 6h16M4 12h16M4 18h16" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="29"
+    height="29"
+    viewBox="0 0 29 29"
+    fill="none"
+  >
+    {/* Corner bracket — bottom-left */}
+    <path d="M0.25 22.8055V26.4352V28.25H6.00941" stroke="white" strokeWidth="0.5" />
+    {/* Corner bracket — top-left */}
+    <path d="M0.25 5.69446V2.06483V0.250013H6.00941" stroke="white" strokeWidth="0.5" />
+    {/* Corner bracket — bottom-right */}
+    <path d="M27.7681 22.8055V26.4352V28.25H22.0087" stroke="white" strokeWidth="0.5" />
+    {/* Corner bracket — top-right */}
+    <path d="M27.7681 5.69446V2.06483V0.250013H22.0087" stroke="white" strokeWidth="0.5" />
+    {/* X strokes */}
+    <path d="M6.24566 6.75L13.498 14.0022" stroke="white" strokeWidth="0.5" />
+    <line x1="12.6402" y1="13.1443" x2="20.6402" y2="21.1443" stroke="white" strokeWidth="0.5" />
+    <path d="M12.2864 15.0021L20.75 6.53873" stroke="white" strokeWidth="0.5" />
+    <line x1="6.14427" y1="21.1443" x2="14.1443" y2="13.1443" stroke="white" strokeWidth="0.5" />
   </svg>
 );
 
@@ -120,7 +138,7 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {/* Mobile Hamburger */}
+            {/* Mobile Hamburger — custom icon */}
             <button
               className="md:hidden flex items-center px-2 py-1 text-white"
               onClick={() => setMenuOpen(true)}

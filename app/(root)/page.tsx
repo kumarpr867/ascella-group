@@ -6,7 +6,7 @@ import HowWeOperate from "@/components/landingPage/HowWeOperate";
 import Faq from "@/components/Faq";
 import Engagement from "@/components/landingPage/Engagement";
 import Prog from "@/components/landingPage/Prog";
-import WhoWeWorkWith from "@/components/landingPage/WhoWeWorkWith";
+import WhoWeWorkWith from "@/components/landingPage/whoWeWorkWith";
 
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
       <Ownership />
       <Arms /> 
       <HowWeOperate />
-      <WhoWeWorkWith />
+      <WhoWeWorkWith/>
       <Faq />
       <Engagement />
     </div>
