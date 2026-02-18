@@ -61,12 +61,12 @@ const ProgramEmbedded = () => {
           </div>
 
           <div className="max-w-2xl mb-4 relative z-20">
-            <h2 className="text-[38px] font-light leading-[1.1] tracking-tight">
+            <h3 className="text-[36px]  leading-[1.1] tracking-tight">
               The Startups Programme embeds
               <span className="block text-white/40">
                 operating structure, governance, and accountability before scale begins.
               </span>
-            </h2>
+            </h3>
           </div>
         </div>
 
@@ -76,14 +76,14 @@ const ProgramEmbedded = () => {
           {/* Box 1 */}
           <div className={boxClass}>
             <div className="absolute top-10 left-10">
-              <img src="/group 1665 (2).svg" alt="icon" className="w-6 h-6" />
+              <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-5">
               <h5 className="text-[20px] font-light leading-tight">
                 Why operating structure is introduced early
               </h5>
-              <div className="text-[13px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
+              <div className="text-[12px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
                 <p>Most early-stage companies prioritise product, growth, and funding.</p>
                 <p>Operating structure — governance, accountability, and execution control — is often deferred until complexity forces reactive changes.</p>
                 <p>Introducing structure early prevents execution debt.</p>
@@ -108,7 +108,7 @@ const ProgramEmbedded = () => {
           {/* Box 3 */}
           <div className={boxClass}>
             <div className="absolute top-10 left-10">
-              <img src="/group 1670.svg" alt="icon" className="w-6 h-6" />
+              <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
             </div>
 
             <div className="space-y-6">

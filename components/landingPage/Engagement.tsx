@@ -1,31 +1,39 @@
 import Link from "next/link"
 import Image from "next/image"
 
-export default function Engagement (){
+export default function Engagement() {
     return (
         <section className="flex flex-col">
             <div className="border-y border-color ">
                 <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
             </div>
-            <div className="mx-auto max-w-7xl  flex flex-col p-15 border-x border-color">
-                <div className="flex justify-between mb-15">
-                    <h1 className="uppercase text-2xl text-gray-200 text-thin"><span className="text-white">Initiate an</span> alignment-led <br/> engagement process.</h1>
-                    <div className="flex flex-col font-light">
-                        <Link href={"/"}>hello@ascellagroup.com</Link>
-                        <p>+91 999 999 9990</p>
+            <div className="mx-auto max-w-7xl flex flex-col py-10 md:p-15 border-x border-color">
+                <div className="flex justify-center md:justify-between mb-15">
+                    <h1 className="uppercase text-2xl text-gray-200 text-thin"><span className="text-white">Initiate an</span> alignment-led <br /> engagement process.</h1>
+                    <div className="hidden md:flex flex-col font-light">
+                        <Link href={"/"}>hello@ascella.group</Link>
+                        <p>+91 16045 10860</p>
                     </div>
                 </div>
-                <div className="flex justify-between gap-20">
-                    <div className="w-1/2 flex flex-col justify-between">
-                        <Image src="/engagement.png" alt="How We Operate" width={200} height={100} />
-                        <div className="flex justify-between px-10 gap-15">
+                <div className="flex  flex-col md:flex-row items-center justify-center md:justify-between gap-20">
+                    <div className="md:w-1/2 flex flex-col gap-20 items-center md:items-start md:justify-between">
+                        <div className="relative w-[250px] h-[250px] lg:w-[350px] md:h-[350px]">
+                            <Image src={"/engagementCircle.svg"} fill alt={""} />
+                        </div>
+                        <div className="flex justify-between px-10 gap-20 md:gap-32">
                             <div className="flex flex-col text-left gap-5">
-                                <h3 className="text-lg">Not sure where <br /> to begin?</h3>
-                                <p className="font-thin">Initial engagement focuses on alignment, not sales discussions.</p>
+                                <h3 className="text-b2 leading-tight">Not sure where <br /> to begin?</h3>
+                                <p className="font-thin leading-tight">Initial engagement focuses on alignment, not sales discussions.</p>
+
+                                <Link href={"/"}
+                                className="block md:hidden"
+                                >hello@ascella.group</Link>
                             </div>
                             <div className="flex flex-col text-left gap-5">
-                                <h3 className="text-lg">Begin alignment Execution follows.</h3>
-                                <p className="font-thin">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. </p>
+                                <h3 className="text-b2 leading-tight">Begin alignment Execution follows.</h3>
+                                <p className="font-thin leading-tight">The first step focuses on clarity and fit.</p>
+
+                                <p className="block md:hidden">+91 16045 10860</p>
                             </div>
                         </div>
                     </div>

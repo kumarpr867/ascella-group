@@ -5,8 +5,8 @@ import Arms from "@/components/landingPage/Arms";
 import HowWeOperate from "@/components/landingPage/HowWeOperate";
 import Faq from "@/components/Faq";
 import Engagement from "@/components/landingPage/Engagement";
-import WhoWeWorkWith from "@/components/landingPage/WhoWeWorkWith";
 import Prog from "@/components/landingPage/Prog";
+import WhoWeWorkWith from "@/components/landingPage/WhoWeWorkWith";
 
 
 export default function Home() {

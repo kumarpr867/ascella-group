@@ -43,19 +43,19 @@ export default function Focuses() {
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 pt-20">
         {/* Header Section */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-20 items-start">
-          <div className="md:col-span-3">
-            <p className="text-[10px] leading-relaxed text-neutral-500 uppercase tracking-[0.2em] max-w-[220px] font-medium">
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. 
+          <div className="md:col-span-3 pt-6">
+            <p className="text-[10px] leading-relaxed  tracking-[0.3em] max-w-[420px] ">
+              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
             </p>
           </div>
 
           <div className="md:col-start-6 md:col-span-7">
-            <h2 className="text-4xl md:text-[52px] font-light tracking-tight leading-[1.05]">
+            <h3 className="text-2xl md:text-[38px]  tracking-tight leading-[1.05] text-right">
               <span className="block text-white">The programme focuses on</span>
               <span className="block text-neutral-500">
-                embedding operating discipline before scale introduces complexity.
+                embedding operating discipline <br />before scale introduces complexity.
               </span>
-            </h2>
+            </h3>
           </div>
         </div>
       </div>

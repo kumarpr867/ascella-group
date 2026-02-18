@@ -1,8 +1,10 @@
 import PartialOutlineBtn from "./btns/PartialOutlineBtn"
+import Link from "next/link"
+import Image from "next/image"
 
 type FooterSection = {
     title: string
-    items: string[]
+    items: { label: string; href: string }[]
     bordered: boolean
 }
 
@@ -10,28 +12,29 @@ const footerSections: FooterSection[] = [
     {
         title: "Pages",
         items: [
-            "Operating Model ",
-            "Execution Arms",
-            "Organisations",
-            "Startups",
+            { label: "Operating Model", href: "/how-ascella-operates" },
+            { label: "Execution Arms", href: "/execution-arms" },
+            { label: "Organisations", href: "/who-we-work-with" },
+            { label: "Startups", href: "/startups" },
+            { label: "Careers", href: "/careers" },
         ],
         bordered: true,
     },
     {
         title: "Contact",
         items: [
-            "hq@ascellagroup.com",
-            "Ascella.in",
-            "Organisations",
+            { label: "hq@ascellagroup.com", href: "mailto:hq@ascellagroup.com" },
+            { label: "Ascella.in", href: "https://ascella.in" },
+            { label: "Connect", href: "/connect" },
         ],
         bordered: true,
     },
     {
         title: "Follow Us",
         items: [
-            "Instagram",
-            "LinkedIn",
-            "Twitter",
+            { label: "Instagram", href: "https://instagram.com" },
+            { label: "LinkedIn", href: "https://linkedin.com" },
+            { label: "Twitter", href: "https://twitter.com" },
         ],
         bordered: false,
     },
@@ -53,7 +56,17 @@ const Footer = () => {
                                 </p>
                                 <ul className="space-y-2 text-xs md:text-sm text-gray-100">
                                     {section.items.map((item, idx) => (
-                                        <li key={idx}>{item}</li>
+                                        <li key={idx}>
+                                            <Link
+                                                href={item.href}
+                                                className="hover:text-white transition-colors duration-200"
+                                                {...(item.href.startsWith("http") || item.href.startsWith("mailto")
+                                                    ? { target: "_blank", rel: "noopener noreferrer" }
+                                                    : {})}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -65,7 +78,7 @@ const Footer = () => {
             <div className="mx-auto max-w-7xl  border-x border-color">
                 {/* Bottom section */}
                 <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
-                    
+
                     <div className="max-w-2xl w-full">
                         <div className="flex flex-col mb-10 md:mb-20">
                             <h2 className="text-2xl md:text-3xl lg:text-5xl leading-tight mb-2">
@@ -98,14 +111,18 @@ const Footer = () => {
                             </div>
                         </div>
                     </div>
+
                     <div className="flex flex-col items-start lg:items-end justify-between w-full max-w-xs mt-8 lg:mt-0">
-                        <img
-                            src="/logo.png"
-                            alt="Ascella Group Logo"
-                            width={120}
-                            height={40}
-                            className="w-24 md:w-32 h-auto"
-                        />
+                        <Link href="/" className="flex items-center gap-2">
+                            <Image
+                                src="/logo.png"
+                                alt="Ascella Logo"
+                                width={90}
+                                height={32}
+                                priority
+                                className="w-20 sm:w-24 h-auto"
+                            />
+                        </Link>
                         <p className="text-xs text-gray-300 mt-2 lg:mt-4">
                             Copyright @ Ascella Group
                         </p>
@@ -113,7 +130,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            
+
             <div className="w-full border-t border-color"></div>
 
             

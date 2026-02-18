@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import PlusHeading from "../../headings/PlusHeading";
 import { SECTIONS, EngagementLabel, EngagementSection } from "./data";
 import EngagementMenu from "./EngagementMenu";
-import { useEffect, useRef } from "react";
 import { useInView } from "framer-motion";
 
 function ScrollSection({
@@ -24,9 +23,7 @@ function ScrollSection({
   });
 
   useEffect(() => {
-    if (isInView) {
-      onEnterView(section.label);
-    }
+    if (isInView) onEnterView(section.label);
   }, [isInView, section.label, onEnterView]);
 
   return (
@@ -40,21 +37,15 @@ function ScrollSection({
         <p className="text-b2 text-gray-100">{section.description}</p>
       </div>
 
-      
       <div className="flex flex-col gap-5">
         <h3>[0{index + 1}]</h3>
         <div className="relative w-[400px] h-[500px]">
-          <Image
-            src={section.image}
-            alt={section.title}
-            fill={true}
-          />
+          <Image src={section.image} alt={section.title} fill={true} />
         </div>
       </div>
     </div>
   );
 }
-
 
 const MENU_ITEMS: EngagementLabel[] = [
   "Operation",
@@ -63,11 +54,8 @@ const MENU_ITEMS: EngagementLabel[] = [
   "Support",
 ];
 
-
 export default function EngagementModel() {
   const [active, setActive] = useState<EngagementLabel>("Operation");
-
-  const section = SECTIONS.find(s => s.label === active)!;
 
   return (
     <section className="m-20 xl:m-30">
@@ -83,25 +71,17 @@ export default function EngagementModel() {
       <div className="flex gap-20 items-start">
         <div className="flex-1 pr-4">
           {SECTIONS.map((section, index) => (
-            <ScrollSection
-              key={section.label}
-              section={section}
-              index={index}
-              onEnterView={setActive}
-            />
+            <ScrollSection key={section.label} section={section} index={index} onEnterView={setActive} />
           ))}
         </div>
 
-        {/* Sticky menu */}
-        <aside className="sticky top-30 self-start h-fit">
+        <aside className="sticky top-20 self-start h-fit">
           <EngagementMenu
             items={MENU_ITEMS}
             active={active}
             onChange={(label) => {
               setActive(label);
-              document
-                .getElementById(label)
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              document.getElementById(label)?.scrollIntoView({ behavior: "smooth", block: "start" });
             }}
           />
         </aside>

@@ -73,7 +73,7 @@ export default function Em3() {
         <section className="m-20 xl:m-30">
             
             <header className="flex flex-col gap-6 md:w-1/2 mb-20">
-                <PlusHeading text="ENGAGEMENT MODELS" size="md" />
+                <PlusHeading text="ENGAGEMENT MODELS" size="b2" />       
                 <h1 className="text-3xl leading-tight">
                     Engagement structures are{" "}
                     <span className="text-gray-200">

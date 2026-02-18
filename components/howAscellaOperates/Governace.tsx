@@ -21,56 +21,63 @@ const points = [
         ),
         count: "01",
         heading: "Decision and approval design",
-        description: "Clear decision ownership, approval layers, and authority limits are established early so execution moves without confusion, delays, or overlapping mandates."
+        description: "Clear decision ownership, approval layers, and authority limits are established early so execution moves without confusion, delays, or overlapping mandates.",
     },
     {
-        svg: <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="27" y="7" width="7" height="7" fill="#3D3D3D" />
-        </svg>
-        ,
-        count: "01",
+        svg: (
+            <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+                <rect x="27" y="7" width="7" height="7" className="fill-gray-400" />
+            </svg>
+        ),
+        count: "02",
         heading: "Escalation and risk control",
-        description: "Defined escalation routes and review checkpoints ensure risks surface quickly and reach accountable decision holders before impact spreads."
+        description: "Defined escalation routes and review checkpoints ensure risks surface quickly and reach accountable decision holders before impact spreads.",
     },
     {
-        svg: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="21" width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-        </svg>
-        ,
-        count: "01",
+        svg: (
+            <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="14" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="21" width="7" height="7" className="fill-gray-400" />
+                <rect x="28" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
+                <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" width="7" height="7" className="fill-gray-400" />
+            </svg>
+        ),
+        count: "03",
         heading: "Performance and outcome tracking",
-        description: "KPIs, SLAs, and outcome thresholds are agreed at the outset to maintain visibility into progress, quality, and operational stability."
+        description: "KPIs, SLAs, and outcome thresholds are agreed at the outset to maintain visibility into progress, quality, and operational stability.",
     },
     {
-        svg: <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect y="14" width="7" height="7" fill="#3D3D3D" />
-            <rect width="7" height="7" fill="#3D3D3D" />
-            <rect x="7" y="7" width="7" height="7" fill="#3D3D3D" />
-            <rect x="14" width="7" height="7" fill="#3D3D3D" />
-        </svg>,
-        count: "01",
+        svg: (
+            <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="28" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
+                <rect y="14" width="7" height="7" className="fill-gray-400" />
+                <rect x="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="14" y="7" width="7" height="7" className="fill-gray-400" />
+                <rect x="21" width="7" height="7" className="fill-gray-400" />
+            </svg>
+        ),
+        count: "04",
         heading: "Compliance and oversight alignment",
-        description: "Governance structures are aligned with regulatory, audit, and security requirements from the start so delivery remains controlled under external scrutiny."
-    }
-]
+        description: "Governance structures are aligned with regulatory, audit, and security requirements from the start so delivery remains controlled under external scrutiny.",
+    },
+];
 
 export default function Governace() {
     return (
@@ -103,13 +110,13 @@ export default function Governace() {
                         </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
                         {points.map((point, index) => (
-                            <div key={index} className="flex flex-col gap-2.5 bg-card p-6 rounded-2xl">
+                            <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
                                 <div className="flex justify-between w-full">
                                     <div className="mb-4">{point.svg}</div>
                                     <span className="text-xl font-thin mb-2">{point.count}</span>
                                 </div>
                                 <h5 className="leading-tight mb-2">{point.heading}</h5>
-                                <p className="text-gray-300 text-b3 max-w-xs">{point.description}</p>
+                                <p className="text-gray-300 text-b3 max-w-xs leading-tight">{point.description}</p>
                             </div>
                         ))}
                     </div>

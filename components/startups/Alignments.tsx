@@ -39,11 +39,11 @@ const Alignments = () => {
       
       {/* Header Section */}
       <div className="flex flex-col items-center w-full max-w-[720px] text-center px-4 z-10 relative">
-        <header className="flex flex-col gap-4">
-          <h3 className="text-[40px] md:text-[40px] leading-[1.1] font-normal tracking-tight">
+        <header className="flex flex-col gap-6">
+          <h3 className="text-[36px] md:text-[40px] leading-[1.1]  tracking-tight">
             Alignment is the first step toward structured execution readiness.
           </h3>
-          <p className="text-white/80 text-base md:text-mid max-w-[600px] mx-auto leading-relaxed">
+          <p className="text-white/60  md:text-mid max-w-[500px] mx-auto leading-relaxed">
             The Startups Programme begins with an alignment conversation focused on 
             operating context, accountability expectations, and readiness for governed execution.
           </p>
@@ -71,13 +71,13 @@ const Alignments = () => {
         
         {/* Top Icon */}
         <div className="mb-10 flex justify-center">
-          <img src="/image (1).png" alt="Icon" className="w-24 h-24 object-contain" />
+          <img src="/image-1.png" alt="Icon" className="w-24 h-24 object-contain" />
         </div>
 
         {/* Form Content */}
         <div className="w-full flex flex-col gap-5 text-center">
           <div className="flex flex-col gap-3">
-            <h2 className="text-3xl font-normal tracking-tight text-white/90">Let's Get You Started</h2>
+            <h3 className="text-3xl font-normal tracking-tight text-white/90">Let's Get You Started</h3>
             <p className="text-white/40 text-sm max-w-[400px] mx-auto">
               Fill out the form below and we'll get in touch to explore how Ascella can help power your success
             </p>

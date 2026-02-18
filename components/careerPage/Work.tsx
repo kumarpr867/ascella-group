@@ -14,13 +14,13 @@ export default function Work() {
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-8">
               
               {/* Left Side: Headline */}
-              <div className="max-w-3xl">
-                <h2 className="text-[32px] md:text-[48px] font-medium leading-[1.1] tracking-tight">
+              <div className="max-w-3xl pt-20">
+                <h2 className="text-[32px] md:text-[48px] leading-[1.1] tracking-tight">
                   Work within a governance-led
                 </h2>
 
                 {/* Icon and Operating Environment - Gap fixed */}
-                <div className="flex items-center justify-start gap-3 mt-1 group">
+                <div className="flex items-center justify-start gap-3 pl-30 mt-1 group">
                   <div className="border border-white/20 rounded-full p-2 md:p-3 shrink-0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -34,8 +34,8 @@ export default function Work() {
               </div>
 
               {/* Right Side: Paragraph */}
-              <div className="md:w-[280px] pt-20">
-                <p className="text-[10px] md:text-[11px] font-light tracking-widest leading-relaxed text-white/40 uppercase">
+              <div className="md:w-[280px] pt-30">
+                <p className="text-[12px] md:text-[11px]  tracking-widest leading-relaxed text-white/40 uppercase">
                   Ascella roles operate inside defined accountability,
                   structured execution, and central oversight frameworks.
                 </p>

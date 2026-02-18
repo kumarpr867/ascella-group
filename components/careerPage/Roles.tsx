@@ -8,13 +8,13 @@ const Roles = () => {
     <div className="bg-black text-white min-h-screen p-8 md:p-20 font-sans">
       
       {/* Header Section */}
-      <div className="max-w-6xl mx-auto mb-20 flex flex-col items-center text-center">
-        <div className="flex items-center gap-2 text-[10px] tracking-[0.3em] text-white/60 mb-8 uppercase font-medium">
-          <span className="text-2xl font-light text-white">+</span> 
-          <span>Working at Ascella</span>
+      <div className="max-w-6xl mx-auto mb-10 flex flex-col items-center text-center">
+        <div className="flex items-center gap-2 text-[10px] tracking-[0.3em] text-white/60 mb-8 uppercase ">
+          <span className="text-4xl  text-white">+ </span> 
+          <span className="text-2xl ">Working at Ascella</span>
         </div>
         
-        <h3 className="text-3xl md:text-[54px] font-medium leading-[1.1] max-w-5xl tracking-tight">
+        <h3 className="text-2xl md:text-[36px]  leading-[1.0] max-w-3xl tracking-tight">
           Roles at Ascella are {` `}
           <span className="text-[#6E6E6E]">
             designed around accountability structure, and execution discipline.
@@ -28,7 +28,7 @@ const Roles = () => {
           
           {/* Left Column: Operating Environment */}
           <div className="flex-1 p-10 md:p-16 border-b md:border-b-0 md:border-r border-white/10 flex flex-col">
-            <h3 className="text-[24px] font-medium mb-12">Operating environment</h3>
+            <h3 className="text-[24px]  mb-12">Operating environment</h3>
             
             {/* Box Image - Sized 152x154 as per Figma */}
             {/* Operating Environment SVG */}
@@ -47,8 +47,8 @@ const Roles = () => {
   </div>
 </div>
             <div className="mt-auto">
-              <h4 className="text-[16px] font-medium mb-4">Ascella operates as a unified operating group.</h4>
-              <p className="text-white/50 leading-relaxed text-[14px] font-light">
+              <h5 className="text-[16px]  mb-4">Ascella operates as a unified operating group.</h5>
+              <p className="text-white/50 leading-relaxed text-[12px]">
                 Work is structured through governance frameworks, defined decision rights, 
                 and measurable execution outcomes. Lorem ipsum dolor sit amet, consectetuer 
                 adipiscing elit. Aenean commodo ligula eget dolor.
@@ -58,7 +58,7 @@ const Roles = () => {
 
           {/* Right Column: Expectations */}
           <div className="flex-1 p-10 md:p-16 flex flex-col">
-            <h3 className="text-[24px] font-medium mb-12">Expectations</h3>
+            <h3 className="text-[24px]  mb-12">Expectations</h3>
             
             {/* Box Image - Sized 152x154 as per Figma */}
             <div className="flex  items-center mb-16 h-[200px]">
@@ -73,8 +73,8 @@ const Roles = () => {
             </div>
 
             <div className="mt-auto">
-              <h4 className="text-[16px] font-medium mb-4">Team members operate within structured pods and reporting models.</h4>
-              <p className="text-white/50 leading-relaxed text-[14px] font-light">
+              <h5 className="text-[16px]  mb-4">Team members operate within structured pods and reporting models.</h5>
+              <p className="text-white/50 leading-relaxed text-[12px] ">
                 Clarity of responsibility, documentation, and delivery discipline are expected 
                 from day one. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
                 Aenean commodo ligula eget dolor.

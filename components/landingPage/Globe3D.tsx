@@ -1,36 +1,25 @@
-"use client";
-
-import { Canvas, useThree } from "@react-three/fiber";
+import React, { Suspense, useRef } from "react";
+import { Canvas } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
-import { Suspense, useEffect } from "react";
+import * as THREE from "three";
 
 function Model() {
   const { scene } = useGLTF("/firstglobe.glb");
-  return <primitive object={scene} scale={0.3} />;
+  const ref = useRef<THREE.Object3D | null>(null);
+
+  // Render the GLB with its original materials so textures are visible.
+  return <primitive ref={ref} object={scene} scale={0.3} dispose={null} />;
 }
 
 export default function Globe3D() {
   return (
-    <Canvas camera={{ fov: 35, position: [0, 0, 3.5] }}>
-      <color attach="background" args={["#000000"]} />
-      <ambientLight intensity={0.5} />
-
-      <directionalLight
-        position={[4, 6, 4]}
-        intensity={0.8}
-      />
+    <Canvas camera={{ position: [0, 0, 2.5], fov: 50 }}>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 5]} intensity={1} />
       <Suspense fallback={null}>
         <Model />
       </Suspense>
-
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={0.35}
-      />
+      <OrbitControls enableZoom={false} enablePan={false} />
     </Canvas>
-
   );
 }
-

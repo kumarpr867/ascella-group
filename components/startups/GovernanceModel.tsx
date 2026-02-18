@@ -56,7 +56,7 @@ Montserrat text-gray-200 max-w-[280px] leading-relaxed">
         <div className={`${colWidth} border-r border-gray-400`}></div>
         <div className={`${colWidth} border-r border-gray-400 pt-30 pr-4 pl-4`}>
             <h3 className="text-xl font-[20px] mb-10">Operating Framework</h3>
-            <p className="text-gray-300 text-xs leading-relaxed font-light">Startups in the programme operate within Ascella's governance framework from the outset. <br />
+            <p className="text-gray-300 text-xs leading-relaxed ">Startups in the programme operate within Ascella's governance framework from the outset. <br />
             Decision rights, accountability paths, and escalation mechanisms are established before execution expands across teams, systems, or external parterns.</p>
         </div>
         <div className={`${sideWidth}`}></div>
@@ -80,11 +80,11 @@ Montserrat text-gray-200 max-w-[280px] leading-relaxed">
         <div className={`${colWidth} border-r border-gray-400 pt-30 pl-4`}>
           <div className="relative z-20">
             <h3 className="text-xl font-normal mb-12">Progressive Introduction</h3>
-            <p className="text-gray-400 text-xs font-light">Governance structures are introduced gradually as scale increases. Early- stage flexibility is preserved while accountability and oversight mature in parallel with organisational growth.</p>
+            <p className="text-gray-300 text-xs ">Governance structures are introduced gradually as scale increases. Early- stage flexibility is preserved while accountability and oversight mature in parallel with organisational growth.</p>
           </div>
         </div>
         <div className={`${colWidth} border-r border-gray-400 p-8 flex flex-col justify-end`}>
-          <p className="text-lg text-gray-400 leading-snug font-light">Execution remains adaptable to evolving startup environments. Accountabilty, ownership, and oversight remain clearly defined at every stage.</p>
+          <span className="text-lg text-gray-300 leading-snug ">Execution remains adaptable to evolving startup environments. Accountabilty, ownership, and oversight remain clearly defined at every stage.</span>
         </div>
         <div className={`${sideWidth}`}></div>
       </div>
