@@ -4,10 +4,10 @@ import Image from "next/image"
 export default function Engagement (){
     return (
         <section className="flex flex-col">
-            <div className=" border-y border-color ">
-                <div className="mx-25 py-15 border-x border-color"></div>
+            <div className="border-y border-color ">
+                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
             </div>
-            <div className="flex flex-col mx:15 lg:mx-25 p-15 border-x border-color">
+            <div className="mx-auto max-w-7xl  flex flex-col p-15 border-x border-color">
                 <div className="flex justify-between mb-15">
                     <h1 className="uppercase text-2xl text-gray-200 text-thin"><span className="text-white">Initiate an</span> alignment-led <br/> engagement process.</h1>
                     <div className="flex flex-col font-light">
@@ -99,7 +99,7 @@ export default function Engagement (){
                 </div>
             </div>
             <div className="border-t border-color ">
-                <div className="mx-25 py-15 border-x border-color"></div>
+                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
             </div>
         </section>
     )

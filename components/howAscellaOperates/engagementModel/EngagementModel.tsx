@@ -32,9 +32,15 @@ function ScrollSection({
       id={section.label}
       className="flex justify-between mb-32 scroll-mt-40"
     >
+<<<<<<< HEAD
       <div className="max-w-sm flex flex-col gap-5">
         <h2 className="text-xl">{section.title}</h2>
         <p className="text-sm text-gray-300">{section.description}</p>
+=======
+      <div className="max-w-sm flex flex-col gap-5 mt-32">
+        <h5>{section.title}</h5>
+        <p className="text-b2 text-gray-100">{section.description}</p>
+>>>>>>> a19ec7e4b85e71cc1ad7b27ca31149049a18e767
       </div>
 
       <div className="flex flex-col gap-5">
@@ -59,6 +65,7 @@ export default function EngagementModel() {
 
   return (
     <section className="m-20 xl:m-30">
+<<<<<<< HEAD
       <header className="flex flex-col gap-6 md:w-1/2 mb-20">
         <PlusHeading text="ENGAGEMENT MODELS" size="b2" />
         <h1 className="text-3xl leading-tight">
@@ -66,6 +73,14 @@ export default function EngagementModel() {
         </h1>
         <p className="font-extralight">
           Ascella engagements are structured based on organisational maturity, execution complexity, and governance need.
+=======
+      {/* Header */}
+      <header className="flex flex-col gap-6 w-2xl mb-20">
+        <PlusHeading text="ENGAGEMENT MODELS" />
+        <h3 className="font-light">Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.</h3>
+        <p className="text-b1 font-extralight">
+          Ascella engagements are structured around operating alignment, where ownership, governance, and measurement are defined before delivery begins so execution remains controlled and accountable instead of transactional and fragmented.
+>>>>>>> a19ec7e4b85e71cc1ad7b27ca31149049a18e767
         </p>
       </header>
 
@@ -76,7 +91,12 @@ export default function EngagementModel() {
           ))}
         </div>
 
+<<<<<<< HEAD
         <aside className="sticky top-20 self-start h-fit">
+=======
+        {/* Sticky menu */}
+        <aside className="sticky top-30 self-start h-fit">
+>>>>>>> a19ec7e4b85e71cc1ad7b27ca31149049a18e767
           <EngagementMenu
             items={MENU_ITEMS}
             active={active}
