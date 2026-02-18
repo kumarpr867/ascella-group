@@ -39,11 +39,11 @@ export default function Faq() {
 
 
   return (
-    <section className="sm:px-6 md:px-10 md:py-20 lg:px-28 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+    <section className="mx-auto max-w-7xl py-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
       <div className="flex flex-col gap-4 py-6   max-w-md md:max-w-xs">
         <PlusHeading text="FAQs" size="b1" plusSize="lg" />
         <h3>Frequently Asked Questions</h3>
-        <p className="text-b1">
+        <p className="text-b1 leading-tight">
           Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function Faq() {
                 {faq.question}
               </h5>
               <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? "max-h-96" : "max-h-0"}`}></div>
-              <p className={`absolute bottom-8 left-8 right-10 text-b1 text-white transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+              <p className={`absolute bottom-8 left-8 right-10 text-b3 text-white transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
                 {faq.answer}
               </p>
             </div>

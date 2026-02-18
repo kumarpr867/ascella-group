@@ -19,8 +19,8 @@ const points = [
             <rect x="7" width="7" height="7" className="fill-gray-400" />
         </svg>,
         count: "01",
-        heading: "Governance-led execution",
-        description: "Decision rights and accountability are defined upfront to keep execution controlled and auditable."
+        heading: "Structured authority",
+        description: "Decision ownership stays defined from the start, with clear authority and outcome responsibility assigned to specific roles instead of shared committees."
     },
     {
         svg: <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,9 +34,9 @@ const points = [
             <rect x="27" y="7" width="7" height="7" className="fill-gray-400" />
         </svg>
         ,
-        count: "01",
-        heading: "Pod-based delivery",
-        description: "Specialised pods operate within Ascella’s framework to deliver without fragmentation."
+        count: "02",
+        heading: "Outcome pods",
+        description: "Small cross functional teams own defined results within a shared operating system, which reduces handoffs and keeps accountability intact throughout delivery."
     },
     {
         svg: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,9 +50,9 @@ const points = [
             <rect x="14" width="7" height="7" className="fill-gray-400" />
         </svg>
         ,
-        count: "01",
-        heading: "KPIs and SLAs",
-        description: "Clear performance metrics keep progress, risk, and delivery continuously visible."
+        count: "03",
+        heading: "Operational signals",
+        description: "Progress, risk, and dependencies remain visible through a small set of consistent signals that surface issues early and trigger action."
     },
     {
         svg: <svg width="35" height="21" viewBox="0 0 35 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,15 +65,15 @@ const points = [
             <rect x="7" y="7" width="7" height="7" className="fill-gray-400" />
             <rect x="14" width="7" height="7" className="fill-gray-400" />
         </svg>,
-        count: "01",
-        heading: "Security-first by default",
-        description: "Every system and process assumes risk before trust, reducing exposure."
+        count: "04",
+        heading: "Built in security",
+        description: "Risk consideration stays embedded in planning and execution workflows, which reduces exposure and prevents last minute controls or reactive fixes."
     }
 ]
 
 export default function HowWeOperate() {
     return (
-        <section className="flex flex-center leading-tight gap-25 px-25 py-20">
+        <section className="mx-auto max-w-7xl flex flex-center leading-tight gap-25  py-20">
             <motion.div
                 initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}

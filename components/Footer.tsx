@@ -41,7 +41,7 @@ const Footer = () => {
     return (
         <footer className="mb-20 lg:mb-2 w-full">
             <div className="border-y border-color">
-                <div className="flex flex-col sm:flex-row mx-2 sm:mx-6 lg:mx-24 border-x border-color">
+                <div className="mx-auto max-w-7xl flex flex-col sm:flex-row border-x border-color">
                     <div className="w-full grid grid-cols-1 sm:grid-cols-3">
                         {footerSections.map((section, i) => (
                             <div
@@ -62,7 +62,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="border-x border-color mx-2 sm:mx-6 lg:mx-24 ">
+            <div className="mx-auto max-w-7xl  border-x border-color">
                 {/* Bottom section */}
                 <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
                     

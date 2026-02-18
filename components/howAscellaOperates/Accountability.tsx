@@ -47,7 +47,7 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex justify-between mb-5 justify-between items-center my-6">
+          <div className="flex  mb-5 justify-between items-center my-6">
             <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
@@ -78,7 +78,7 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex justify-between mb-5 justify-between items-center my-6">
+          <div className="flex  mb-5 justify-between items-center my-6">
             <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">

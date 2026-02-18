@@ -1,10 +1,10 @@
 import PartialOutlineBtn from "../btns/PartialOutlineBtn"
 
-export default function Programme () {
+export default function Prog () {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="flex px-6 py-8 lg:px-10 lg:py-10 mx-5 lg:mx-25 border-x border-color">
+                <div className="mx-auto max-w-7xl sm:px-6 flex px-6 py-8 lg:px-10 lg:py-10 border-x border-color">
                     <h3 className="text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
                         embedding operating <br />discipline before scale introduces complexity.
@@ -12,7 +12,7 @@ export default function Programme () {
                 </div>
             </div>
 
-            <div className="border-x border-color mx-5 lg:mx-25">
+            <div className="mx-auto max-w-7xl sm:px-6 border-x border-color">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
                     <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">
@@ -103,7 +103,7 @@ export default function Programme () {
             </div>
 
             <div className="w-full border-y border-color">
-                <div className="mx-5 lg:mx-25 border-x border-color">
+                <div className="mx-auto max-w-7xl border-x border-color">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-6 lg:p-10">
                         <PartialOutlineBtn text="See How It Works" />
                         <p className="max-w-xl text-left  leading-relaxed text-b3 md:pl-60">
