@@ -132,7 +132,7 @@ export default function ExecutionProblemSection() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
             >
-                <div className="hidden md:flex mx-auto max-w-7xl sm:px-6 flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
+                <div className="hidden md:flex mx-auto max-w-7xl sm:px-4 flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
                     <motion.p
                         variants={fadeUp}
                         style={{ willChange: "transform" }}
@@ -146,7 +146,7 @@ export default function ExecutionProblemSection() {
                         style={{ willChange: "transform" }}
                         className="max-w-lg text-right"
                     >
-                        <span className="text-white">The Execution Problem </span>
+                        <span className="text-[18px] md:text-[36px]text-white">The Execution Problem </span>
                         <span className="text-gray-400">
                             Modern Organisations Face
                         </span>
@@ -154,7 +154,7 @@ export default function ExecutionProblemSection() {
                 </div>
                 {/* for small screen  */}
                 <div className="md:hidden flex mx-auto max-w-7xl flex-col md:justify-between gap-12 pb-12 px-10">
-                    <motion.h3
+                    <motion.h4
                         variants={fadeUp}
                         style={{ willChange: "transform" }}
                     >
@@ -162,7 +162,7 @@ export default function ExecutionProblemSection() {
                         <span className="text-gray-400">
                             Modern Organisations Face
                         </span>
-                    </motion.h3>
+                    </motion.h4>
 
                     <motion.p
                         variants={fadeUp}
@@ -214,7 +214,7 @@ export default function ExecutionProblemSection() {
                             {item.icon}
                         </motion.div>
 
-                        <h4 className="mb-2 mt-6">{item.title}</h4>
+                        <h5 className="mb-2 mt-6">{item.title}</h5>
 
                         <div className="w-10 h-px mb-4" />
 

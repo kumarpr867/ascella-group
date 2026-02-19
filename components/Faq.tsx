@@ -12,9 +12,9 @@ const faqs = [
       "Ascella Group is a unified operating authority that designs and governs execution across security, technology, workforce, operations, and revenue.",
   },
   {
-    question: "Is Ascella a consulting firm?",
+    question: "Is Ascella a consulting company?",
     answer:
-      "Ascella is not a consulting firm. Work does not stop at advice or recommendations. Responsibility extends into execution, governance, and outcomes.",
+      "Ascella is not a consulting company. Work does not stop at advice or recommendations. Responsibility extends into execution, governance, and outcomes.",
   },
   {
     question: "Does Ascella replace internal teams?",
@@ -116,12 +116,12 @@ export default function Faq() {
           );
         })}
       </section>
-      <section className="block md:hidden mx-auto max-w-7xl px-6 py-16 md:py-24">
+      <section className="block md:hidden mx-auto max-w-7xl px-10 py-16 md:py-24">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-10 max-w-md">
           <PlusHeading text="FAQs" size="b1" plusSize="lg" />
-          <h3>Frequently Asked Questions</h3>
-          <p className="text-b1 text-gray-200">
+          <h4>Frequently Asked Questions</h4>
+          <p className="text-b2 text-gray-200 leading-tight">
             Common questions about how Ascella works, what it owns, and how engagements run.
             Written to help assess fit and set expectations early.
           </p>
@@ -142,7 +142,7 @@ export default function Faq() {
                   onClick={() => toggle(index)}
                   className="w-full flex items-center justify-between text-left"
                 >
-                  <h5 className="pr-6">{faq.question}</h5>
+                  <h6 className="pr-6">{faq.question}</h6>
 
                   <div
                     className={`transition-transform duration-300 ${isOpen ? "rotate-90" : ""

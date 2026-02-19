@@ -4,15 +4,15 @@ export default function Prog () {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="mx-auto max-w-7xl sm:px-6 flex px-6 py-8 lg:px-10 lg:py-10 border-x border-color">
-                    <h3 className="text-gray-300 leading-tight tracking-tighter">
+                <div className="mx-auto max-w-7xl sm:px-6 flex px-6 py-8 lg:px-10 lg:py-10 border-x-0 lg:border-x border-color">
+                    <h3 className="text-[24px] md:text-[36px] text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
                         embedding operating <br />discipline before scale introduces complexity.
                     </h3>
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl sm:px-6 border-x border-color">
+            <div className="mx-auto max-w-7xl sm:px-6 border-x-0 md:border-x border-color">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
                     <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">
@@ -40,7 +40,7 @@ export default function Prog () {
                             },
                         ].map((item, i) => (
                             <div key={i} className="border-b border-color p-6 lg:p-10 last:border-0">
-                                <h5 className="pb-10">{item.title}</h5>
+                                <h5 className="text-[18px] md:text-[20px] pb-10">{item.title}</h5>
                                 <p className="text-b2 pb-2 md:pr-48">{item.subtitle}</p>
                                 <p className="text-b2 text-gray-200">{item.body}</p>
                             </div>
@@ -104,8 +104,8 @@ export default function Prog () {
 
             <div className="w-full border-y border-color">
                 <div className="mx-auto max-w-7xl border-x border-color">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-6 lg:p-10">
-                        <PartialOutlineBtn text="See How It Works" />
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between  p-6 lg:p-10">
+                        <PartialOutlineBtn text="See How It Works" size="sm" />
                         <p className="max-w-xl text-left  leading-relaxed text-b3 md:pl-60">
                             Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>

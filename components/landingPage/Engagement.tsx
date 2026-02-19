@@ -1,15 +1,22 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
+import dynamic from "next/dynamic"
+
+const ParticleSphere = dynamic(() => import("./ParticleSphere"), {
+    ssr: false
+})
 
 export default function Engagement() {
     return (
         <section className="flex flex-col">
             <div className="border-y border-color ">
-                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
+                <div className="mx-auto max-w-7xl py-15 border-x-0 md:border-x border-color"></div>
             </div>
-            <div className="mx-auto max-w-7xl flex flex-col py-10 md:p-15 border-x border-color">
+            <div className="mx-auto max-w-7xl flex flex-col py-10 md:p-15 border-x-0 md:border-x border-color">
                 <div className="flex justify-center md:justify-between mb-15">
-                    <h1 className="uppercase text-2xl text-gray-200 text-thin"><span className="text-white">Initiate an</span> alignment-led <br /> engagement process.</h1>
+                    <h1 className="uppercase text-[24px] md:text-[36px] text-gray-200 text-thin"><span className="text-white">Initiate an</span> alignment-led <br /> engagement process.</h1>
                     <div className="hidden md:flex flex-col font-light">
                         <Link href={"/"}>hello@ascella.group</Link>
                         <p>+91 16045 10860</p>
@@ -17,27 +24,29 @@ export default function Engagement() {
                 </div>
                 <div className="flex  flex-col md:flex-row items-center justify-center md:justify-between gap-20">
                     <div className="md:w-1/2 flex flex-col gap-20 items-center md:items-start md:justify-between">
-                        <div className="relative w-[250px] h-[250px] lg:w-[350px] md:h-[350px]">
-                            <Image src={"/engagementCircle.svg"} fill alt={""} />
+                        <div className="relative w-[400px] lg:w-[500px] aspect-square">
+                            <ParticleSphere />
                         </div>
+
+
                         <div className="flex justify-between px-10 gap-20 md:gap-32">
-                            <div className="flex flex-col text-left gap-5">
-                                <h3 className="text-b2 leading-tight">Not sure where <br /> to begin?</h3>
+                            <div className="flex flex-col gap-5">
+                                <h3 className="text-[14px] text-left leading-tight">Not sure where <br /> to begin?</h3>
                                 <p className="font-thin leading-tight">Initial engagement focuses on alignment, not sales discussions.</p>
 
                                 <Link href={"/"}
-                                className="block md:hidden"
+                                    className="block md:hidden"
                                 >hello@ascella.group</Link>
                             </div>
-                            <div className="flex flex-col text-left gap-5">
-                                <h3 className="text-b2 leading-tight">Begin alignment Execution follows.</h3>
+                            <div className="flex flex-col gap-5">
+                                <h3 className="text-[14px] text-left leading-tight">Begin alignment Execution follows.</h3>
                                 <p className="font-thin leading-tight">The first step focuses on clarity and fit.</p>
 
                                 <p className="block md:hidden">+91 16045 10860</p>
                             </div>
                         </div>
                     </div>
-                    <form className="w-full max-w-md space-y-5">
+                    <form className="w-full max-w-md p-10 md:p-0 space-y-5">
 
                         <div>
                             <label className="block text-sm text-white font-light mb-1">Full Name</label>
@@ -107,7 +116,7 @@ export default function Engagement() {
                 </div>
             </div>
             <div className="border-t border-color ">
-                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
+                <div className="mx-auto max-w-7xl py-15 border-x-0 md:border-x border-color"></div>
             </div>
         </section>
     )
