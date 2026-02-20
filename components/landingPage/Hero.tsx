@@ -2,7 +2,7 @@
 import PlusHeading from "../headings/PlusHeading";
 import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
-import Globe3D from "./Globe3D";
+import { World } from "./Globe3D";
 
 const EASE = cubicBezier(0.33, 1, 0.68, 1);
 
@@ -75,9 +75,16 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 top-[10vh] flex items-center justify-center z-2"
         >
-          <div className="w-[70vw] max-w-[900px] aspect-square">
-            <Globe3D />
-          </div>
+          <motion.div
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 2,
+              ease: "linear"
+            }}
+            className="w-[70vw] max-w-[900px] aspect-square pointer-events-none md:pointer-events-auto">
+            <World />
+          </motion.div>
         </motion.div>
 
 
@@ -226,7 +233,7 @@ export default function Hero() {
           className="flex justify-center z-0"
         >
           <div className="w-[85vw] max-w-[600px] aspect-square">
-            <Globe3D />
+            <World />
           </div>
         </motion.div>
 

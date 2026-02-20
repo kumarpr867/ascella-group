@@ -1,10 +1,11 @@
 import Image from "next/image"
 import PlusHeading from "../headings/PlusHeading"
+import EnterpriseStartupSystem from "./EnterpriseStartupSystem"
 
 export default function WhoWeWorkWith() {
   return (
     <section className="border-y border-color">
-      <div className="mx-4 lg:mx-25">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 border-x border-color">
           <div
             className="
@@ -17,7 +18,7 @@ export default function WhoWeWorkWith() {
           >
 
             
-            <div className="border-b border-color px-6 py-12 lg:px-8 lg:py-28">
+            <div className="border-b border-color px-6 py-6 lg:px-8 lg:py-10">
               <h2 className="leading">
                 Who We <span className="text-gray-200">Work With</span>
               </h2>
@@ -70,15 +71,8 @@ export default function WhoWeWorkWith() {
           </div>
 
           
-          <div className="flex items-center justify-center p-10 lg:p-20">
-            <Image
-              src="/whoWeWorkWith/sphere.png"
-              alt="Abstract sphere"
-              width={520}
-              height={520}
-              className="max-w-[320px] lg:max-w-full h-auto"
-              priority
-            />
+          <div className="flex items-center justify-center p-10 h-full w-full">
+            <EnterpriseStartupSystem />
           </div>
 
         </div>

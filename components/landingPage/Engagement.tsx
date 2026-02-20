@@ -27,18 +27,24 @@ export default function Engagement() {
                 <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
                     <div className="w-full md:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
                         <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px]">
-                            <Image src={"/engagementCircle.svg"} fill alt={""} />
+                            <ParticleSphere />
                         </div>
-                        <div className="flex justify-between px-2 sm:px-6 gap-8 sm:gap-12 md:gap-16 w-full">
-                            <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                                <h3 className="text-b2 leading-tight text-sm sm:text-base">Not sure where <br /> to begin?</h3>
-                                <p className="font-thin leading-tight text-xs sm:text-sm">Initial engagement focuses on alignment, not sales discussions.</p>
-                                <Link href={"/"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
+
+
+                        <div className="grid grid-cols-2 justify-between px-5 gap-5 md:gap-32">
+                            <div className="flex flex-col gap-5">
+                                <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
+                                <p className="font-thin leading-tight min-h-20">Initial engagement focuses on alignment, not sales discussions.</p>
+
+                                <Link href={"/"}
+                                    className="block md:hidden"
+                                >hello@ascella.group</Link>
                             </div>
-                            <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                                <h3 className="text-b2 leading-tight text-sm sm:text-base">Begin alignment. Execution follows.</h3>
-                                <p className="font-thin leading-tight text-xs sm:text-sm">The first step focuses on clarity and fit.</p>
-                                <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
+                            <div className="flex flex-col gap-5">
+                                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
+                                <p className="font-thin leading-tight min-h-20">The first step focuses on clarity and fit.</p>
+
+                                <p className="block md:hidden">+91 16045 10860</p>
                             </div>
                         </div>
                     </div>
