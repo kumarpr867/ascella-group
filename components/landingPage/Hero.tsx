@@ -73,7 +73,7 @@ export default function Hero() {
           variants={globeAnim}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 top-[18vh] flex items-center justify-center z-2"
+          className="absolute inset-x-0 top-[10vh] flex items-center justify-center z-2"
         >
           <div className="w-[70vw] max-w-[900px] aspect-square">
             <Globe3D />
@@ -202,7 +202,7 @@ export default function Hero() {
       </div>
 
 
-      <div className="mobile py-10 md:hidden flex flex-col justify-between h-[100vh]">
+      <div className="mobile py-10 md:hidden flex flex-col justify-between min-h-[100vh]">
 
         <motion.div variants={container} initial="hidden" animate="visible">
           <div className="mx-auto max-w-7xl px-6 flex flex-col gap-5">

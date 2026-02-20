@@ -1,5 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
+import dynamic from "next/dynamic"
+
+const ParticleSphere = dynamic(() => import("./ParticleSphere"), {
+    ssr: false
+})
 
 export default function Engagement() {
     return (
