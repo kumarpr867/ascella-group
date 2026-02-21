@@ -1,280 +1,337 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
-import ThreeGlobe from "three-globe";
-import { useThree, Canvas, extend } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  BufferGeometry,
+  BufferAttribute,
+  PointsMaterial,
+  Points,
+  Texture,
+  CanvasTexture,
+  AdditiveBlending,
+  SphereGeometry,
+  MeshBasicMaterial,
+  Mesh,
+  Vector3,
+  Vector2,
+  Raycaster
+} from "three";
+import { useThree, Canvas, extend, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "./globe.json";
 
-extend({ ThreeGlobe });
+const GLOBE_CONFIG = {
+  // Particle appearance
+  particleSize: 0.0001,         // INCREASED from 0.045 to 0.06 for even larger pixels
+  particleColor: "#ffffff",    // Color of pixels (hex code)
+  particleOpacity: 0.30,       // Transparency (0-1)
 
-// Sample data for arcs connecting major cities across continents
-const generateArcData = () => {
-  // Major cities across continents
-  const cities = [
-    // North America
-    { lat: 40.7128, lng: -74.0060, continent: 'NA' }, // NYC
-    { lat: 34.0522, lng: -118.2437, continent: 'NA' }, // LA
-    { lat: 41.8781, lng: -87.6298, continent: 'NA' }, // Chicago
-    
-    // South America
-    { lat: -23.5505, lng: -46.6333, continent: 'SA' }, // Sao Paulo
-    { lat: -34.6037, lng: -58.3816, continent: 'SA' }, // Buenos Aires
-    { lat: -12.0464, lng: -77.0428, continent: 'SA' }, // Lima
-    
-    // Europe
-    { lat: 51.5074, lng: -0.1278, continent: 'EU' }, // London
-    { lat: 48.8566, lng: 2.3522, continent: 'EU' }, // Paris
-    { lat: 52.5200, lng: 13.4050, continent: 'EU' }, // Berlin
-    { lat: 41.9028, lng: 12.4964, continent: 'EU' }, // Rome
-    
-    // Asia
-    { lat: 35.6762, lng: 139.6503, continent: 'AS' }, // Tokyo
-    { lat: 31.2304, lng: 121.4737, continent: 'AS' }, // Shanghai
-    { lat: 28.6139, lng: 77.2090, continent: 'AS' }, // Delhi
-    { lat: 13.7563, lng: 100.5018, continent: 'AS' }, // Bangkok
-    
-    // Africa
-    { lat: -26.2041, lng: 28.0473, continent: 'AF' }, // Johannesburg
-    { lat: 30.0444, lng: 31.2357, continent: 'AF' }, // Cairo
-    { lat: 6.5244, lng: 3.3792, continent: 'AF' }, // Lagos
-    
-    // Australia
-    { lat: -33.8688, lng: 151.2093, continent: 'OC' }, // Sydney
-    { lat: -37.8136, lng: 144.9631, continent: 'OC' }, // Melbourne
+  // Grid & density
+  pointsPerDegree: 0.7,          // Grid resolution
+  clusterChance: 0.6,          // Chance to place a cluster
+
+  // Cluster sizes (min/max)
+  minClusterSize: 2,           // Minimum pixels per cluster
+  maxClusterSize: 7,           // Maximum pixels per cluster
+
+  // Cluster spread
+  clusterSpread: 0.25,         // How spread out clusters are
+
+  // Rotation
+  rotationSpeed: 0.01,        // Speed of auto-rotation
+
+  // Camera
+  cameraDistance: 22,          // REDUCED from 22 to 18 (much closer = much larger globe)
+};
+
+extend({ Points, Mesh });
+
+interface PixelGlobeProps {
+  particleSize?: number;
+  rotationSpeed?: number;
+}
+
+// Convert lat/lon to 3D coordinates
+const latLonToPosition = (lat: number, lon: number, radius: number = 7): [number, number, number] => {
+  // INCREASED radius from 6 to 7 for even larger globe
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = lon * Math.PI / 180;
+
+  return [
+    radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta)
   ];
+};
 
-  const arcs = [];
-  
-  // Generate arcs between different continents
-  const continentPairs = [
-    ['NA', 'EU'], ['NA', 'AS'], ['NA', 'AF'],
-    ['EU', 'AS'], ['EU', 'AF'], ['AS', 'OC'],
-    ['AS', 'AF'], ['SA', 'EU'], ['SA', 'AF'],
-    ['OC', 'AS'], ['NA', 'SA']
-  ];
+// Check if a point is inside a polygon
+const isPointInPolygon = (point: [number, number], polygon: [number, number][]): boolean => {
+  const [lat, lon] = point;
+  let inside = false;
 
-  continentPairs.forEach(([cont1, cont2]) => {
-    const cities1 = cities.filter(c => c.continent === cont1);
-    const cities2 = cities.filter(c => c.continent === cont2);
-    
-    // Create 1-2 arcs between these continents
-    for (let i = 0; i < 2; i++) {
-      const city1 = cities1[Math.floor(Math.random() * cities1.length)];
-      const city2 = cities2[Math.floor(Math.random() * cities2.length)];
-      
-      if (city1 && city2) {
-        arcs.push({
-          startLat: city1.lat,
-          startLng: city1.lng,
-          endLat: city2.lat,
-          endLng: city2.lng,
-          // All arcs are now white
-          color: '#ffffff',
-          altitude: 0.3 + Math.random() * 0.4, // Random height between 0.3-0.7
-        });
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [lat1, lon1] = polygon[i];
+    const [lat2, lon2] = polygon[j];
+
+    const intersect = ((lon1 > lon) !== (lon2 > lon)) &&
+      (lat < (lat2 - lat1) * (lon - lon1) / (lon2 - lon1) + lat1);
+
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+};
+
+// Generate particles using grid sampling
+const generateParticles = (features: any[]): Float32Array => {
+  const positions: number[] = [];
+  const radius = 7; // INCREASED from 6 to 7
+  const config = GLOBE_CONFIG;
+
+  // Collect all polygons
+  const polygons: { points: [number, number][]; bounds: any }[] = [];
+
+  features.forEach((feature) => {
+    const processRing = (ring: any) => {
+      const points: [number, number][] = [];
+      ring.forEach((coord: [number, number]) => {
+        points.push([coord[1], coord[0]]);
+      });
+
+      const lats = points.map(p => p[0]);
+      const lons = points.map(p => p[1]);
+
+      polygons.push({
+        points,
+        bounds: {
+          minLat: Math.min(...lats),
+          maxLat: Math.max(...lats),
+          minLon: Math.min(...lons),
+          maxLon: Math.max(...lons)
+        }
+      });
+    };
+
+    if (feature.geometry.type === "MultiPolygon") {
+      feature.geometry.coordinates.forEach((polygon: any) => {
+        polygon.forEach(processRing);
+      });
+    } else if (feature.geometry.type === "Polygon") {
+      feature.geometry.coordinates.forEach(processRing);
+    }
+  });
+
+  // Grid sampling
+  polygons.forEach(({ points: polygon, bounds }) => {
+    const latStep = 1 / config.pointsPerDegree;
+    const lonStep = 1 / config.pointsPerDegree;
+
+    for (let lat = bounds.minLat; lat <= bounds.maxLat; lat += latStep) {
+      for (let lon = bounds.minLon; lon <= bounds.maxLon; lon += lonStep) {
+
+        if (isPointInPolygon([lat, lon], polygon)) {
+
+          if (Math.random() < config.clusterChance) {
+            // Random cluster size between min and max
+            const size = Math.floor(Math.random() * (config.maxClusterSize - config.minClusterSize + 1)) + config.minClusterSize;
+
+            for (let i = 0; i < size; i++) {
+              const latOffset = (Math.random() - 0.5) * config.clusterSpread;
+              const lonOffset = (Math.random() - 0.5) * config.clusterSpread;
+
+              const [x, y, z] = latLonToPosition(lat + latOffset, lon + lonOffset, radius);
+              positions.push(x, y, z);
+            }
+          }
+        }
       }
     }
   });
 
-  return arcs;
+  console.log(`Generated ${positions.length / 3} particles`);
+  return new Float32Array(positions);
 };
 
-// Generate particle data (spaced out)
-const generateParticleData = () => {
-  const points = [];
-  // Create a grid of points with spacing
-  for (let lat = -80; lat <= 80; lat += 8) { // Spaced every 8 degrees
-    for (let lng = -180; lng <= 180; lng += 12) { // Spaced every 12 degrees
-      // Add some random offset to make it look more natural
-      const latOffset = (Math.random() - 0.5) * 2;
-      const lngOffset = (Math.random() - 0.5) * 3;
-      
-      points.push({
-        lat: lat + latOffset,
-        lng: lng + lngOffset,
-        color: '#ffffff', // White particles
-        size: 0.5 + Math.random() * 0.5, // Varied sizes
-      });
-    }
-  }
-  return points;
-};
+// Main PixelGlobe component
+const PixelGlobe = ({
+  particleSize = GLOBE_CONFIG.particleSize,
+  rotationSpeed = GLOBE_CONFIG.rotationSpeed
+}: PixelGlobeProps) => {
+  const groupRef = useRef<THREE.Group>(null);
+  const sphereRef = useRef<THREE.Mesh>(null);
+  const { camera } = useThree();
 
-const GlobeComponent = ({ globeConfig, arcData, particleData }) => {
-  const [globeData, setGlobeData] = useState(null);
-  const globeRef = useRef(null);
+  // Generate particles once (UNCHANGED)
+  const particles = useMemo(
+    () => generateParticles(countries.features),
+    []
+  );
 
-  const defaultProps = {
-    ...globeConfig,
-  };
+  // Store original positions
+  const originalPositions = useRef(new Float32Array(particles));
+
+  const geometry = useMemo(() => {
+    const geo = new BufferGeometry();
+    geo.setAttribute("position", new BufferAttribute(particles, 3));
+    return geo;
+  }, [particles]);
+
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 4;
+    canvas.height = 4;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = GLOBE_CONFIG.particleColor;
+    ctx.fillRect(0, 0, 4, 4);
+    return new CanvasTexture(canvas);
+  }, []);
+
+  const material = useMemo(() => {
+    return new PointsMaterial({
+      color: 0xffffff,
+      size: particleSize,
+      sizeAttenuation: true,
+      map: texture,
+      blending: AdditiveBlending,
+      transparent: true,
+      opacity: GLOBE_CONFIG.particleOpacity,
+      depthWrite: true,
+      depthTest: true
+    });
+  }, [particleSize, texture]);
+
+
+  const raycaster = useMemo(() => new Raycaster(), []);
+  const mouse = useRef(new Vector2());
+  const hoverPoint = useRef<Vector3 | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && globeRef.current && globeData) {
-      const globe = globeRef.current;
+    const handleMove = (e: MouseEvent) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener("mousemove", handleMove);
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, []);
 
-      // Configure globe with black and white theme
-      globe
-        .hexPolygonsData(countries.features)
-        .hexPolygonResolution(3)
-        .hexPolygonMargin(0.8) // Increased margin for more space between particles
-        .showAtmosphere(defaultProps.showAtmosphere)
-        .atmosphereColor(defaultProps.atmosphereColor)
-        .atmosphereAltitude(defaultProps.atmosphereAltitude)
-        .hexPolygonColor(() => '#333333'); // Dark gray for countries
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
 
-      // Add white particles
-      globe
-        .pointsData(globeData.points)
-        .pointColor((e) => e.color)
-        .pointAltitude(0.02) // Slight elevation
-        .pointRadius((e) => e.size || 0.8)
-        .pointsMerge(true);
+    // Rotation
+    if (rotationSpeed) {
+      groupRef.current.rotation.y += rotationSpeed * delta * 60;
+    }
 
-      // Add white arcs (all white now)
-      globe
-        .arcsData(globeData.arcs)
-        .arcColor(() => '#ffffff') // All arcs white
-        .arcAltitude((e) => e.altitude || 0.5)
-        .arcStroke(0.6) // Slightly thinner arcs
-        .arcDashLength(0.8)
-        .arcDashGap(0.4)
-        .arcDashInitialGap(() => Math.random())
-        .arcDashAnimateTime(3000); // Slower animation
+    // Raycast against rotating sphere
+    if (sphereRef.current) {
+      raycaster.setFromCamera(mouse.current, camera);
+      const intersects = raycaster.intersectObject(sphereRef.current);
+      hoverPoint.current = intersects.length ? intersects[0].point : null;
+    }
 
-      // Cleanup
-      return () => {
-        try {
-          const renderer = globe.renderer();
-          const scene = globe.scene();
-          renderer?.dispose?.();
-          scene?.traverse?.((obj) => {
-            if (obj.geometry) obj.geometry.dispose?.();
-            if (obj.material) {
-              if (Array.isArray(obj.material)) {
-                obj.material.forEach((m) => m.dispose?.());
-              } else obj.material.dispose?.();
-            }
-          });
-        } catch (err) {
+    const positions = geometry.attributes.position.array as Float32Array;
+    const originals = originalPositions.current;
+    const temp = new Vector3();
+
+const baseRadius = 7;
+const influenceRadius = 1.5; // bigger area
+const maxPush = 0.7;         // stronger push 
+
+    for (let i = 0; i < positions.length; i += 3) {
+      temp.set(originals[i], originals[i + 1], originals[i + 2]);
+
+      let targetRadius = baseRadius;
+
+      if (hoverPoint.current) {
+        const dist = temp.distanceTo(hoverPoint.current);
+
+        if (dist < influenceRadius) {
+          const strength = 1 - dist / influenceRadius;
+          targetRadius = baseRadius + maxPush * strength;
         }
-      };
+      }
+
+      // Move along radial direction only
+      temp.normalize().multiplyScalar(targetRadius);
+
+      // Smooth interpolation
+      positions[i] += (temp.x - positions[i]) * 0.15;
+      positions[i + 1] += (temp.y - positions[i + 1]) * 0.15;
+      positions[i + 2] += (temp.z - positions[i + 2]) * 0.15;
     }
-  }, [globeData]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && globeRef.current) {
-      // Prepare data
-      setGlobeData({
-        points: particleData,
-        arcs: arcData,
-      });
-      _buildMaterial();
-    }
-  }, [globeRef.current, arcData, particleData]);
-
-  const _buildMaterial = () => {
-    if (!globeRef.current) return;
-
-    const globeMaterial = globeRef.current.globeMaterial();
-    globeMaterial.color = new Color(globeConfig.globeColor); // Black/dark
-    globeMaterial.emissive = new Color(globeConfig.emissive);
-    globeMaterial.emissiveIntensity = globeConfig.emissiveIntensity || 0.2;
-    globeMaterial.shininess = globeConfig.shininess || 0.3; // Less shiny for matte look
-  };
+    geometry.attributes.position.needsUpdate = true;
+  });
 
   return (
-    <>
-      <threeGlobe ref={globeRef} />
-    </>
+    <group ref={groupRef}>
+      <points geometry={geometry} material={material} />
+
+      {/* Invisible raycast sphere (rotates with group) */}
+      <mesh ref={sphereRef}>
+        <sphereGeometry args={[7, 64, 64]} />
+        <meshBasicMaterial
+          color={0x000000}
+          transparent
+          opacity={0}
+        />
+      </mesh>
+
+      {/* Solid black inner sphere to block backside */}
+      <mesh>
+        <sphereGeometry args={[6.99, 64, 32]} />
+        <meshBasicMaterial color={0x000000} side={2} />
+      </mesh>
+    </group>
   );
 };
 
-const ResizeCameraUpdater = () => {
-  const { camera, gl, size } = useThree();
-  useEffect(() => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    gl.setPixelRatio(dpr);
-    gl.setSize(size.width, size.height);
-    camera.aspect = size.width / size.height;
-    camera.updateProjectionMatrix();
-  }, [camera, gl, size]);
-  return null;
+// Solid sphere to block backside (adjusted for larger radius)
+const SolidSphere = () => {
+  const geometry = new SphereGeometry(6.99, 64, 32); // INCREASED from 5.99 to 6.99
+  const material = new MeshBasicMaterial({
+    color: 0x000000,
+    side: 2
+  });
+  return <mesh geometry={geometry} material={material} />;
 };
 
-const World = (props) => {
-  // Generate arc and particle data
-  const arcData = generateArcData();
-  const particleData = generateParticleData();
-  
-  const scene = new Scene();
-  scene.fog = new Fog(0x000000, 400, 2000); // Black fog for dark theme
+interface PixelWorldProps {
+  particleSize?: number;
+  rotationSpeed?: number;
+  autoRotate?: boolean;
+  enableZoom?: boolean;
+}
 
-  // Black and white globe configuration
-  const globeConfig = {
-    showAtmosphere: true,
-    atmosphereColor: "#333333", // Dark gray atmosphere
-    atmosphereAltitude: 0.15,
-    polygonColor: "#222222", // Very dark gray for countries
-    globeColor: "#111111", // Almost black
-    emissive: "#222222",
-    emissiveIntensity: 0.2,
-    shininess: 0.3,
-    ambientLight: "#404040", // Dim white
-    directionalLeftLight: "#ffffff",
-    directionalTopLight: "#ffffff",
-    pointLight: "#ffffff",
-  };
-
+const PixelWorld = ({
+  particleSize = GLOBE_CONFIG.particleSize,
+  rotationSpeed = GLOBE_CONFIG.rotationSpeed,
+  autoRotate = true,
+  enableZoom = false
+}: PixelWorldProps) => {
   return (
     <Canvas
-      style={{ width: "100%", height: "100%", display: "block", background: "#000000" }}
-      shadows={false}
-      gl={{ antialias: true, alpha: false }} // Black background
-      scene={scene}
-      // Adjusted camera for smaller globe
-      camera={new PerspectiveCamera(45, 1.5, 10, 1000)}
+      style={{ width: "100%", height: "100%", background: "black" }}
+      gl={{ antialias: true, alpha: false }}
+      camera={{ position: [0, 0, GLOBE_CONFIG.cameraDistance], fov: 45 }}
     >
-      <ResizeCameraUpdater />
-      
-      {/* Lights adjusted for black and white theme */}
-      <ambientLight color="#404040" intensity={0.8} />
-      <directionalLight
-        color="#ffffff"
-        position={new Vector3(-400, 100, 400)}
-        intensity={1.2}
+      <ambientLight intensity={2} />
+
+      <PixelGlobe
+        particleSize={particleSize}
+        rotationSpeed={autoRotate ? rotationSpeed : 0}
       />
-      <directionalLight
-        color="#ffffff"
-        position={new Vector3(-200, 500, 200)}
-        intensity={0.8}
-      />
-      <pointLight
-        color="#ffffff"
-        position={new Vector3(-200, 500, 200)}
-        intensity={0.5}
-      />
-      
-      <GlobeComponent 
-        globeConfig={globeConfig} 
-        arcData={arcData}
-        particleData={particleData}
-      />
-      
+
       <OrbitControls
         enablePan={false}
-        enableZoom={true}
-        minDistance={150} // Reduced min distance
-        maxDistance={300} // Reduced max distance
-        autoRotateSpeed={1.5} // Slightly slower rotation
-        autoRotate={true}
-        rotateSpeed={0.8}
-        minPolarAngle={0} // Allow full rotation
-        maxPolarAngle={Math.PI}
+        enableZoom={enableZoom}
+        enableDamping
+        dampingFactor={0.05}
+        minDistance={GLOBE_CONFIG.cameraDistance - 2}
+        maxDistance={GLOBE_CONFIG.cameraDistance + 5}
       />
     </Canvas>
   );
 };
 
-export { GlobeComponent as Globe, World };
+export { PixelGlobe, PixelWorld };

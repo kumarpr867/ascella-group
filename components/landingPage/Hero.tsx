@@ -2,7 +2,7 @@
 import PlusHeading from "../headings/PlusHeading";
 import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
-import { World } from "./Globe3D";
+import { PixelWorld } from "./Globe3D";
 
 const EASE = cubicBezier(0.33, 1, 0.68, 1);
 
@@ -73,18 +73,23 @@ export default function Hero() {
           variants={globeAnim}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 top-[10vh] flex items-center justify-center z-2"
+          className="absolute inset-x-0 top-[15vh] flex items-center justify-center z-2"
         >
-          <motion.div
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 2,
-              ease: "linear"
-            }}
-            className="w-[70vw] max-w-[900px] aspect-square pointer-events-none md:pointer-events-auto">
-            <World />
-          </motion.div>
+<motion.div
+  transition={{
+    repeat: Infinity,
+    repeatType: "loop",
+    duration: 2,
+    ease: "linear"
+  }}
+  className="w-[70vw] max-w-[900px] aspect-square pointer-events-auto">
+  <PixelWorld
+    particleSize={0.15}
+    rotationSpeed={0.002}
+    autoRotate={true}
+    enableZoom={false}
+  />
+</motion.div>
         </motion.div>
 
 
@@ -233,7 +238,12 @@ export default function Hero() {
           className="flex justify-center z-0"
         >
           <div className="w-[85vw] max-w-[600px] aspect-square">
-            <World />
+            <PixelWorld
+              particleSize={0.15}
+              rotationSpeed={0.002}
+              autoRotate={true}
+              enableZoom={false}
+            />
           </div>
         </motion.div>
 
