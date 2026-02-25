@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import PlusHeading from "../headings/PlusHeading";
+import PlusHeading from "../headings/Heading";
 
 type Section = {
   id: string;
@@ -18,7 +18,7 @@ const SECTIONS: Section[] = [
       <>
         <div className="border-b border-color">
           <div className="flex justify-between items-center my-6">
-            <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Accountability is implied rather than explicitly assigned, leaving
@@ -27,7 +27,7 @@ const SECTIONS: Section[] = [
           </p>
         </div>
         <div className="flex justify-between items-center my-6">
-          <h4>In the Ascella model: </h4><p className="text-b1">[ Risk increases ]</p>
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200  mb-4">
           Accountability is architected into the operating system with named
@@ -35,7 +35,7 @@ const SECTIONS: Section[] = [
           before execution begins.
         </p>
 
-        <p className="mt-6">
+        <p className="text-b2 lg:text-b1 mt-6">
           Accountability shifts from assumed responsibility → to designed authority.
         </p>
       </>
@@ -48,7 +48,7 @@ const SECTIONS: Section[] = [
       <>
         <div className="border-b border-color">
           <div className="flex  mb-5 justify-between items-center my-6">
-            <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Multiple leaders share influence over the same workstreams, approvals
@@ -58,7 +58,7 @@ const SECTIONS: Section[] = [
         </div>
 
         <div className="flex justify-between items-center my-6">
-          <h4>In the Ascella model: </h4><p className="text-b1">[ Risk increases ]</p>
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200  mb-4">
           Each execution domain has a single accountable owner supported by
@@ -66,7 +66,7 @@ const SECTIONS: Section[] = [
           escalation pathways that maintain clarity under scale.
         </p>
 
-        <p className="mt-6">
+        <p className="text-b2 lg:text-b1 mt-6">
           Shared influence → Singular ownership → Structured escalation.
         </p>
       </>
@@ -79,7 +79,7 @@ const SECTIONS: Section[] = [
       <>
         <div className="border-b border-color">
           <div className="flex  mb-5 justify-between items-center my-6">
-            <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Delayed decisions, duplicated effort, silent risk accumulation, and
@@ -88,7 +88,7 @@ const SECTIONS: Section[] = [
           </p>
         </div>
         <div className="flex justify-between items-center my-6">
-          <h4>In the Ascella model: </h4><p className="text-b1">[ Risk increases ]</p>
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200 mb-4">
           Clear ownership eliminates ambiguity, accelerates decision velocity,
@@ -96,7 +96,7 @@ const SECTIONS: Section[] = [
           controlled governance boundaries.
         </p>
 
-        <p className="mt-6">
+        <p className="text-b2 lg:text-b1 mt-6">
           Ambiguity reduces → Alignment increases → Risk is contained.
         </p>
       </>
@@ -109,7 +109,7 @@ const SECTIONS: Section[] = [
       <>
         <div className="border-b border-color">
           <div className="flex justify-between mb-5 items-center my-6">
-            <h4>In conventional models:</h4> <p className="text-b2">[ Risk increases ]</p>
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200 mb-4">
             Work is divided across teams, vendors, and functions without a single
@@ -117,22 +117,22 @@ const SECTIONS: Section[] = [
             decisions, and unmanaged operational exposure as complexity increases.
           </p>
 
-          <p className="text-b1 mb-4">
+          <p className="text-b2 lg:text-b1 mb-4">
             Execution spreads across multiple contributors → Accountability
             fragments → Risk compounds over time.
           </p>
         </div>
         <div className="flex justify-between items-center my-6">
-          <h4>In the Ascella model: </h4><p className="text-b1">[ Risk increases ]</p>
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
         </div>
-        <p className="opacity-70 mb-4">
+        <p className="text-b2 text-gray-200 mb-4">
           Workstreams operate through defined governance channels where one
           authority retains accountability for outcomes, escalation paths are
           explicit, and performance oversight remains continuous as execution
           scales.
         </p>
 
-        <p className="mt-6">
+        <p className="text-b2 lg:text-b1 mt-6">
           Execution is distributed → Accountability remains singular → Risk stays controlled.
         </p>
       </>
@@ -167,10 +167,15 @@ function AccordionItem({
     >
       <motion.button
         onClick={() => onToggle(item.id)}
-        className={`w-full text-left p-4 transition-colors duration-300 ${titleClass}`}
+        className={`group w-full text-left p-4 transition-colors duration-300 ${titleClass} flex justify-between items-center`}
         whileTap={{ scale: 0.98 }}
       >
         <motion.h5
+          className={
+            showContent
+              ? "text-[16px] lg:text-[24px]"
+              : "text-[12px] lg:text-[20px] tracking-wide"
+          }
           animate={{
             x: isActive ? 6 : 0,
             opacity: isActive ? 1 : 0.75,
@@ -179,6 +184,19 @@ function AccordionItem({
         >
           {item.title}
         </motion.h5>
+        {showContent && (
+          <div
+            className={`
+      relative flex items-center justify-center h-3 w-3
+      transition-transform duration-300 ease-out
+      ${isActive ? "rotate-45" : ""}
+      group-hover:scale-125
+    `}
+          >
+            <span className="absolute w-full h-px bg-current" />
+            <span className="absolute h-full w-px bg-current" />
+          </div>
+        )}
       </motion.button>
 
       {showContent && (
@@ -187,23 +205,23 @@ function AccordionItem({
             <motion.div
               key="content"
               layout
-              initial={{ 
-                height: 0, 
-                opacity: 0, 
+              initial={{
+                height: 0,
+                opacity: 0,
                 y: -10,
-                filter: "blur(6px)" 
+                filter: "blur(6px)"
               }}
-              animate={{ 
-                height: "auto", 
-                opacity: 1, 
+              animate={{
+                height: "auto",
+                opacity: 1,
                 y: 0,
-                filter: "blur(0px)" 
+                filter: "blur(0px)"
               }}
-              exit={{ 
-                height: 0, 
-                opacity: 0, 
+              exit={{
+                height: 0,
+                opacity: 0,
                 y: -6,
-                filter: "blur(4px)" 
+                filter: "blur(4px)"
               }}
               transition={{
                 height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
@@ -231,22 +249,22 @@ export default function Accountability() {
   };
 
   return (
-    <section className="border-b border-color min-h-[720px] lg:min-h-[640px]">
+    <section className="border-b border-color  bg-gray-500 md:bg-black min-h-[720px] lg:min-h-[640px]">
 
 
-      <div className="py-10 px-10 lg:px-24 border-b border-color">
-        <PlusHeading text="Accountability Principle" size="b1" />
+      <div className="py-6 md:py-10 px-10 lg:px-24 md:border-b border-color">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <PlusHeading text="Accountability Principle" />
+        </div>
       </div>
-      <div className=" px-10 lg:px-24">
+      <div className="hidden xl:block mx-auto max-w-7xl px-4 sm:px-6">
         <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_240px_1.2fr] min-h-[520px]">
-
-
           <div className="flex flex-col justify-between sticky">
             <div></div>
             <div className="pb-10">
               <h3>The Single <br /> Accountability Principle </h3>
-              <p className="text-b1 leading-tight mt-2 max-w-xs">
-                A governance model designed to eliminate ownership gaps in execution.
+              <p className="text-b2 leading-tight mt-4">
+                A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
               </p>
             </div>
           </div>
@@ -278,31 +296,24 @@ export default function Accountability() {
             </div>
 
           </div>
-          {/* <div className="relative border-x border-color min-h-[520px] bg-gray-500">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 p-6"
-              >
-                {SECTIONS.find((s) => s.id === active)?.content}
-              </motion.div>
-            </AnimatePresence>
-          </div> */}
         </div>
       </div>
+
       {/* Mobile accordion */}
-      <div className="lg:hidden mt-20 px-6 space-y-4">
+      <div className="xl:hidden mt-20 px-6 space-y-4">
+        <div className="pb-4">
+          <h4>The Single <br /> Accountability Principle </h4>
+          <p className="text-b2 leading-tight mt-2 ">
+            A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
+          </p>
+        </div>
         {SECTIONS.map((item) => (
           <AccordionItem
             key={item.id}
             item={item}
             active={active}
             onToggle={toggle}
-            titleClass="text-lg"
+            titleClass="text-b1"
           />
         ))}
       </div>

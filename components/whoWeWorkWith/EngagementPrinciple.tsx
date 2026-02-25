@@ -1,5 +1,5 @@
 import Image from "next/image"
-import PlusHeading from "../headings/PlusHeading"
+import PlusHeading from "../headings/Heading"
 
 export default function EngagementPrinciple() {
   return (

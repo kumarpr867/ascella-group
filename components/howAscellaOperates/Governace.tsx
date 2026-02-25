@@ -1,6 +1,6 @@
 "use client"
 import OutlineBtn from "../btns/OutlineBtn";
-import PlusHeading from "../headings/PlusHeading";
+import PlusHeading from "../headings/Heading";
 import Image from "next/image"
 
 const points = [
@@ -99,15 +99,15 @@ export default function Governace() {
                 <div className="flex flex-col justify-between gap-32">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="flex flex-col gap-5">
-                        <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" width={80} height={80}/>
+                        <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" width={80} height={80} />
                         <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
                     </div>
                 </div>
                 <div className="flex flex-col justify-between">
-                        <h3>Before execution</h3>
-                        <p className="text-gray-300 font-light max-w-lg">
-                            Begins, Ascella establishes
-                        </p>
+                    <h3>Before execution</h3>
+                    <p className="text-gray-300 font-light max-w-lg">
+                        Begins, Ascella establishes
+                    </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
                         {points.map((point, index) => (
                             <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
@@ -125,7 +125,7 @@ export default function Governace() {
             <div className="flex flex-col flex-center">
                 <div className=" w-0.5 h-10 bg-gray-400">
                 </div>
-                <OutlineBtn text="Explore With Us"/>
+                <OutlineBtn text="Explore With Us" />
             </div>
 
         </section>

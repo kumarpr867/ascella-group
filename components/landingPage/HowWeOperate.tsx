@@ -1,9 +1,9 @@
 'use client';
 
 import Image from "next/image";
-import PlusHeading from "../headings/PlusHeading";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState, useCallback } from "react";
+import Heading from "../headings/Heading";
 
 // ── Particle config ───────────────────────────────────────────────────────────
 const SPACING   = 3;
@@ -293,7 +293,7 @@ export default function HowWeOperate() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="flex flex-col gap-4"
           >
-            <PlusHeading text="How We Operate" />
+            <Heading text="How We Operate" />
             <p className="font-light text-3xl xl:text-4xl text-white leading-tight">
               Control is designed in,<br />
               not enforced later
@@ -336,7 +336,7 @@ export default function HowWeOperate() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="flex flex-col gap-3"
         >
-          <PlusHeading text="How We Operate" />
+          <Heading text="How We Operate" />
           <p className="font-light text-3xl text-white leading-tight">
             Control is built before<br />
             work begins

@@ -238,7 +238,7 @@ export default function Prog() {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="mx-auto max-w-7xl sm:px-6 flex px-6 py-8 lg:px-10 lg:py-10 border-x-0 lg:border-x border-color">
+                <div className="mx-auto max-w-7xl flex py-8 px-5 lg:px-10 lg:py-10 border-x-0 lg:border-x border-color">
                     <h3 className="text-[24px] md:text-[36px] text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
                         embedding operating <br />discipline before scale introduces complexity.
@@ -246,7 +246,7 @@ export default function Prog() {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl sm:px-6 border-x-0 md:border-x border-color">
+            <div className="mx-auto max-w-7xl sm:px-6 md:px-0 border-x-0 md:border-x border-color">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
                     <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">

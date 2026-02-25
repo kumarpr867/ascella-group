@@ -162,13 +162,11 @@ const PixelGlobe = ({
   const sphereRef = useRef<THREE.Mesh>(null);
   const { camera, gl } = useThree();
 
-  // Generate particles once (UNCHANGED)
   const particles = useMemo(
     () => generateParticles(countries.features),
     []
   );
 
-  // Store original positions
   const originalPositions = useRef(new Float32Array(particles));
 
   const geometry = useMemo(() => {
@@ -201,43 +199,57 @@ const PixelGlobe = ({
     });
   }, [particleSize, texture]);
 
-
   const raycaster = useMemo(() => new Raycaster(), []);
   const mouse = useRef(new Vector2());
   const hoverPoint = useRef<Vector3 | null>(null);
 
-useEffect(() => {
-  const handleMove = (e: MouseEvent) => {
-    const rect = gl.domElement.getBoundingClientRect();
+  // 🔥 Shockwave additions
+  const shockwaveTime = useRef<number | null>(null);
+  const clickPoint = useRef<Vector3 | null>(null);
 
-    mouse.current.x =
-      ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      const rect = gl.domElement.getBoundingClientRect();
 
-    mouse.current.y =
-      -((e.clientY - rect.top) / rect.height) * 2 + 1;
-  };
+      mouse.current.x =
+        ((e.clientX - rect.left) / rect.width) * 2 - 1;
 
-  window.addEventListener("mousemove", handleMove);
-  return () => window.removeEventListener("mousemove", handleMove);
-}, [gl]);
+      mouse.current.y =
+        -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    };
 
-  {/* ripple effect */ }
+    const handleClick = () => {
+      if (hoverPoint.current) {
+        clickPoint.current = hoverPoint.current.clone();
+        shockwaveTime.current = performance.now();
+      }
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("click", handleClick);
+    };
+  }, [gl]);
+
   useFrame((_, delta) => {
     if (!groupRef.current) return;
 
-    // Rotation
     if (rotationSpeed) {
       groupRef.current.rotation.y += rotationSpeed * delta * 60;
     }
 
-    // Raycast against rotating sphere - FIXED FOR BOTH SIDES
+    // Raycast
     if (sphereRef.current) {
       raycaster.setFromCamera(mouse.current, camera);
-
       const intersects = raycaster.intersectObject(sphereRef.current);
 
-      if (intersects.length > 0) {
-        hoverPoint.current = intersects[0].point;
+      if (intersects.length) {
+        const worldPoint = intersects[0].point.clone();
+        groupRef.current.worldToLocal(worldPoint);
+        hoverPoint.current = worldPoint;
       } else {
         hoverPoint.current = null;
       }
@@ -248,120 +260,80 @@ useEffect(() => {
     const temp = new Vector3();
 
     const baseRadius = 7;
-    const influenceRadius = 2.5;
-    const time = Date.now() * 0.005;
+    const influenceRadius = 2.2;
+    const time = performance.now() * 0.002;
 
     for (let i = 0; i < positions.length; i += 3) {
       temp.set(originals[i], originals[i + 1], originals[i + 2]);
 
+      let displacement = 0;
+
+      // ✅ KEEP YOUR EXISTING HOVER EFFECT EXACTLY
       if (hoverPoint.current) {
         const dist = temp.distanceTo(hoverPoint.current);
 
         if (dist < influenceRadius) {
           const strength = 1 - dist / influenceRadius;
-          const wave = Math.sin(dist * 5 - time * 3) * 0.3;
-          const push = strength * wave;
 
-          temp.normalize();
-          const targetRadius = baseRadius + push;
-          temp.multiplyScalar(targetRadius);
-        } else {
-          // Return to original radius
-          temp.normalize().multiplyScalar(baseRadius);
+          const pullDir = hoverPoint.current.clone().sub(temp).normalize();
+          const pullForce = strength * 0.4;
+          temp.add(pullDir.multiplyScalar(pullForce));
+
+          const pulse = Math.sin(time * 4 + dist * 6) * 0.15 * strength;
+          displacement += pulse;
         }
-      } else {
-        temp.normalize().multiplyScalar(baseRadius);
       }
 
-      // Smooth interpolation
-      positions[i] += (temp.x - positions[i]) * 0.15;
-      positions[i + 1] += (temp.y - positions[i + 1]) * 0.15;
-      positions[i + 2] += (temp.z - positions[i + 2]) * 0.15;
+      // ✅ NEW: Shockwave (pure radial ring)
+      if (shockwaveTime.current && clickPoint.current) {
+        const elapsed = (performance.now() - shockwaveTime.current) * 0.002;
+        const waveRadius = elapsed * 4;
+        const waveWidth = 0.4;
+
+        const dist = temp.distanceTo(clickPoint.current);
+        const diff = Math.abs(dist - waveRadius);
+
+        if (diff < waveWidth) {
+          displacement += (1 - diff / waveWidth) * 0.6;
+        }
+
+        if (elapsed > 3) {
+          shockwaveTime.current = null;
+        }
+      }
+
+      temp.normalize().multiplyScalar(baseRadius + displacement);
+
+      positions[i] += (temp.x - positions[i]) * 0.12;
+      positions[i + 1] += (temp.y - positions[i + 1]) * 0.12;
+      positions[i + 2] += (temp.z - positions[i + 2]) * 0.12;
+    }
+
+    // ✅ NEW: Subtle glow on hover
+    if (hoverPoint.current) {
+      material.opacity = 0.6;
+      material.size = particleSize * 1.3;
+    } else {
+      material.opacity = GLOBE_CONFIG.particleOpacity;
+      material.size = particleSize;
     }
 
     geometry.attributes.position.needsUpdate = true;
   });
 
-  // useFrame((_, delta) => {
-  //   if (!groupRef.current) return;
-
-  //   // Rotation
-  //   if (rotationSpeed) {
-  //     groupRef.current.rotation.y += rotationSpeed * delta * 60;
-  //   }
-
-  //   // Raycast
-  //   if (sphereRef.current) {
-  //     raycaster.setFromCamera(mouse.current, camera);
-  //     const intersects = raycaster.intersectObject(sphereRef.current);
-  //     if (intersects.length) {
-  //       const worldPoint = intersects[0].point.clone();
-  //       groupRef.current.worldToLocal(worldPoint);
-  //       hoverPoint.current = worldPoint;
-  //     } else {
-  //       hoverPoint.current = null;
-  //     }
-  //   }
-
-  //   const positions = geometry.attributes.position.array as Float32Array;
-  //   const originals = originalPositions.current;
-  //   const temp = new Vector3();
-
-  //   const baseRadius = 7;
-  //   const influenceRadius = 2.2;
-  //   const time = performance.now() * 0.002;
-
-  //   for (let i = 0; i < positions.length; i += 3) {
-  //     temp.set(originals[i], originals[i + 1], originals[i + 2]);
-
-  //     if (hoverPoint.current) {
-  //       const dist = temp.distanceTo(hoverPoint.current);
-
-  //       if (dist < influenceRadius) {
-  //         const strength = 1 - dist / influenceRadius;
-
-  //         // 🔥 Magnetic pull toward hover point
-  //         const pullDir = hoverPoint.current.clone().sub(temp).normalize();
-  //         const pullForce = strength * 0.4;
-
-  //         temp.add(pullDir.multiplyScalar(pullForce));
-
-  //         // 🌊 Breathing radial pulse
-  //         const pulse = Math.sin(time * 4 + dist * 6) * 0.15 * strength;
-
-  //         temp.normalize().multiplyScalar(baseRadius + pulse);
-  //       } else {
-  //         temp.normalize().multiplyScalar(baseRadius);
-  //       }
-  //     } else {
-  //       temp.normalize().multiplyScalar(baseRadius);
-  //     }
-
-  //     // Smooth interpolation
-  //     positions[i] += (temp.x - positions[i]) * 0.12;
-  //     positions[i + 1] += (temp.y - positions[i + 1]) * 0.12;
-  //     positions[i + 2] += (temp.z - positions[i + 2]) * 0.12;
-  //   }
-
-  //   geometry.attributes.position.needsUpdate = true;
-  // });
-
   return (
     <group ref={groupRef}>
       <points geometry={geometry} material={material} />
 
-      {/* Invisible raycast sphere (rotates with group) */}
       <mesh ref={sphereRef}>
         <sphereGeometry args={[7, 64, 64]} />
         <meshBasicMaterial
-          color={0x000000}
           transparent
           opacity={0}
-          side={DoubleSide} // DoubleSide
+          side={DoubleSide}
         />
       </mesh>
 
-      {/* Solid black inner sphere to block backside */}
       <mesh>
         <sphereGeometry args={[6.99, 64, 32]} />
         <meshBasicMaterial color={0x000000} side={2} />

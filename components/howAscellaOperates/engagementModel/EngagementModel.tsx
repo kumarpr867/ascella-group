@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import PlusHeading from "../../headings/PlusHeading";
+import PlusHeading from "../../headings/Heading";
 import { SECTIONS, EngagementLabel, EngagementSection } from "./data";
 import EngagementMenu from "./EngagementMenu";
 import { useInView } from "framer-motion";
@@ -30,7 +30,7 @@ function ScrollSection({
     <div
       ref={ref}
       id={section.label}
-      className="flex justify-between mb-32 scroll-mt-40"
+      className="flex justify-between mb-32 scroll-mt-40 h-screen items-center"
     >
       <div className="max-w-sm flex flex-col gap-5 mt-32">
         <h5>{section.title}</h5>
@@ -75,7 +75,7 @@ export default function EngagementModel() {
           ))}
         </div>
 
-        <aside className="sticky top-20 self-start h-fit">
+        <aside className="sticky top-40 self-start h-fit">
           <EngagementMenu
             items={MENU_ITEMS}
             active={active}

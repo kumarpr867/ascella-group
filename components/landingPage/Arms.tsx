@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { content } from "./data/content";
+import Heading from "../headings/Heading";
 
 export default function Arms() {
   const [index, setIndex] = useState(0);
@@ -21,12 +22,7 @@ export default function Arms() {
       {/* Upper Header */}
       <div className="text-center max-w-3xl mb-10 md:mb-16">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 0V14M0 7H14" stroke="white" strokeWidth="1.5"/>
-          </svg>
-          <span className="uppercase text-[10px] tracking-[0.4em] text-white font-medium">
-            Execution Arms
-          </span>
+          <Heading text="Execution Arms" />
         </div>
         <h2 className="text-xl md:text-2xl lg:text-4xl text-white leading-tight font-light tracking-tight">
           We take full responsibility for critical outcomes that organisations

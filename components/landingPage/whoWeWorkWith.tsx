@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence, animate, useInView } from "motion/react"
 import { useRef } from "react"
-import PlusHeading from "@/components/headings/PlusHeading";
 import OutlineBtn from '../btns/OutlineBtn';
+import Heading from '@/components/headings/Heading';
 
 const cards = [
     {
@@ -120,9 +120,9 @@ export default function WhoWeWorkWith() {
             transition={{ duration: 1.1, ease: "easeOut" }}
         >
             {/* Top border — all devices */}
-        <div className="w-full h-[1px] bg-white/20" />
+            <div className="w-full h-[1px] bg-white/20" />
 
-        <div className="flex flex-col h-auto lg:h-screen">
+            <div className="flex flex-col h-auto lg:h-screen">
 
                 {/* ── Header ── */}
                 <motion.div
@@ -131,7 +131,7 @@ export default function WhoWeWorkWith() {
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: 0.4, duration: 0.8 }}
                 >
-                    <PlusHeading text='Who We Work With' size='b1' />
+                    <Heading text='Who We Work With' />
                     <h3 className='w-full sm:w-3/4 lg:w-1/2 mb-5 mt-4 text-xl sm:text-2xl lg:text-3xl leading-snug'>
                         Organisations that require control, accountability, and structured execution at scale
                     </h3>
@@ -160,7 +160,7 @@ export default function WhoWeWorkWith() {
                                 transition={{ duration: 0.6 }}
                             >
                                 <div className="scale-90 sm:scale-100">{card.svg}</div>
-                                <h4 className="text-base sm:text-lg lg:text-xl">{card.title}</h4>
+                                <h4 className="text-base sm:text-lg lg:text-xl capitalize">{card.title}</h4>
                             </motion.div>
 
                             {/* ── Progress Bar ── */}
@@ -192,7 +192,7 @@ export default function WhoWeWorkWith() {
                                     animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                                     exit={{ opacity: 0, filter: "blur(15px)", y: -15 }}
                                     transition={{ delay: 0.15, duration: 0.6 }}
-                                    className="leading-snug mb-3 sm:mb-4 text-lg sm:text-xl lg:text-2xl"
+                                    className="leading-snug mb-3 sm:mb-4 text-lg sm:text-xl lg:text-2xl uppercase"
                                 >
                                     {card.heading}
                                 </motion.h5>
@@ -216,8 +216,8 @@ export default function WhoWeWorkWith() {
                 </div>
             </div>
 
-        {/* Bottom border — all devices */}
-        <div className="w-full h-[1px] bg-white/20" />
+            {/* Bottom border — all devices */}
+            <div className="w-full h-[1px] bg-white/20" />
 
         </motion.section>
     )

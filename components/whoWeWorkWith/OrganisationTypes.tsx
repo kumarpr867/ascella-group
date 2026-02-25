@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import Image from "next/image";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
-import PlusHeading from "../headings/PlusHeading";
+import PlusHeading from "../headings/Heading";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 
 interface OrganisationType {
@@ -13,11 +13,13 @@ interface OrganisationType {
   engagementFocus: string;
   typicalNeed: string;
   icon?: ReactNode;
+  img: string;
 }
 
 const ORGANISATION_TYPES: OrganisationType[] = [
   {
     title: "Regulated Industries",
+    img: "/whoWeWorkWith/floating1.svg",
     subHeading:
       "Organisations operating under statutory oversight, audit scrutiny, and sector specific compliance obligations that require formal control environments.",
     engagementFocus:
@@ -33,6 +35,7 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   },
   {
     title: "Venture-Backed Scale-Ups",
+    img: "/whoWeWorkWith/floating2.svg",
     subHeading:
       "High growth companies shifting from founder led coordination toward structured operating systems and accountable leadership layers.",
     engagementFocus:
@@ -46,7 +49,8 @@ const ORGANISATION_TYPES: OrganisationType[] = [
 
   },
   {
-    title: "Enterprises",
+    title: "Enterprises",   
+    img: "/whoWeWorkWith/floating3.svg",
     subHeading:
       "Large organisations managing distributed teams, layered decision hierarchies, and complex cross functional dependencies.",
     engagementFocus:
@@ -62,6 +66,7 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   },
   {
     title: "Startups Programme",
+    img: "/whoWeWorkWith/floating1.svg",
     subHeading:
       "Early stage organisations preparing for structured growth, operational maturity, and investor grade governance foundations.",
     engagementFocus:
@@ -125,7 +130,7 @@ export default function OrganisationTypes() {
                         : "opacity-0 scale-[0.92] [clip-path:inset(50%)]"
                       }`}
                   >
-                    <Image src={"/whoWeWorkWith/floating.png"} alt="" fill className="object-cover"/>
+                    <Image src={type.img} alt="" fill className="object-cover" />
                   </div>
                 </div>
 

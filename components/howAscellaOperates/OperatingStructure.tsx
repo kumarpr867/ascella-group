@@ -1,4 +1,7 @@
+"use client"
 import Image from 'next/image';
+import { SpiderNetwork } from './Spider';
+import { Canvas } from '@react-three/fiber';
 
 const items = [
   { label: "Accountability", icon: "/howAscellaOperates/accountability.svg" },
@@ -56,7 +59,6 @@ export default function OperatingStructure() {
 
   return (
     <section className="border-y border-color">
-<<<<<<< HEAD
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-10 md:py-24 flex flex-col md:flex-row border-x-0 lg:border-x border-color gap-8 md:gap-0">
 
         {/* top */}
@@ -67,8 +69,19 @@ export default function OperatingStructure() {
           </h2>
           <p className="text-[14px] text-left w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
         </div>
-        <div className="absolute inset-0 flex justify-end pointer-events-none">
-          <div className="grid-bg w-1/2 h-full -z-1"></div>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute right-0 top-0 h-full w-1/2 pointer-events-none">
+            <Canvas
+              camera={{ position: [0, 0, 6] }}
+              dpr={[1, 1.5]}
+              gl={{ alpha: true }}
+            >
+              <SpiderNetwork
+                count={64}
+                radius={3}
+              />
+            </Canvas>
+          </div>
         </div>
 
       </div>
@@ -76,7 +89,7 @@ export default function OperatingStructure() {
       {/* flow chart */}
       <div className="border-t border-color ">
 
-        
+
         {/* xl screen */}
         <div className='hidden mx-auto max-w-7xl px-4 sm:px-6 py-10 xl:flex items-center justify-around  border-x-0 lg:border-x  border-color '>
           <div className="flex flex-col items-center py-8 ">
@@ -145,71 +158,12 @@ export default function OperatingStructure() {
                   height={80}
                 />
                 <p className={"text-b3 mb-6"}>Governance</p>
-=======
-
-      {/* ─────────────────────────────────────────
-          LAPTOP VIEW — bilkul original, untouched
-      ───────────────────────────────────────── */}
-      <div className="hidden md:block">
-        <div className="relative sm:mx-6 md:mx-10 lg:mx-24 px-4 py-10 md:px-10 md:py-24 flex flex-col md:flex-row border-x border-color gap-8 md:gap-0">
-          <div className="flex flex-col gap-5 pb-6 md:pb-10 w-full md:w-1/2">
-            <h2>
-              A unified model built for accountable
-              <span className="text-gray-300"> execution at scale.</span>
-            </h2>
-            <p className="text-b2 w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
-          </div>
-          <div className="absolute inset-0 flex justify-end pointer-events-none">
-            <div className="grid-bg w-1/2 h-full"></div>
-          </div>
-        </div>
-        <div className="border-t border-color">
-          <div className="mx-2 sm:mx-6 md:mx-10 lg:mx-24 px-2 py-6 md:px-8 md:py-10 border-x border-color">
-            <div className="text-b3 text-gray-300 flex flex-wrap justify-between gap-2 text-xs sm:text-sm md:text-base">
-              <span className="text-white">Governance</span>
-              <span>Accountability</span>
-              <span>Assemble Pods</span>
-              <span>Performance</span>
-              <span>Embed Security</span>
-              <span>Controlled Execution</span>
-              <span className="text-white">Outcome Stability</span>
-            </div>
-            <div className="flex flex-cols flex-center items-center m-10">
-              <div className="flex w-full justify-evenly items-center">
-                <span>
-                  <Image src={'/howAscellaOperates/governace.svg'} alt={''} width={100} height={100} />
-                </span>
-                <div className="flex flex-center line h-0.5 w-10 bg-gray-400"></div>
-                <div className="flex w-full items-center justify-between border border-color p-6">
-                  <span>
-                    <Image src={'/howAscellaOperates/accountability.svg'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/pods.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/performance.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/security.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/execution.png'} alt={''} width={100} height={100} />
-                  </span>
-                </div>
-                <div className="flex flex-center line h-0.5 w-15 bg-gray-400"></div>
-                <span>
-                  <Image src={'/howweoperate/outcome.png'} alt={''} width={100} height={100} />
-                </span>
->>>>>>> 9c14ba8 (Resolved merge conflict)
               </div>
             </div>
           </div>
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
       {/* ─────────────────────────────────────────
           MOBILE VIEW — naya, image ke jaisa
       ───────────────────────────────────────── */}
@@ -312,7 +266,6 @@ export default function OperatingStructure() {
         </div>
 
       </div>
->>>>>>> 9c14ba8 (Resolved merge conflict)
     </section>
   );
 }

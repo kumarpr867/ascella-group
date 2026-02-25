@@ -4,7 +4,7 @@ import React from 'react';
 
 type Size = 'b1' | 'b2' | 'b3';
 
-type PlusHeadingProps = {
+type PlusTextProps = {
   text: string;
   size?: Size;
   plusSize?: 'sm' | 'md' | 'lg' | string;
@@ -22,7 +22,7 @@ const plusSizeClasses = {
   lg: 'w-4 h-4',
 };
 
-const PlusHeading: React.FC<PlusHeadingProps> = ({
+const PlusText: React.FC<PlusTextProps> = ({
   text,
   size = 'b1',
   plusSize = 'md',
@@ -55,4 +55,4 @@ const PlusHeading: React.FC<PlusHeadingProps> = ({
   );
 };
 
-export default PlusHeading;
+export default PlusText;

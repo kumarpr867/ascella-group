@@ -60,7 +60,7 @@ const footerSections: FooterSection[] = [
 
 const Footer = () => {
     return (
-        <footer className="mb-20 lg:mb-2 w-full">
+        <footer className="mb-2 lg:mb-20 w-full">
             <div className="border-y border-color">
                 <div className="border-b border-color">
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Arrow from "./btns/Arrow";
-import PlusHeading from "./headings/PlusHeading";
+import PlusHeading from "./headings/Heading";
 import Image from "next/image";
 
 const faqs = [
@@ -160,8 +160,8 @@ export default function Faq() {
                 {/* Answer */}
                 <div
                   className={`grid transition-all duration-300 ${isOpen
-                      ? "grid-rows-[1fr] opacity-100 mt-4"
-                      : "grid-rows-[0fr] opacity-0"
+                    ? "grid-rows-[1fr] opacity-100 mt-4"
+                    : "grid-rows-[0fr] opacity-0"
                     }`}
                 >
                   <div className="overflow-hidden">

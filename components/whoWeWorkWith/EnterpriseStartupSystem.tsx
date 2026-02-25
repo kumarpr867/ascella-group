@@ -77,6 +77,69 @@ function StartupCluster() {
   )
 }
 
+// function StartupCluster() {
+//   const ref = useRef<THREE.Points>(null!)
+//   const parentRotation = useRef(new THREE.Euler())
+//   const targetRotation = useRef(new THREE.Euler())
+
+//   useFrame((state, delta) => {
+//     if (!ref.current) return
+
+//     // Keep current rotation for independent spin
+//     ref.current.rotation.y -= delta * 0.12
+
+//     // Get the parent's rotation
+//     const parent = ref.current.parent
+//     if (parent) {
+//       targetRotation.current.copy(parent.rotation)
+//     }
+
+//     // Interpolate rotation towards parent's rotation (delay effect)
+//     const lerpFactor = 0.05 // controls smoothness (~0.5s delay)
+//     ref.current.rotation.x +=
+//       (targetRotation.current.x - ref.current.rotation.x) * lerpFactor
+//     ref.current.rotation.y +=
+//       (targetRotation.current.y - ref.current.rotation.y) * lerpFactor
+//     ref.current.rotation.z +=
+//       (targetRotation.current.z - ref.current.rotation.z) * lerpFactor
+//   })
+
+//   const particles = useMemo(() => {
+//     const count = 120
+//     const radius = 3.4
+//     const arr = new Float32Array(count * 3)
+
+//     for (let i = 0; i < count; i++) {
+//       const theta = Math.random() * Math.PI * 2
+//       const phi = Math.acos(2 * Math.random() - 1)
+
+//       const x = radius * Math.sin(phi) * Math.cos(theta)
+//       const y = radius * Math.sin(phi) * Math.sin(theta)
+//       const z = radius * Math.cos(phi)
+
+//       arr[i * 3] = x
+//       arr[i * 3 + 1] = y
+//       arr[i * 3 + 2] = z
+//     }
+
+//     return arr
+//   }, [])
+
+//   return (
+//     <points ref={ref}>
+//       <bufferGeometry>
+//         <bufferAttribute attach="attributes-position" args={[particles, 3]} />
+//       </bufferGeometry>
+//       <pointsMaterial
+//         size={0.08}
+//         color="#d1d5db"
+//         transparent
+//         opacity={0.8}
+//         depthWrite={false}
+//       />
+//     </points>
+//   )
+// }
 export default function EnterpriseStartupSystem() {
   return (
     <div className="w-full h-[420px] lg:h-[600px]">

@@ -1,8 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import PlusHeading from "../headings/PlusHeading"
-import { useEffect, useRef, useState, useCallback } from "react"
+import PlusHeading from "../headings/Heading"
+import EnterpriseStartupSystem from "./EnterpriseStartupSystem"
+import Heading from "../headings/Heading"
 
 // ── Shared config ─────────────────────────────────────────────────────────────
 const SPACING   = 3;
@@ -284,7 +285,8 @@ export default function WhoWeWorkWith() {
         <div className="grid grid-cols-1 lg:grid-cols-2 border-x border-color">
           <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-auto lg:grid-rows-[minmax(220px,auto)_1fr_minmax(140px,auto)] lg:border-r border-color">
 
-            <div className="border-b border-color px-6 py-12 lg:px-8 lg:py-28">
+
+            <div className="border-b border-color px-6 py-6 lg:px-8 lg:py-10">
               <h2 className="leading">
                 Who We <span className="text-gray-200">Work With</span>
               </h2>
@@ -293,7 +295,9 @@ export default function WhoWeWorkWith() {
               </p>
             </div>
 
+
             <div className="hidden lg:block border-l border-b border-color" />
+
 
             <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-6">
               <div className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
@@ -311,10 +315,9 @@ export default function WhoWeWorkWith() {
             </div>
 
             <div className="px-6 py-10 lg:p-10 flex items-end">
-              <PlusHeading text="Scroll Down" size="b1" />
+              <Heading text="Scroll Down"/>
             </div>
 
-            {/* Rock — brightness effect */}
             <div className="lg:border-l border-color px-6 py-10 lg:p-10 flex items-end justify-end">
               <ParticleImage
                 src="/whoWeWorkWith/rock.png"
@@ -327,16 +330,9 @@ export default function WhoWeWorkWith() {
             </div>
           </div>
 
-          {/* Sphere — segment lift effect */}
-          <div className="flex items-center justify-center p-10 lg:p-20">
-            <ParticleImage
-              src="/whoWeWorkWith/sphere.png"
-              alt="Abstract sphere"
-              width={520}
-              height={520}
-              className="max-w-[320px] lg:max-w-full h-auto"
-              mode="segment-lift"
-            />
+
+          <div className="flex items-center justify-center p-10 h-full w-full">
+            <EnterpriseStartupSystem />
           </div>
 
         </div>

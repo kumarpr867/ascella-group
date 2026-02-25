@@ -1,8 +1,8 @@
 "use client";
-import PlusHeading from "../headings/PlusHeading";
 import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
-import { PixelWorld } from "./Globe3D";
+import { PixelWorld } from "./glowEffect";
+import PlusText from "../headings/PlusText";
 
 const EASE = cubicBezier(0.33, 1, 0.68, 1);
 
@@ -12,7 +12,7 @@ const container: Variants = {
     transition: {
       staggerChildren: 0.22,
       delayChildren: 0.8,
-    },
+    },  
   },
 };
 
@@ -75,21 +75,21 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 top-[15vh] flex items-center justify-center z-2"
         >
-<motion.div
-  transition={{
-    repeat: Infinity,
-    repeatType: "loop",
-    duration: 2,
-    ease: "linear"
-  }}
-  className="w-[70vw] max-w-[900px] aspect-square pointer-events-auto">
-  <PixelWorld
-    particleSize={0.15}
-    rotationSpeed={0.002}
-    autoRotate={true}
-    enableZoom={false}
-  />
-</motion.div>
+          <motion.div
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 2,
+              ease: "linear"
+            }}
+            className="w-[70vw] max-w-[900px] aspect-square pointer-events-auto">
+            <PixelWorld
+              particleSize={0.15}
+              rotationSpeed={0.002}
+              autoRotate={true}
+              enableZoom={false}
+            />
+          </motion.div>
         </motion.div>
 
 
@@ -199,15 +199,15 @@ export default function Hero() {
             className="mx-auto max-w-7xl px-4 sm:px-6 pt-4 flex items-center justify-center lg:justify-between md:justify-around"
           >
             <motion.div variants={fadeUp} className="hidden xl:block">
-              <PlusHeading text="Security and risk managed with clear ownership" size="b2" />
+              <PlusText text="Security and risk managed with clear ownership" size="b2" />
             </motion.div>
 
             <motion.div variants={fadeUp} className="hidden md:block">
-              <PlusHeading text="Technology and platforms delivered with control" size="b2" />
+              <PlusText text="Technology and platforms delivered with control" size="b2" />
             </motion.div>
 
             <motion.div variants={fadeUp}>
-              <PlusHeading text="Operations and growth aligned under one structure" size="b2" />
+              <PlusText text="Operations and growth aligned under one structure" size="b2" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -252,7 +252,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="border-t border-color p-5 my-6 flex justify-center">
-          <PlusHeading text="Operations and growth aligned under one structure" size="b2" />
+          <PlusText text="Operations and growth aligned under one structure" size="b2" />
         </motion.div>
       </div>
 

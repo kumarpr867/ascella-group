@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import PlusHeading from "../headings/PlusHeading";
+import Heading from "../headings/Heading";
 import { motion, type Variants } from "motion/react";
 
 const container: Variants = {
@@ -235,9 +235,18 @@ export default function ExecutionProblemSection() {
                 </div>
             </motion.div>
 
-            <motion.div className="border-b border-color" initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <motion.div variants={fadeIn} style={{ willChange: "transform" }} className="mx-auto max-w-7xl px-10 flex items-center py-8">
-                    <PlusHeading text="Execution Policy" size="b1" plusSize="lg" />
+
+            <motion.div
+                className="border-b border-color"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+            >
+                <motion.div
+                    variants={fadeIn}
+                    style={{ willChange: "transform" }}
+                    className="mx-auto max-w-7xl px-10 flex items-center py-8">
+                    <Heading text="Execution Policy" />
                 </motion.div>
             </motion.div>
 

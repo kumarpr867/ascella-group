@@ -1,4 +1,4 @@
-import PlusHeading from "../headings/PlusHeading";
+import PlusHeading from "../headings/Heading";
 
 type ProblemItem = {
   title: string;
