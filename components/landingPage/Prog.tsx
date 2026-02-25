@@ -6,17 +6,23 @@ import { useEffect, useRef, useState } from "react"
 const CX = 308.958
 const CY = 314.981
 
-// Big dot original position angle from center
-const DOT_R = Math.sqrt(99.89 ** 2 + 82.113 ** 2) // ≈ 129.3 — inside inner circle (r=140)
-const DOT_ORIG_ANGLE = Math.atan2(82.113, -99.89)   // ≈ 140° in radians
+const DOT_R = Math.sqrt(99.89 ** 2 + 82.113 ** 2)
+const DOT_ORIG_ANGLE = Math.atan2(82.113, -99.89)
+
+const R_INNER = 140
 
 function InteractiveSVG() {
     const outerAngleRef = useRef(0)
     const midAngleRef   = useRef(0)
     const innerAngleRef = useRef(0)
 
-    const dotAngleRef       = useRef(DOT_ORIG_ANGLE)
-    const dotTargetAngleRef = useRef(DOT_ORIG_ANGLE)
+    // Dot current position (lerped)
+    const dotXRef = useRef(CX + DOT_R * Math.cos(DOT_ORIG_ANGLE))
+    const dotYRef = useRef(CY + DOT_R * Math.sin(DOT_ORIG_ANGLE))
+
+    // Dot target position
+    const dotTargetXRef = useRef(dotXRef.current)
+    const dotTargetYRef = useRef(dotYRef.current)
 
     const midVelRef   = useRef(0)
     const innerVelRef = useRef(0)
@@ -28,35 +34,34 @@ function InteractiveSVG() {
         clickInner: false,
     })
 
-    const [outerAngle, setOuterAngle] = useState(0)
-    const [midAngle,   setMidAngle]   = useState(0)
-    const [innerAngle, setInnerAngle] = useState(0)
-    const [dotPos,     setDotPos]     = useState({ x: 209.068, y: 397.094 })
-    const [isDotHovered, setIsDotHovered] = useState(false)
+    const [outerAngle,    setOuterAngle]    = useState(0)
+    const [midAngle,      setMidAngle]      = useState(0)
+    const [innerAngle,    setInnerAngle]    = useState(0)
+    const [dotPos,        setDotPos]        = useState({ x: dotXRef.current, y: dotYRef.current })
+    const [isDotHovered,  setIsDotHovered]  = useState(false)
+    const [isInsideInner, setIsInsideInner] = useState(false)
+    const [cursorPos,     setCursorPos]     = useState({ x: 0, y: 0 })
 
     const svgRef = useRef(null)
     const rafRef = useRef(null)
 
-    // Constant anticlockwise rotation speed for outer ring (degrees per frame)
-    const OUTER_SPEED = -0.15 // negative = anticlockwise
+    const OUTER_SPEED = -0.15
 
     useEffect(() => {
-        const SPEED = 0.6
-        const LERP  = 0.07
+        const SPEED    = 0.6
+        const LERP     = 0.07
+        const DOT_LERP = 0.09
 
         const loop = () => {
             const h = hoverRef.current
 
-            // Outer always rotates anticlockwise at constant slow speed
             outerAngleRef.current += OUTER_SPEED
 
-            // Mid and inner velocities based on hover
             let midTarget   = 0
             let innerTarget = 0
 
             if (h.clickInner) {
                 innerTarget = SPEED
-                midTarget   = 0
             } else {
                 if (h.mid)   midTarget   = -SPEED
                 if (h.inner) innerTarget =  SPEED
@@ -68,16 +73,14 @@ function InteractiveSVG() {
             midAngleRef.current   += midVelRef.current
             innerAngleRef.current += innerVelRef.current
 
-            // Dot angle lerp
-            dotAngleRef.current += (dotTargetAngleRef.current - dotAngleRef.current) * 0.09
-
-            const newDotX = CX + DOT_R * Math.cos(dotAngleRef.current)
-            const newDotY = CY + DOT_R * Math.sin(dotAngleRef.current)
+            // Smoothly lerp dot toward target
+            dotXRef.current += (dotTargetXRef.current - dotXRef.current) * DOT_LERP
+            dotYRef.current += (dotTargetYRef.current - dotYRef.current) * DOT_LERP
 
             setOuterAngle(outerAngleRef.current)
             setMidAngle(midAngleRef.current)
             setInnerAngle(innerAngleRef.current)
-            setDotPos({ x: newDotX, y: newDotY })
+            setDotPos({ x: dotXRef.current, y: dotYRef.current })
 
             rafRef.current = requestAnimationFrame(loop)
         }
@@ -99,38 +102,45 @@ function InteractiveSVG() {
         const dy   = svgP.y - CY
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        const R_INNER   = 141
         const R_MID_IN  = 141
         const R_MID_OUT = 185
 
-        const ddx  = svgP.x - dotPos.x
-        const ddy  = svgP.y - dotPos.y
+        // Check if cursor is on the dot
+        const ddx  = svgP.x - dotXRef.current
+        const ddy  = svgP.y - dotYRef.current
         const dotD = Math.sqrt(ddx * ddx + ddy * ddy)
 
-        const isOnDot = dotD < 20
+        const isOnDot = dotD < 18
         setIsDotHovered(isOnDot)
+        setIsInsideInner(dist < R_INNER)
+        setCursorPos({ x: svgP.x, y: svgP.y })
 
         hoverRef.current.dot   = isOnDot
         hoverRef.current.inner = dist < R_INNER && !isOnDot
         hoverRef.current.mid   = dist >= R_MID_IN && dist <= R_MID_OUT
 
-        // If inside inner circle but NOT on dot → move dot to cursor angle
         if (dist < R_INNER && !isOnDot) {
-            const cursorAngle = Math.atan2(dy, dx)
-            dotTargetAngleRef.current = cursorAngle
+            // Move dot to exact cursor position, clamped inside circle boundary
+            const angle       = Math.atan2(dy, dx)
+            const clampedDist = Math.min(dist, R_INNER - 13)
+            dotTargetXRef.current = CX + clampedDist * Math.cos(angle)
+            dotTargetYRef.current = CY + clampedDist * Math.sin(angle)
         }
 
-        // If hovering dot → push it away
+        // If cursor hovers the dot → push it away
         if (isOnDot) {
-            const cursorAngle = Math.atan2(dy, dx)
-            const offset = Math.PI * (0.8 + Math.random() * 0.4)
-            dotTargetAngleRef.current = cursorAngle + offset
+            const angle  = Math.atan2(dy, dx)
+            const offset = Math.PI * (0.85 + Math.random() * 0.3)
+            const pushR  = R_INNER * 0.8
+            dotTargetXRef.current = CX + pushR * Math.cos(angle + offset)
+            dotTargetYRef.current = CY + pushR * Math.sin(angle + offset)
         }
     }
 
     const handleMouseLeave = () => {
         hoverRef.current = { mid: false, inner: false, dot: false, clickInner: false }
         setIsDotHovered(false)
+        setIsInsideInner(false)
     }
 
     const handleClick = (e) => {
@@ -143,7 +153,7 @@ function InteractiveSVG() {
         const dx   = svgP.x - CX
         const dy   = svgP.y - CY
         const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 141) {
+        if (dist < R_INNER) {
             hoverRef.current.clickInner = !hoverRef.current.clickInner
         }
     }
@@ -152,7 +162,8 @@ function InteractiveSVG() {
         <svg
             ref={svgRef}
             viewBox="0 0 620 630"
-            className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-auto cursor-default"
+            className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-auto"
+            style={{ cursor: isInsideInner ? "none" : "default" }}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             onMouseMove={handleMouseMove}
@@ -165,7 +176,7 @@ function InteractiveSVG() {
             <circle cx="431.163" cy="314.98"  r="188.222" transform="rotate(90 431.163 314.98)" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
             <circle cx="188.472" cy="314.98"  r="188.222" transform="rotate(90 188.472 314.98)" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
 
-            {/* ── OUTER GROUP — always rotates anticlockwise ── */}
+            {/* ── OUTER GROUP ── */}
             <g transform={`rotate(${outerAngle} ${CX} ${CY})`}>
                 <path d="M308.07 67.144C444.624 67.1443 555.324 178.104 555.324 314.981C555.324 451.858 444.624 562.818 308.07 562.818C171.516 562.818 60.815 451.858 60.8149 314.981C60.8149 178.104 171.516 67.144 308.07 67.144Z" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
                 <path d="M308.07 92.7678C430.472 92.7681 529.7 192.256 529.7 314.981C529.7 437.706 430.472 537.193 308.07 537.194C185.667 537.194 86.439 437.706 86.439 314.981C86.439 192.255 185.667 92.7678 308.07 92.7678Z" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
@@ -210,18 +221,40 @@ function InteractiveSVG() {
                 <circle cx="309.816" cy="314.981" r="140.682" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
             </g>
 
-            {/* ── DOT — hover state: glows white, normal: gray ── */}
-            <circle
-                cx={dotPos.x}
-                cy={dotPos.y}
-                r={isDotHovered ? 14 : 11.065}
-                fill={isDotHovered ? "white" : "#9ca3af"}
-                style={{
-                    transition: "r 0.2s ease, fill 0.2s ease",
-                    cursor: "pointer",
-                    filter: isDotHovered ? "drop-shadow(0 0 8px rgba(255,255,255,0.8))" : "none",
-                }}
-            />
+            {/* ── REAL DOT — hidden when cursor is inside inner circle ── */}
+            {!isInsideInner && (
+                <circle
+                    cx={dotPos.x}
+                    cy={dotPos.y}
+                    r={11.065}
+                    fill="#9ca3af"
+                    style={{ cursor: "pointer" }}
+                />
+            )}
+
+            {/* ── CUSTOM CURSOR DOT — shown only inside inner circle ── */}
+            {isInsideInner && (
+                <>
+                    <circle
+                        cx={cursorPos.x}
+                        cy={cursorPos.y}
+                        r={20}
+                        fill="white"
+                        fillOpacity="0.06"
+                        style={{ pointerEvents: "none" }}
+                    />
+                    <circle
+                        cx={cursorPos.x}
+                        cy={cursorPos.y}
+                        r={11}
+                        fill="#9ca3af"
+                        style={{
+                            pointerEvents: "none",
+                            filter: "drop-shadow(0 0 4px rgba(255,255,255,0.4))",
+                        }}
+                    />
+                </>
+            )}
 
             <defs>
                 <radialGradient id="paint0_radial_125_2049" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(309.816 314.981) rotate(90) scale(317.657)">

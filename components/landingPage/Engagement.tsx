@@ -7,20 +7,22 @@ import { useEffect, useRef, useState, useCallback } from "react"
 
 const ParticleSphere = dynamic(() => import("./ParticleSphere"), { ssr: false })
 
-// ── Config ────────────────────────────────────────────────────────────────────
-const SPACING       = 3;
+// ── Config (Slow & Smooth Tuning) ─────────────────────────────────────────────
+const SPACING       = 5;      
 const THRESHOLD     = 10;
-const HOVER_RADIUS  = 60;   // px — particles within this radius scatter on hover
-const EXPLODE_FORCE = 4;    // how far they fly
-const EXPLODE_DECAY = 0.85; // velocity decay per frame
-const RETURN_LERP   = 0.08; // how fast they return to origin
+const HOVER_RADIUS  = 100;    
+const EXPLODE_FORCE = 4;      
+const EXPLODE_DECAY = 0.94;   // Higher decay = smoother slowdown
+const RETURN_LERP   = 0.02;   // Lower value = slower, more liquid morphing
+const CONNECT_DIST  = 32;     
 
 interface Particle {
-    ox: number; oy: number; // origin — never changes
-    x:  number; y:  number; // current position
-    vx: number; vy: number; // velocity
+    ox: number; oy: number; 
+    cx: number; cy: number; 
+    x:  number; y:  number; 
+    vx: number; vy: number; 
     size: number;
-    scattered: boolean;
+    phase: number;
 }
 
 // ── ParticleCanvas ────────────────────────────────────────────────────────────
@@ -29,6 +31,15 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
     const mouseRef     = useRef({ x: -9999, y: -9999 });
     const particlesRef = useRef<Particle[]>([]);
     const rafRef       = useRef<number | null>(null);
+    const [mode, setMode] = useState<"image" | "circle">("image");
+
+    // Timing slowed to 3 seconds for a more graceful transition
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setMode((prev) => (prev === "image" ? "circle" : "image"));
+        }, 3000); 
+        return () => clearInterval(timer);
+    }, []);
 
     const buildParticles = useCallback(() => {
         const canvas = canvasRef.current;
@@ -40,7 +51,9 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 
         const W = canvas.width;
         const H = canvas.height;
-        if (W === 0 || H === 0) return;
+        const centerX = W / 2;
+        const centerY = H / 2;
+        const circleRadius = Math.min(W, H) / 3.4;
 
         const off    = document.createElement("canvas");
         off.width    = W;
@@ -54,15 +67,21 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 
             for (let y = 0; y < H; y += SPACING) {
                 for (let x = 0; x < W; x += SPACING) {
-                    const i          = (y * W + x) * 4;
+                    const i = (y * W + x) * 4;
                     const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
                     if (brightness > THRESHOLD) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const r = circleRadius + (Math.random() * 10 - 5);
+
                         pts.push({
                             ox: x, oy: y,
-                            x,     y,
+                            cx: centerX + Math.cos(angle) * r,
+                            cy: centerY + Math.sin(angle) * r,
+                            x: Math.random() * W, 
+                            y: Math.random() * H,
                             vx: 0, vy: 0,
-                            size: Math.random() * 1.0 + 0.5,
-                            scattered: false,
+                            size: 0.7, 
+                            phase: Math.random() * Math.PI * 2
                         });
                     }
                 }
@@ -77,108 +96,97 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d")!;
+        let time = 0;
 
         const loop = () => {
+            time += 0.02; // Slower organic wave
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             const mx = mouseRef.current.x;
             const my = mouseRef.current.y;
+            const pts = particlesRef.current;
 
-            for (const p of particlesRef.current) {
+            for (let i = 0; i < pts.length; i++) {
+                const p = pts[i];
+                const tx = mode === "image" ? p.ox : p.cx;
+                const ty = mode === "image" ? p.oy : p.cy;
 
-                // ── Hover scatter: push away from cursor ──
-                const dx   = p.ox - mx;
-                const dy   = p.oy - my;
+                // Subtle floating movement
+                const floatX = Math.sin(time + p.phase) * 0.8;
+                const floatY = Math.cos(time + p.phase) * 0.8;
+
+                // Smooth mouse interaction
+                const dx = p.x - mx;
+                const dy = p.y - my;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
                 if (dist < HOVER_RADIUS) {
-                    // Soft falloff — closer = more push
-                    const falloff = 1 - dist / HOVER_RADIUS;
-                    const len     = dist || 1;
-                    // Add push velocity away from cursor each frame
-                    p.vx += (dx / len) * EXPLODE_FORCE * falloff * 0.3;
-                    p.vy += (dy / len) * EXPLODE_FORCE * falloff * 0.3;
-                    p.scattered = true;
+                    const force = (HOVER_RADIUS - dist) / HOVER_RADIUS;
+                    p.vx += (dx / dist) * EXPLODE_FORCE * force * 0.15;
+                    p.vy += (dy / dist) * EXPLODE_FORCE * force * 0.15;
                 }
 
-                // Apply velocity + decay
-                p.x  += p.vx;
-                p.y  += p.vy;
                 p.vx *= EXPLODE_DECAY;
                 p.vy *= EXPLODE_DECAY;
+                
+                // Position update with very smooth LERP
+                p.x += (tx + floatX - p.x) * RETURN_LERP + p.vx;
+                p.y += (ty + floatY - p.y) * RETURN_LERP + p.vy;
 
-                // Return to origin when cursor is far
-                if (dist >= HOVER_RADIUS) {
-                    p.x += (p.ox - p.x) * RETURN_LERP;
-                    p.y += (p.oy - p.y) * RETURN_LERP;
-                    if (Math.sqrt(p.vx * p.vx + p.vy * p.vy) < 0.05) {
-                        p.scattered = false;
+                // Net Connections (Spider-web style)
+                for (let j = i + 1; j < pts.length; j++) {
+                    const p2 = pts[j];
+                    const ldx = p.x - p2.x;
+                    const ldy = p.y - p2.y;
+                    const ldistSq = ldx * ldx + ldy * ldy;
+
+                    if (ldistSq < CONNECT_DIST * CONNECT_DIST) {
+                        const opacity = (1 - Math.sqrt(ldistSq) / CONNECT_DIST) * 0.35;
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.4;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
                     }
                 }
 
-                // Skip fully settled invisible particles
-                const atOrigin = Math.abs(p.x - p.ox) < 0.3 && Math.abs(p.y - p.oy) < 0.3;
-                if (!p.scattered && atOrigin) continue;
-
-                // Draw — pure white, no brightness boost, no glow
+                // Draw Particle
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(255,255,255,0.85)";
                 ctx.fill();
             }
-
             rafRef.current = requestAnimationFrame(loop);
         };
 
         const onMove = (e: MouseEvent) => {
-            const rect       = canvas.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
             mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
         };
-        const onLeave = () => {
-            mouseRef.current = { x: -9999, y: -9999 };
-        };
+        const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
 
         canvas.addEventListener("mousemove", onMove);
         canvas.addEventListener("mouseleave", onLeave);
-
         const ro = new ResizeObserver(buildParticles);
         ro.observe(canvas);
-
-        if (imgEl) {
-            if (imgEl.complete) buildParticles();
-            else imgEl.addEventListener("load", buildParticles);
-        }
-
+        if (imgEl?.complete) buildParticles();
+        
         rafRef.current = requestAnimationFrame(loop);
-
         return () => {
             canvas.removeEventListener("mousemove", onMove);
             canvas.removeEventListener("mouseleave", onLeave);
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             ro.disconnect();
-            if (imgEl) imgEl.removeEventListener("load", buildParticles);
         };
-    }, [buildParticles, imgEl]);
+    }, [buildParticles, imgEl, mode]);
 
     return (
-        <canvas
-            ref={canvasRef}
-            style={{
-                position:      "absolute",
-                inset:         0,
-                width:         "100%",
-                height:        "100%",
-                pointerEvents: "auto",
-                zIndex:        10,
-                cursor:        "crosshair",
-            }}
-        />
+        <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "auto", zIndex: 10, cursor: "crosshair" }} />
     );
 }
 
 // ── ParticleImage ─────────────────────────────────────────────────────────────
 function ParticleImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
-    const wrapRef           = useRef<HTMLDivElement>(null);
+    const wrapRef = useRef<HTMLDivElement>(null);
     const [imgEl, setImgEl] = useState<HTMLImageElement | null>(null);
 
     useEffect(() => {
@@ -190,13 +198,7 @@ function ParticleImage({ src, alt, className }: { src: string; alt: string; clas
 
     return (
         <div ref={wrapRef} className={className} style={{ position: "relative" }}>
-            <Image
-                src={src}
-                fill
-                alt={alt}
-                crossOrigin="anonymous"
-                style={{ objectFit: "contain" }}
-            />
+            <Image src={src} fill alt={alt} crossOrigin="anonymous" style={{ objectFit: "contain", opacity: 0 }} />
             <ParticleCanvas imgEl={imgEl} />
         </div>
     );
@@ -264,8 +266,6 @@ export default function Engagement() {
                             <label className="block text-sm text-white font-light mb-1">Organisation Type</label>
                             <select defaultValue="" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition">
                                 <option value="" disabled></option>
-                                <option>Something</option>
-                                <option>Something</option>
                                 <option>Something</option>
                                 <option>Something</option>
                             </select>
