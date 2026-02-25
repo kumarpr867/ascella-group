@@ -76,6 +76,67 @@ const ExecutionTogether = () => {
       {/* Cards Interaction Area */}
       <div className="relative w-full max-w-[1000px] h-[500px] flex justify-center items-center">
         <div className="relative" style={{ width: '840px', height: '300px' }}>
+
+          {/* ── Isometric Grid — exact same as ExecutionLayer ── */}
+          <div
+            className="absolute z-0 pointer-events-none left-0 right-0"
+            style={{ top: '260px', bottom: '-120px' }}
+          >
+            <svg
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+            >
+              <defs>
+                <pattern id="iso-grid" width="100" height="60" patternUnits="userSpaceOnUse">
+                  <path
+                    d="M50 0 L100 30 L50 60 L0 30 Z"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="0.5"
+                    opacity="0.08"
+                  />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#iso-grid)" />
+
+              {/* Vector Cell 1 — col=0, row=0 */}
+              <image
+                href="/vector 55.png"
+                x="0"
+                y="0"
+                width="100"
+                height="60"
+                opacity="10"
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              {/* Vector Cell 2 — col=2, row=1 */}
+              <image
+                href="/vector 55.png"
+                x="200"
+                y="60"
+                width="100"
+                height="60"
+                opacity="80"
+                preserveAspectRatio="xMidYMid meet"
+              />
+
+              {/* Vector Cell 3 — col=5, row=2 */}
+              <image
+                href="/vector 55.png"
+                x="500"
+                y="120"
+                width="100"
+                height="60"
+                opacity="10"
+                preserveAspectRatio="xMidYMid meet"
+              />
+            </svg>
+          </div>
+          {/* ── End Isometric Grid ── */}
+
           {executionArms.map((arm) => {
             const isHovered = hoveredId === arm.id;
             
@@ -121,7 +182,6 @@ const ExecutionTogether = () => {
                   {/* Content Layer */}
                   <div className={`relative z-10 w-full h-full flex flex-col p-6 transition-colors duration-500 ${isHovered ? 'text-black' : 'text-white'}`}>
                     
-                    {/* ID - Isomorphic on normal, flat on hover */}
                     <span 
                       className={`text-[12px] font-mono tracking-widest transition-all duration-500 ${isHovered ? 'text-gray-500' : 'text-gray-700 absolute top-10 left-8'}`}
                       style={{
@@ -131,7 +191,6 @@ const ExecutionTogether = () => {
                       {arm.id}
                     </span>
 
-                    {/* Icon Logic */}
                     <div 
                       className={`transition-all duration-500 ${isHovered ? 'ml-auto w-10 h-10' : 'w-14 h-14 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'}`}
                       style={{
@@ -144,11 +203,9 @@ const ExecutionTogether = () => {
                         WebkitMaskPosition: 'center',
                         maskSize: 'contain',
                         WebkitMaskSize: 'contain',
-                        transform: 'isHovered '
                       }}
                     />
 
-                    {/* Description & Name */}
                     {isHovered ? (
                       <div className="mt-auto transition-all duration-500">
                         <p className="text-[13px] leading-snug font-medium mb-8 text-gray-800">
@@ -159,7 +216,6 @@ const ExecutionTogether = () => {
                         </h4>
                       </div>
                     ) : (
-                      /* TITLE IN DIRECTION: Added skewY to align with the SVG path */
                       <span 
                         className="absolute bottom-14 right-8 text-[11px] uppercase tracking-[0.2em] text-gray-500 text-right leading-tight max-w-[100px] transition-all duration-500"
                         style={{
@@ -177,8 +233,8 @@ const ExecutionTogether = () => {
         </div>
       </div>
 
-      {/* Footer Branding... (Keep as is) */}
-      <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-end mt-auto pt-10 pb-12">
+      {/* Footer */}
+      <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-end pt-4 pb-12">
         <h5 className="text-gray-300 text-[12px] tracking-wide max-w-[200px] leading-relaxed mb-8 md:mb-0">
           Governance is designed <br />in, not enforced later.
         </h5>

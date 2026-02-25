@@ -76,12 +76,17 @@ export default function Faq() {
               className={`group relative min-h-40 md:min-h-60 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
             >
               <Image
-                src="/FaqCube.svg"
-                alt="FAQ Cube"
-                width={120}
-                height={120}
-                className={`absolute top-20 right-1 pointer-events-none transition-opacity duration-500 ${isExpanded ? "opacity-10" : "opacity-15"}`}
-              />
+  src="/FaqCube.svg"
+  alt="FAQ Cube"
+  width={120}
+  height={120}
+  className={`absolute top-20 pointer-events-none transition-opacity duration-500 
+    ${isExpanded ? "opacity-10" : "opacity-15"}
+    ${index % 2 !== 0 
+      ? "left-1 -scale-x-100"   // odd boxes: left side, flipped
+      : "right-1"                // even boxes: right side, normal
+    }`}
+/>
               <div className="relative z-10 h-full p-4 md:p-6 lg:mr-10">
                 {/* bottom question */}
                 <h5
