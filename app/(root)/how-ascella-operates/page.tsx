@@ -3,6 +3,7 @@ import Accountability from "@/components/howAscellaOperates/Accountability";
 import DayZero from "@/components/howAscellaOperates/DayZero";
 import Em3 from "@/components/howAscellaOperates/engagementModel/Em3";
 import EMII from "@/components/howAscellaOperates/engagementModel/EMII";
+import EngagementMenu from "@/components/howAscellaOperates/engagementModel/EngagementMenu";
 import EngagementModel from "@/components/howAscellaOperates/engagementModel/EngagementModel";
 import ExecutionPods from "@/components/howAscellaOperates/ExecutionPods";
 import Governace from "@/components/howAscellaOperates/Governace";
@@ -19,7 +20,7 @@ export default function HowAscellaOperate() {
       <Governace />
       <ExecutionPods />
       <DayZero />
-      <EngagementModel />
+      <Em3 />
       <Faq />
       <NotCapabilityProblem />
     </>

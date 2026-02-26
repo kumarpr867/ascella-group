@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import PlusHeading from "../../headings/Heading";
 import { SECTIONS, EngagementLabel } from "./data";
+import Heading from "../../headings/Heading";
 
 const MENU_ITEMS: EngagementLabel[] = [
     "Operation",
@@ -31,7 +32,7 @@ export default function Em3() {
 
     const { scrollYProgress } = useScroll({
         target: sectionRef,
-        offset: ["start end", "end start"],
+        offset: ["start start", "end end"],
     });
 
     const imageY = reduceMotion
@@ -40,11 +41,7 @@ export default function Em3() {
 
     const textY = reduceMotion
         ? 0
-        : useTransform(scrollYProgress, [0, 1], [12, -12]);
-
-
-
-
+        : useTransform(scrollYProgress, [0, 1], [1, -1]);
 
     useEffect(() => {
         const onScroll = () => setIsPaused(false);
@@ -67,29 +64,94 @@ export default function Em3() {
             setActive(MENU_ITEMS[clampedIndex]);
         });
     }, [scrollYProgress]);
+    // AUTO ROTATE (Mobile Only)
+    useEffect(() => {
+        const isMobile = window.innerWidth < 1024;
+        if (!isMobile) return;
+        if (isPaused) return;
 
+        const interval = setInterval(() => {
+            setActive((prev) => {
+                const currentIndex = MENU_ITEMS.indexOf(prev);
+                const nextIndex = (currentIndex + 1) % MENU_ITEMS.length;
+                return MENU_ITEMS[nextIndex];
+            });
+        }, 4000); // 4 seconds
+
+        return () => clearInterval(interval);
+    }, [active, isPaused]);
 
     return (
-        <section className="m-20 xl:m-30">
-
-            <header className="flex flex-col gap-6 md:w-1/2 mb-20">
-                <PlusHeading text="ENGAGEMENT MODELS" size="b2" />
-                <h1 className="text-3xl leading-tight">
+        <section className="mx-auto max-w-7xl px-4 my-40">
+            <header className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
+                <Heading text="ENGAGEMENT MODELS" />
+                <h1 className="text-2xl lg:text-3xl leading-tight">
                     Engagement structures are{" "}
                     <span className="text-gray-200">
                         designed for operational alignment
                     </span>
                     , not transactional delivery.
                 </h1>
-                <p className="font-extralight">
+                <p className="font-extralight text-[14px] md:text-[16px] lg:text-base">
                     Ascella engagements are structured based on organisational maturity,
                     execution complexity, and governance need.
                 </p>
             </header>
 
+            {/* MOBILE AUTO VERSION */}
+            <div className="flex flex-col items-center gap-8 md:hidden">
 
-            <div ref={sectionRef} className="relative h-[300vh]">
-                <div className="sticky top-24 flex justify-between items-start gap-12">
+                {/* Menu */}
+                <nav className="flex flex-col gap-2 text-lg">
+                    {MENU_ITEMS.map((item, index) => (
+                        <button
+                            key={item}
+                            onClick={() => handleClick(item)}
+                            className={`text-left transition-colors ${active === item
+                                    ? "text-white"
+                                    : "text-gray-400"
+                                }`}
+                        >
+                            [{String(index + 1).padStart(2, "0")}] {item}
+                        </button>
+                    ))}
+                </nav>
+
+                {/* Animated Content */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={section.label}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.4 }}
+                        className="flex flex-col items-center gap-6 text-center"
+                    >
+                        <div className="relative w-full h-[260px]">
+                            <Image
+                                src={section.image}
+                                alt={section.title}
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-4 max-w-md">
+                            <h2 className="text-xl">{section.title}</h2>
+                            <p className="text-sm text-gray-300">
+                                {section.description}
+                            </p>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* DESKTOP STICKY SCROLL VERSION */}
+            <div
+                ref={sectionRef}
+                className="relative h-[300vh] hidden md:block"
+            >
+                <div className="sticky top-44 grid grid-cols-3 md:gap-16 lg:gap-32 w-full items-center">
 
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -99,13 +161,14 @@ export default function Em3() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -16 }}
                             transition={{ duration: 0.35, ease: "easeOut" }}
-                            className="max-w-sm min-h-[220px] flex flex-col gap-5 will-change-transform"
+                            className="max-w-sm flex flex-col gap-5"
                         >
                             <h2 className="text-xl">{section.title}</h2>
-                            <p className="text-sm text-gray-300">{section.description}</p>
+                            <p className="text-sm text-gray-300">
+                                {section.description}
+                            </p>
                         </motion.div>
                     </AnimatePresence>
-
 
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -115,22 +178,26 @@ export default function Em3() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.96 }}
                             transition={{ duration: 0.35, ease: "easeOut" }}
-                            className="flex flex-col gap-5 will-change-transform"
+                            className="flex flex-col items-center gap-5"
                         >
-                            <h1 className="text-3xl">
-                                [0{MENU_ITEMS.indexOf(active) + 1}]
-                            </h1>
-                            <Image
-                                src={section.image}
-                                alt={section.title}
-                                width={300}
-                                height={600}
-                            />
+                            <div className="w-full flex gap-2">
+                                <h1 className="text-3xl">
+                                    [{String(MENU_ITEMS.indexOf(active) + 1).padStart(2, "0")}]
+                                </h1>
+                            </div>
+
+                            <div className="relative w-full h-[500px]">
+                                <Image
+                                    src={section.image}
+                                    alt={section.title}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
                         </motion.div>
                     </AnimatePresence>
 
-
-                    <nav className="menu text-2xl flex flex-col gap-2">
+                    <nav className="text-2xl flex flex-col gap-2">
                         {MENU_ITEMS.map((item) => (
                             <button
                                 key={item}
@@ -148,19 +215,4 @@ export default function Em3() {
             </div>
         </section>
     );
-
-    function newFunction() {
-        useEffect(() => {
-            if (isPaused) return;
-
-            const interval = setInterval(() => {
-                setActive((prev) => {
-                    const i = MENU_ITEMS.indexOf(prev);
-                    return MENU_ITEMS[(i + 1) % MENU_ITEMS.length];
-                });
-            }, 5000);
-
-            return () => clearInterval(interval);
-        }, [isPaused]);
-    }
 }

@@ -58,12 +58,12 @@ export default function EngagementModel() {
   const [active, setActive] = useState<EngagementLabel>("Operation");
 
   return (
-    <section className="m-20 xl:m-30">
+    <section className="mx-10 xl:mx-30 my-30">
       {/* Header */}
-      <header className="flex flex-col gap-6 w-2xl mb-20">
+      <header className="flex flex-col gap-6 md:w-3xl mb-20">
         <PlusHeading text="ENGAGEMENT MODELS" />
-        <h3 className="font-light">Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.</h3>
-        <p className="text-b1 font-extralight">
+        <h3 className="text-[20px] md:text-[36px] font-light">Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.</h3>
+        <p className="text-[14px] font-extralight">
           Ascella engagements are structured around operating alignment, where ownership, governance, and measurement are defined before delivery begins so execution remains controlled and accountable instead of transactional and fragmented.
         </p>
       </header>

@@ -102,7 +102,7 @@ const Navbar = () => {
                 <div key={link.href} className="flex items-center text-white">
                   <Link
                     href={link.href}
-                    className="px-2 hover:scale-[1.1] transition ease-in"
+                    className="px-2 text-b2 hover:scale-[1.1] transition ease-in"
                   >
                     {link.label}
                   </Link>
@@ -115,7 +115,7 @@ const Navbar = () => {
 
             {/* Desktop CTA */}
             <Link
-              href="/connect"
+              href="/engageWithUs"
               className="hidden md:flex group items-center gap-3 font-medium text-white ml-6"
             >
               <span>Connect</span>
@@ -124,7 +124,7 @@ const Navbar = () => {
                   width="20"
                   height="20"
                   viewBox="0 0 14 14"
-                  className="rounded-sm bg-white p-1 transition-transform group-hover:scale-[1.4] text-black"
+                  className="rounded-sm bg-white p-1 transition-transform ease-in-out duration-300 group-hover:scale-[1.4] text-black"
                 >
                   <path
                     d="M3 11L11 3M11 3H5M11 3V9"

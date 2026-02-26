@@ -39,15 +39,35 @@
   body {
     @apply bg-black text-white antialiased;
     font-family: var(--font-montserrat), sans-serif;
-    overflow-y: scroll;
+  }
 
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  body {
+    --sb-track-color: #00000000;
+    --sb-thumb-color: var(--color-gray-400);
+    --sb-size: 10px;
   }
 
   body::-webkit-scrollbar {
-    display: none;
+    width: var(--sb-size)
   }
+
+  body::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 10px;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 10px;
+
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    body {
+      scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+  }
+
 
   h1 {
     font-size: 64px;
@@ -155,39 +175,4 @@ a {
         rgba(0, 0, 0, 0.4) 65%,
         transparent 85%);
   }
-}
-.rotating-svg {
-  animation: slow-spin 20s linear infinite;
-  background-color: beige;
-}
-
-@keyframes slow-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Add this to your globals.css */
-.rotating-svg {
-  animation: slowSpin 20s linear infinite;
-  transform-origin: center;
-}
-
-@keyframes slowSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Make sure the SVG is displayed as a block element */
-svg.rotating-svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
 }

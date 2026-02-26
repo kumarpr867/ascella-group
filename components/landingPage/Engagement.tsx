@@ -5,7 +5,7 @@ import Image from "next/image"
 import dynamic from "next/dynamic"
 import { useEffect, useRef, useState, useCallback } from "react"
 
-const ParticleSphere = dynamic(() => import("./ParticleSphere"), { ssr: false })
+const ParticleSphere = dynamic(() => import("../howAscellaOperates/ParticleSphere"), { ssr: false })
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const SPACING       = 3;

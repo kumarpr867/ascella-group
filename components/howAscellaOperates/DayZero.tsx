@@ -1,3 +1,4 @@
+import Heading from "../headings/Heading";
 import PlusHeading from "../headings/Heading";
 
 type ProblemItem = {
@@ -12,7 +13,7 @@ const items: ProblemItem[] = [
     description:
       "Security controls are engineered directly into platform design and technical foundations so exposure reduces through structure rather than after release adjustments.",
     icon: (
-      <svg width="109" height="111" viewBox="0 0 109 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="122" height="124" viewBox="0 0 109 111" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="0.5" y="43.5" width="67" height="67" stroke="white" stroke-opacity="0.5" />
         <rect x="17.5" y="20.5" width="67" height="67" stroke="white" stroke-opacity="0.5" />
         <rect x="41.5" y="0.5" width="67" height="67" stroke="white" stroke-opacity="0.5" />
@@ -48,7 +49,7 @@ const items: ProblemItem[] = [
     title: "Continuous Risk Visibility",
     description: "Threats, vulnerabilities, and compliance posture stay continuously observable through structured monitoring and review cycles so risk surfaces early and accountability remains clear.",
     icon: (
-      <svg width="131" height="131" viewBox="0 0 131 131" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="122" height="124" viewBox="0 0 131 131" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="65.5" cy="65.5" r="13" stroke="white" stroke-opacity="0.5" />
         <circle cx="65.5" cy="65.5" r="26" stroke="white" stroke-opacity="0.5" />
         <circle cx="65.5" cy="65.5" r="44" stroke="white" stroke-opacity="0.5" />
@@ -60,13 +61,13 @@ const items: ProblemItem[] = [
 
 export default function DayZero() {
   return (
-    <section className="m:20 xl:m-30 flex flex-col gap-28 flex-center">
-      <div className="flex flex-col flex-center gap-10 max-w-3xl text-center">
+    <section className="mx-auto max-w-7xl px-4 my-20 flex flex-col gap-28 flex-center">
+      <div className="flex flex-col flex-center gap-12 max-w-3xl text-center">
         <div className="">
-          <PlusHeading text="SECURITY FROM DAY ZERO" />
+          <Heading text="SECURITY FROM DAY ZERO" />
         </div>
-        <h3 className="font-light">Security operates as a core design principle embedded into governance, delivery, and oversight from the start.</h3>
-        <p className="font-light px-16">Protection is structured into decision paths, system design, and operational workflows before execution begins so risk does not accumulate silently as scale increases.</p>
+        <h3 className="text-[20px] lg:text-[36px] font-light px-5">Security operates as a core design principle embedded into governance, delivery, and oversight from the start.</h3>
+        <p className="font-light leading-tight px-16 ">Protection is structured into decision paths, system design, and operational workflows before execution begins so risk does not accumulate silently as scale increases.</p>
         <div className="flex gap-5 border-b border-color pb-10">
           <div className="flex flex-col gap-3 flex-center">
             <div className="bg-white w-15 h-15 rounded-sm p-4">
@@ -76,7 +77,7 @@ export default function DayZero() {
                 <path d="M4 19H12C12.0007 18.3226 12.0997 17.6489 12.294 17H4V19Z" fill="black" />
               </svg>
             </div>
-            <span className="font-extralight">Architecture</span>
+            <span className="font-extralight text-[12px] md:text-[16px]">Architecture</span>
           </div>
           <div className="flex flex-col gap-3 flex-center">
             <div className="bg-white w-15 h-15 rounded-sm p-3">
@@ -85,7 +86,7 @@ export default function DayZero() {
               </svg>
 
             </div>
-            <span className="font-extralight">Operations</span>
+            <span className="font-extralight text-[12px] md:text-[16px]">Operations</span>
           </div>
           <div className="flex flex-col gap-3 flex-center">
             <div className="bg-white w-15 h-15 rounded-sm p-2">
@@ -96,24 +97,24 @@ export default function DayZero() {
               </svg>
 
             </div>
-            <span className="font-extralight">Risk Visibility</span>
+            <span className="font-extralight text-[12px] md:text-[16px]">Risk Visibility</span>
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-400">
+      <div className="grid grid-cols-1 lg:grid-cols-3 border border-color">
         {items.map((item, index) => (
           <div
             key={item.title}
-            className={`px-10 py-15 min-h-105 flex flex-col border-gray-400 ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""}`}
+            className={`p-10 flex flex-col border-color ${index !== 0 ? "lg:border-l border-t lg:border-t-0" : ""}`}
           >
-            <div className="pb-10">
+            <div className="pb-5 md:pb-10">
               {item.icon}
             </div>
 
-            <h3 className="text-2xl mb-6 mt-6 ">
+            <h5 className="mb-6 mt-6 ">
               {item.title}
-            </h3>
-            <p className="text-md leading-tight md:pr-10 font-extralight">
+            </h5>
+            <p className="text-b3 leading-tight md:pr-10 font-extralight">
               {item.description}
             </p>
           </div>
