@@ -12,6 +12,7 @@ import {
   SphereGeometry,
   MeshBasicMaterial,
   Mesh,
+  Group,
   Vector3,
   Vector2,
   Raycaster,
@@ -158,8 +159,8 @@ const PixelGlobe = ({
   particleSize = GLOBE_CONFIG.particleSize,
   rotationSpeed = GLOBE_CONFIG.rotationSpeed
 }: PixelGlobeProps) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const sphereRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<Group>(null);
+  const sphereRef = useRef<Mesh>(null);
   const { camera, gl } = useThree();
 
   const particles = useMemo(

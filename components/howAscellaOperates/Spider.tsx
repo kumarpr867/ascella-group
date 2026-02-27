@@ -112,7 +112,7 @@ export function SpiderNetwork({
 
   return (
     <group>
-      <instancedMesh ref={pointsRef} args={[null, null, count]}>
+      <instancedMesh ref={pointsRef} args={[undefined, undefined, count]}>
         <sphereGeometry args={[0.07, 16, 16]} />
         <meshBasicMaterial color={color} />
       </instancedMesh>

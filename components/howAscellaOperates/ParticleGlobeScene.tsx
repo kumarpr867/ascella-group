@@ -7,7 +7,7 @@ import { useMemo, useRef } from "react"
 /* ------------------------ Random Curved Lines ------------------------ */
 
 function CurvedLines({ count = 120, radius = 2 }) {
-  const group = useRef()
+  const group = useRef<THREE.Group>(null)
 
   const lines = useMemo(() => {
     const temp = []
@@ -43,14 +43,17 @@ function CurvedLines({ count = 120, radius = 2 }) {
   }, [count, radius])
 
   useFrame(() => {
-    group.current.rotation.y += 0.0015
-    group.current.rotation.x += 0.0007
+    if (group.current) {
+      group.current.rotation.y += 0.0015
+      group.current.rotation.x += 0.0007
+    }
   })
 
   return (
     <group ref={group}>
       {lines.map((geometry, i) => (
-        <line key={i} geometry={geometry}>
+        <line key={i}>
+          <primitive object={geometry} attach="geometry" />
           <lineBasicMaterial
             color="#CFCFCF"
             transparent
@@ -66,7 +69,7 @@ function CurvedLines({ count = 120, radius = 2 }) {
 /* ----------------------------- Particles ----------------------------- */
 
 function Particles({ count = 300 }) {
-  const ref = useRef()
+  const ref = useRef<THREE.Points>(null)
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3)
@@ -79,7 +82,9 @@ function Particles({ count = 300 }) {
   }, [count])
 
   useFrame(() => {
-    ref.current.rotation.y += 0.005
+    if (ref.current) {
+      ref.current.rotation.y += 0.005
+    }
   })
 
   return (
@@ -87,9 +92,7 @@ function Particles({ count = 300 }) {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial

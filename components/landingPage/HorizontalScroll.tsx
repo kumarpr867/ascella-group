@@ -104,7 +104,7 @@ export default function HorizontalScroll() {
       >
         <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
           <div className="flex flex-col items-center text-center pt-20 pb-10">
-            <PlusHeading text='Who We Work With' size='b1' />
+            <PlusHeading text='Who We Work With' />
             <h3 className='w-1/2 mb-6 mt-4'>
               Organisations that require control, accountability, and structured execution at scale
             </h3>

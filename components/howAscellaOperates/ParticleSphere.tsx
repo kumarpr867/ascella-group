@@ -4,7 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
 function ParticleSphere({ count = 1500, radius = 2 }) {
-  const meshRef = useRef()
+  const meshRef = useRef<THREE.Group>(null)
 
   // Generate positions + random rotations
   const { positions, rotations } = useMemo(() => {
@@ -39,7 +39,7 @@ function ParticleSphere({ count = 1500, radius = 2 }) {
 
   return (
     <group ref={meshRef}>
-      <instancedMesh args={[null, null, count]}>
+      <instancedMesh args={[undefined, undefined, count]}>
         <planeGeometry args={[0.05, 0.015]} />
         <meshBasicMaterial color="white" />
         {positions && (
@@ -50,9 +50,14 @@ function ParticleSphere({ count = 1500, radius = 2 }) {
   )
 }
 
-function InstanceSetter({ positions, rotations }) {
-  const ref = useRef()
-  const temp = new THREE.Object3D()
+interface InstanceSetterProps {
+  positions: Float32Array;
+  rotations: number[];
+}
+
+function InstanceSetter({ positions, rotations }: InstanceSetterProps) {
+  const ref = useRef<THREE.InstancedMesh>(null)
+  const temp = useMemo(() => new THREE.Object3D(), [])
 
   useFrame(() => {
     if (!ref.current) return
@@ -71,7 +76,7 @@ function InstanceSetter({ positions, rotations }) {
     ref.current.instanceMatrix.needsUpdate = true
   })
 
-  return <primitive object={ref} attach="ref" />
+  return ref.current ? <primitive object={ref.current} /> : null;
 }
 
 export default function Scene() {

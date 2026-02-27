@@ -4,7 +4,7 @@ import { Suspense, useRef, useMemo, useState } from "react";
 import * as THREE from "three";
 
 function ScatterSphere() {
-  const pointsRef = useRef();
+  const pointsRef = useRef<THREE.Points>(null);
   const progress = useRef(0); // 0 = circle, 1 = scattered
   const [hovered, setHovered] = useState(false);
 
@@ -74,9 +74,7 @@ function ScatterSphere() {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          array={original}
-          count={original.length / 3}
-          itemSize={3}
+          args={[original, 3]}
         />
       </bufferGeometry>
       <pointsMaterial color="white" size={0.01} />

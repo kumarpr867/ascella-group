@@ -47,11 +47,9 @@ const TOTAL = SLIDES.length;
 
 const SectionHeader = ({ title }: { title: string }) => (
   <div className="flex items-center gap-2 mb-3">
-    <Heading className=" text-white" />
-    <span className="text-[12px] font-bold uppercase tracking-[0.2em] ">{title}</span>
+    <Heading text={title} className="text-white" />
   </div>
 );
-
 const fadeIn = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.6 } },
