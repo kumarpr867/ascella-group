@@ -4,8 +4,8 @@ import { ReactNode, useState } from "react";
 import Image from "next/image";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
-import PlusHeading from "../headings/Heading";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
+import Heading from "../headings/Heading";
 
 interface OrganisationType {
   title: string;
@@ -66,7 +66,7 @@ const ORGANISATION_TYPES: OrganisationType[] = [
   },
   {
     title: "Startups Programme",
-    img: "/whoWeWorkWith/floating1.svg",
+    img: "/whoWeWorkWith/floating4.svg",
     subHeading:
       "Early stage organisations preparing for structured growth, operational maturity, and investor grade governance foundations.",
     engagementFocus:
@@ -81,20 +81,19 @@ export default function OrganisationTypes() {
   const [activeRow, setActiveRow] = useState<number | null>(null);
 
   return (
-    <section className="">
-      <div className="lg:px-25 lg:py-32 w-screen">
-        <div className="mb-20 flex justify-between items-center">
+    <section className="mx-auto max-w-7xl px-4">
+      <div className="lg:py-32 ">
+        <div className="mb-20 flex justify-between gap-20 lg:gap-10 items-center">
           <Reveal variants={slideInFromLeft(0.2)}>
-            <p className="text-sm max-w-xs leading-loose">
+            <p className="text-[16px] max-w-xs leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
 
             </p>
           </Reveal>
           <Reveal variants={slideInFromRight(0.2)}>
-            <PlusHeading text="ORGANISATION TYPES" />
-            <p className="text-3xl max-w-2xl leading-snug mt-10">
+            <Heading text="ORGANISATION TYPES" />
+            <p className="text-[20px] md:text-[24px] lg:text-[36px] max-w-2xl leading-snug mt-10">
               Ascella partners with organisations where execution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
-
             </p>
           </Reveal>
         </div>
@@ -108,7 +107,7 @@ export default function OrganisationTypes() {
                 key={type.title}
                 onMouseEnter={() => setActiveRow(index)}
                 onMouseLeave={() => setActiveRow(null)}
-                className="relative grid grid-cols-1 lg:grid-cols-[1fr_172px_1fr] gap-y-10 lg:gap-x-20 mx-auto py-10 lg:py-16 border-t  border-color overflow-visible"
+                className="relative grid grid-cols-1 md:grid-cols-[1fr_172px_1fr] gap-y-10 lg:gap-x-20 mx-auto py-10 lg:py-16 border-t  border-color overflow-visible"
 
               >
                 <div className="flex flex-col gap-5">

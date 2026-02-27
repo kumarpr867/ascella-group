@@ -4,6 +4,7 @@ import { useState } from "react";
 import Arrow from "./btns/Arrow";
 import PlusHeading from "./headings/Heading";
 import Image from "next/image";
+import Heading from "./headings/Heading";
 
 const faqs = [
   {
@@ -50,12 +51,12 @@ export default function Faq() {
 
   return (
     <>
-      <section className="hidden md:grid mx-auto max-w-7xl py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]">
-        <div className="flex flex-col gap-4 py-6 row-span-2  max-w-md md:max-w-xs">
-          <PlusHeading text="FAQs" size="b1" plusSize="lg" />
+      <section className="px-10 hidden md:grid mx-auto max-w-7xl py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]">
+        <div className="flex flex-col gap-8 py-6 row-span-2  max-w-md md:max-w-xs">
+          <Heading text="FAQs" />
           <h3>Frequently Asked Questions</h3>
-          <p className="text-b1 text-gray-200 ">
-            Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
+          <p className="text-[16px] text-gray-200 ">
+           Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
           </p>
         </div>
 
@@ -73,33 +74,33 @@ export default function Faq() {
               onMouseLeave={() => {
                 if (activeIndex !== index) setHoveredIndex(null);
               }}
-              className={`group relative min-h-40 md:min-h-60 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
+              className={`group relative min-h-56 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
             >
               <Image
-  src="/FaqCube.svg"
-  alt="FAQ Cube"
-  width={120}
-  height={120}
-  className={`absolute top-20 pointer-events-none transition-opacity duration-500 
+                src="/FaqCube.svg"
+                alt="FAQ Cube"
+                width={120}
+                height={120}
+                className={`absolute top-20 pointer-events-none transition-opacity duration-500 
     ${isExpanded ? "opacity-10" : "opacity-15"}
-    ${index % 2 !== 0 
-      ? "left-1 -scale-x-100"   // odd boxes: left side, flipped
-      : "right-1"                // even boxes: right side, normal
-    }`}
-/>
+    ${index % 2 !== 0
+                    ? "left-1 -scale-x-100"   // odd boxes: left side, flipped
+                    : "right-1"                // even boxes: right side, normal
+                  }`}
+              />
               <div className="relative z-10 h-full p-4 md:p-6 lg:mr-10">
                 {/* bottom question */}
-                <h5
+                <h6
                   className={`md:absolute md:bottom-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded ? "md:opacity-0 md:translate-y-2 md:pointer-events-none" : "opacity-100 translate-y-0"}`}
                 >
                   {faq.question}
-                </h5>
+                </h6>
                 {/* top question */}
-                <h5
+                <h6
                   className={`hidden md:block md:absolute md:top-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
                 >
                   {faq.question}
-                </h5>
+                </h6>
                 <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? "max-h-96" : "max-h-0"}`}></div>
                 <p className={`absolute bottom-8 left-8 right-10 text-b3 text-white transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
                   {faq.answer}
@@ -121,10 +122,12 @@ export default function Faq() {
           );
         })}
       </section>
-      <section className="block md:hidden mx-auto max-w-7xl px-10 py-16 md:py-24">
+
+
+      <section className="px-10 block md:hidden mx-auto max-w-7xl py-16 md:py-24">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-10 max-w-md">
-          <PlusHeading text="FAQs" size="b1" plusSize="lg" />
+          <Heading text="FAQs" />
           <h4>Frequently Asked Questions</h4>
           <p className="text-b2 text-gray-200 leading-tight">
             Common questions about how Ascella works, what it owns, and how engagements run.

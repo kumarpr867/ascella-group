@@ -1,6 +1,6 @@
 "use client"
 import OutlineBtn from "../btns/OutlineBtn";
-import PlusHeading from "../headings/Heading";
+import Heading from "../headings/Heading";
 import Image from "next/image"
 
 const points = [
@@ -81,34 +81,36 @@ const points = [
 
 export default function Governace() {
     return (
-        <section className="flex flex-col p-15 lg:p-25">
-            <div className="flex flex-col gap-12 mb-20">
-                <div className="flex flex-col gap-5 max-w-3xl leading-relaxed">
-                    <PlusHeading text="GOVERNANCE & OVERSIGHT" size="b1" />
-                    <h3>Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
+        <section className="flex flex-col p-10 xl:p-25">
+            <div className="mx-auto max-w-7xl px-4 flex flex-col gap-6 mb-20">
+                <div className="flex flex-col gap-5 max-w-3xl">
+                    <Heading text="Governance and Oversight" />
+                    <h3 className="text-[14px] md:text-[20px] lg:text-[36px]">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
                     </h3>
                 </div>
-                <div className="flex justify-between gap-48">
-                    <p className="font-extralight text-sm">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
+                <div className="flex flex-col md:flex-row justify-between gap-6 md:gap-20 lg:gap-48">
+                    <p className="font-extralight text-[12px] md:text-[16px]">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
                     </p>
-                    <p>As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
+                    <p className="text-[12px] md:text-[16px]">As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
                 </div>
             </div>
 
-            <div className="flex flex-center leading-tight gap-48 border-y border-color py-15">
+            <div className="mx-auto max-w-7xl px-4 flex md:flex-row flex-col  flex-center leading-tight gap-48 border-y border-color py-15">
                 <div className="flex flex-col justify-between gap-32">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
-                    <div className="flex flex-col gap-5">
-                        <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" width={80} height={80} />
+                    <div className="hidden md:flex flex-col gap-5">
+                        <div className="flex-center relative md:w-20 md:h-20">
+                        <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" fill />
+                        </div>
                         <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
                     </div>
                 </div>
                 <div className="flex flex-col justify-between">
-                    <h3>Before execution</h3>
-                    <p className="text-gray-300 font-light max-w-lg">
+                    <h3 className="text-[24px] md:text-[36px]">Before execution</h3>
+                    <p className="text-gray-200 font-light max-w-lg">
                         Begins, Ascella establishes
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
                         {points.map((point, index) => (
                             <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
                                 <div className="flex justify-between w-full">

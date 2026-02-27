@@ -4,16 +4,16 @@ import Image from "next/image";
 
 export default function NotCapabilityProblem() {
     return (
-        <section className="m-20 xl:m-28">
-            <div className="mx-10 lg:mx-25 overflow-hidden">
+        <section className="mx-auto max-w-7xl px-4 my-30">
+            <div className="overflow-hidden">
                 <div className="relative bg-gray-500">
                     <PrecisionGrid />
-                    <div className="px-6 sm:px-10 lg:px-32 py-15 ">
-                            <p className="text-[36px] leading-10"> Execution rarely fails from lack of talent but from fragmented ownership<span className="text-gray-300"> and unclear control. Organisations rise or fall on how authority, accountability, and decision flow are structured as scale increases.</span></p>
+                    <div className="px-6 sm:px-10 lg:px-24 py-15 ">
+                            <p className="text-[24px] xl:text-[36px] leading-7 lg:leading-12"> Execution rarely fails from lack of talent but from fragmented ownership<span className="text-gray-300"> and unclear control. Organisations rise or fall on how authority, accountability, and decision flow are structured as scale increases.</span></p>
                     </div>
                 </div>
-                <div className="flex items-stretch">
-                    <div className="relative w-1/4 h-[300px]">
+                <div className="flex flex-col md:flex-row items-stretch">
+                    <div className="relative md:w-1/4 h-[500px] md:h-[300px]">
                         <Image
                             src="/howAscellaOperates/NotCapabilityProblem/left.svg"
                             alt=""
@@ -22,7 +22,7 @@ export default function NotCapabilityProblem() {
                         />
                     </div>
 
-                    <div className="relative w-3/4 h-[300px] overflow-hidden">
+                    <div className="relative md:w-3/4 h-[300px] overflow-hidden">
                         <Image
                             src="/howAscellaOperates/NotCapabilityProblem/right.svg"
                             alt=""
@@ -31,7 +31,7 @@ export default function NotCapabilityProblem() {
                         />
                         <div className="absolute inset-0 z-10 flex flex-col justify-center px-10">
                             <div className="flex flex-col items-center">
-                                <p className="text-b1 max-w-md">
+                                <p className="text-[16px] text-center max-w-md">
                                     Execution fails when structure fails. Discover Ascella's execution arms
                                     purpose-built to govern, align, and scale enterprise operations.
                                 </p>

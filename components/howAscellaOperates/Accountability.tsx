@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PlusHeading from "../headings/Heading";
+import Heading from "../headings/Heading";
 
 type Section = {
   id: string;
@@ -249,12 +250,12 @@ export default function Accountability() {
   };
 
   return (
-    <section className="border-b border-color  bg-gray-500 md:bg-black min-h-[720px] lg:min-h-[640px]">
+    <section className="border-b border-color min-h-[720px] lg:min-h-[640px]">
 
 
-      <div className="py-6 md:py-10 px-10 lg:px-24 md:border-b border-color">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <PlusHeading text="Accountability Principle" />
+      <div className="  py-10 xl:py-10  xl:border-b border-color">
+        <div className="mx-auto max-w-7xl px-5 xl:px-0">
+          <Heading text="Accountability Principle" />
         </div>
       </div>
       <div className="hidden xl:block mx-auto max-w-7xl px-4 sm:px-6">
@@ -300,10 +301,10 @@ export default function Accountability() {
       </div>
 
       {/* Mobile accordion */}
-      <div className="xl:hidden mt-20 px-6 space-y-4">
+      <div className="xl:hidden mb-20 px-6 space-y-4">
         <div className="pb-4">
           <h4>The Single <br /> Accountability Principle </h4>
-          <p className="text-b2 leading-tight mt-2 ">
+          <p className="text-b2 leading-tight mt-4 ">
             A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
           </p>
         </div>

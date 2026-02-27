@@ -60,10 +60,9 @@ const footerSections: FooterSection[] = [
 
 const Footer = () => {
     return (
-        <footer className="mb-2 lg:mb-20 w-full">
+        <footer className="mb-2 lg:mb-10 w-full">
             <div className="border-y border-color">
                 <div className="border-b border-color">
-
                     <div className="flex md:hidden flex-col mx-5 py-7 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Join Us
@@ -144,15 +143,13 @@ const Footer = () => {
             <div className="hidden md:block mx-auto max-w-7xl  border-x border-color">
                 <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
 
-                    <div className="max-w-2xl w-full">
+                    <div>
                         <div className="flex flex-col mb-10 md:mb-20">
-                            <h3 className="text[36px] md:text-[64px] leading-tight mb-2">
+                            <h3 className="text[36px] md:text-[52px] leading-tight mb-2">
                                 Control. Structure. Execution.
                             </h3>
-                            <p className="text-b3 text-gray-100">
-                                A unified operating group delivering security, technology,
-                                workforce, operations, and revenue under a single governance
-                                framework.
+                            <p className="text-b3 text-gray-100 w-2/3">
+                                A unified operating group delivering security, technology, workforce, operations, and revenue under a single governance framework.
                             </p>
                         </div>
                         <div className="hidden md:flex flex-col max-w-md w-full">

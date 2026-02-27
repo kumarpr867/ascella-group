@@ -17,117 +17,122 @@ export default function OperatingStructure() {
       label: 'Governance',
       src: '/howAscellaOperates/governace.svg',
       width: 69,
-      height: 70,
-      highlighted: false,
+      height: 70
     },
     {
       label: 'Accountability',
       src: '/howAscellaOperates/accountability.svg',
       width: 80,
-      height: 80,
-      highlighted: true,
+      height: 80
     },
     {
       label: 'Assemble Pods',
       src: '/howAscellaOperates/pods.png',
       width: 69,
-      height: 70,
-      highlighted: false,
+      height: 70
     },
     {
       label: 'Performance',
       src: '/howAscellaOperates/performance.png',
       width: 88,
-      height: 52,
-      highlighted: false,
+      height: 52
     },
     {
       label: 'Embed Security',
       src: '/howAscellaOperates/security.png',
       width: 63,
-      height: 73,
-      highlighted: false,
+      height: 73
     },
     {
       label: 'Controlled Execution',
       src: '/howAscellaOperates/execution.png',
       width: 65,
-      height: 45,
-      highlighted: false,
+      height: 45
     },
   ];
 
   return (
     <section className="border-y border-color">
+      <div className="hidden md:flex relative mx-auto max-w-7xl px-4 sm:px-6 py-10 md:py-24 flex-col md:flex-row border-x-0 lg:border-x border-color gap-8 md:gap-0">
 
-      {/* ─────────────────────────────────────────
-          LAPTOP VIEW — bilkul original, untouched
-      ───────────────────────────────────────── */}
-      <div className="hidden md:block">
-        <div className="relative sm:mx-6 md:mx-10 lg:mx-24 px-4 py-10 md:px-10 md:py-24 flex flex-col md:flex-row border-x border-color gap-8 md:gap-0">
-          <div className="flex flex-col gap-5 pb-6 md:pb-10 w-full md:w-1/2">
-            <h2>
-              A unified model built for accountable
-              <span className="text-gray-300"> execution at scale.</span>
-            </h2>
-            <p className="text-b2 w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
-          </div>
-          <div className="absolute inset-0 flex justify-end pointer-events-none">
-            <div className="grid-bg w-1/2 h-full"></div>
-          </div>
+        {/* top */}
+        <div className="flex flex-col gap-5 w-full md:w-1/2">
+          <h2 className='text-2xl md:text-5xl'>
+            A unified model built for accountable
+            <span className="text-gray-300"> execution at scale.</span>
+          </h2>
+          <p className="text-[14px] text-left w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
         </div>
-        <div className="border-t border-color">
-          <div className="mx-2 sm:mx-6 md:mx-10 lg:mx-24 px-2 py-6 md:px-8 md:py-10 border-x border-color">
-            <div className="text-b3 text-gray-300 flex flex-wrap justify-between gap-2 text-xs sm:text-sm md:text-base">
-              <span className="text-white">Governance</span>
-              <span>Accountability</span>
-              <span>Assemble Pods</span>
-              <span>Performance</span>
-              <span>Embed Security</span>
-              <span>Controlled Execution</span>
-              <span className="text-white">Outcome Stability</span>
+      </div>
+
+      {/* flow chart */}
+      <div className="border-t border-color ">
+
+
+        {/* xl screen */}
+        <div className='hidden mx-auto max-w-7xl px-4 sm:px-6 py-10 xl:flex items-center justify-around  border-x-0 xl:border-x  border-color '>
+          <div className="flex flex-col items-center py-8 ">
+            <p className={"text-b3 mb-6"}>Governance</p>
+            <div className={"w-full h-40 flex items-center justify-center"}>
+              <Image
+                src={"/howAscellaOperates/governace.svg"}
+                alt={"governance"}
+                width={80}
+                height={80}
+              />
+              <div className='w-10 bg-gray-400 h-1'></div>
             </div>
-            <div className="flex flex-cols flex-center items-center m-10">
-              <div className="flex w-full justify-evenly items-center">
-                <span>
-                  <Image src={'/howAscellaOperates/governace.svg'} alt={''} width={100} height={100} />
-                </span>
-                <div className="flex flex-center line h-0.5 w-10 bg-gray-400"></div>
-                <div className="flex w-full items-center justify-between border border-color p-6">
-                  <span>
-                    <Image src={'/howAscellaOperates/accountability.svg'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/pods.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/performance.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/security.png'} alt={''} width={100} height={100} />
-                  </span>
-                  <span>
-                    <Image src={'/howAscellaOperates/execution.png'} alt={''} width={100} height={100} />
-                  </span>
+          </div>
+          <div className="grid grid-cols-5 text-center">
+            {items.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col items-center py-8 "
+                >
+                  <p className={"text-b3 mb-6"} >{item.label}</p>
+
+                  <div className={` w-48 h-40 flex items-center justify-center border-y border-color
+              ${index == 0 ? "border-l" : ""} ${index == 4 ? "border-r" : ""}`}>
+                    <Image
+                      src={item.icon}
+                      alt={item.label}
+                      width={80}
+                      height={80}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-center line h-0.5 w-15 bg-gray-400"></div>
-                <span>
-                  <Image src={'/howweoperate/outcome.png'} alt={''} width={100} height={100} />
-                </span>
-              </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-col items-center py-8 ">
+            <p className={"text-b3 mb-6"}>Outcome Stability</p>
+            <div className={"w-full h-40 flex items-center justify-center"}>
+              <div className='w-10 bg-gray-400 h-1'></div>
+              <Image
+                src={"/howAscellaOperates/outcome.png"}
+                alt={"Outcome Stability"}
+                width={80}
+                height={80}
+              />
             </div>
           </div>
         </div>
+
+
+
+
+
       </div>
 
       {/* ─────────────────────────────────────────
           MOBILE VIEW — naya, image ke jaisa
       ───────────────────────────────────────── */}
-      <div className="block md:hidden bg-black">
+      <div className="block xl:hidden ">
 
         {/* Hero text */}
         <div
-          className="relative px-[51px] pt-[80px] pb-[88px] border-b border-[#3D3D3D] overflow-hidden"
+          className="relative max-w-7xl mx-auto px-5 py-24 border-b border-color overflow-hidden"
         >
           {/* Subtle diagonal lines background */}
           <div
@@ -142,70 +147,58 @@ export default function OperatingStructure() {
               )`,
             }}
           />
-          <h2
-            className="relative font-normal text-[24px] leading-[24px]"
-            style={{ fontFamily: 'Montserrat, sans-serif', maxWidth: 273 }}
+          <h4
+            className="relative font-normal leading-tight"
           >
             <span className="text-white">A unified model built for accountable </span>
             <span className="text-[#6E6E6E]">execution at scale.</span>
-          </h2>
+          </h4>
           <p
-            className="relative mt-4 text-white text-[12px] leading-[13px]"
-            style={{ fontFamily: 'Montserrat, sans-serif', maxWidth: 206 }}
+            className="relative mt-4 text-white text-[12px] leading-3.25"
           >
-            Ownership, governance, and delivery aligned before work begins.
+            Ownership, governance, and <br /> delivery aligned before work begins.
           </p>
         </div>
 
         {/* 2-column icon grid — 3 rows */}
-        <div className="px-[50px] border-b border-[#3D3D3D]">
-        <div className="grid grid-cols-2 border-x border-[#3D3D3D]">
-          {gridItems.map((item, i) => (
-            <div
-              key={item.label}
-              className={[
-                'relative flex flex-col items-center justify-center gap-3 py-[38px]',
-                i % 2 === 0 ? 'border-r border-[#3D3D3D]' : '',
-                i < 4 ? 'border-b border-[#3D3D3D]' : '',
-              ].join(' ')}
-              style={
-                item.highlighted
-                  ? { outline: '1.5px solid #4A8FFF', outlineOffset: '-1.5px' }
-                  : {}
-              }
-            >
-              {/* Blue dot on highlighted card */}
-              {item.highlighted && (
-                <span className="absolute top-3 left-3 w-[6px] h-[6px] rounded-full bg-[#4A8FFF]" />
-              )}
-
-              <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
-                <Image
-                  src={item.src}
-                  alt={item.label}
-                  width={item.width}
-                  height={item.height}
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-
-              <span
-                className="text-[#6E6E6E] text-[12px] leading-[13px] text-center px-2"
-                style={{ fontFamily: 'Montserrat, sans-serif' }}
+        <div className="px-5 border-b border-color">
+          <div className="grid grid-cols-2 border-x border-color">
+            {gridItems.map((item, i) => (
+              <div
+                key={item.label}
+                className={[
+                  'relative flex flex-col items-center justify-center gap-3 py-6',
+                  i % 2 === 0 ? 'border-r border-color' : '',
+                  i < 4 ? 'border-b border-color' : '',
+                ].join(' ')}
               >
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
+                <div className="flex items-center justify-center">
+                  <Image
+                    src={item.src}
+                    alt={item.label}
+                    width={item.width}
+                    height={item.height}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+
+                <span
+                  className="text-[#6E6E6E] text-[12px] leading-[13px] text-center px-2"
+                  style={{ fontFamily: 'Montserrat, sans-serif' }}
+                >
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Outcome Stability — full width centred */}
-        <div className="px-[50px] border-b border-[#3D3D3D]">
-          <div className="flex flex-col items-center justify-center py-[38px] gap-3 border-x border-[#3D3D3D]">
+        <div className="px-5 border-b border-color">
+          <div className="flex flex-col items-center justify-center py-6 gap-3 border-x border-color">
             <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
               <Image
-                src="/howweoperate/outcome.png"
+                src="/howAscellaoperates/outcome.png"
                 alt="Outcome Stability"
                 width={73}
                 height={75}
