@@ -10,7 +10,13 @@ const Roles = () => {
       {/* Header Section */}
       <div className="max-w-6xl mx-auto mb-10 flex flex-col items-center text-center">
         <div className="flex items-center gap-2 text-[10px] tracking-[0.3em] text-white/60 mb-8 uppercase ">
-          <span className="text-4xl  text-white">+ </span> 
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+<rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
+<rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+<rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+</svg>
+
           <span className="text-2xl ">Working at Ascella</span>
         </div>
         
@@ -63,12 +69,91 @@ const Roles = () => {
             {/* Box Image - Sized 152x154 as per Figma */}
             <div className="flex  items-center mb-16 h-[200px]">
               <div className="relative w-[152px] h-[154px]">
-                <Image 
-                  src="/box.png" // Replace with your actual box path
-                  alt="Expectations Icon"
-                  fill
-                  className="object-contain"
-                />
+                <svg width="149" height="144" viewBox="0 0 149 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M74.4999 38V56.5M74.4999 56.5L0.887695 99M74.4999 56.5L148.112 99" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M148.5 80.2239L74.5 37.5L0.5 80.2239L74.5 122.948L148.5 80.2239Z" stroke="white" stroke-linejoin="round"/>
+<path d="M0.5 100.224L74.5 142.948L148.5 100.224" stroke="white" stroke-linejoin="round"/>
+<path d="M74.5 142.948L0.5 100.224V80.7239V80.5L74.5 123.224V142.948Z" fill="black" stroke="white" stroke-linejoin="round"/>
+<path d="M74.5 142.948L148.5 100.224V80.7239V80.5L74.5 123.224V142.948Z" fill="black" stroke="white" stroke-linejoin="round"/>
+<path d="M76.5 122.5V141.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M80.5 120.5V139.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M84.5 118.5V137.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M88.5 115.5V134.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M92.5 112.5V131.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M96.5 111.5V130.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M100.5 108.5V127.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M104.5 106.5V125.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M110.5 103.5V122.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M130.5 91.5V110.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M116.5 99.5V118.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M136.5 87.5V106.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M122.5 96.5V115.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M142.5 84.5V103.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M78.5 120.5V140.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M82.5 118.5V138.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M86.5 116.5V136.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M90.5 113.5V133.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M94.5 111.5V131.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M98.5 109.5V129.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M102.5 106.5V126.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M108.5 103.5V123.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M128.5 91.5V111.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M114.5 99.5V119.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M134.5 88.5V108.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M120.5 96.5V116.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M140.5 84.5V104.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M106.5 104.5V124.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M126.5 92.5V112.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M112.5 101.5V121.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M132.5 89.5V109.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M118.5 97.5V117.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M138.5 85.5V105.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M124.5 94.5V114.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M144.5 82.5V102.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M146.5 81.5V101.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M74.4999 1V19.5M74.4999 19.5L0.887695 62M74.4999 19.5L148.112 62" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M148.5 43.2239L74.5 0.5L0.5 43.2239L74.5 85.9478L148.5 43.2239Z" stroke="white" stroke-linejoin="round"/>
+<path d="M0.5 63.2239L74.5 105.948L148.5 63.2239" stroke="white" stroke-linejoin="round"/>
+<path d="M74.5 105.948L0.5 63.2239V43.7239V43.5L74.5 86.2239V105.948Z" fill="black" stroke="white" stroke-linejoin="round"/>
+<path d="M74.5 105.948L148.5 63.2239V43.7239V43.5L74.5 86.2239V105.948Z" fill="black" stroke="white" stroke-linejoin="round"/>
+<path d="M76.5 85.5V104.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M80.5 83.5V102.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M84.5 81.5V100.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M88.5 78.5V97.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M92.5 75.5V94.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M96.5 74.5V93.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M100.5 71.5V90.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M104.5 69.5V88.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M110.5 66.5V85.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M130.5 54.5V73.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M116.5 62.5V81.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M136.5 50.5V69.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M122.5 59.5V78.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M142.5 47.5V66.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M78.5 83.5V103.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M82.5 81.5V101.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M86.5 79.5V99.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M90.5 76.5V96.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M94.5 74.5V94.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M98.5 72.5V92.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M102.5 69.5V89.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M108.5 66.5V86.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M128.5 54.5V74.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M114.5 62.5V82.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M134.5 51.5V71.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M120.5 59.5V79.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M140.5 47.5V67.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M106.5 67.5V87.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M126.5 55.5V75.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M112.5 64.5V84.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M132.5 52.5V72.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M118.5 60.5V80.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M138.5 48.5V68.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M124.5 57.5V77.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M144.5 45.5V65.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+<path d="M146.5 44.5V64.5" stroke="white" stroke-width="0.5" stroke-dasharray="1 1"/>
+</svg>
+
               </div>
             </div>
 

@@ -50,15 +50,15 @@ const CurrentOpenings = () => {
 
       
       <div className="relative z-10 mb-12 w-full max-w-5xl">
-        <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 font-bold mb-6">
+        <p className="text-[16px] uppercase tracking-[0.3em] ml-57 text-b2  mb-2">
           Roles & Opportunities
         </p>
 
-        <h1 className="text-4xl md:text-5xl font-light leading-tight text-white">
-          Current openings are <span className="text-gray-400 ">aligned to</span>
-        </h1>
 
-        <div className="text-4xl md:text-5xl font-light leading-tight text-gray-400 mt-2 ml-16 md:ml-55">
+        <div className="text-4xl md:text-5xl font-light leading-tight text-gray-400 mt-2  md:ml-55">
+            <h3 className="text-4xl md:text-5xl leading-tight text-white">
+          Current openings are <span className="text-gray-400 ">aligned to</span>
+        </h3>
           execution and governance needs.
         </div>
       </div>

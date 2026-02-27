@@ -68,10 +68,13 @@ const Professionals = () => {
       <div className="grid grid-cols-12">
         <div className="col-span-10 p-12 lg:p-20">
           <div className="flex items-center gap-3 mb-8">
-            <div className="relative w-4 h-4">
-              <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white" />
-              <div className="absolute left-1/2 top-0 w-[1px] h-full bg-white" />
-            </div>
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+<rect x="10.833" y="15.1667" width="4.33333" height="10.8333" fill="white"/>
+<rect x="15.167" y="10.8333" width="10.8333" height="4.33333" fill="white"/>
+<rect y="10.8333" width="10.8333" height="4.33333" fill="white"/>
+</svg>
+
             <span className="text-[16px] tracking-[0.25em] uppercase opacity-60">
               Who this is for
             </span>

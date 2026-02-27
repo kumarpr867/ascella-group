@@ -12,9 +12,10 @@ export default function StructuredDesigned() {
 
 function HeaderSection() {
   return (
-    <div className="flex flex-col items-center text-center gap-6 mb-24">
-      <h3 className="font-light">
-        WORKING AT ASCELLA IS STRUCTURED BY DESIGN.
+    <div className="flex flex-col items-center text-center gap-4 mb-24">
+      <h3 className="">
+        WORKING AT ASCELLA IS 
+        <br />STRUCTURED BY DESIGN.
       </h3>
       <p className="text-b2 max-w-1/2">
        Ascella offers an operating environment for professionals who value clarity, discipline, and accountability in execution.
@@ -47,15 +48,15 @@ function HorizontalText() {
       <div className="absolute uppercase text-[36px] text-gray-200 left-0 top-1/2 w-full border-b border-color -translate-y-25">
         Single point of contact 
       </div>
-      <div className="absolute uppercase text-[36px] h-12 left-0 top-1/2 w-full -translate-y-12 border-b border-color flex justify-between items-baseline">
-        <div>
+      <div className="absolute  text-[36px] h-12 left-0 top-1/2 w-full -translate-y-12 border-b border-color flex justify-between items-baseline">
+        <div className="uppercase">
           for career-related 
         </div>
-        <div className="text-[24px]">Email- A@ascella.group</div>
+        <div className="text-[24px] text-b1">Email- A@ascella.group</div>
       </div>
-      <div className="absolute  text-[24px] left-0 top-1/2 w-full text-gray-200 border-b border-color flex justify-between">
-        <div className="text-[36px]"> communication</div>
-        <div>All career coordination is managed centrally.</div>
+      <div className="absolute  text-[24px] left-0 top-1/2 w-full  border-b border-color flex justify-between">
+        <div className="text-[36px] uppercase"> communication</div>
+        <div className="text-[12px] text-b1 pt-4">All career coordination is managed centrally.</div>
       </div>
     </>
   );

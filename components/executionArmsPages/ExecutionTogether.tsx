@@ -1,225 +1,411 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 
-const ExecutionTogether = () => {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+// ── Isometric Grid with Per-Cell Hover ────────────────────────────────────────
+function IsometricHoverGrid() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef    = useRef<number | null>(null);
 
-  const executionArms = [
-    {
-      id: '01',
-      name: 'Infosec',
-      desc: 'Coordinated execution without loss of control.',
-      pos: { top: '60px', left: '0px' },
-      zIndex: 50,
-      iconPath: '/Group.svg', 
-    },
-    {
-      id: '02',
-      name: 'Software labs',
-      desc: 'Scalable infrastructure and rapid prototyping.',
-      pos: { top: '45px', left: '160px' },
-      zIndex: 40,
-      iconPath: '/software-labs.svg',
-    },
-    {
-      id: '03',
-      name: 'Engage',
-      desc: 'Direct market interaction and growth strategies.',
-      pos: { top: '30px', left: '320px' },
-      zIndex: 30,
-      iconPath: '/engage.svg',
-    },
-    {
-      id: '04',
-      name: 'Forge',
-      desc: 'Innovation and high-performance engineering.',
-      pos: { top: '15px', left: '480px' },
-      zIndex: 20,
-      iconPath: '/forge.svg',
-    },
-    {
-      id: '05',
-      name: 'Staffing',
-      desc: 'Managed talent solutions and expert placement.',
-      pos: { top: '0px', left: '640px' },
-      zIndex: 10,
-      iconPath: '/staffing.svg',
-    },
-  ];
+  const CELL_W = 90;
+  const CELL_H = 50;
+
+  const cellCenter = (col: number, row: number, offsetX: number, offsetY: number) => {
+    const x = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+    const y = offsetY + row * (CELL_H / 2);
+    return { x, y };
+  };
+
+  const inDiamond = (px: number, py: number, cx: number, cy: number) => {
+    const dx = Math.abs(px - cx) / (CELL_W / 2);
+    const dy = Math.abs(py - cy) / (CELL_H / 2);
+    return dx + dy <= 1;
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+    canvas.addEventListener('mousemove', onMove);
+    canvas.addEventListener('mouseleave', onLeave);
+
+    const alphaMap = new Map<string, number>();
+
+    const loop = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      const cols = Math.ceil(W / CELL_W) + 2;
+      const rows = Math.ceil(H / (CELL_H / 2)) + 2;
+      const offsetX = -CELL_W / 2;
+      const offsetY = -CELL_H / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
+          const key = `${col},${row}`;
+
+          const hovered = inDiamond(mx, my, cx, cy);
+          const target  = hovered ? 1 : 0;
+          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
+          alphaMap.set(key, current);
+
+          ctx.beginPath();
+          ctx.moveTo(cx,              cy - CELL_H / 2);
+          ctx.lineTo(cx + CELL_W / 2, cy);
+          ctx.lineTo(cx,              cy + CELL_H / 2);
+          ctx.lineTo(cx - CELL_W / 2, cy);
+          ctx.closePath();
+
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+
+          if (current > 0.005) {
+            ctx.fillStyle = `rgba(163,163,163,${current * 0.25})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', onMove);
+      canvas.removeEventListener('mouseleave', onLeave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center py-12 px-8 relative overflow-hidden font-sans">
-      
-      {/* Header */}
-      <div className="text-center max-w-4xl mb-12 z-50">
-        <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.3em] mb-8 text-white">
-          <Plus size={18} strokeWidth={1.5} className="text-white" />
+    <canvas
+      ref={canvasRef}
+      style={{
+        position:     'absolute',
+        inset:        0,
+        width:        '100%',
+        height:       '100%',
+        pointerEvents:'auto',
+        cursor:       'crosshair',
+      }}
+    />
+  );
+}
+
+// ── Responsive hook ────────────────────────────────────────────────────────────
+function useBreakpoint() {
+  const [bp, setBp] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const [screenW, setScreenW] = useState(375);
+  useEffect(() => {
+    const check = () => {
+      const w = window.innerWidth;
+      setScreenW(w);
+      if (w < 640) setBp('mobile');
+      else if (w < 1024) setBp('tablet');
+      else setBp('desktop');
+    };
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return { bp, screenW };
+}
+
+// ── Config per breakpoint ──────────────────────────────────────────────────────
+const CONFIG = {
+  // mobile values are computed dynamically below
+  mobile:  { cardW: 90,  cardH: 116, leftStep: 72,  topStep: 8,  gridTop: 108, gridBottom: -40,  liftY: -30, scale: 1.05 },
+  tablet:  { cardW: 160, cardH: 206, leftStep: 128, topStep: 12, gridTop: 196, gridBottom: -80,  liftY: -50, scale: 1.05 },
+  desktop: { cardW: 200, cardH: 256, leftStep: 160, topStep: 15, gridTop: 260, gridBottom: -120, liftY: -60, scale: 1.05 },
+};
+
+// ── Main Component ─────────────────────────────────────────────────────────────
+const ExecutionTogether = () => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const { bp, screenW } = useBreakpoint();
+  const isMobile = bp === 'mobile';
+
+  // Dynamically compute mobile card dimensions so all 5 cards always fit screen
+  const mobileCfg = (() => {
+    const totalCards = 5;
+    const pagePadding = 40;
+    const available = Math.max(screenW - pagePadding, 200);
+    // containerW = cardW + leftStep*4, leftStep ≈ cardW*0.78
+    // so available ≈ cardW * (1 + 0.78*4) = cardW * 4.12
+    const cardW = Math.floor(available / 4.12);
+    const leftStep = Math.floor(cardW * 0.78);
+    const cardH = Math.round(cardW * 1.28);
+    const gridTop = Math.round(cardH * 0.93);
+    return { cardW, cardH, leftStep, topStep: 8, gridTop, gridBottom: -40, liftY: -28, scale: 1.04 };
+  })();
+
+  const cfg = isMobile ? mobileCfg : CONFIG[bp];
+
+  const executionArms = [
+    { id: '01', name: 'Infosec',       desc: 'Coordinated execution without loss of control.',       iconPath: '/Group.svg' },
+    { id: '02', name: 'Software labs', desc: 'Scalable infrastructure and rapid prototyping.',        iconPath: '/software-labs.svg' },
+    { id: '03', name: 'Engage',        desc: 'Direct market interaction and growth strategies.',      iconPath: '/engage.svg' },
+    { id: '04', name: 'Forge',         desc: 'Innovation and high-performance engineering.',          iconPath: '/forge.svg' },
+    { id: '05', name: 'Staffing',      desc: 'Managed talent solutions and expert placement.',        iconPath: '/staffing.svg' },
+  ];
+
+  const totalCards  = executionArms.length;
+  const containerW  = cfg.cardW + cfg.leftStep * (totalCards - 1);
+  const containerH  = cfg.cardH + cfg.topStep  * (totalCards - 1) + (isMobile ? 60 : 100);
+
+  return (
+    <div
+      className="min-h-screen bg-black text-white flex flex-col items-center relative overflow-hidden"
+      style={{
+        fontFamily: 'sans-serif',
+        paddingTop:    isMobile ? 36 : 48,
+        paddingBottom: 48,
+        paddingLeft:   isMobile ? 20 : 32,
+        paddingRight:  isMobile ? 20 : 32,
+      }}
+    >
+
+      {/* ── Header ────────────────────────────────────────────────────────── */}
+      <div
+        className="text-center z-50"
+        style={{ maxWidth: isMobile ? '100%' : 900, marginBottom: isMobile ? 24 : 48 }}
+      >
+        <div
+          className="flex items-center justify-center gap-2 text-white uppercase"
+          style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: isMobile ? 20 : 32 }}
+        >
+          <Plus size={isMobile ? 14 : 18} strokeWidth={1.5} />
           How Execution Arms Work Together
         </div>
 
-        <h3 className="text-2xl md:text-4xl font-light leading-[1.1] mb-6 tracking-tight">
-          Ascella Group sits above execution. <br />
-          Execution arms deliver specialised work <br />
+        <h3
+          className="font-light tracking-tight"
+          style={{
+            fontSize:     isMobile ? 20 : bp === 'tablet' ? 28 : 36,
+            lineHeight:   1.1,
+            marginBottom: isMobile ? 16 : 24,
+          }}
+        >
+          Ascella Group sits above execution.{' '}
+          {!isMobile && <br />}
+          Execution arms deliver specialised work{' '}
+          {!isMobile && <br />}
           within <span className="text-gray-400">Ascella's operating structure.</span>
         </h3>
 
-        <p className="text-white text-[14px] leading-relaxed max-w-md mx-auto font-Montserrat">
+        <p
+          className="text-white leading-relaxed mx-auto"
+          style={{ fontSize: isMobile ? 12 : 14, maxWidth: isMobile ? 300 : 420 }}
+        >
           Governance, accountability, and performance oversight remain central ensuring coordinated execution without fragmented ownership.
         </p>
       </div>
 
-      <div className="bg-[#111] px-8 py-2.5 rounded border border-gray-400 text-[11px] tracking-[0.4em] uppercase mb-10 z-50 text-white">
+      {/* ── Ascella badge ─────────────────────────────────────────────────── */}
+      <div
+        className="bg-[#111] rounded border border-gray-400 text-white uppercase z-50"
+        style={{
+          padding:       isMobile ? '7px 20px' : '10px 32px',
+          fontSize:      11,
+          letterSpacing: '0.4em',
+          marginBottom:  isMobile ? 24 : 40,
+        }}
+      >
         Ascella
       </div>
 
-      {/* Cards Interaction Area */}
-      <div className="relative w-full max-w-[1000px] h-[500px] flex justify-center items-center">
-        <div className="relative" style={{ width: '840px', height: '300px' }}>
+      {/* ── Cards area ────────────────────────────────────────────────────── */}
+      <div
+        className="relative flex justify-center items-start w-full"
+        style={{ height: containerH + (isMobile ? 40 : 80) }}
+      >
+        <div className="relative" style={{ width: containerW, height: containerH }}>
 
-          {/* ── Isometric Grid — exact same as ExecutionLayer ── */}
+          {/* Isometric SVG grid */}
           <div
             className="absolute z-0 pointer-events-none left-0 right-0"
-            style={{ top: '260px', bottom: '-120px' }}
+            style={{ top: cfg.gridTop, bottom: cfg.gridBottom }}
           >
-            <svg
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-            >
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern id="iso-grid" width="100" height="60" patternUnits="userSpaceOnUse">
-                  <path
-                    d="M50 0 L100 30 L50 60 L0 30 Z"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="0.5"
-                    opacity="0.08"
-                  />
+                  <path d="M50 0 L100 30 L50 60 L0 30 Z" fill="none" stroke="white" strokeWidth="0.5" opacity="0.08" />
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#iso-grid)" />
-
-              {/* Vector Cell 1 — col=0, row=0 */}
-              <image
-                href="/vector 55.png"
-                x="0"
-                y="0"
-                width="100"
-                height="60"
-                opacity="10"
-                preserveAspectRatio="xMidYMid meet"
-              />
-
-              {/* Vector Cell 2 — col=2, row=1 */}
-              <image
-                href="/vector 55.png"
-                x="200"
-                y="60"
-                width="100"
-                height="60"
-                opacity="80"
-                preserveAspectRatio="xMidYMid meet"
-              />
-
-              {/* Vector Cell 3 — col=5, row=2 */}
-              <image
-                href="/vector 55.png"
-                x="500"
-                y="120"
-                width="100"
-                height="60"
-                opacity="10"
-                preserveAspectRatio="xMidYMid meet"
-              />
+              <image href="/vector 55.png" x="0"   y="0"   width="100" height="60" opacity="10" preserveAspectRatio="xMidYMid meet" />
+              <image href="/vector 55.png" x="200" y="60"  width="100" height="60" opacity="80" preserveAspectRatio="xMidYMid meet" />
+              <image href="/vector 55.png" x="500" y="120" width="100" height="60" opacity="10" preserveAspectRatio="xMidYMid meet" />
             </svg>
           </div>
-          {/* ── End Isometric Grid ── */}
 
-          {executionArms.map((arm) => {
-            const isHovered = hoveredId === arm.id;
-            
+          {/* Hover canvas */}
+          <div
+            style={{
+              position: 'absolute',
+              top:   cfg.gridTop,
+              bottom: cfg.gridBottom,
+              left: 0, right: 0,
+              zIndex: 1,
+              WebkitMaskImage: [
+                'linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+              ].join(', '),
+              maskImage: [
+                'linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+              ].join(', '),
+              WebkitMaskComposite: 'destination-in',
+              maskComposite: 'intersect',
+              pointerEvents: 'auto',
+            }}
+          >
+            <IsometricHoverGrid />
+          </div>
+
+          {/* Cards */}
+          {executionArms.map((arm, index) => {
+            const isExpanded = activeId === arm.id;
+            const topPx  = (totalCards - 1 - index) * cfg.topStep;
+            const leftPx = index * cfg.leftStep;
+            const zBase  = totalCards - index;
+
             return (
               <div
                 key={arm.id}
-                onMouseEnter={() => setHoveredId(arm.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                className="absolute transition-all duration-500 ease-out cursor-pointer"
+                onMouseEnter={() => !isMobile && setActiveId(arm.id)}
+                onMouseLeave={() => !isMobile && setActiveId(null)}
+                onClick={() => isMobile && setActiveId(prev => prev === arm.id ? null : arm.id)}
+                className="absolute transition-all ease-out"
                 style={{
-                  width: '200px',
-                  height: '256px',
-                  top: arm.pos.top,
-                  left: arm.pos.left,
-                  zIndex: isHovered ? 100 : arm.zIndex,
-                  transform: isHovered ? 'translateY(-60px) scale(1.05)' : 'none',
+                  width:            cfg.cardW,
+                  height:           cfg.cardH,
+                  top:              topPx,
+                  left:             leftPx,
+                  zIndex:           isExpanded ? 100 : zBase,
+                  transform:        isExpanded ? `translateY(${cfg.liftY}px) scale(${cfg.scale})` : 'none',
+                  transitionDuration:'500ms',
+                  cursor:           isMobile ? 'pointer' : 'default',
                 }}
               >
                 <div className="relative w-full h-full">
-                  
-                  {/* Background Layer */}
+
+                  {/* BG */}
                   <div className="absolute inset-0 transition-all duration-500">
-                    {isHovered ? (
-                      <div className="w-full h-full bg-[#D1D1D1] rounded-sm shadow-2xl transition-all duration-500" />
+                    {isExpanded ? (
+                      <div className="w-full h-full bg-[#D1D1D1] rounded-sm shadow-2xl" />
                     ) : (
-                      <svg 
-                        viewBox="0 0 137 176" 
-                        preserveAspectRatio="none" 
-                        fill="none" 
+                      <svg
+                        viewBox="0 0 137 176"
+                        preserveAspectRatio="none"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="absolute inset-0 w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.8)]"
+                        className="absolute inset-0 w-full h-full"
+                        style={{ filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.8))' }}
                       >
-                        <path 
-                          d="M0.000976398 3.10009C-0.0481035 0.891496 1.6425 -0.437488 3.77705 0.131725L129.871 33.7567C132.005 34.3259 133.775 36.5778 133.825 38.7864L136.802 172.753C136.851 174.962 135.16 176.291 133.025 175.722L6.93183 142.097C4.79728 141.527 3.0271 139.276 2.97802 137.067L0.000976398 3.10009Z" 
+                        <path
+                          d="M0.000976398 3.10009C-0.0481035 0.891496 1.6425 -0.437488 3.77705 0.131725L129.871 33.7567C132.005 34.3259 133.775 36.5778 133.825 38.7864L136.802 172.753C136.851 174.962 135.16 176.291 133.025 175.722L6.93183 142.097C4.79728 141.527 3.0271 139.276 2.97802 137.067L0.000976398 3.10009Z"
                           fill="#0D0D0D"
-                          className="stroke-gray-800/50"
+                          stroke="rgba(75,85,99,0.5)"
                           strokeWidth="0.8"
                         />
                       </svg>
                     )}
                   </div>
 
-                  {/* Content Layer */}
-                  <div className={`relative z-10 w-full h-full flex flex-col p-6 transition-colors duration-500 ${isHovered ? 'text-black' : 'text-white'}`}>
-                    
-                    <span 
-                      className={`text-[12px] font-mono tracking-widest transition-all duration-500 ${isHovered ? 'text-gray-500' : 'text-gray-700 absolute top-10 left-8'}`}
+                  {/* Content */}
+                  <div
+                    className={`relative z-10 w-full h-full flex flex-col transition-colors duration-500 ${isExpanded ? 'text-black' : 'text-white'}`}
+                    style={{ padding: isMobile ? '12px' : '24px' }}
+                  >
+                    {/* ID */}
+                    <span
+                      className="font-mono transition-all duration-500"
                       style={{
-                        transform: isHovered ? 'none' : 'skewY(-15deg)'
+                        fontSize:      isMobile ? 9 : 12,
+                        letterSpacing: '0.15em',
+                        color:         isExpanded ? '#6b7280' : '#374151',
+                        position:      isExpanded ? 'static' : 'absolute',
+                        top:           isMobile ? 20 : 40,
+                        left:          isMobile ? 16 : 32,
+                        transform:     isExpanded ? 'none' : 'skewY(-15deg)',
                       }}
                     >
                       {arm.id}
                     </span>
 
-                    <div 
-                      className={`transition-all duration-500 ${isHovered ? 'ml-auto w-10 h-10' : 'w-14 h-14 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'}`}
+                    {/* Icon */}
+                    <div
+                      className="transition-all duration-500"
                       style={{
-                        backgroundColor: isHovered ? '#333' : '#9ca3af',
-                        maskImage: `url(${arm.iconPath})`,
-                        WebkitMaskImage: `url(${arm.iconPath})`,
-                        maskRepeat: 'no-repeat',
-                        WebkitMaskRepeat: 'no-repeat',
-                        maskPosition: 'center',
-                        WebkitMaskPosition: 'center',
-                        maskSize: 'contain',
-                        WebkitMaskSize: 'contain',
+                        backgroundColor:      isExpanded ? '#333' : '#9ca3af',
+                        maskImage:            `url(${arm.iconPath})`,
+                        WebkitMaskImage:      `url(${arm.iconPath})`,
+                        maskRepeat:           'no-repeat',
+                        WebkitMaskRepeat:     'no-repeat',
+                        maskPosition:         'center',
+                        WebkitMaskPosition:   'center',
+                        maskSize:             'contain',
+                        WebkitMaskSize:       'contain',
+                        width:  isExpanded ? (isMobile ? 24 : 40) : (isMobile ? 36 : 56),
+                        height: isExpanded ? (isMobile ? 24 : 40) : (isMobile ? 36 : 56),
+                        flexShrink: 0,
+                        ...(isExpanded
+                          ? { marginLeft: 'auto' }
+                          : { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }
+                        ),
                       }}
                     />
 
-                    {isHovered ? (
-                      <div className="mt-auto transition-all duration-500">
-                        <p className="text-[13px] leading-snug font-medium mb-8 text-gray-800">
+                    {/* Text */}
+                    {isExpanded ? (
+                      <div className="mt-auto">
+                        <p
+                          className="leading-snug font-medium text-gray-800"
+                          style={{ fontSize: isMobile ? 10 : 13, marginBottom: isMobile ? 12 : 32 }}
+                        >
                           {arm.desc}
                         </p>
-                        <h4 className="text-xl font-semibold text-right tracking-tight">
+                        <h4
+                          className="font-semibold text-right tracking-tight"
+                          style={{ fontSize: isMobile ? 13 : 20 }}
+                        >
                           {arm.name}
                         </h4>
                       </div>
                     ) : (
-                      <span 
-                        className="absolute bottom-14 right-8 text-[11px] uppercase tracking-[0.2em] text-gray-500 text-right leading-tight max-w-[100px] transition-all duration-500"
+                      <span
+                        className="uppercase text-gray-500 text-right leading-tight"
                         style={{
-                          transform: 'skewY(-15deg)'
+                          position:      'absolute',
+                          bottom:        isMobile ? 20 : 56,
+                          right:         isMobile ? 10 : 32,
+                          fontSize:      isMobile ? 8 : 11,
+                          letterSpacing: '0.2em',
+                          maxWidth:      isMobile ? 60 : 100,
+                          transform:     'skewY(-15deg)',
                         }}
                       >
                         {arm.name}
@@ -233,34 +419,60 @@ const ExecutionTogether = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-end pt-4 pb-12">
-        <h5 className="text-gray-300 text-[12px] tracking-wide max-w-[200px] leading-relaxed mb-8 md:mb-0">
+      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      <div
+        className="w-full"
+        style={{
+          maxWidth:      1280,
+          display:       'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between',
+          alignItems:    isMobile ? 'flex-end' : 'flex-end',
+          gap:           isMobile ? 16 : 0,
+          paddingTop:    16,
+          paddingBottom: 48,
+        }}
+      >
+        <h5
+          className="text-gray-300 leading-relaxed"
+          style={{ fontSize: 12, letterSpacing: '0.03em', maxWidth: 200, alignSelf: isMobile ? 'flex-start' : 'auto' }}
+        >
           Governance is designed <br />in, not enforced later.
         </h5>
 
-        <div className="bg-[#D1D1D1] text-black px-6 py-5 rounded-sm flex gap-6 max-w-md items-center shadow-2xl">
-          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none">
+        <div
+          className="bg-[#D1D1D1] text-black rounded-sm flex items-center shadow-2xl"
+          style={{
+            gap:       isMobile ? 14 : 24,
+            padding:   isMobile ? '14px 16px' : '20px 24px',
+            width:     isMobile ? 'auto' : 'auto',
+            maxWidth:  isMobile ? '80%' : 400,
+            alignSelf: isMobile ? 'flex-end' : 'auto',
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none" style={{ flexShrink: 0 }}>
             <rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D"/>
+            <rect x="21" y="7"  width="7" height="7" fill="#3D3D3D"/>
             <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="21" width="7" height="7" fill="#3D3D3D"/>
+            <rect x="28" y="7"  width="7" height="7" fill="#3D3D3D"/>
+            <rect x="7"  y="14" width="7" height="7" fill="#3D3D3D"/>
+            <rect x="0"  y="14" width="7" height="7" fill="#3D3D3D"/>
+            <rect x="7"  y="0"  width="7" height="7" fill="#3D3D3D"/>
+            <rect x="14" y="7"  width="7" height="7" fill="#3D3D3D"/>
+            <rect x="21" y="0"  width="7" height="7" fill="#3D3D3D"/>
           </svg>
           <div>
-            <h4 className="font-bold text-lg leading-tight tracking-tight">Ascella Group</h4>
-            <p className="text-[14px] text-gray-800 font-semibold">
+            <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: isMobile ? 15 : 18 }}>
+              Ascella Group
+            </h4>
+            <p className="text-gray-800 font-semibold" style={{ fontSize: isMobile ? 12 : 14 }}>
               Coordinated execution without loss of control.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-400/60 z-10" />
+      <div className="absolute bottom-0 left-0 w-full bg-gray-400/60 z-10" style={{ height: 1 }} />
     </div>
   );
 };

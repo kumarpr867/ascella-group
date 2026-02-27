@@ -8,7 +8,7 @@ import PlusHeading from "../headings/Heading";
 import SecurityWaveSVG from "./SecurityWave";
 import TechnologyExecution from "./TechonologyExecution";
 
-// Image fades up on enter
+    // Image fades up on enter
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },

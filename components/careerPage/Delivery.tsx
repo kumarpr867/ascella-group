@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /* ------------------ PRECISE DOTTED RING ------------------ */
@@ -35,24 +35,79 @@ const HalfVerticalLine = ({ outerR }: { outerR: number }) => (
   </mesh>
 );
 
-/* ------------------ DOTTED DIAGONAL — upper-left to outer ring ------------------ */
-const HalfDottedDiagonal = ({ outerR }: { outerR: number }) => {
+/* ------------------ ROTATING DOTTED DIAGONAL — auto-rotates + follows mouse on hover ------------------ */
+const RotatingDottedDiagonal = ({ outerR }: { outerR: number }) => {
   const dotCount = 38;
-  const angle135 = (135 * Math.PI) / 180;
-  return (
-    <group>
-      {Array.from({ length: dotCount }).map((_, i) => {
-        const t = (i / (dotCount - 1)) * outerR + 0.08;
-        if (t > outerR) return null;
-        return (
-          <mesh key={i} position={[Math.cos(angle135) * t, Math.sin(angle135) * t, 0]}>
-            <circleGeometry args={[0.018, 8]} />
-            <meshBasicMaterial color="#ffffff" transparent opacity={0.28} />
-          </mesh>
-        );
-      })}
-    </group>
-  );
+  const groupRef = React.useRef<THREE.Group>(null);
+  const targetAngleRef = React.useRef((135 * Math.PI) / 180);
+  const currentAngleRef = React.useRef((135 * Math.PI) / 180);
+  const isHoveredRef = React.useRef(false);
+  const autoSpeedRef = React.useRef(0.3); // radians per second
+
+  const { gl, camera } = useThree();
+
+  React.useEffect(() => {
+    const canvas = gl.domElement;
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      // Project mouse to world space at z=0
+      const vector = new THREE.Vector3(x, y, 0.5).unproject(camera);
+      const dir = vector.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const worldPos = camera.position.clone().addScaledVector(dir, distance);
+
+      targetAngleRef.current = Math.atan2(worldPos.y, worldPos.x);
+      isHoveredRef.current = true;
+    };
+
+    const onMouseLeave = () => {
+      isHoveredRef.current = false;
+    };
+
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mouseleave', onMouseLeave);
+    return () => {
+      canvas.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, [gl, camera]);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+
+    if (isHoveredRef.current) {
+      // Smooth lerp toward mouse angle
+      let diff = targetAngleRef.current - currentAngleRef.current;
+      // Normalize diff to [-PI, PI]
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      currentAngleRef.current += diff * Math.min(delta * 8, 1);
+    } else {
+      // Auto clockwise rotation (subtract = clockwise in standard coords)
+      currentAngleRef.current -= autoSpeedRef.current * delta;
+    }
+
+    groupRef.current.rotation.z = currentAngleRef.current - (135 * Math.PI) / 180;
+  });
+
+  // Build dots along 135° direction (upper-left) — we'll rotate the group
+  const dots = Array.from({ length: dotCount }).map((_, i) => {
+    const angle135 = (135 * Math.PI) / 180;
+    const t = (i / (dotCount - 1)) * outerR + 0.08;
+    if (t > outerR) return null;
+    return (
+      <mesh key={i} position={[Math.cos(angle135) * t, Math.sin(angle135) * t, 0]}>
+        <circleGeometry args={[0.018, 8]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.28 + (i / dotCount) * 0.15} />
+      </mesh>
+    );
+  });
+
+  return <group ref={groupRef}>{dots}</group>;
 };
 
 /* ------------------ ANIMATED TARGET — blink on jump ------------------ */
@@ -105,7 +160,7 @@ const RadarScene = () => {
   const r = OUTER_R;
   return (
     <group>
-      {/* MAIN OUTER RING — touches top & bottom canvas edge */}
+      {/* MAIN OUTER RING */}
       <mesh>
         <ringGeometry args={[r, r + 0.018, 256]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
@@ -137,13 +192,11 @@ const RadarScene = () => {
         <meshBasicMaterial color="#ffffff" />
       </mesh>
 
-     
-
       {/* VERTICAL LINE — center to top outer ring */}
       <HalfVerticalLine outerR={r} />
 
-      {/* DOTTED DIAGONAL — upper-left to outer ring */}
-      <HalfDottedDiagonal outerR={r} />
+      {/* ROTATING DOTTED DIAGONAL — auto clockwise + mouse hover snap */}
+      <RotatingDottedDiagonal outerR={r} />
 
       {/* ANIMATED TARGETS */}
       <AnimatedTarget ringRadius={r * 0.83} size={0.09} interval={4}   initialAngle={0.5} />
@@ -183,7 +236,7 @@ const Delivery = () => {
             </div>
           </div>
 
-          {/* RIGHT — canvas fills full column height, no padding */}
+          {/* RIGHT — canvas fills full column height */}
           <div style={styles.rightSide}>
             <div style={styles.canvasContainer}>
               <Canvas
@@ -227,18 +280,16 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     paddingBottom: '80px',
   },
-  /* Right side stretches full height between the two grid lines */
   rightSide: {
     width: '56%',
     display: 'flex',
-    alignItems: 'stretch',   // let child fill height
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
-  /* Square canvas container — height 100% of the right side column */
   canvasContainer: {
     position: 'relative',
     width: '100%',
-    height: '100%',          // fills the space between top & bottom grid lines
+    height: '100%',
   },
   canvas: {
     position: 'absolute',

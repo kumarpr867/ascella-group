@@ -1,7 +1,140 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
+// ── Isometric Grid with Per-Cell Hover (dot-based, yellow) ───────────────────
+function IsometricHoverGrid() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef    = useRef<number | null>(null);
+
+  const CELL_W = 100;
+  const CELL_H = 60;
+
+  const cellCenter = (col: number, row: number, offsetX: number, offsetY: number) => {
+    const x = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+    const y = offsetY + row * (CELL_H / 2);
+    return { x, y };
+  };
+
+  const inDiamond = (px: number, py: number, cx: number, cy: number) => {
+    const dx = Math.abs(px - cx) / (CELL_W / 2);
+    const dy = Math.abs(py - cy) / (CELL_H / 2);
+    return dx + dy <= 1;
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+    canvas.addEventListener('mousemove', onMove);
+    canvas.addEventListener('mouseleave', onLeave);
+
+    const alphaMap = new Map<string, number>();
+    const DOTS_X = 15;
+    const DOTS_Y = 15;
+    const DOT_R  = 0.6;
+
+    const loop = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      const cols    = Math.ceil(W / CELL_W) + 2;
+      const rows    = Math.ceil(H / (CELL_H / 2)) + 2;
+      const offsetX = -CELL_W / 2;
+      const offsetY = -CELL_H / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
+          const key = `${col},${row}`;
+
+          const hovered = inDiamond(mx, my, cx, cy);
+          const target  = hovered ? 1 : 0;
+          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
+          alphaMap.set(key, current);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(cx,              cy - CELL_H / 2);
+          ctx.lineTo(cx + CELL_W / 2, cy);
+          ctx.lineTo(cx,              cy + CELL_H / 2);
+          ctx.lineTo(cx - CELL_W / 2, cy);
+          ctx.closePath();
+          ctx.clip();
+
+          for (let dy = 0; dy < DOTS_Y; dy++) {
+            for (let dx = 0; dx < DOTS_X; dx++) {
+              const px = cx - CELL_W / 2 + (dx + 0.5) * (CELL_W / DOTS_X);
+              const py = cy - CELL_H / 2 + (dy + 0.5) * (CELL_H / DOTS_Y);
+
+              if (!inDiamond(px, py, cx, cy)) continue;
+
+              const fdx  = (px - cx) / (CELL_W / 2);
+              const fdy  = (py - cy) / (CELL_H / 2);
+              const fade = Math.max(0, 1 - (Math.abs(fdx) + Math.abs(fdy)));
+
+              const baseAlpha  = fade * 0.18;
+              const hoverExtra = current * fade * 0.45;
+              const alpha      = baseAlpha + hoverExtra;
+
+              if (alpha < 0.01) continue;
+
+              ctx.beginPath();
+              ctx.arc(px, py, DOT_R + current * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(234,197,52,${Math.min(1, alpha)})`;
+              ctx.fill();
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', onMove);
+      canvas.removeEventListener('mouseleave', onLeave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position:      'absolute',
+        inset:         0,
+        width:         '100%',
+        height:        '100%',
+        pointerEvents: 'auto',
+        cursor:        'crosshair',
+      }}
+    />
+  );
+}
 
 const Isometric3DBox = ({
   className,
@@ -70,34 +203,92 @@ const ContactSection: React.FC<ContactSectionProps> = ({
         className="relative h-[500px] border-b border-[#3D3D3D] flex items-center overflow-hidden"
         style={{ borderTop: 'none' }}
       >
+        {/* Subtle background grid */}
         <div
-          className="absolute inset-0 z-0 opacity-[0.04]"
+          className="absolute inset-0 z-0 opacity-[0.06]"
           style={{
-            backgroundImage: `linear-gradient(30deg, #555 1px, transparent 1px), linear-gradient(-30deg, #555 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(30deg, #555 1px, transparent 1px), linear-gradient(-30deg, #555 1px, transparent 3px)`,
             backgroundSize: '64px 110px',
           }}
         />
-        <div className="relative z-10 pl-15 pointer-events-none">
-          <h2 className="text-[52px] font-light mb-4 tracking-tighter leading-tight max-w-2xl">
+
+        {/*
+          ── ISOMETRIC HOVER GRID ──
+          Starts from content left (pl-15 ≈ 60px), ends 50px after content end.
+          Content text starts ~60px from left, max-w-xl ≈ 576px → ends ~636px.
+          So grid: left=60px, width= content_width + 50px.
+          Height = upper 60% of header (300px), bottom-aligned to just above text.
+
+          Cell math (CELL_W=100, CELL_H=60, offsetX=-50, offsetY=-30):
+            Row 2 (y=30), Row 4 (y=90)
+            Center col of a ~600px wide strip: col=3 → x=250, col=4 → x=350
+
+          We place 2 vectors:
+            Cell A: col=2, row=4 → x=-50+200=150, y=-30+120=90  → center(150,90)  [left, more faded]
+            Cell B: col=4, row=4 → x=-50+400=350, y=-30+120=90  → center(350,90)  [right, brighter]
+        */}
+        <div
+          className="absolute z-10"
+          style={{
+            top:    '5%',
+            bottom: '38%',   // leaves bottom area clear for text
+            left:   '60px',  // aligns with pl-15 content start
+            right:  '-50px', // extends 50px past content end
+            // Radial fade: bright center, transparent edges
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 45% 55%, black 15%, transparent 85%)',
+            maskImage:       'radial-gradient(ellipse 80% 80% at 45% 55%, black 15%, transparent 85%)',
+            pointerEvents:   'auto',
+          }}
+        >
+          {/* Hover dot-grid canvas */}
+          <IsometricHoverGrid />
+
+          {/* vector 55 — Cell A: col=2,row=4 → (150,90) — left, more faded */}
+          <img
+            src="/vector 55.png"
+            alt=""
+            style={{
+              position:      'absolute',
+              left:          '150px',
+              top:           '90px',
+              width:         '100px',
+              height:        '60px',
+              transform:     'translate(-50%, 10%)',
+              objectFit:     'fill',
+              opacity:       1,
+              pointerEvents: 'none',
+              mixBlendMode:  'screen',
+            }}
+          />
+
+          {/* vector 55 — Cell B: col=4,row=4 → (350,90) — center, brighter */}
+          <img
+            src="/vector 55.png"
+            alt=""
+            style={{
+              position:      'absolute',
+              left:          '350px',
+              top:           '90px',
+              width:         '100px',
+              height:        '60px',
+              transform:     'translate(-50%, 20%)',
+              objectFit:     'fill',
+              opacity:       1,
+              pointerEvents: 'none',
+              mixBlendMode:  'screen',
+            }}
+          />
+        </div>
+
+        {/* Text content — z-20 so it's always above grid */}
+        <div className="relative z-20 pt-60 pl-15 pointer-events-none">
+          <h3 className="text-[45px] mb-2 tracking-tighter leading-tight max-w-xl">
             {title}
-          </h2>
-          <p className="text-zinc-600 text-lg font-light max-w-sm">{subtitle}</p>
+          </h3>
+          <p className="text-gray-300 text-lg text-b1 max-w-sm">{subtitle}</p>
         </div>
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          <div className="absolute top-[10%] left-[2%]">
-            <Isometric3DBox className="absolute top-0 left-0 scale-125" opacity={0.5} />
-            <Isometric3DBox className="absolute top-[37px] left-[63px]" opacity={0.4} />
-            <Isometric3DBox className="absolute top-[74px] left-[126px]" opacity={0.3} />
-            {[...Array(9)].map((_, i) => (
-              <Isometric3DBox
-                key={i}
-                className="absolute"
-                style={{ top: `${(i + 3) * 37}px`, left: `${(i + 3) * 63}px` }}
-                opacity={0.03}
-              />
-            ))}
-          </div>
-        </div>
+
+        <div className="absolute inset-0 z-30 pointer-events-none" />
       </div>
 
       {/* Grid Boxes */}
@@ -128,32 +319,33 @@ const ContactSection: React.FC<ContactSectionProps> = ({
         </div>
 
         {/* Center */}
-        <div
-          className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303]"
-          style={{ width: '256px', height: '271px' }}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              border: '1px solid #3D3D3D',
-              backgroundImage: `linear-gradient(0deg, rgba(0,0,0,0.54) 0%, rgba(0,0,0,0.54) 100%), linear-gradient(0deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.04) 100%)`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        </div>
+      {/* Center */}
+<div
+  className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303]"
+  style={{ width: '256px', height: '271px' }}
+>
+  <img
+    src="/Rectangle 9476.svg"
+    alt=""
+    style={{
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block',
+    }}
+  />
+</div>
 
         {/* Right */}
         <div className="flex flex-col overflow-hidden" style={{ width: '256px', height: '271px' }}>
           <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
-            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">
+            <span className="text-[9px] uppercase tracking-[0.2em]  mb-2 block">
               Location
             </span>
-            <p className="text-[12px] font-light leading-snug">
+            <p className="text-[12px]  leading-snug">
               {location?.address ?? ''}
             </p>
-            <p className="text-[11px] text-zinc-600 mt-1">{location?.postalCode}</p>
+            <p className="text-[11px] mt-1">{location?.postalCode}</p>
           </div>
           <div className="flex-1 p-6 flex flex-col justify-center">
             <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">
@@ -196,7 +388,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
         <div className="max-w-xl">
           <h4
             className={`text-xl md:text-2xl font-light transition-colors ${
-              open ? 'text-white' : 'text-gray-500'
+              open ? 'text-white' : 'text-gray-300'
             }`}
           >
             {title}
@@ -296,6 +488,9 @@ const Icon6 = () => (
 // ─────────────────────────────────────────────
 // MAIN PAGE COMPONENT
 // ─────────────────────────────────────────────
+
+const NAVBAR_HEIGHT = 64;
+
 const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
 
@@ -329,25 +524,21 @@ const ContextsPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-white md:pl-25 md:pr-25 font-sans">
-      {/*
-        Two-column layout:
-        - Left  (2/6): sticky, stays fixed while right scrolls
-        - Right (4/6): normal flow, scrolls with the page
-        Parent uses `items-start` so sticky works correctly
-      */}
       <div className="relative w-full border border-[#3D3D3D] flex flex-col lg:flex-row items-start">
 
         {/* Background Grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-20"
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20"
           style={{
             backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(61,61,61,0.3) 1px, transparent 1px)`,
             backgroundSize: '40px 40px',
           }}
         />
 
-        {/* ── LEFT COLUMN — STICKY FORM ── */}
-        <div className="relative z-10 w-full lg:w-2/6 border-b lg:border-b-0 lg:border-r border-[#3D3D3D] p-7 flex flex-col bg-black lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-          
+        {/* ── LEFT COLUMN — STICKY BELOW NAVBAR ── */}
+        <div
+          className="relative z-10 w-full lg:w-2/6 border-b lg:border-b-0 lg:border-r border-[#3D3D3D] p-7 flex flex-col bg-black lg:sticky lg:top-[64px] lg:h-[calc(100vh-64px)] lg:overflow-y-auto"
+        >
           <header className="max-w-md">
             <h5 className="text-2xl font-light mb-3">
               Provide operating context to <br /> initiate alignment.
@@ -512,8 +703,13 @@ const ContextsPage = () => {
           {/* ACCORDION — WHAT HAPPENS NEXT */}
           <div className="border-t border-[#3D3D3D] w-full">
             <div className="px-6 md:px-12 py-12">
-              <div className="flex items-center gap-4 text-xs text-gray-400 mb-8">
-                <span className="text-lg">✚</span>
+              <div className="flex items-center gap-4 text-xs mb-8">
+                <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+                  <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
+                  <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                  <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                </svg>
                 <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
               </div>
               <h3 className="text-3xl md:text-5xl font-light max-w-2xl leading-[1.1]">
@@ -534,7 +730,7 @@ const ContextsPage = () => {
               ))}
 
               <div className="py-8 px-6 md:px-12">
-                <p className="text-sm text-gray-300 font-light">
+                <p className="text-sm">
                   No engagement proceeds without operating alignment.
                 </p>
               </div>

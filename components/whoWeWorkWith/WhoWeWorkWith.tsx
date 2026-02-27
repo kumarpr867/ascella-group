@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
+import { useRef, useEffect, useState, useCallback } from "react";
 import PlusHeading from "../headings/Heading"
 import EnterpriseStartupSystem from "./EnterpriseStartupSystem"
-import Heading from "../headings/Heading"
 
 // ── Shared config ─────────────────────────────────────────────────────────────
 const SPACING   = 3;
@@ -315,7 +315,7 @@ export default function WhoWeWorkWith() {
             </div>
 
             <div className="px-6 py-10 lg:p-10 flex items-end">
-              <Heading text="Scroll Down"/>
+              <PlusHeading text="Scroll Down"/>
             </div>
 
             <div className="lg:border-l border-color px-6 py-10 lg:p-10 flex items-end justify-end">

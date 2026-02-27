@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 // SVG center
 const CX = 308.958
@@ -42,8 +42,8 @@ function InteractiveSVG() {
     const [isInsideInner, setIsInsideInner] = useState(false)
     const [cursorPos,     setCursorPos]     = useState({ x: 0, y: 0 })
 
-    const svgRef = useRef(null)
-    const rafRef = useRef(null)
+    const svgRef = useRef<SVGSVGElement | null>(null)
+    const rafRef = useRef<number | null>(null)
 
     const OUTER_SPEED = -0.15
 
@@ -89,14 +89,16 @@ function InteractiveSVG() {
         return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
     }, [])
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const svg = svgRef.current
         if (!svg) return
 
         const pt  = svg.createSVGPoint()
         pt.x = e.clientX
         pt.y = e.clientY
-        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse())
+        const ctm = svg.getScreenCTM()
+        if (!ctm) return
+        const svgP = pt.matrixTransform(ctm.inverse())
 
         const dx   = svgP.x - CX
         const dy   = svgP.y - CY
@@ -143,13 +145,15 @@ function InteractiveSVG() {
         setIsInsideInner(false)
     }
 
-    const handleClick = (e) => {
+    const handleClick = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const svg = svgRef.current
         if (!svg) return
         const pt  = svg.createSVGPoint()
         pt.x = e.clientX
         pt.y = e.clientY
-        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse())
+        const ctm = svg.getScreenCTM()
+        if (!ctm) return
+        const svgP = pt.matrixTransform(ctm.inverse())
         const dx   = svgP.x - CX
         const dy   = svgP.y - CY
         const dist = Math.sqrt(dx * dx + dy * dy)
