@@ -254,7 +254,7 @@ export default function Accountability() {
 
 
       <div className="  py-10 xl:py-10  xl:border-b border-color">
-        <div className="mx-auto max-w-7xl px-5 xl:px-0">
+        <div className="mx-auto max-w-7xl px-10 xl:px-0">
           <Heading text="Accountability Principle" />
         </div>
       </div>
@@ -301,7 +301,7 @@ export default function Accountability() {
       </div>
 
       {/* Mobile accordion */}
-      <div className="xl:hidden mb-20 px-6 space-y-4">
+      <div className="xl:hidden mb-20 px-10 space-y-4">
         <div className="pb-4">
           <h4>The Single <br /> Accountability Principle </h4>
           <p className="text-b2 leading-tight mt-4 ">

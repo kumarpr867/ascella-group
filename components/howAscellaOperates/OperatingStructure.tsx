@@ -53,10 +53,10 @@ export default function OperatingStructure() {
 
   return (
     <section className="border-y border-color">
-      <div className="hidden md:flex relative mx-auto max-w-7xl px-4 sm:px-6 py-10 md:py-24 flex-col md:flex-row border-x-0 lg:border-x border-color gap-8 md:gap-0">
+      <div className="hidden md:flex relative mx-auto max-w-7xl px-10 py-10 md:py-24 flex-col md:flex-row border-x-0 lg:border-x border-color gap-8 md:gap-0">
 
         {/* top */}
-        <div className="flex flex-col gap-5 w-full md:w-1/2">
+        <div className="flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
           <h2 className='text-2xl md:text-5xl'>
             A unified model built for accountable
             <span className="text-gray-300"> execution at scale.</span>
@@ -70,7 +70,7 @@ export default function OperatingStructure() {
 
 
         {/* xl screen */}
-        <div className='hidden mx-auto max-w-7xl px-4 sm:px-6 py-10 xl:flex items-center justify-around  border-x-0 xl:border-x  border-color '>
+        <div className='hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around  border-x-0 xl:border-x  border-color '>
           <div className="flex flex-col items-center py-8 ">
             <p className={"text-b3 mb-6"}>Governance</p>
             <div className={"w-full h-40 flex items-center justify-center"}>
@@ -132,7 +132,7 @@ export default function OperatingStructure() {
 
         {/* Hero text */}
         <div
-          className="relative max-w-7xl mx-auto px-5 py-24 border-b border-color overflow-hidden"
+          className="relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden"
         >
           {/* Subtle diagonal lines background */}
           <div
@@ -151,7 +151,7 @@ export default function OperatingStructure() {
             className="relative font-normal leading-tight"
           >
             <span className="text-white">A unified model built for accountable </span>
-            <span className="text-[#6E6E6E]">execution at scale.</span>
+            <span className="text-gray-300">execution at scale.</span>
           </h4>
           <p
             className="relative mt-4 text-white text-[12px] leading-3.25"
@@ -161,7 +161,7 @@ export default function OperatingStructure() {
         </div>
 
         {/* 2-column icon grid — 3 rows */}
-        <div className="px-5 border-b border-color">
+        <div className="px-10 border-b border-color">
           <div className="grid grid-cols-2 border-x border-color">
             {gridItems.map((item, i) => (
               <div
@@ -194,7 +194,7 @@ export default function OperatingStructure() {
         </div>
 
         {/* Outcome Stability — full width centred */}
-        <div className="px-5 border-b border-color">
+        <div className="px-10 border-b border-color">
           <div className="flex flex-col items-center justify-center py-6 gap-3 border-x border-color">
             <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
               <Image

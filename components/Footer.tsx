@@ -63,17 +63,18 @@ const Footer = () => {
         <footer className="mb-2 lg:mb-10 w-full">
             <div className="border-y border-color">
                 <div className="border-b border-color">
-                    <div className="flex md:hidden flex-col mx-5 py-7 px-5 border-x border-color">
+                    <div className="flex md:hidden flex-col mx-10 py-7 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Join Us
                         </label>
-                        <div className="flex  sm:flex-row border border-white rounded overflow-hidden">
+                        <div className="flex sm:flex-row border border-white rounded overflow-hidden">
                             <input
                                 type="email"
                                 placeholder="Email"
-                                className="flex-1 bg-white text-black px-4 py-2 text-xs md:text-sm outline-none placeholder:text-gray-400"
+                                className="flex-1 bg-white text-black px-4 py-2 text-b3 outline-none placeholder:text-gray-400"
                             />
                             <PartialOutlineBtn
+                            size="sm"
                                 text="Consult Now"
                                 textColor="text-black"
                                 bgColor="bg-white"
@@ -90,7 +91,7 @@ const Footer = () => {
                         {footerSections.map((section, i) => (
                             <div
                                 key={i}
-                                className={`py-7 px-5 lg:p-10 border-x  border-color mx-5 md:mx-0 border-b md:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
+                                className={`py-7 px-5 lg:p-10 border-x  border-color mx-10 md:mx-0 border-b md:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
                             >
                                 <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
                                     {section.title}
@@ -117,7 +118,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="block md:hidden mx-5 border-x border-color">
+            <div className="block md:hidden mx-10 border-x border-color">
                 <div className="flex flex-col p-6">
                     <h4 className="text[36px] md:text-[64px] leading-tight mb-2">
                         Control. Structure. Execution.
@@ -130,7 +131,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="border-t border-color">
-                <div className="block md:hidden mx-5 border-x border-color">
+                <div className="block md:hidden mx-10 border-x border-color">
                     <div className="flex items-center justify-between p-6">
                         <Image src={"/logo2.png"} alt={""} width={50} height={50} />
                         <p className="text-[14px] text-gray-100">

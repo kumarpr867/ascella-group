@@ -82,7 +82,7 @@ export default function Em3() {
     }, [active, isPaused]);
 
     return (
-        <section className="mx-auto max-w-7xl px-4 my-40">
+        <section className="mx-auto max-w-7xl px-10 my-40">
             <header className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
                 <h1 className="text-2xl lg:text-3xl leading-tight">

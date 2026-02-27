@@ -5,6 +5,7 @@ import Arrow from "./btns/Arrow";
 import PlusHeading from "./headings/Heading";
 import Image from "next/image";
 import Heading from "./headings/Heading";
+import ArrowButton from "./btns/Arrow";
 
 const faqs = [
   {
@@ -56,7 +57,7 @@ export default function Faq() {
           <Heading text="FAQs" />
           <h3>Frequently Asked Questions</h3>
           <p className="text-[16px] text-gray-200 ">
-           Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
+            Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
           </p>
         </div>
 
@@ -74,7 +75,7 @@ export default function Faq() {
               onMouseLeave={() => {
                 if (activeIndex !== index) setHoveredIndex(null);
               }}
-              className={`group relative min-h-56 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
+              className={`group relative min-h-56 xl:min-h-48 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
             >
               <Image
                 src="/FaqCube.svg"
@@ -116,7 +117,7 @@ export default function Faq() {
                 className={`absolute top-6 right-6 z-20 transition-transform duration-500 ${isOpen ? "rotate-90" : ""}
     `}
               >
-                <Arrow />
+                <ArrowButton/>
               </button>
             </div>
           );
@@ -156,7 +157,7 @@ export default function Faq() {
                     className={`transition-transform duration-300 ${isOpen ? "rotate-90" : ""
                       }`}
                   >
-                    <Arrow />
+                    <ArrowButton />
                   </div>
                 </button>
 

@@ -1,6 +1,6 @@
 "use client";
 const PartialOutlineBtn = ({
-    text = "Explore More",
+  text = "Explore More",
   size = "md",
   bgColor = "bg-black",
   textColor = "text-white",

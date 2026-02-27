@@ -5,7 +5,7 @@ export default function OperatingGroup() {
     return (
         <section className="mt-20 border-y border-color">
             <div className="flex flex-col gap-10 py-10 lg:py-25">
-                <div className="mx-auto max-w-7xl px-5 md:px-5 xl:px-0 flex flex-col md:flex-row justify-between gap-5 ">
+                <div className="mx-auto max-w-7xl px-10 xl:px-0 flex flex-col md:flex-row justify-between gap-5 ">
                     <div className="flex flex-col gap-6 md:w-1/2">
                         <Heading text="Introduction" />
                         <h3 className="text-[18px] md:text-[36px]">What an Operating Group Means</h3>
@@ -18,11 +18,9 @@ export default function OperatingGroup() {
                 </div>
 
 
-                <div className="hidden lg:block mx-auto max-w-7xl px-5 md:px-10 py-10 border border-color">
+                <div className="hidden lg:block mx-auto max-w-7xl px-10 py-10 border border-color">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-                        <h4>
-                            Ascella Group holds operating authority
-                        </h4>
+                        <h4>Ascella Group holds operating authority</h4>
                         <h4 >
                             Execution arms deliver outcomes
                         </h4>
@@ -67,7 +65,7 @@ export default function OperatingGroup() {
 
                     </div>
                 </div>
-                <div className="flex flex-col lg:hidden mx-auto max-w-7xl px-5 py-10 border border-color">
+                <div className="flex flex-col lg:hidden mx-auto max-w-7xl px-10 py-10 border border-color">
                     <div className="flex flex-col gap-4">
                         <h6>Ascella Group holds operating authority</h6>
                         <div>

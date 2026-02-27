@@ -42,9 +42,9 @@
   }
 
   body {
-    --sb-track-color: #00000000;
-    --sb-thumb-color: var(--color-gray-400);
-    --sb-size: 10px;
+    --sb-track-color: #181818be;
+    --sb-thumb-color: var(--color-gray-300);
+    --sb-size: 5px;
   }
 
   body::-webkit-scrollbar {

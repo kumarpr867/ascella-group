@@ -81,8 +81,8 @@ const points = [
 
 export default function Governace() {
     return (
-        <section className="flex flex-col p-10 xl:p-25">
-            <div className="mx-auto max-w-7xl px-4 flex flex-col gap-6 mb-20">
+        <section className="flex flex-col my-20 *:xl:p-25">
+            <div className="mx-auto max-w-7xl px-10 flex flex-col gap-6 mb-20">
                 <div className="flex flex-col gap-5 max-w-3xl">
                     <Heading text="Governance and Oversight" />
                     <h3 className="text-[14px] md:text-[20px] lg:text-[36px]">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
@@ -95,7 +95,7 @@ export default function Governace() {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 flex md:flex-row flex-col  flex-center leading-tight gap-48 border-y border-color py-15">
+            <div className="mx-auto max-w-7xl px-10 flex md:flex-row flex-col  flex-center leading-tight gap-15 md:gap-48 border-y border-color py-15">
                 <div className="flex flex-col justify-between gap-32">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="hidden md:flex flex-col gap-5">

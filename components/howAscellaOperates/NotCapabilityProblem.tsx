@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function NotCapabilityProblem() {
     return (
-        <section className="mx-auto max-w-7xl px-4 my-30">
+        <section className="mx-auto max-w-7xl px-10 my-30">
             <div className="overflow-hidden">
                 <div className="relative bg-gray-500">
                     <PrecisionGrid />
@@ -13,7 +13,7 @@ export default function NotCapabilityProblem() {
                     </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-stretch">
-                    <div className="relative md:w-1/4 h-[500px] md:h-[300px]">
+                    <div className="relative md:w-1/4 h-[350px] sm:h-[500px] md:h-[300px]">
                         <Image
                             src="/howAscellaOperates/NotCapabilityProblem/left.svg"
                             alt=""

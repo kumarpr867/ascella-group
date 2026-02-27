@@ -7,7 +7,7 @@ import ParticleGlobeScene from "./ParticleGlobeScene"
 
 export default function ExecutionPods() {
   return (
-    <section className="mx-auto max-w-7xl px-4">
+    <section className="mx-auto max-w-7xl px-5">
       <div className="relative min-h-screen overflow-hidden">
 
         <PrecisionGrid />
