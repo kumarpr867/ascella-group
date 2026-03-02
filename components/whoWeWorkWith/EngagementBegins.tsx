@@ -26,12 +26,11 @@ function HeaderSection() {
 
 function ArchitectureDiagram() {
   return (
-    <div className="relative w-full h-[500px] lg:h-[700px] mx-auto overflow-hidden">
+    <div className="relative w-full h-[500px] lg:h-[700px] mx-auto overflow-hidden mt-10">
       <div className="absolute inset-0">
         <VerticalLine />
         <HorizontalText />
         <DiagonalLines />
-
       </div>
     </div>
   );
@@ -40,7 +39,6 @@ function ArchitectureDiagram() {
 function VerticalLine() {
   return (
     <div className="absolute left-1/2 top-0 h-full w-px bg-gray-400 -translate-x-1/2" />
-
   );
 }
 
@@ -64,14 +62,24 @@ function HorizontalText() {
       </div>
 
       <div className="lg:hidden block">
+        <div className="flex flex-col items-center absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-0 w-full">
+        <div className=" text-gray-200" >
+          OPERATING DESIGN FIRST.
+        </div>
+        
+          <div>
+            CONTROLLED DELIVERY FOLLOWS.
+          </div>
+        </div>
+
         <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full h-10 border-b border-color -translate-y-20" >
           <div className="flex items-end w-full justify-center h-full z-1">
-          READY TO ESTABLISH 
+            READY TO ESTABLISH
           </div>
         </div>
         <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-1/2 w-full -translate-y-6 border-b border-color flex ">
           <div className="flex items-center w-full justify-center z-1">
-             STRUCTURE AND ACCOUNTABILITY AT SCALE?
+            STRUCTURE AND ACCOUNTABILITY AT SCALE?
           </div>
         </div>
         <div className="absolute left-0 top-1/2 w-full h-8 sm:h-10 border-b border-color" >

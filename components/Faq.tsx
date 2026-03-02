@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Arrow from "./btns/Arrow";
-import PlusHeading from "./headings/Heading";
 import Image from "next/image";
 import Heading from "./headings/Heading";
 import ArrowButton from "./btns/Arrow";
