@@ -1,4 +1,16 @@
 "use client";
+type PartialOutlineBtnProps = {
+  text?: string;
+  size?: "sm" | "md";
+  bgColor?: string;
+  textColor?: string;
+  hoverBgColor?: string;
+  hoverTextColor?: string;
+  borderColor?: string;
+  hoverBorderColor?: string;
+  onClick?: () => void; 
+}
+
 const PartialOutlineBtn = ({
   text = "Explore More",
   size = "md",
@@ -8,6 +20,7 @@ const PartialOutlineBtn = ({
   hoverTextColor = "hover:text-black",
   borderColor = "border-gray-400",
   hoverBorderColor = "group-hover:border-gray-100",
+  onClick = () => {},
 }) => {
   const sizeClasses =
     size === "sm"
@@ -16,6 +29,7 @@ const PartialOutlineBtn = ({
 
   return (
     <button
+      onClick={onClick}
       className={`
         group relative inline-flex items-center
         ${sizeClasses} tracking-wide

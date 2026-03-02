@@ -1,29 +1,23 @@
 "use client";
 
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
+import { useRouter } from "next/navigation";
 
 export default function ApplicationForm() {
+    const router = useRouter();
+
     return (
-        <section className="relative border-y border-color my-5">
-
-            <div className="relative">
-                <div className="grid grid-cols-[10%_25%_55%_10%] relative min-h-screen">
-
-                    {/* Vertical grid lines */}
-                    <div className="absolute inset-0 flex pointer-events-none z-0">
-                        <div className="h-full w-[10%] border-r border-color" />
-                        <div className="h-full w-[25%] border-r border-color" />
-                        <div className="h-full w-[55%] border-r border-color" />
-                    </div>
-
-                    <div />
+        <section className="relative border-y border-color pb-10 mb-20">
+            <div className="max-w-7xl mx-auto md:border-x border-color px-10 lg:px-0">
+                <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[420px_1fr] lg:gap-16">
 
                     {/* LEFT COLUMN */}
-
-                    <aside className="relative">
-                        <div className="sticky top-0 w-full max-w-md">
-                            <div className="border-b border-color p-5">
-                                <button className="mb-6 flex items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
+                    <aside className="order-2 lg:order-1 lg:border-r border-color">
+                        <div className="w-full lg:sticky lg:top-24">
+                            <div className="lg:border-b border-color lg:p-5">
+                                <button
+                                    onClick={() => router.push("/JD-Page")}
+                                    className="hidden lg:flex mb-6 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
                                     <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
                                         <path
                                             d="M11.707 4.85355H0.707031M0.707031 4.85355L5.20703 0.353546M0.707031 4.85355L5.20703 9.35355"
@@ -40,8 +34,9 @@ export default function ApplicationForm() {
                                     and alignment process.
                                 </p>
                             </div>
-                            <form className="space-y-5 p-5">
-                                <div className="grid grid-cols-2 gap-4">
+
+                            <form className="space-y-5 mt-5 lg:mt-0 lg:p-5">
+                                <div className="grid grid-cols-2 gap-2">
                                     <Input label="Full Name" />
                                     <Input label="Email" type="email" />
                                     <Input label="Phone Number" />
@@ -79,12 +74,23 @@ export default function ApplicationForm() {
                     </aside>
 
                     {/* RIGHT COLUMN */}
-                    <main className="relative px-15 py-20">
+                    <main className="order-1 lg:order-2 py-16 lg:py-24 lg:pr-16">
                         <div>
                             <div className="max-w-lg">
+                                <button
+                                    onClick={() => router.push("/JD-Page")}
+                                    className="lg:hidden flex mb-6 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
+                                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                                        <path
+                                            d="M11.707 4.85355H0.707031M0.707031 4.85355L5.20703 0.353546M0.707031 4.85355L5.20703 9.35355"
+                                            stroke="currentColor"
+                                        />
+                                    </svg>
+                                    <p className="text-b3">See all jobs</p>
+                                </button>
                                 <h3 className="mb-10">Security Governance Lead</h3>
 
-                                <div className="flex flex-wrap justify-between gap-y-2 text-b3 mb-10">
+                                <div className="flex flex-col sm:flex-row  flex-wrap justify-between gap-y-2 text-b3 mb-10">
                                     <div>
                                         <span className="text-b3 text-gray-300">Operating entity</span>
                                         <div className="text-b2 uppercase">ASCELLA INFOSEC</div>
@@ -99,7 +105,7 @@ export default function ApplicationForm() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between mb-10">
+                            <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between mb-10">
                                 <h4>Job Description</h4>
                                 <span className="text-b3 text-gray-200">
                                     Posted on <span className="text-white">06 Feb 2026</span>
@@ -159,11 +165,11 @@ export default function ApplicationForm() {
                                 the Group’s accountability framework.
                             </Section>
                         </div>
-                    </main>  
+                    </main>
                 </div>
-            </div>
+            </div >
 
-        </section>
+        </section >
     );
 }
 
@@ -178,7 +184,7 @@ function Input({ label, type = "text" }: InputProps) {
             <label className="block text-b2 mb-2 text-gray-100">{label}</label>
             <input
                 type={type}
-                className="w-full bg-gray-500 border border-color rounded-lg px-4 py-4 text-b2 outline-none focus:border-gray-200 transition"
+                className="w-full bg-gray-500 border border-color rounded-lg p-2 lg:p-4 text-b2 outline-none focus:border-gray-200 transition"
             />
         </div>
     );
@@ -196,7 +202,7 @@ function Textarea({ label, placeholder }: TextareaProps) {
             <textarea
                 rows={5}
                 placeholder={placeholder}
-                className="w-full  bg-gray-500 border border-color rounded-lg px-4 py-4 text-b2 text-gray-100 placeholder:text-gray-    300 outline-none focus:border-gray-200 transition resize-none"
+                className="w-full  bg-gray-500 border border-color rounded-lg p-4 text-b2 text-gray-100 placeholder:text-gray-300 outline-none focus:border-gray-200 transition resize-none"
             />
         </div>
     );
@@ -208,19 +214,17 @@ type SectionProps = {
 function Section({ title, children }: SectionProps) {
     return (
         <section className="mb-10">
-            <div className="text-b1 tracking-wide uppercase mb-4">
+            <div className="text-[14px] tracking-wide uppercase mb-4">
                 {title}
             </div>
 
             <div
                 className="
-                    text-b2 text-gray-200 leading-relaxed
-
+                    text-b2 text-gray-100 leading-relaxed
                     [&>ul]:list-disc
                     [&>ul]:pl-6
                     [&>ul]:space-y-2
-
-                    [&>ul>li]:marker:text-gray-400
+                    [&>ul>li]:marker:text-gray-100
                 "
             >
                 {children}
