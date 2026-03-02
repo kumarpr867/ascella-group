@@ -118,7 +118,7 @@ function IsometricHoverGrid() {
 // ── Main Component ─────────────────────────────────────────────────────────────
 
 const ProgramEmbedded = () => {
-  const boxClass = "w-[442px] h-[450px] border-r border-b border-[#3D3D3D] p-10 flex flex-col justify-end relative bg-black";
+  const boxClass = "w-[450px] h-[450px] border-r border-b border-[#3D3D3D] p-15 flex flex-col justify-end relative bg-black";
 
   const shapes = [
     { t: 0, l: 0, o: 0.6 },
@@ -142,7 +142,7 @@ const ProgramEmbedded = () => {
       <div className="w-full border-t border-[#3D3D3D]" />
 
       {/* Main Container */}
-      <div className="w-[1325px] border-l border-[#3D3D3D] relative z-10">
+      <div className="w-[1286px] border-l border-[#3D3D3D] relative z-10">
 
         {/* --- TOP ROW (Hero Section) --- */}
         <div className="relative w-full h-[450px] border-b border-r border-[#3D3D3D] flex flex-col justify-end p-12 overflow-hidden">

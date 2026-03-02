@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
 // ══════════════════════════════════════════════════════════════════════════════
-// WAVE CANVAS — smooth water surface wave, no scatter
+// WAVE CANVAS
 // ══════════════════════════════════════════════════════════════════════════════
 const SPACING   = 3;
 const THRESHOLD = 8;
@@ -13,285 +13,498 @@ function WaveCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
   const mouseRef     = useRef({ x: -9999, y: -9999 });
   const ripplesRef   = useRef<{ x: number; y: number; t: number; strength: number }[]>([]);
   const particlesRef = useRef<
-    {
-      x: number;
-      y: number;
-      phase: number;
-      amp: number;
-      size: number;
-      alpha: number;
-    }[]
+    { x: number; y: number; phase: number; amp: number; size: number; alpha: number }[]
   >([]);
   const rafRef       = useRef<number | null>(null);
   const lastMouseRef = useRef({ x: -9999, y: -9999 });
   const frameRef     = useRef(0);
-  // Track if mouse is inside canvas area
-  const isHoveringRef = useRef(false);
 
   const buildParticles = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !imgEl) return;
-
-    const rect    = canvas.getBoundingClientRect();
-    canvas.width  = rect.width;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
     canvas.height = rect.height;
-
-    const W = canvas.width;
-    const H = canvas.height;
-    if (W === 0 || H === 0) return;
-
-    const off    = document.createElement('canvas');
-    off.width    = W;
-    off.height   = H;
+    const W = canvas.width, H = canvas.height;
+    if (!W || !H) return;
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
     const offCtx = off.getContext('2d')!;
-
     try {
       offCtx.drawImage(imgEl, 0, 0, W, H);
       const { data } = offCtx.getImageData(0, 0, W, H);
       const pts: typeof particlesRef.current = [];
-
       for (let y = 0; y < H; y += SPACING) {
         for (let x = 0; x < W; x += SPACING) {
-          const i          = (y * W + x) * 4;
-          const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-          const a          = data[i + 3];
-          if (a < 10 || brightness <= THRESHOLD) continue;
-
-          pts.push({
-            x,
-            y,
-            phase: (x * 0.04) + (y * 0.04),
-            amp:   0,
-            size:  Math.random() * 0.8 + 0.3,
-            alpha: (brightness / 255) * 0.55,
-          });
+          const i = (y * W + x) * 4;
+          const brightness = (data[i] + data[i+1] + data[i+2]) / 3;
+          if (data[i+3] < 10 || brightness <= THRESHOLD) continue;
+          pts.push({ x, y, phase: x*0.04+y*0.04, amp: 0, size: Math.random()*0.8+0.3, alpha: (brightness/255)*0.55 });
         }
       }
       particlesRef.current = pts;
-    } catch {
-      particlesRef.current = [];
-    }
+    } catch { particlesRef.current = []; }
   }, [imgEl]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
-
     const loop = () => {
-      frameRef.current += 1;
+      frameRef.current++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      const lx    = lastMouseRef.current.x;
-      const ly    = lastMouseRef.current.y;
-      const moved = Math.sqrt((mx - lx) ** 2 + (my - ly) ** 2);
+      const mx = mouseRef.current.x, my = mouseRef.current.y;
+      const lx = lastMouseRef.current.x, ly = lastMouseRef.current.y;
+      const moved = Math.sqrt((mx-lx)**2+(my-ly)**2);
       if (moved > 6 && mx > 0) {
-        ripplesRef.current.push({
-          x:        mx,
-          y:        my,
-          t:        0,
-          strength: Math.min(moved / 12, 1.5),
-        });
-        lastMouseRef.current = { x: mx, y: my };
+        ripplesRef.current.push({ x:mx, y:my, t:0, strength: Math.min(moved/12,1.5) });
+        lastMouseRef.current = { x:mx, y:my };
       }
-
-      ripplesRef.current = ripplesRef.current.filter((r) => r.t < 120);
-      for (const r of ripplesRef.current) r.t += 1;
-
+      ripplesRef.current = ripplesRef.current.filter(r => r.t < 120);
+      for (const r of ripplesRef.current) r.t++;
       const hasRipples = ripplesRef.current.length > 0;
-
       for (const p of particlesRef.current) {
         if (!hasRipples && p.amp < 0.005) continue;
-
-        let targetAmp = 0;
+        let tAmp = 0;
         for (const r of ripplesRef.current) {
-          const dx   = p.x - r.x;
-          const dy   = p.y - r.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          const ringFront = r.t * 3;
-          const ringWidth = 60;
-          const fromFront = dist - ringFront;
-
-          if (fromFront > -20 && fromFront < ringWidth) {
-            const t        = Math.max(0, 1 - fromFront / ringWidth);
-            const envelope = t * t * (3 - 2 * t);
-            const decay    = Math.max(0, 1 - r.t / 110);
-            targetAmp     += envelope * decay * r.strength * 6;
+          const dist = Math.sqrt((p.x-r.x)**2+(p.y-r.y)**2);
+          const ff = dist - r.t*3;
+          if (ff > -20 && ff < 60) {
+            const t = Math.max(0,1-ff/60);
+            tAmp += t*t*(3-2*t)*Math.max(0,1-r.t/110)*r.strength*6;
           }
         }
-
-        if (targetAmp > p.amp) {
-          p.amp += (targetAmp - p.amp) * 0.25;
-        } else {
-          p.amp *= 0.93;
-        }
-
+        p.amp = tAmp > p.amp ? p.amp+(tAmp-p.amp)*0.25 : p.amp*0.93;
         if (p.amp < 0.005) continue;
-
-        const t    = frameRef.current * 0.06;
-        const wave = Math.sin(t - p.phase);
-
-        // FIX 1: Clamp dy tightly — max 1.8px so particles don't go far outside
-        const dy   = wave * Math.min(p.amp, 1.8);
-
-        // FIX 2: Boost alpha strongly on wave so it's clearly visible
-        const waveAlpha = Math.min(p.alpha * 2.5 + p.amp * 0.18, 1.0);
-
+        const dy = Math.sin(frameRef.current*0.06-p.phase)*Math.min(p.amp,1.8);
         ctx.beginPath();
-        ctx.arc(p.x, p.y + dy, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${waveAlpha})`;
+        ctx.arc(p.x, p.y+dy, p.size, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${Math.min(p.alpha*2.5+p.amp*0.18,1)})`;
         ctx.fill();
       }
-
       rafRef.current = requestAnimationFrame(loop);
     };
-
     const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const x    = e.clientX - rect.left;
-      const y    = e.clientY - rect.top;
-      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-        mouseRef.current    = { x, y };
-        isHoveringRef.current = true;
-      } else {
-        mouseRef.current      = { x: -9999, y: -9999 };
-        lastMouseRef.current  = { x: -9999, y: -9999 };
-        isHoveringRef.current = false;
-      }
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX-r.left, y = e.clientY-r.top;
+      mouseRef.current = (x>=0&&x<=r.width&&y>=0&&y<=r.height) ? {x,y} : {x:-9999,y:-9999};
+      if (mouseRef.current.x < 0) lastMouseRef.current = {x:-9999,y:-9999};
     };
-
+    const onTouch = (e: TouchEvent) => {
+      const r = canvas.getBoundingClientRect(), t = e.touches[0];
+      if (!t) return;
+      const x = t.clientX-r.left, y = t.clientY-r.top;
+      if (x>=0&&x<=r.width&&y>=0&&y<=r.height) mouseRef.current = {x,y};
+    };
     window.addEventListener('mousemove', onMove);
-
+    canvas.addEventListener('touchmove', onTouch, {passive:true});
     const ro = new ResizeObserver(buildParticles);
     ro.observe(canvas);
-
-    if (imgEl) {
-      if (imgEl.complete) buildParticles();
-      else imgEl.addEventListener('load', buildParticles);
-    }
-
+    if (imgEl) { if (imgEl.complete) buildParticles(); else imgEl.addEventListener('load', buildParticles); }
     rafRef.current = requestAnimationFrame(loop);
-
     return () => {
       window.removeEventListener('mousemove', onMove);
+      canvas.removeEventListener('touchmove', onTouch);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       if (imgEl) imgEl.removeEventListener('load', buildParticles);
     };
   }, [buildParticles, imgEl]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position:      'absolute',
-        inset:         0,
-        width:         '100%',
-        height:        '100%',
-        // FIX 3: pointer-events auto so cursor changes on hover over canvas area
-        pointerEvents: 'auto',
-        cursor:        'crosshair',
-        zIndex:        20,
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'auto',cursor:'crosshair',zIndex:20}} />;
 }
 
-// ── ParticleGlobe ─────────────────────────────────────────────────────────────
-function ParticleGlobe() {
-  const wrapRef           = useRef<HTMLDivElement>(null);
+function GlobeInner({ wrapRef }: { wrapRef: React.RefObject<HTMLDivElement> }) {
   const [imgEl, setImgEl] = useState<HTMLImageElement | null>(null);
-
   useEffect(() => {
-    const wrap = wrapRef.current;
-    if (!wrap) return;
-    const el = wrap.querySelector('img') as HTMLImageElement | null;
+    const el = wrapRef.current?.querySelector('img') as HTMLImageElement | null;
     if (el) setImgEl(el);
+  }, [wrapRef]);
+  return <WaveCanvas imgEl={imgEl} />;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STYLES — Desktop unchanged, Mobile exactly like Figma
+// ══════════════════════════════════════════════════════════════════════════════
+const styles = `
+
+  /* ══════════════════════════════════════════
+     SHARED / RESET
+  ══════════════════════════════════════════ */
+  .ctrl-section { position:relative; width:100%; background:#000; color:#fff; }
+
+  /* ══════════════════════════════════════════
+     DESKTOP (≥ 641px) — original layout
+  ══════════════════════════════════════════ */
+  @media (min-width:641px) {
+    .ctrl-section { display:flex; flex-direction:column; min-height:100vh; }
+
+    /* Grid lines */
+    .d-gl-top   { position:absolute; top:0;       left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-nav   { position:absolute; top:100px;   left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-foot  { position:absolute; bottom:100px;left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-left  { position:absolute; top:0; bottom:0; left:96px;          width:1px;  background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-right { position:absolute; top:0; bottom:0; right:96px;         width:1px;  background:rgba(255,255,255,.2); z-index:50; }
+
+    /* Globe */
+    .d-globe-container {
+      position:absolute; top:100px; bottom:100px; left:96px; right:96px;
+      overflow:hidden; z-index:10;
+    }
+    .d-globe-wrapper {
+      position:absolute; width:761px; height:677px; top:30px; left:-200px;
+      transform:rotate(158.67deg);
+    }
+
+    /* Content */
+    .d-content {
+      position:relative; z-index:40; display:flex; flex-direction:column;
+      min-height:100vh; pointer-events:none;
+    }
+    .d-nav-sp   { height:100px; }
+    .d-foot-sp  { height:100px; }
+    .d-main {
+      flex:1; display:flex; flex-direction:column;
+      justify-content:center; align-items:flex-end; padding:0 160px;
+    }
+    .d-inner { max-width:900px; padding-right:176px; }
+    .d-h2 { font-size:clamp(32px,3.5vw,48px); font-weight:300; line-height:1.05; letter-spacing:-.02em; }
+    .d-indent { padding-left:96px; display:block; }
+    .d-subrow {
+      margin-top:32px; display:flex; align-items:center;
+      justify-content:flex-end; gap:32px; pointer-events:auto; cursor:pointer;
+    }
+    .d-subtext { font-size:10px; color:rgba(255,255,255,.5); max-width:300px; line-height:1.6; text-transform:uppercase; letter-spacing:.2em; }
+    .d-arrow {
+      flex-shrink:0; width:40px; height:40px;
+      border:1px solid rgba(255,255,255,.2); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .7s,color .7s;
+    }
+    .d-subrow:hover .d-arrow { background:#fff; color:#000; }
+
+    /* Footer */
+    .d-footer {
+      height:100px; display:flex; align-items:center;
+      justify-content:space-between; padding:0 128px;
+      pointer-events:auto; position:relative; z-index:50;
+    }
+    .d-engage {
+      padding:16px 32px; border:1px solid rgba(255,255,255,.15);
+      font-size:10px; letter-spacing:.4em; text-transform:uppercase;
+      background:transparent; color:#fff; cursor:pointer; white-space:nowrap;
+      transition:background .3s,color .3s;
+    }
+    .d-engage:hover { background:#fff; color:#000; }
+    .d-ascella {
+      font-size:9px; letter-spacing:.15em; max-width:320px;
+      text-align:right; text-transform:uppercase; line-height:1.5;
+      color:rgba(255,255,255,.45);
+    }
+
+    /* Hide mobile elements */
+    .m-layout { display:none !important; }
+  }
+
+  /* ══════════════════════════════════════════
+     TABLET tweaks
+  ══════════════════════════════════════════ */
+  @media (min-width:641px) and (max-width:1023px) {
+    .d-gl-left  { left:40px; }
+    .d-gl-right { right:40px; }
+    .d-globe-container { left:40px; right:40px; }
+    .d-globe-wrapper   { width:560px; height:500px; top:20px; left:-80px; }
+    .d-main  { padding:0 60px; }
+    .d-inner { padding-right:40px; }
+    .d-indent { padding-left:60px; }
+    .d-footer { padding:0 48px; }
+  }
+
+  /* ══════════════════════════════════════════
+     LARGE DESKTOP ≥ 1440px
+  ══════════════════════════════════════════ */
+  @media (min-width:1440px) {
+    .d-gl-left  { left:120px; }
+    .d-gl-right { right:120px; }
+    .d-globe-container { left:120px; right:120px; }
+    .d-globe-wrapper   { width:900px; height:800px; top:40px; left:-220px; }
+    .d-footer { padding:0 160px; }
+  }
+
+  /* ══════════════════════════════════════════
+     MOBILE (≤ 640px) — exact Figma layout
+     Layout is pure vertical flow, no absolute.
+     Section fits content naturally (no 100vh).
+  ══════════════════════════════════════════ */
+  @media (max-width:640px) {
+
+    /* Hide all desktop elements */
+    .d-gl-top, .d-gl-nav, .d-gl-foot, .d-gl-left, .d-gl-right,
+    .d-globe-container, .d-content, .d-footer { display:none !important; }
+
+    /* Mobile wrapper — simple flex column */
+    .m-layout {
+      display:flex;
+      flex-direction:column;
+      width:100%;
+    }
+
+    /* ── Line 1: top border of section ── */
+    .m-line {
+      width:100%; height:1px;
+      background:rgba(255,255,255,.22);
+      flex-shrink:0;
+    }
+
+    /* ── Text content block ── */
+    .m-text-block {
+      padding:24px 28px 22px 28px;
+    }
+
+    .m-h2 {
+      font-size:22px;
+      font-weight:300;
+      line-height:1.15;
+      letter-spacing:-.01em;
+      text-align:left;
+    }
+    .m-h2-center {
+      display:block;
+      text-align:center;
+    }
+    .m-dim { color:rgba(255,255,255,.28); }
+
+    .m-subrow {
+      margin-top:18px;
+      margin-left:30px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+    }
+    .m-subtext {
+      font-size:8px;
+      
+      line-height:1.65;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      flex:1;
+    }
+    .m-arrow {
+      flex-shrink:0;
+      width:32px; height:32px;
+      border:1px solid rgba(255,255,255,.25);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* ── Line 2: below text, above globe ── */
+    /* (reuses .m-line) */
+
+    /* ── Globe block ── */
+    .m-globe-block {
+      width:100%;
+      height:240px;
+      position:relative;
+      overflow:visible;
+    }
+    .m-globe-wrapper {
+      position:absolute;
+      width:240px; height:240px;
+      top:0; left:50%;
+      transform:translateX(-50%) rotate(158.67deg);
+    }
+
+    /* ── Line 3: footer top border ── */
+    /* (reuses .m-line) */
+
+    /* ── Footer zone: vertical lines + centered button ── */
+   .m-footer-zone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-engage-btn {
+  display: flex;
+  align-items: center;      /* vertical center */
+  justify-content: center;  /* horizontal center */
+  gap: 8px;                 /* space between text & svg */
+
+  padding: 10px 24px;
+  border: 1px solid rgba(255,255,255,.5);
+  font-size: 8px;
+  letter-spacing: .38em;
+  text-transform: uppercase;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .3s, color .3s;
+}
+
+.m-engage-btn svg {
+  display: block;
+}
+
+    /* ── Ascella text: below footer line with side margins ── */
+    .m-ascella {
+      padding:14px 30px 22px 24px;
+    }
+    .m-ascella p {
+      font-size:10px;
+      letter-spacing:.13em;
+      line-height:1.7;
+      text-transform:uppercase;
+      
+      text-align:left;
+    }
+  }
+
+  .dim { color:rgba(255,255,255,.3); }
+`;
+
+// ── Main Component ─────────────────────────────────────────────────────────────
+const Controlled = () => {
+  // Desktop globe ref
+  const dGlobeRef = useRef<HTMLDivElement>(null);
+  const [dImgEl, setDImgEl] = useState<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const el = dGlobeRef.current?.querySelector('img') as HTMLImageElement | null;
+    if (el) setDImgEl(el);
+  }, []);
+
+  // Mobile globe ref
+  const mGlobeRef = useRef<HTMLDivElement>(null);
+  const [mImgEl, setMImgEl] = useState<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const el = mGlobeRef.current?.querySelector('img') as HTMLImageElement | null;
+    if (el) setMImgEl(el);
   }, []);
 
   return (
-    <div
-      ref={wrapRef}
-      style={{
-        position:  'absolute',
-        width:     '761px',
-        height:    '677px',
-        top:       '30px',
-        left:      '-200px',
-        transform: 'rotate(158.67deg)',
-      }}
-    >
-      <img
-        src="/globe2.png"
-        alt="Globe Decor"
-        crossOrigin="anonymous"
-        className="absolute opacity-55 object-contain max-w-none"
-        style={{ width: '100%', height: '100%', display: 'block' }}
-      />
-      <WaveCanvas imgEl={imgEl} />
-    </div>
-  );
-}
+    <>
+      <style>{styles}</style>
 
-// ── Main Component ────────────────────────────────────────────────────────────
-const Controlled = () => {
-  return (
-    <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col">
+      <section className="ctrl-section">
 
-      {/* --- GRID LINES --- */}
-      <div className="absolute left-0 w-full h-px bg-white/20 z-50" />
-      <div className="absolute top-[100px] left-0 w-full h-px bg-white/20 z-50" />
-      <div className="absolute bottom-[120px] left-0 w-full h-px bg-white/20 z-50" />
-      <div className="absolute top-0 left-6 sm:left-10 lg:left-24 w-px h-full bg-white/20 z-50" />
-      <div className="absolute top-0 right-6 sm:right-10 lg:right-24 w-px h-full bg-white/20 z-50" />
+        {/* ════════════════════════════════════════
+            DESKTOP LAYOUT (hidden on mobile)
+        ════════════════════════════════════════ */}
 
-      {/* --- IMAGE CONTAINER --- */}
-      <div className="absolute top-[100px] bottom-[120px] left-6 sm:left-10 lg:left-24 right-6 sm:right-10 lg:right-24 overflow-hidden z-10">
-        <ParticleGlobe />
-      </div>
+        {/* Grid lines */}
+        <div className="d-gl-top" />
+        <div className="d-gl-nav" />
+        <div className="d-gl-foot" />
+        <div className="d-gl-left" />
+        <div className="d-gl-right" />
 
-      {/* --- CONTENT LAYER --- */}
-      <div className="relative z-40 flex flex-col h-screen pointer-events-none">
-
-        <div className="h-[100px] w-full" />
-
-        <div className="flex-grow flex flex-col justify-center items-end px-10 lg:px-40">
-          <div className="max-w-4xl pr-45">
-            <h2 className="text-[20px] md:text-[40px] lg:text-[48px] leading-[1.05] tracking-tight">
-              Controlled execution <br />
-            </h2>
-            <h2 className="pl-25">units for <span className="text-white/30">complex</span></h2>
-            <h2 className="pl-25 text-white/30">Operating Environments</h2>
-
-            <div className="mt-8 flex items-center justify-end gap-8 group cursor-pointer pointer-events-auto">
-              <p className="text-[10px] text-white/50 max-w-[300px] leading-relaxed uppercase tracking-[0.2em] text-left">
-                Early-stage execution succeeds or fails based on operating structure.
-              </p>
-              <div className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-700">
-                <span className="text-2xl font-light">↓</span>
-              </div>
-            </div>
+        {/* Globe */}
+        <div className="d-globe-container">
+          <div ref={dGlobeRef} className="d-globe-wrapper">
+            <img src="/globe2.png" alt="" crossOrigin="anonymous"
+              style={{position:'absolute',width:'100%',height:'100%',display:'block',opacity:0.55,objectFit:'contain'}} />
+            <WaveCanvas imgEl={dImgEl} />
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="h-[100px] flex items-center justify-between px-8 lg:px-32 relative z-50 pointer-events-auto">
-          <Link href="/engageWithUs">
-            <button className="relative px-8 py-4 border border-white/10 text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all">
-              Engage With Us <span className="ml-2 opacity-30">:::</span>
-            </button>
-          </Link>
-          <p className="hidden md:block text-[9px] tracking-[0.15em] max-w-[320px] text-right uppercase leading-tight">
-            The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.
-          </p>
+        {/* Content */}
+        <div className="d-content">
+          <div className="d-nav-sp" />
+          <div className="d-main">
+            <div className="d-inner">
+              <h2 className="d-h2">
+                Controlled execution
+                <span className="d-indent">units for <span className="dim">complex</span></span>
+                <span className="d-indent dim">operating environments</span>
+              </h2>
+              <div className="d-subrow">
+                <p className="d-subtext">Early-stage execution succeeds or fails based on operating structure.</p>
+                <div className="d-arrow"><span style={{fontSize:'20px',fontWeight:300}}>↓</span></div>
+              </div>
+            </div>
+          </div>
+          <div className="d-foot-sp" />
         </div>
-      </div>
 
-    </section>
+        {/* Footer */}
+        <footer className="d-footer">
+          <Link href="/engageWithUs">
+            <button className="d-engage">Engage With Us <span style={{marginLeft:'8px',opacity:.3}}>:::</span></button>
+          </Link>
+          <p className="d-ascella">The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
+        </footer>
+
+        {/* ════════════════════════════════════════
+            MOBILE LAYOUT (hidden on desktop)
+            Pure document flow — no absolute tricks
+        ════════════════════════════════════════ */}
+        <div className="m-layout">
+
+          {/* Line 1 — top of section */}
+          <div className="m-line" />
+
+          {/* Text block */}
+          <div className="m-text-block">
+            <h2 className="m-h2">
+              Controlled execution
+              <span className="m-h2-center">units for <span className="m-dim">complex</span></span>
+              <span className="m-h2-center m-dim">operating environments</span>
+            </h2>
+            <div className="m-subrow">
+              <p className="m-subtext">Early-stage execution succeeds or fails based on operating structure.</p>
+              <div className="m-arrow"><span style={{fontSize:'16px',fontWeight:300}}>↓</span></div>
+            </div>
+          </div>
+
+          {/* Line 2 — below text, above globe */}
+          
+
+          {/* Globe */}
+          <div className="m-globe-block">
+            <div ref={mGlobeRef} className="m-globe-wrapper">
+              <img src="/globe2.png" alt="" crossOrigin="anonymous"
+                style={{position:'absolute',width:'100%',height:'100%',display:'block',opacity:0.55,objectFit:'contain'}} />
+              <WaveCanvas imgEl={mImgEl} />
+            </div>
+          </div>
+
+          {/* Line 3 — above footer */}
+          <div className="m-line" />
+          
+
+          {/* Footer zone */}
+          <div className="m-footer-zone">
+            
+            <Link href="/engageWithUs">
+              <button className="m-engage-btn">
+                Engage With Us <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="2" height="2" fill="#3D3D3D"/>
+<rect y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="12" y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" y="12" width="2" height="2" fill="#3D3D3D"/>
+<rect x="12" y="12" width="2" height="2" fill="#3D3D3D"/>
+</svg>
+
+              </button>
+            </Link>
+           
+
+          </div>
+          <div className="m-line" />
+
+          {/* Ascella text */}
+          <div className="m-ascella">
+            <p>The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
+          </div>
+
+        </div>
+
+      </section>
+    </>
   );
 };
 
