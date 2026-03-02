@@ -49,7 +49,7 @@ const ORGANISATION_TYPES: OrganisationType[] = [
 
   },
   {
-    title: "Enterprises",   
+    title: "Enterprises",
     img: "/whoWeWorkWith/floating3.svg",
     subHeading:
       "Large organisations managing distributed teams, layered decision hierarchies, and complex cross functional dependencies.",
@@ -81,24 +81,29 @@ export default function OrganisationTypes() {
   const [activeRow, setActiveRow] = useState<number | null>(null);
 
   return (
-    <section className="mx-auto max-w-7xl px-4">
-      <div className="lg:py-32 ">
-        <div className="mb-20 flex justify-between gap-20 lg:gap-10 items-center">
-          <Reveal variants={slideInFromLeft(0.2)}>
+    <section className="mx-auto max-w-7xl px-10">
+      <div className="lg:my-32 ">
+        <div className="mb-20 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-10 lg:items-center">
+          <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:block ">
             <p className="text-[16px] max-w-xs leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
-
             </p>
           </Reveal>
           <Reveal variants={slideInFromRight(0.2)}>
             <Heading text="ORGANISATION TYPES" />
-            <p className="text-[20px] md:text-[24px] lg:text-[36px] max-w-2xl leading-snug mt-10">
+            <p className="text-[20px] md:text-[24px] lg:text-[36px] max-w-2xl leading-6 sm:leading-9 mt-10">
               Ascella partners with organisations where execution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
+            </p>
+          </Reveal>
+          <Reveal variants={slideInFromLeft(0.2)} className="lg:hidden block ">
+            <p className="text-[12px] max-w-xs leading-snug">
+              These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
             </p>
           </Reveal>
         </div>
 
-        <div className="flex flex-col">
+        {/* Desktop */}
+        <div className="hidden lg:flex flex-col">
           {ORGANISATION_TYPES.map((type, index) => {
             const isActive = activeRow === index;
 
@@ -149,6 +154,93 @@ export default function OrganisationTypes() {
 
                     <h2 className="text-xl">Typical Need</h2>
                     <p className="font-light text-gray-200 text-sm leading-tight lg:pr-14">{type.typicalNeed}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          <div className="border-t border-color" />
+        </div>
+
+        {/* mobile and tab*/}
+        <div className="flex flex-col lg:hidden">
+          {ORGANISATION_TYPES.map((type, index) => {
+            const isActive = activeRow === index;
+
+            return (
+              <div
+                key={type.title}
+                className="border-t border-color py-6"
+              >
+                {/* Header */}
+                <button
+                  onClick={() =>
+                    setActiveRow(isActive ? null : index)
+                  }
+                  className="w-full text-left flex justify-between items-start gap-6"
+                >
+                  <div className="flex flex-col gap-3">
+                    <h2 className="text-[22px] md:text-[26px] leading-snug">
+                      {type.title}
+                    </h2>
+                    <p className="text-[13px] md:text-[15px] text-gray-200 leading-relaxed max-w-xl">
+                      {type.subHeading}
+                    </p>
+                  </div>
+
+                  {/* Expand Icon */}
+                  <span
+                    className={`text-2xl leading-none transition-transform duration-300 ${isActive ? "rotate-45" : ""
+                      }`}
+                  >
+                    +
+                  </span>
+                </button>
+
+                {/* Accordion Content */}
+                <div
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${isActive
+                    ? "max-h-[1200px] opacity-100 mt-8"
+                    : "max-h-0 opacity-0"
+                    }`}
+                >
+                  <div className="flex flex-col md:flex-row gap-8">
+
+                    <div className="relative w-full md:w-[220px] h-[400px] md:h-[250px] shrink-0 ">
+                      <Image
+                        src={type.img}
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* Right Content */}
+                    <div className="flex flex-col gap-6">
+                      <div>
+                        <h4 className="text-b2 uppercase tracking-wide  mb-2">
+                          Engagement Focus
+                        </h4>
+                        <p className="text-b3 text-gray-200 font-light leading-relaxed">
+                          {type.engagementFocus}
+                        </p>
+                      </div>
+                      {type.icon && (
+                        <div className="pt-2">
+                          {type.icon}
+                        </div>
+                      )}
+
+                      <div>
+                        <h4 className="text-b2 uppercase tracking-wide mb-2">
+                          Typical Need
+                        </h4>
+                        <p className="text-b3 text-gray-200 font-light leading-relaxed">
+                          {type.typicalNeed}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

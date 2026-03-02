@@ -1,8 +1,8 @@
 export default function Hero() {
     return (
         <section className="border-y border-color">
-            <div className="relative flex flex-col gap-10 py-30 px-10 border-x border-color mx-25">
-                <div className="absolute right-0 top-0.5">
+            <div className="relative flex flex-col gap-10 mx-auto max-w-7xl px-10 py-20 border-x border-color">
+                <div className="absolute -z-1 right-0 top-0.5">
                     <svg width="830" height="587" viewBox="0 0 830 587" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 393.982 -26)" stroke="url(#paint0_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />
                         <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 328.202 10)" stroke="url(#paint1_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />

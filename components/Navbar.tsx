@@ -80,7 +80,7 @@ const Navbar = () => {
   return (
     <>
       <header className="sticky top-0 w-full bg-black z-50 ">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-20">
+        <div className="mx-auto max-w-7xl px-10 sm:px-6 h-16 sm:h-20">
           <div className="flex justify-between items-center h-full">
 
             {/* Logo */}
