@@ -8,7 +8,14 @@ const navLinks = [
   { label: "Execution Arms", href: "/execution-arms" },
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
-  { label: "Careers", href: "/careers" },
+  {
+    label: "Careers",
+    href: "/careers",
+    children: [
+      { label: "Life at Ascella", href: "/careers/life-at-ascella" },
+      { label: "Explore Opportunities", href: "/careers/opportunities" },
+    ],
+  },
 ];
 
 // ── Arrow icon (↗) used on each nav link row ──
@@ -96,22 +103,41 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center font-medium">
-              <div className="w-px mx-3 h-5 rotate-30 bg-gray-400/40" />
-              {navLinks.map((link, index) => (
-                <div key={link.href} className="flex items-center text-white">
-                  <Link
-                    href={link.href}
-                    className="px-2 text-b2 hover:scale-[1.1] transition ease-in"
-                  >
-                    {link.label}
-                  </Link>
-                  {index !== navLinks.length - 1 && (
-                    <div className="w-px mx-3 h-5 rotate-30 bg-white/40" />
-                  )}
-                </div>
-              ))}
-            </nav>
+            <nav className="hidden md:flex items-center font-medium relative">
+  <div className="w-px mx-3 h-5 rotate-30 bg-gray-400/40" />
+
+  {navLinks.map((link, index) => (
+    <div key={link.href} className="relative group flex items-center text-white">
+      
+      {/* Main Nav Link */}
+      <Link
+        href={link.href}
+        className="px-2 text-b2 hover:scale-[1.1] transition ease-in"
+      >
+        {link.label}
+      </Link>
+
+      {/* Dropdown (only if children exist) */}
+      {link.children && (
+        <div className="absolute top-full left-0 mt-4 w-56 bg-black border border-[#2a2a2a] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          {link.children.map((child) => (
+            <Link
+              key={child.href}
+              href={child.href}
+              className="block px-5 py-3 text-sm text-white hover:bg-[#111] transition-colors"
+            >
+              {child.label}
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {index !== navLinks.length - 1 && (
+        <div className="w-px mx-3 h-5 rotate-30 bg-white/40" />
+      )}
+    </div>
+  ))}
+</nav>
 
             {/* Desktop CTA */}
             <Link
