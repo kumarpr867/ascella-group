@@ -208,10 +208,12 @@ function ParticleImage({ src, alt, className }: { src: string; alt: string; clas
 export default function Engagement() {
     return (
         <section className="flex flex-col">
+
             <div className="border-y border-color">
-                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
+                <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
             </div>
-            <div className="mx-auto w-full max-w-7xl flex flex-col py-10 px-4 sm:px-6 md:px-15 border-x border-color">
+
+            <div className="xl:mx-auto mx-10 full max-w-7xl flex flex-col py-10 px-4 sm:px-6 md:px-10 border-x border-color">
                 <div className="flex justify-center md:justify-between mb-10 md:mb-15">
                     <h1 className="uppercase text-xl sm:text-2xl text-gray-200 text-thin text-center md:text-left">
                         <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
@@ -222,7 +224,7 @@ export default function Engagement() {
                     </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
-                    <div className="w-full md:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
+                    <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
 
                         <ParticleImage
                             src="/engagementCircle.svg"
@@ -230,17 +232,17 @@ export default function Engagement() {
                             className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px]"
                         />
 
-                        <div className="flex justify-between px-2 sm:px-6 gap-8 sm:gap-12 md:gap-16 w-full">
+                        <div className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
                             <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                                <h3 className="text-b2 leading-tight text-sm sm:text-base">Not sure where <br /> to begin?</h3>
-                                <p className="font-thin leading-tight text-xs sm:text-sm">Initial engagement focuses on alignment, not sales discussions.</p>
+                                <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
+                                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
                                 <Link href={"/"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
                             </div>
-                            <div className="flex flex-col gap-5">
-                                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
-                                <p className="font-thin leading-tight min-h-20">The first step focuses on clarity and fit.</p>
 
-                                <p className="block md:hidden">+91 16045 10860</p>
+                            <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
+                                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
+                                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
+                                <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
                             </div>
                         </div>
                     </div>
@@ -282,8 +284,9 @@ export default function Engagement() {
                     </form>
                 </div>
             </div>
+            
             <div className="border-t border-color">
-                <div className="mx-auto max-w-7xl py-15 border-x border-color"></div>
+                <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
             </div>
         </section>
     )

@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Operating Model", href: "/how-ascella-operates" },
@@ -9,13 +11,22 @@ const navLinks = [
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
   {
-    label: "Careers",
-    href: "/careers",
+    label: "Insights ",
+    href: "/insights/case-studies",
     children: [
-      { label: "Life at Ascella", href: "/careers/life-at-ascella" },
-      { label: "Explore Opportunities", href: "/careers/opportunities" },
+      { label: "Case Studies", href: "/insights/case-studies" },
+      { label: "Blogs", href: "/insights/blogs" },
     ],
   },
+  {
+    label: "Careers ",
+    href: "/careers",
+    children: [
+      { label: "Life at Ascella", href: "/careers" },
+      { label: "Explore Opportunities", href: "/JD-Page" },
+    ],
+  },
+
 ];
 
 // ── Arrow icon (↗) used on each nav link row ──
@@ -82,11 +93,32 @@ const MenuIcon = () => (
 );
 
 const Navbar = () => {
+  const [openDesktopDropdown, setOpenDesktopDropdown] = useState<string | null>(null);
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const desktopRef = useRef<HTMLDivElement | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        desktopRef.current &&
+        !desktopRef.current.contains(event.target as Node)
+      ) {
+        setOpenDesktopDropdown(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   return (
     <>
-      <header className="sticky top-0 w-full bg-black z-50 ">
+      <header className="top-0 w-full bg-black z-50 ">
         <div className="mx-auto max-w-7xl px-10 sm:px-6 h-16 sm:h-20">
           <div className="flex justify-between items-center h-full">
 
@@ -103,46 +135,91 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center font-medium relative">
-  <div className="w-px mx-3 h-5 rotate-30 bg-gray-400/40" />
+            <nav className="hidden lg:flex items-center font-medium relative">
+              <div className="w-px mx-3 h-5 rotate-30 bg-gray-200" />
 
-  {navLinks.map((link, index) => (
-    <div key={link.href} className="relative group flex items-center text-white">
-      
-      {/* Main Nav Link */}
-      <Link
-        href={link.href}
-        className="px-2 text-b2 hover:scale-[1.1] transition ease-in"
-      >
-        {link.label}
-      </Link>
+              {navLinks.map((link, index) => {
+                const isActive =
+                  pathname === link.href ||
+                  link.children?.some((child) => pathname === child.href);
 
-      {/* Dropdown (only if children exist) */}
-      {link.children && (
-        <div className="absolute top-full left-0 mt-4 w-56 bg-black border border-[#2a2a2a] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-          {link.children.map((child) => (
-            <Link
-              key={child.href}
-              href={child.href}
-              className="block px-5 py-3 text-sm text-white hover:bg-[#111] transition-colors"
-            >
-              {child.label}
-            </Link>
-          ))}
-        </div>
-      )}
+                const isOpen = openDesktopDropdown === link.label;
 
-      {index !== navLinks.length - 1 && (
-        <div className="w-px mx-3 h-5 rotate-30 bg-white/40" />
-      )}
-    </div>
-  ))}
-</nav>
+                return (
+                  <div
+                    key={link.label}
+                    className="relative flex items-center text-white"
+                    ref={isOpen ? desktopRef : null}
+                  >
+                    <button
+                      onClick={() =>
+                        link.children
+                          ? setOpenDesktopDropdown(isOpen ? null : link.label)
+                          : null
+                      }
+                      className={`px-2 text-b2 flex items-center gap-1 transition-colors ${isActive ? "text-white" : "text-gray-200 hover:text-white"
+                        }`}
+                      aria-haspopup={link.children ? "menu" : undefined}
+                      aria-expanded={link.children ? isOpen : undefined}
+                    >
+                      <Link href={link.href}>{link.label}</Link>
+
+                      {link.children && (
+                        <svg
+                          className={`w-3 h-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+                            }`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M5 7l5 6 5-6H5z" />
+                        </svg>
+                      )}
+                    </button>
+
+                    {/* Blur Glass Animated Dropdown */}
+                    <AnimatePresence>
+                      {link.children && isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute left-0 top-full mt-3 w-max overflow-hidden z-50"
+                        >
+                          <div className="bg-white/5 backdrop-blur-xl border border-color rounded-xl shadow-2xl">
+                            {link.children.map((child) => {
+                              const childActive = pathname === child.href;
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={() => setOpenDesktopDropdown(null)}
+                                  className={`block px-5 py-3 text-sm transition-colors ${childActive
+                                      ? "text-white bg-white/10"
+                                      : "text-gray-300 hover:text-white hover:bg-white/10"
+                                    }`}
+                                >
+                                  {child.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {index !== navLinks.length - 1 && (
+                      <div className="w-px mx-3 h-5 rotate-30 bg-gray-200" />
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
 
             {/* Desktop CTA */}
             <Link
               href="/engageWithUs"
-              className="hidden md:flex group items-center gap-3 font-medium text-white ml-6"
+              className="hidden lg:flex group items-center gap-3 font-medium text-white ml-6"
             >
               <span>Connect</span>
               <span className="w-5 h-5 flex items-center justify-center">
@@ -166,7 +243,7 @@ const Navbar = () => {
 
             {/* Mobile Hamburger — custom icon */}
             <button
-              className="md:hidden flex items-center px-2 py-1 text-white"
+              className="lg:hidden flex items-center px-2 py-1 text-white"
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
             >
@@ -176,20 +253,20 @@ const Navbar = () => {
         </div>
       </header>
 
+
+
       {/* ── FULL-SCREEN MOBILE DRAWER OVERLAY ── */}
       {/* Backdrop */}
       <div
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
       />
 
       {/* Drawer Panel — slides in from left */}
       <div
-        className={`fixed top-0 left-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out md:hidden ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* ── Top bar: Logo + Close ── */}
         <div className="flex items-center justify-between px-7 pt-7 pb-6">
@@ -224,19 +301,70 @@ const Navbar = () => {
 
         {/* ── Nav Links ── */}
         <nav className="flex flex-col flex-1 px-7 pt-2 overflow-y-auto">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="group flex items-center justify-between py-6 border-b border-[#2a2a2a] transition-colors hover:text-gray-300"
-            >
-              <span className="text-[22px] text-white font-light tracking-tight">
-                {link.label}
-              </span>
-              <ArrowIcon />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isOpen = openMobileDropdown === link.label;
+
+            return (
+              <div key={link.label} className="border-b border-[#2a2a2a]">
+                <div
+                  className="flex items-center justify-between py-6 cursor-pointer"
+                  onClick={() => {
+                    if (link.children) {
+                      setOpenMobileDropdown(isOpen ? null : link.label);
+                    } else {
+                      setMenuOpen(false);
+                    }
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    className="text-[22px] text-white font-light tracking-tight"
+                  >
+                    {link.label}
+                  </Link>
+
+                  {link.children ? (
+                    <svg
+                      className={`w-4 h-4 text-white transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+                        }`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M5 7l5 6 5-6H5z" />
+                    </svg>
+                  ) : (
+                    <ArrowIcon />
+                  )}
+                </div>
+
+                <AnimatePresence>
+                  {link.children && isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setOpenMobileDropdown(null);
+                          }}
+                          className="block pl-6 py-3 text-[16px] text-gray-400 hover:text-white transition-colors"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
           {/* Final border after last item */}
           <div className="border-b border-[#2a2a2a]" />
         </nav>
@@ -251,8 +379,8 @@ const Navbar = () => {
             <span>Engage With Us</span>
             {/* Dots icon */}
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <circle cx="3"  cy="9" r="1.5" fill="white" opacity="0.6" />
-              <circle cx="9"  cy="9" r="1.5" fill="white" opacity="0.6" />
+              <circle cx="3" cy="9" r="1.5" fill="white" opacity="0.6" />
+              <circle cx="9" cy="9" r="1.5" fill="white" opacity="0.6" />
               <circle cx="15" cy="9" r="1.5" fill="white" opacity="0.6" />
             </svg>
           </Link>

@@ -262,7 +262,7 @@ const points = [
 // ── HowWeOperate ──────────────────────────────────────────────────────────────
 export default function HowWeOperate() {
   return (
-    <section className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+    <section className="mx-10 xl:mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
 
       {/* ══ DESKTOP lg+ ══ */}
       <div className="hidden lg:flex items-start gap-16 xl:gap-24">

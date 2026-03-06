@@ -17,7 +17,7 @@ export default function Arms() {
   }, [total]);
 
   return (
-    <section className="w-full flex flex-col items-center justify-center py-16 md:py-24 px-4 bg-black font-sans">
+    <section className="w-full flex flex-col items-center justify-center py-16 md:py-24 px-4">
       
       {/* Upper Header */}
       <div className="text-center max-w-3xl mb-10 md:mb-16">

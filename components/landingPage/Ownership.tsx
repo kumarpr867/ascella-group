@@ -406,7 +406,7 @@ function OwnershipSection({
       ref={ref}
       className="relative flex flex-col items-start
         mx-0 my-0
-        pt-6 pb-10 px-5
+        pt-6 pb-10 px-10
         sm:pt-8 sm:pb-16 sm:px-8
         md:pt-12 md:pb-24 md:px-12
         lg:pt-16 lg:pb-32 lg:px-16
@@ -552,7 +552,7 @@ export default function Ownership() {
 
         {/* ══ MOBILE <sm ══ */}
         <div className="sm:hidden">
-          <div className="px-4 pt-8 pb-4 border-b border-white/10">
+          <div className="px-10 pt-8 pb-4 border-b border-white/10">
             <PlusHeading text="OWNERSHIP" />
           </div>
           <div className="py-2">
@@ -562,13 +562,13 @@ export default function Ownership() {
               </div>
             ))}
           </div>
-          <div className="px-4 pb-10"><PartialOutlineBtn text="Explore More" /></div>
+          <div className="px-10 pb-10"><PartialOutlineBtn text="Explore More" /></div>
         </div>
 
       </div>
 
-      <div className="relative h-px w-full">
-        <div className="mx-8 h-full bg-white/10" />
+      <div className="relative  h-px w-full">
+        <div className="mx-10 h-full bg-white/10" />
       </div>
     </section>
   );

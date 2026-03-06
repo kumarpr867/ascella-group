@@ -1,0 +1,154 @@
+import { slugify } from "@/utils/slugify";
+
+interface Blog {
+    [x: string]: any;
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    date: string;
+    category: string;
+    featured?: boolean;
+}
+
+
+export const blogs: Blog[] = [
+    {
+        id: 1,
+        title: "Smart City AI Data Lake city analytics platform for traffic, safety, and urban data management lorem ipsum dolor sit ",
+        description: "AI-powered smart city analytics platform for traffic, safety, and urban data management lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "12 Feb",
+        category: "AI",
+        featured: true,
+    },
+    {
+        id: 2,
+        title: "Enterprise Cyber Defense System  platform protecting enterprise infrastructure lorem ipsum dolor sit amet, ",
+        description: "Real-time threat detection platform protecting enterprise infrastructure lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "18 Feb",
+        category: "Cybersecurity",
+        featured: true,
+    },
+    {
+        id: 3,
+        title: "Cloud Infrastructure Modernization e to scalable cloud architecture lorem ipsum dolor sit amet, consectetur ",
+        description: "Migrated legacy infrastructure to scalable cloud architecture lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "20 Feb",
+        category: "Technology",
+        featured: true,
+    },
+
+    {
+        id: 4,
+        title: "AI Recruitment Automation Platform  with jobs using predictive hiring models lorem ipsum dolor sit amet, consectetur ",
+        description: "AI engine matching candidates with jobs using predictive hiring models lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "22 Feb",
+        category: "Staffing",
+    },
+    {
+        id: 5,
+        title: "Digital Marketing Performance Suite  optimizing campaign ROI lorem ipsum dolor sit amet, consectetur adipiscing ",
+        description: "Marketing automation dashboard optimizing campaign ROI lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "25 Feb",
+        category: "Marketing",
+    },
+    {
+        id: 6,
+        title: "Enterprise Sales Optimization gence and forecasting platform lorem ipsum dolor sit amet, consectetur adipiscing ",
+        description: "AI-powered sales intelligence and forecasting platform lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "28 Feb",
+        category: "Sales",
+    },
+
+    {
+        id: 7,
+        title: "AI Fraud Detection Engine els detecting financial fraud in real time lorem ipsum dolor sit amet, consectetur ",
+        description: "Machine learning models detecting financial fraud in real time lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "03 Mar",
+        category: "AI",
+    },
+    {
+        id: 8,
+        title: "Zero Trust Security Architecture amework based on zero trust principles lorem ipsum dolor sit amet, consectetur ",
+        description: "Enterprise cybersecurity framework based on zero trust principles lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "05 Mar",
+        category: "Cybersecurity",
+    },
+    {
+        id: 9,
+        title: "Enterprise Data Platform nabling analytics across multiple departments lorem ipsum dolor sit amet, consectetur ",
+        description: "Unified data lake enabling analytics across multiple departments lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "08 Mar",
+        category: "Technology",
+    },
+    {
+        id: 10,
+        title: "Global Talent Matching Platform form connecting companies with global talent lorem ipsum dolor sit amet, consectetur ",
+        description: "AI-driven recruitment platform connecting companies with global talent lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "11 Mar",
+        category: "Staffing",
+    },
+    {
+        id: 11,
+        title: "AI Customer Insights Engine ystem analyzing consumer behavior patterns lorem ipsum dolor sit amet, consectetur ",
+        description: "Predictive analytics system analyzing consumer behavior patterns lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "14 Mar",
+        category: "AI",
+    },
+    {
+        id: 12,
+        title: "Security Operations Automation se system for enterprise SOC teams lorem ipsum dolor sit amet, consectetur adipiscing ",
+        description: "Automated incident response system for enterprise SOC teams lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "16 Mar",
+        category: "Cybersecurity",
+    },
+    {
+        id: 13,
+        title: "E-commerce Growth Marketing Strategy increasing online conversion rates lorem ipsum dolor sit amet, consectetur ",
+        description: "Digital marketing optimization increasing online conversion rates lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "19 Mar",
+        category: "Marketing",
+    },
+    {
+        id: 14,
+        title: "B2B Sales Intelligence Platform ving pipeline forecasting accuracy lorem ipsum dolor sit amet, consectetur ",
+        description: "Sales analytics tool improving pipeline forecasting accuracy lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "21 Mar",
+        category: "Sales",
+    },
+    {
+        id: 15,
+        title: "AI-Driven Customer Support Bot automating customer support workflows lorem ipsum dolor sit amet, consectetur ",
+        description: "Conversational AI system automating customer support workflows lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "24 Mar",
+        category: "AI",
+    },
+    {
+        id: 15,
+        title: "The Definitive Guide to Securing Operational Technology (OT): Bridging the Air Gap",
+        description: "Conversational AI system automating customer support workflows lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        image: "/insights/case.svg",
+        date: "24 Mar",
+        category: "AI",
+    },
+];
+
+export const blogsWithSlug = blogs.map((blog) => ({
+  ...blog,
+  slug: slugify(blog.title),
+}))

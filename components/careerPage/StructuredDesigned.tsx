@@ -1,8 +1,10 @@
+"use client";
+import { useRouter } from "next/navigation";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 
-export default function StructuredDesigned() {
+export default function EngagementBegins() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-25 my-30">
+    <section className="relative min-h-screen flex flex-col items-center justify-center mx-auto max-w-7xl px-10 xl:px-0 my-30">
       <HeaderSection />
       <ArchitectureDiagram />
       <ExploreNowBtn />
@@ -12,13 +14,13 @@ export default function StructuredDesigned() {
 
 function HeaderSection() {
   return (
-    <div className="flex flex-col items-center text-center gap-4 mb-24">
-      <h3 className="">
-        WORKING AT ASCELLA IS 
-        <br />STRUCTURED BY DESIGN.
+    <div className="flex flex-col items-center text-center gap-6 mb-12 md:mb-24">
+      <h3 className="text-[20px] sm:text-[24px] md:text-[36px] font-light">
+        Centralised Career<br />
+        Communication Channel
       </h3>
-      <p className="text-b2 max-w-1/2">
-       Ascella offers an operating environment for professionals who value clarity, discipline, and accountability in execution.
+      <p className="text-[12px] sm:text-[16px] md:max-w-1/2">
+        All applications, candidate correspondence, and role coordination are handled through a single governance-led process to ensure consistency, discretion, and accountability.
       </p>
     </div>
   );
@@ -26,7 +28,7 @@ function HeaderSection() {
 
 function ArchitectureDiagram() {
   return (
-    <div className="relative w-full h-[700px] mx-auto overflow-hidden">
+    <div className="relative w-full h-[500px] lg:h-[700px] mx-auto overflow-hidden mt-10">
       <div className="absolute inset-0">
         <VerticalLine />
         <HorizontalText />
@@ -45,26 +47,60 @@ function VerticalLine() {
 function HorizontalText() {
   return (
     <>
-      <div className="absolute uppercase text-[36px] text-gray-200 left-0 top-1/2 w-full border-b border-color -translate-y-25">
-        Single point of contact 
-      </div>
-      <div className="absolute  text-[36px] h-12 left-0 top-1/2 w-full -translate-y-12 border-b border-color flex justify-between items-baseline">
-        <div className="uppercase">
-          for career-related 
+      <div className="hidden lg:block">
+        <div className="absolute uppercase lg:text-[16px] xl:text-[24px] text-gray-200 left-0 top-1/2 w-full border-b border-color -translate-y-12   xl:-translate-y-20" >
+          Single point of contact
         </div>
-        <div className="text-[24px] text-b1">Email- A@ascella.group</div>
+        <div className="absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-1/2 w-full -translate-y-6 xl:-translate-y-10 border-b border-color flex justify-between items-baseline">
+          <div>
+            for career-related
+          </div>
+          <div className="lg:text-[16px] xl:text-[24px] ">Email: careers@ascella.group</div>
+        </div>
+        <div className="absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-1/2 w-full text-gray-200 border-b border-color flex justify-between " >
+          <div className="text-white">communication</div>
+          <div className="text-[16px]">All career coordination is managed centrally.</div>
+        </div>
       </div>
-      <div className="absolute  text-[24px] left-0 top-1/2 w-full  border-b border-color flex justify-between">
-        <div className="text-[36px] uppercase"> communication</div>
-        <div className="text-[12px] text-b1 pt-4">All career coordination is managed centrally.</div>
+
+      <div className="lg:hidden block">
+        <div className="flex flex-col text-center items-center absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-0 w-full">
+          <div className=" text-gray-200" >
+            Single point of contact
+          </div>
+
+          <div>
+            for career-related <br />communication
+          </div>
+        </div>
+
+        <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full h-10 border-b border-color -translate-y-20" >
+          <div className="flex items-end w-full justify-center h-full z-1">
+            Email: careers@ascella.group
+          </div>
+        </div>
+        <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-1/2 w-full -translate-y-6 border-b border-color flex ">
+          <div className="hidden sm:flex items-center w-full justify-center z-2">
+            All career coordination is managed centrally.
+          </div>
+          <div className="sm:hidden flex items-center w-full justify-center z-2">
+            All career coordination is managed
+          </div>
+        </div>
+        <div className="absolute left-0 top-1/2 w-full h-8 sm:h-10 border-b border-color" >
+          <div className="sm:hidden uppercase flex items-center w-full justify-center z-2 text-[14px] sm:text-[16px]">
+             centrally.
+          </div>
+        </div>
       </div>
+
     </>
   );
 }
 
 function DiagonalLines() {
   return (
-    <div className="absolute left-1/2 top-1/2 w-[700px] h-[700px] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+    <div className="absolute left-1/2 top-1/2 w-[500px] lg:w-[700px] h-[500px] lg:h-[700px] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
       <div className="absolute inset-0">
         <div className="absolute left-0 top-1/2 w-full h-px bg-gray-400 rotate-45 origin-center" />
         <div className="absolute left-0 top-1/2 w-full h-px bg-gray-400 -rotate-45 origin-center" />
@@ -74,13 +110,17 @@ function DiagonalLines() {
 }
 
 function ExploreNowBtn() {
+  const router = useRouter();
   return (
-    <div className="max-w-md flex flex-center flex-col gap-2">
-      <p className="text-b1 text-gray-200 text-center">
-        Career-related enquiries are coordinated centrally to ensure consistency, confidentiality, and structured handling of all applications and role-related communication.
+    <div className="max-w-md flex flex-center flex-col gap-4">
+      <p className="text-[12px] text-gray-200 text-center">
+        Career enquiries are routed through a structured review framework to maintain clarity, control, and defined ownership across every interaction.
       </p>
       <div>
-        <PartialOutlineBtn text="Be a part of ascella" />
+        <PartialOutlineBtn text="Join Ascella"
+          onClick={() => {
+            router.push(`/JD-Page`);
+          }} />
       </div>
     </div>
   );

@@ -112,7 +112,7 @@ export default function OrganisationTypes() {
                 key={type.title}
                 onMouseEnter={() => setActiveRow(index)}
                 onMouseLeave={() => setActiveRow(null)}
-                className="relative grid grid-cols-1 md:grid-cols-[1fr_172px_1fr] gap-y-10 lg:gap-x-20 mx-auto py-10 lg:py-16 border-t  border-color overflow-visible"
+                className="relative grid lg:grid-cols-[1fr_170px_0.8fr] xl:grid-cols-[1fr_172px_1fr] gap-y-10 lg:gap-x-20 mx-auto py-10 lg:py-16 border-t  border-color overflow-visible"
 
               >
                 <div className="flex flex-col gap-5">
@@ -138,7 +138,7 @@ export default function OrganisationTypes() {
                   </div>
                 </div>
 
-                <div className="relative w-full lg:w-md flex flex-col gap-6 lg:gap-10">
+                <div className="relative w-full  flex flex-col gap-6 lg:gap-10">
 
                   <div className="flex items-center">
                     {type.icon ? (
@@ -248,6 +248,11 @@ export default function OrganisationTypes() {
           })}
 
           <div className="border-t border-color" />
+          <div className="border-b  py-5 border-color justify-center flex">
+            <PartialOutlineBtn
+              text="View Startup Programme"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+"use client";
+import { useRouter } from "next/navigation";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 
 export default function EngagementBegins() {
@@ -12,8 +14,8 @@ export default function EngagementBegins() {
 
 function HeaderSection() {
   return (
-    <div className="flex flex-col items-center text-center gap-6 md:mb-24">
-      <h3 className="text-[20px] sm:text-[24px] md:text-[36px] font-light">
+    <div className="flex flex-col items-center text-center gap-6 mb-12 md:mb-24">
+      <h3 className="text-[20px] sm:text-[24px] md:text-[36px] font-light leading-normal">
         Engagement begins with <br />
         structural clarity, not transactional discussions.
       </h3>
@@ -63,10 +65,10 @@ function HorizontalText() {
 
       <div className="lg:hidden block">
         <div className="flex flex-col items-center absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-0 w-full">
-        <div className=" text-gray-200" >
-          OPERATING DESIGN FIRST.
-        </div>
-        
+          <div className=" text-gray-200" >
+            OPERATING DESIGN FIRST.
+          </div>
+
           <div>
             CONTROLLED DELIVERY FOLLOWS.
           </div>
@@ -78,12 +80,17 @@ function HorizontalText() {
           </div>
         </div>
         <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-1/2 w-full -translate-y-6 border-b border-color flex ">
-          <div className="flex items-center w-full justify-center z-1">
+          <div className="hidden sm:flex items-center w-full justify-center z-2">
             STRUCTURE AND ACCOUNTABILITY AT SCALE?
+          </div>
+          <div className="sm:hidden flex items-center w-full justify-center z-2">
+            STRUCTURE AND ACCOUNTABILITY
           </div>
         </div>
         <div className="absolute left-0 top-1/2 w-full h-8 sm:h-10 border-b border-color" >
-
+          <div className="sm:hidden uppercase flex items-center w-full justify-center z-2 text-[14px] sm:text-[16px]">
+            AT SCALE?
+          </div>
         </div>
       </div>
 
@@ -103,13 +110,17 @@ function DiagonalLines() {
 }
 
 function ExploreNowBtn() {
+  const router = useRouter();
   return (
     <div className="max-w-md flex flex-center flex-col gap-4">
       <p className="text-[12px] text-gray-200 text-center">
         Initiate an alignment-led engagement designed to embed governance, clarify authority, and stabilise execution before complexity increases.
       </p>
       <div>
-        <PartialOutlineBtn text="Begin Alignment" />
+        <PartialOutlineBtn text="Begin Alignment"
+          onClick={() => {
+            router.push(`/startups`);
+          }} />
       </div>
     </div>
   );

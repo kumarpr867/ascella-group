@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
+import PartialOutlineBtn from "../btns/PartialOutlineBtn"
 
 // SVG center
 const CX = 308.958
@@ -275,7 +276,7 @@ export default function Prog() {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="mx-auto max-w-7xl flex py-8 px-5 lg:px-10 lg:py-10 border-x-0 lg:border-x border-color">
+                <div className="mx-10 xl:mx-auto max-w-7xl flex py-8 px-5 lg:px-10 lg:py-10 border-x border-color">
                     <h3 className="text-[24px] md:text-[36px] text-gray-300 leading-tight tracking-tighter">
                         <span className="text-white">The programme focuses on </span>
                         embedding operating <br />discipline before scale introduces complexity.
@@ -283,7 +284,7 @@ export default function Prog() {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-7xl sm:px-6 md:px-0 border-x-0 md:border-x border-color">
+            <div className="mx-10 xl:mx-auto max-w-7xl  border-x border-color">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
 
                     <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-color">
@@ -319,9 +320,10 @@ export default function Prog() {
             </div>
 
             <div className="w-full border-y border-color">
-                <div className="mx-auto max-w-7xl border-x border-color">
+                <div className="mx-10 xl:mx-auto max-w-7xl border-x border-color">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between p-6 lg:p-10">
-                        <p className="max-w-xl text-left leading-relaxed text-b3 md:pl-60">
+                        <PartialOutlineBtn text="See How It Works" size="sm" />
+                        <p className="sm:w-xs text-left leading-relaxed text-b3 ">
                             Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>
                     </div>

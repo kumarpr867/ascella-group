@@ -12,7 +12,7 @@ const container: Variants = {
     transition: {
       staggerChildren: 0.22,
       delayChildren: 0.8,
-    },  
+    },
   },
 };
 
@@ -66,6 +66,7 @@ const globeAnim = {
 export default function Hero() {
   return (
     <section className="relative md:h-screen overflow-hidden bg-bg">
+
       <div className="desktop hidden md:block">
         <div className="absolute inset-x-0 bottom-0 h-[50vh] bg-linear-to-t from-black via-black/80 to-transparent z-2 pointer-events-none" />
 
@@ -103,7 +104,7 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 top-[10vh] z-5 pointer-events-none"
         >
-          <div className="hidden md:flex mx-auto max-w-7xl px-6 gap-10 justify-between">
+          <div className="hidden md:flex mx-auto max-w-7xl px-10 gap-10 justify-between">
 
             <motion.div variants={fadeUp} className="flex max-w-md gap-10">
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
@@ -134,7 +135,7 @@ export default function Hero() {
           animate="visible"
           className="hidden md:block absolute inset-x-0 top-[30vh] z-5 pointer-events-none"
         >
-          <div className="mx-auto max-w-7xl px-6 flex flex-col">
+          <div className="mx-auto max-w-7xl px-10 flex flex-col">
 
             <motion.div variants={fadeUp} className="flex flex-col max-w-xs gap-2">
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
@@ -156,7 +157,7 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 md:bottom-[22vh] z-5 pointer-events-none  "
         >
-          <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row justify-between gap-5">
+          <div className="mx-auto max-w-7xl px-10 flex flex-col md:flex-row justify-between gap-5">
 
             <motion.h2 variants={fadeUp} className="text-gray-300 text-[36px] xl:text-[48px]">
               A Unified <br />
@@ -196,7 +197,7 @@ export default function Hero() {
             variants={container}
             initial="hidden"
             animate="visible"
-            className="mx-auto max-w-7xl px-4 sm:px-6 pt-4 flex items-center justify-center lg:justify-between md:justify-around"
+            className="mx-auto max-w-7xl px-4 sm:px-10 pt-4 flex items-center justify-center lg:justify-between md:justify-around"
           >
             <motion.div variants={fadeUp} className="hidden xl:block">
               <PlusText text="Security and risk managed with clear ownership" size="b2" />
@@ -217,7 +218,7 @@ export default function Hero() {
       <div className="mobile py-10 md:hidden flex flex-col justify-between min-h-[100vh]">
 
         <motion.div variants={container} initial="hidden" animate="visible">
-          <div className="mx-auto max-w-7xl px-6 flex flex-col gap-5">
+          <div className="mx-auto max-w-7xl px-10 flex flex-col gap-5">
 
             <motion.h2 variants={fadeUp} className="text-gray-300 text-[36px]">
               A Unified <br />
@@ -235,7 +236,7 @@ export default function Hero() {
           variants={globeAnim}
           initial="hidden"
           animate="visible"
-          className="flex justify-center z-0"
+          className="flex justify-center z-0 posi"
         >
           <div className="w-[85vw] max-w-[600px] aspect-square">
             <PixelWorld
@@ -252,7 +253,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="border-t border-color p-5 my-6 flex justify-center">
-          <PlusText text="Operations and growth aligned under one structure" size="b2" />
+          <PlusText text="Operations and growth aligned under one structure" size="b3" />
         </motion.div>
       </div>
 

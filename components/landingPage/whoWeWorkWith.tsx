@@ -114,13 +114,11 @@ export default function WhoWeWorkWith() {
     return (
         <motion.section
             ref={sectionRef}
-            className='my-8 sm:my-12 lg:my-16 overflow-hidden'
+            className='my-10 border-y border-color py-20 overflow-hidden'
             initial={{ opacity: 0, y: 80 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.1, ease: "easeOut" }}
         >
-            {/* Top border — all devices */}
-            <div className="w-full h-[1px] bg-white/20" />
 
             <div className="flex flex-col h-auto lg:h-screen">
 
@@ -132,14 +130,14 @@ export default function WhoWeWorkWith() {
                     transition={{ delay: 0.4, duration: 0.8 }}
                 >
                     <Heading text='Who We Work With' />
-                    <h3 className='w-full sm:w-3/4 lg:w-1/2 mb-5 mt-4 text-xl sm:text-2xl lg:text-3xl leading-snug'>
+                    <h3 className='w-full sm:w-3/4 lg:w-1/2 my-10 text-[16px] lg:text-[24px] leading-snug'>
                         Organisations that require control, accountability, and structured execution at scale
                     </h3>
                     <OutlineBtn text='Engage With Us' color='white' />
                 </motion.div>
 
                 {/* ── Card Area ── */}
-                <div className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pb-4 sm:pb-0">
+                <div className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pb-4 ">
 
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -215,9 +213,6 @@ export default function WhoWeWorkWith() {
 
                 </div>
             </div>
-
-            {/* Bottom border — all devices */}
-            <div className="w-full h-[1px] bg-white/20" />
 
         </motion.section>
     )

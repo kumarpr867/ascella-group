@@ -157,105 +157,117 @@ const AnimatedTarget: React.FC<{
 const OUTER_R = 2.82;
 
 const RadarScene = () => {
-  const r = OUTER_R;
+  const { viewport } = useThree()
+  const r = OUTER_R
+
+  const isMobile = viewport.width < 6
+
+  // 🔑 MOBILE: scale based only on height
+  // 🔑 DESKTOP: scale based on min dimension
+  const fitSize = isMobile
+    ? viewport.height * 0.75
+    : Math.min(viewport.width, viewport.height) * 0.75
+
+  const scale = fitSize / (r * 2)
+
   return (
-    <group>
-      {/* MAIN OUTER RING */}
+    <group
+      scale={[scale, scale, scale]}
+      position={[0, 0, 0]}   // ✅ ALWAYS CENTER
+    >
       <mesh>
         <ringGeometry args={[r, r + 0.018, 256]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
       </mesh>
 
-      {/* SECOND RING */}
       <mesh>
         <ringGeometry args={[r * 0.66, r * 0.66 + 0.012, 256]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
       </mesh>
 
-      {/* DOTTED RING OUTER */}
       <PreciseDotted radius={r * 0.83} count={80} size={0.022} />
-
-      {/* DOTTED RING INNER */}
       <PreciseDotted radius={r * 0.47} count={56} size={0.022} />
 
-      {/* CENTER RINGS */}
       {[0.16, 0.25, 0.36, 0.50].map((fr, i) => (
         <mesh key={i}>
           <ringGeometry args={[fr, fr + 0.013, 128]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.16 - i * 0.02} />
+          <meshBasicMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.16 - i * 0.02}
+          />
         </mesh>
       ))}
 
-      {/* CENTER DOT */}
       <mesh>
         <circleGeometry args={[0.055, 32]} />
         <meshBasicMaterial color="#ffffff" />
       </mesh>
 
-      {/* VERTICAL LINE — center to top outer ring */}
       <HalfVerticalLine outerR={r} />
-
-      {/* ROTATING DOTTED DIAGONAL — auto clockwise + mouse hover snap */}
       <RotatingDottedDiagonal outerR={r} />
 
-      {/* ANIMATED TARGETS */}
-      <AnimatedTarget ringRadius={r * 0.83} size={0.09} interval={4}   initialAngle={0.5} />
-      <AnimatedTarget ringRadius={r * 0.57} size={0.09} interval={5}   initialAngle={2.3} />
+      <AnimatedTarget ringRadius={r * 0.83} size={0.09} interval={4} initialAngle={0.5} />
+      <AnimatedTarget ringRadius={r * 0.57} size={0.09} interval={5} initialAngle={2.3} />
       <AnimatedTarget ringRadius={r * 0.47} size={0.08} interval={4.5} initialAngle={4.1} />
     </group>
-  );
-};
+  )
+}
 
 /* ------------------ MAIN DELIVERY COMPONENT ------------------ */
 const Delivery = () => {
   return (
-    <div className="bg-default text-default min-h-screen w-full flex flex-col overflow-hidden">
+    <section className="w-full border-y border-color my-20">
+      <div className="flex flex-col lg:pl-20 lg:flex-row w-full min-h-[700px] lg:min-h-[90vh]">
 
-      {/* TOP GRID LINE */}
-      <div className="w-full h-px bg-white/15" />
-
-      <div style={styles.mainContainer}>
-        <div style={styles.contentWrapper}>
-
-          {/* LEFT */}
-          <div style={styles.leftSide}>
-            <h3 style={styles.headline}>
+        {/* LEFT */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-between px-6 md:px-16 py-16 lg:py-24">
+          <div className="max-w-xl">
+            <h3 className="text-3xl md:text-4xl font-light leading-tight mb-8 tracking-tight">
               Delivery is organised through governed pods under central oversight.
             </h3>
-            <p style={styles.description}>
+
+            <p className="text-sm text-gray-200 leading-relaxed">
               Teams operate within small, accountable pods aligned to specific execution outcomes.
               Pods are coordinated through Ascella's governance layer, performance measurement
               frameworks, and escalation structures. Collaboration across execution arms occurs
               through defined operating pathways.
             </p>
-            <div style={styles.footerTag}>
-              <div style={styles.arrowIcon}>↗</div>
-              <span style={styles.footerText}>
-                Pods execute. Governance <br />coordinates.
-              </span>
-            </div>
           </div>
 
-          {/* RIGHT — canvas fills full column height */}
-          <div style={styles.rightSide}>
-            <div style={styles.canvasContainer}>
-              <Canvas
-                camera={{ position: [0, 0, 5], fov: 60 }}
-                style={styles.canvas}
-                gl={{ antialias: true, alpha: true }}
-              >
-                <RadarScene />
-              </Canvas>
+          <div className="hidden lg:flex items-center gap-4 mt-16 lg:mt-0">
+            <div className="border border-white/25 rounded-full w-11 h-11 flex items-center justify-center text-xl">
+              ↗
             </div>
+            <span className="text-lg font-light">
+              Pods execute. Governance coordinates.
+            </span>
           </div>
 
         </div>
+
+        {/* RIGHT */}
+        <div className="w-full lg:w-1/2 relative h-[500px] md:h-[650px] lg:h-auto">
+          <Canvas
+            camera={{ position: [0, 0, 6], fov: 50 }}
+            className="absolute inset-0 w-full h-full"
+          >
+            <RadarScene />
+          </Canvas>
+        </div>
+
+        <div className="lg:hidden flex items-center px-10 gap-4 mb-10 lg:mt-0">
+          <div className="border border-white/25 rounded-full w-11 h-11 flex items-center justify-center text-xl">
+            ↗
+          </div>
+          <span className="text-lg font-light">
+            Pods execute. Governance coordinates.
+          </span>
+        </div>
+
       </div>
 
-      {/* BOTTOM GRID LINE */}
-      <div className="w-full h-px bg-white/15" />
-      <div className="w-full h-24 bg-default" />
-    </div>
+    </section>
   );
 };
 

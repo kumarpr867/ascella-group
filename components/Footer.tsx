@@ -35,7 +35,7 @@ const footerSections: FooterSection[] = [
         items: [
             { label: "hq@ascellagroup.com", href: "mailto:hq@ascellagroup.com" },
             { label: "Ascella.in", href: "https://ascella.in" },
-            { label: "Connect", href: "/connect" },
+            { label: "Connect", href: "/engageWithUs" },
         ],
         bordered: true,
     },
@@ -62,8 +62,10 @@ const Footer = () => {
     return (
         <footer className="mb-2 lg:mb-10 w-full">
             <div className="border-y border-color">
-                <div className="border-b border-color">
-                    <div className="flex md:hidden flex-col mx-10 py-7 px-5 border-x border-color">
+
+                {/* md join us */}
+                <div className="md:hidden border-b border-color">
+                    <div className="flex  flex-col mx-10 py-7 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Join Us
                         </label>
@@ -74,7 +76,7 @@ const Footer = () => {
                                 className="flex-1 bg-white text-black px-4 py-2 text-b3 outline-none placeholder:text-gray-400"
                             />
                             <PartialOutlineBtn
-                            size="sm"
+                                size="sm"
                                 text="Consult Now"
                                 textColor="text-black"
                                 bgColor="bg-white"
@@ -84,9 +86,9 @@ const Footer = () => {
                             />
                         </div>
                     </div>
-
                 </div>
-                <div className="mx-auto max-w-7xl flex flex-col sm:flex-row md:border-x border-color">
+
+                <div className="md:mx-10 xl:mx-auto max-w-7xl flex flex-col sm:flex-row md:border-x border-color">
                     <div className="w-full grid grid-cols-1 md:grid-cols-4 ">
                         {footerSections.map((section, i) => (
                             <div
@@ -118,6 +120,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+
             <div className="block md:hidden mx-10 border-x border-color">
                 <div className="flex flex-col p-6">
                     <h4 className="text[36px] md:text-[64px] leading-tight mb-2">
@@ -141,9 +144,8 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="hidden md:block mx-auto max-w-7xl  border-x border-color">
+            <div className="hidden md:block mx-10 xl:mx-auto max-w-7xl border-x border-color">
                 <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
-
                     <div>
                         <div className="flex flex-col mb-10 md:mb-20">
                             <h3 className="text[36px] md:text-[52px] leading-tight mb-2">

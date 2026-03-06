@@ -37,9 +37,8 @@ const cardVariants: Variants = {
     },
   },
   hover: {
-    y: -10,
-    scale: 1.05,
-    boxShadow: "0 15px 25px rgba(0,0,0,0.2)",
+    y: -5,
+    scale: 1.02,
     transition: {
       type: "spring",
       stiffness: 300,
@@ -193,7 +192,7 @@ export default function JobsSection() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6 bg-black space-y-6"
+            className="block lg:hidden overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6  space-y-6"
           >
 
             {/* COMPANY FILTER */}
@@ -279,16 +278,17 @@ export default function JobsSection() {
                 exit="hidden"
                 className="space-y-6"
               >
-                <h2 className="text-xl mb-8">{company}</h2>
+                <h5 className="md:ml-5 text[2] mb-8">{company}</h5>
 
-                <div className="grid gap-12 xl:gap-16 md:grid-cols-2 lg:grid-cols-3 md:px-5 ">
+                <div className="grid gap-12 xl:gap-16 md:grid-cols-2 lg:grid-cols-3 md:px-5">
                   {jobs.map((job) => (
                     <motion.div
                       key={job.id}
                       variants={cardVariants}
                       whileHover="hover"
+                      className="border border-color rounded-sm p-5 md:border-none md:p-0"
                     >
-                      <div className="relative h-40 mb-4">
+                      <div className="hidden md:block relative h-40 mb-4 ">
                         <Image
                           src={job.image}
                           alt={job.title}
@@ -310,14 +310,14 @@ export default function JobsSection() {
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between my-5">
-                        <h3 className="text-b1">{job.title}</h3>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between my-5">
+                        <h3 className={`text-[20px] md:text-[16px] ${job.status === "Open position" ? "text-white" : "text-gray-200"}`}>{job.title}</h3>
                         <p className="text-b1">{job.company}</p>
                       </div>
 
-                      <p className="text-b3 text-gray-200 mb-5">{job.description}</p>
+                      <p className="text-b3 text-gray-200 mb-5 leading-tight">{job.description}</p>
 
-                      <div className="flex items-center gap-3 mb-6">
+                      <div className="flex justify-between md:justify-start items-center gap-3 mb-6">
                         <span
                           className={`text-b3 px-4 py-1 rounded-2xl ${job.status === "Open position"
                             ? "bg-white text-black font-bold"
@@ -331,11 +331,23 @@ export default function JobsSection() {
                         </span>
                       </div>
 
-                      {job.status === "Open position" && <PartialOutlineBtn
-                        text="Apply Now"
-                        onClick={() => {
-                          router.push(`/JD-Apply`);
-                        }} />}
+                      {job.status === "Open position" ? (
+                        <PartialOutlineBtn
+                          text="Apply Now"
+                          onClick={() => {
+                            router.push(`/JD-Apply`);
+                          }}
+                        />
+                      ) : (
+                        <div className="block md:hidden">
+                          <PartialOutlineBtn
+                            text="Expired"
+                            hoverBgColor="black"
+                            hoverTextColor="black"
+                          />
+                        </div>
+                      )}
+
                     </motion.div>
                   ))}
                 </div>
