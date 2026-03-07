@@ -58,10 +58,9 @@ function IsometricHoverGrid() {
       const offsetX = -CELL_W / 2;
       const offsetY = -CELL_H / 2;
 
-      // Dot grid config — 15 dots across, 15 dots tall per cell
       const DOTS_X = 15;
       const DOTS_Y = 15;
-      const DOT_R  = 0.6; // dot radius px
+      const DOT_R  = 0.6;
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -73,7 +72,6 @@ function IsometricHoverGrid() {
           const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
           alphaMap.set(key, current);
 
-          // Clip to diamond shape so dots don't spill outside
           ctx.save();
           ctx.beginPath();
           ctx.moveTo(cx,              cy - CELL_H / 2);
@@ -83,29 +81,23 @@ function IsometricHoverGrid() {
           ctx.closePath();
           ctx.clip();
 
-          // Draw 15×15 dots inside the diamond bounding box
           for (let dy = 0; dy < DOTS_Y; dy++) {
             for (let dx = 0; dx < DOTS_X; dx++) {
-              // Map dot to bounding box of diamond
               const px = cx - CELL_W / 2 + (dx + 0.5) * (CELL_W / DOTS_X);
               const py = cy - CELL_H / 2 + (dy + 0.5) * (CELL_H / DOTS_Y);
 
-              // Only draw if inside diamond
               if (!inDiamond(px, py, cx, cy)) continue;
 
-              // Distance from center for fade effect
               const fdx = (px - cx) / (CELL_W / 2);
               const fdy = (py - cy) / (CELL_H / 2);
               const fade = Math.max(0, 1 - (Math.abs(fdx) + Math.abs(fdy)));
 
-              // Base yellow faded; brighter on hover
-              const baseAlpha  = fade * 0.18;
+              const baseAlpha  = fade * 0.55;
               const hoverExtra = current * fade * 0.45;
               const alpha      = baseAlpha + hoverExtra;
 
               if (alpha < 0.01) continue;
 
-              // Yellow: rgb(234, 197, 52) — faded
               ctx.beginPath();
               ctx.arc(px, py, DOT_R + current * 0.4, 0, Math.PI * 2);
               ctx.fillStyle = `rgba(234,197,52,${Math.min(1, alpha)})`;
@@ -145,7 +137,6 @@ function IsometricHoverGrid() {
 }
 
 // ── Main Component ─────────────────────────────────────────────────────────────
-
 const Alignments = () => {
   return (
     <div className="min-h-screen w-full bg-black text-white flex flex-col items-center py-10 font-sans overflow-hidden relative">
@@ -153,10 +144,10 @@ const Alignments = () => {
       {/* Header Section */}
       <div className="flex flex-col items-center w-full max-w-[720px] text-center px-4 z-10 relative">
         <header className="flex flex-col gap-6">
-          <h3 className="text-[36px] md:text-[40px] leading-[1.1] tracking-tight">
+          <h3 className="text-[28px] md:text-[36px] lg:text-[40px] leading-[1.1] tracking-tight">
             Alignment is the first step toward structured execution readiness.
           </h3>
-          <p className="text-white/60 md:text-mid max-w-[500px] mx-auto leading-relaxed">
+          <p className="text-white/60 text-sm md:text-base max-w-[500px] mx-auto leading-relaxed">
             The Startups Programme begins with an alignment conversation focused on
             operating context, accountability expectations, and readiness for governed execution.
           </p>
@@ -165,35 +156,16 @@ const Alignments = () => {
 
       {/*
         ── ISOMETRIC GRID STRIP ──
-        Width matches the form box (720px), height ~160px
-        Grid confined inside, faded on left/right/top/bottom edges
-        vector 55.png placed at exact cell centers (CELL_W=100, CELL_H=60)
-
-        Cell center formula:
-          offsetX = -CELL_W/2 = -50
-          offsetY = -CELL_H/2 = -30
-          x = -50 + col*100 + (row%2===0 ? 0 : 50)
-          y = -30 + row*30
-
-        Canvas is 720px wide, 160px tall.
-        Center x of canvas = 360.
-
-        Row 2 (y = -30 + 2*30 = 30):  even row, no offset
-          col=3 → x = -50 + 300 = 250   center(250, 30)  — too high
-        Row 4 (y = -30 + 4*30 = 90):  even row
-          col=2 → x = -50 + 200 = 150   center(150, 90)
-          col=3 → x = -50 + 300 = 250   center(250, 90)
-          col=4 → x = -50 + 400 = 350   center(350, 90)  ← place vector here (center of canvas ~360)
-
-        We place one vector at center: col=3 row=4 → (250, 90)
-        And one at col=4 row=4 → (350, 90)
+        Desktop: 720px wide, 160px tall — same as before
+        Mobile: full width, 140px tall — vectors placed at proportional positions
       */}
+
+      {/* Desktop grid (md and above) */}
       <div
-        className="relative my-[-20px]"
+        className="relative my-[-20px] hidden md:block"
         style={{
           width:  '720px',
           height: '160px',
-          // Fade: left/right edges and top/bottom edges
           WebkitMaskImage: [
             'linear-gradient(to right,  transparent 0%, black 12%, black 88%, transparent 100%)',
             'linear-gradient(to bottom, transparent 0%, black 20%, black 75%, transparent 100%)',
@@ -206,10 +178,9 @@ const Alignments = () => {
           maskComposite:       'intersect',
         }}
       >
-        {/* Hover canvas — draws full iso grid */}
         <IsometricHoverGrid />
 
-        {/* vector 55.png — exactly 100×60px, centered on cell col=3,row=4 → (250,90) */}
+        {/* vector at col=3, row=4 → (250, 90) */}
         <img
           src="/vector 55.png"
           alt=""
@@ -227,7 +198,7 @@ const Alignments = () => {
           }}
         />
 
-        {/* vector 55.png — exactly 100×60px, centered on cell col=4,row=4 → (350,90) */}
+        {/* vector at col=4, row=4 → (350, 90) */}
         <img
           src="/vector 55.png"
           alt=""
@@ -244,24 +215,142 @@ const Alignments = () => {
             mixBlendMode:  'screen',
           }}
         />
+
+        {/* vector at col=5, row=4 → (450, 90) — extra cell for desktop */}
+        <img
+          src="/vector 55.png"
+          alt=""
+          style={{
+            position:      'absolute',
+            left:          '450px',
+            top:           '90px',
+            width:         '100px',
+            height:        '60px',
+            transform:     'translate(-50%, -50%)',
+            objectFit:     'fill',
+            opacity:       0.4,
+            pointerEvents: 'none',
+            mixBlendMode:  'screen',
+          }}
+        />
+      </div>
+
+      {/* Mobile grid (below md) */}
+      {/*
+        On mobile canvas is full width (let's call it W px).
+        CELL_W=100, CELL_H=60, offsetX=-50, offsetY=-30
+        We place vectors at row=3 (y = -30+3*30 = 60), odd row so +50 offset:
+          col=1 → x = -50 + 100 + 50 = 100  → center(100, 60)
+          col=2 → x = -50 + 200 + 50 = 200  → center(200, 60)
+          col=3 → x = -50 + 300 + 50 = 300  → center(300, 60)
+        Canvas height = 140px, center y = 70 → row=3 y=60 is close to center, good.
+      */}
+      <div
+        className="relative my-[-20px] block md:hidden w-full"
+        style={{
+          height: '140px',
+          WebkitMaskImage: [
+            'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
+            'linear-gradient(to bottom, transparent 0%, black 15%, black 75%, transparent 100%)',
+          ].join(', '),
+          maskImage: [
+            'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
+            'linear-gradient(to bottom, transparent 0%, black 15%, black 75%, transparent 100%)',
+          ].join(', '),
+          WebkitMaskComposite: 'destination-in',
+          maskComposite:       'intersect',
+        }}
+      >
+        <IsometricHoverGrid />
+
+        {/* Mobile: 3 vectors on odd row=3 (y=60) — centered roughly around mid-screen */}
+        {/* col=1 odd → x=100 */}
+        <img
+          src="/vector 55.png"
+          alt=""
+          style={{
+            position:      'absolute',
+            left:          '100px',
+            top:           '60px',
+            width:         '100px',
+            height:        '60px',
+            transform:     'translate(-50%, -50%)',
+            objectFit:     'fill',
+            opacity:       0.45,
+            pointerEvents: 'none',
+            mixBlendMode:  'screen',
+          }}
+        />
+        {/* col=2 odd → x=200 */}
+        <img
+          src="/vector 55.png"
+          alt=""
+          style={{
+            position:      'absolute',
+            left:          '200px',
+            top:           '60px',
+            width:         '100px',
+            height:        '60px',
+            transform:     'translate(-50%, -50%)',
+            objectFit:     'fill',
+            opacity:       0.75,
+            pointerEvents: 'none',
+            mixBlendMode:  'screen',
+          }}
+        />
+        {/* col=3 odd → x=300 */}
+        <img
+          src="/vector 55.png"
+          alt=""
+          style={{
+            position:      'absolute',
+            left:          '300px',
+            top:           '60px',
+            width:         '100px',
+            height:        '60px',
+            transform:     'translate(-50%, -50%)',
+            objectFit:     'fill',
+            opacity:       0.45,
+            pointerEvents: 'none',
+            mixBlendMode:  'screen',
+          }}
+        />
       </div>
 
       {/* --- FORM CONTAINER BOX --- */}
+      {/*
+        Desktop: max-w-[720px], centered, no horizontal margin
+        Mobile: mx-[10px] so 10px gap on left and right
+        Box bottom: 10px margin from grid line (mb-[10px] on grid, or mt-[10px] on box)
+      */}
       <div
-        className="w-full max-w-[720px] min-h-[720px] border border-[#3D3D3D] rounded-[12px] bg-[#000]/90 backdrop-blur-md flex flex-col items-center px-8 md:px-[100px] z-20 relative"
-        style={{ paddingTop: '60px' }}
+        className="
+          w-full
+          mx-[10px] md:mx-auto
+          max-w-[calc(100%-20px)] md:max-w-[720px]
+          min-h-[720px]
+          border border-[#3D3D3D] rounded-[12px]
+          bg-[#000]/90 backdrop-blur-md
+          flex flex-col items-center
+          px-5 md:px-[100px]
+          z-20 relative
+          mt-[10px]
+        "
+        style={{ paddingTop: '60px', paddingBottom: '60px' }}
       >
 
         {/* Top Icon */}
         <div className="mb-10 flex justify-center">
-          <img src="/image-1.png" alt="Icon" className="w-24 h-24 object-contain" />
+          <img src="/image-1.png" alt="Icon" className="w-16 h-16 md:w-24 md:h-24 object-contain" />
         </div>
 
         {/* Form Content */}
         <div className="w-full flex flex-col gap-5 text-center">
           <div className="flex flex-col gap-3">
-            <h3 className="text-3xl font-normal tracking-tight text-white/90">Let's Get You Started</h3>
-            <p className="text-white/40 text-sm max-w-[400px] mx-auto">
+            <h3 className="text-2xl md:text-3xl font-normal tracking-tight text-white/90">
+              Let's Get You Started
+            </h3>
+            <p className="text-white/40 text-sm max-w-[400px] mx-auto leading-relaxed">
               Fill out the form below and we'll get in touch to explore how Ascella can help power your success
             </p>
           </div>
@@ -270,25 +359,25 @@ const Alignments = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors"
+              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="text"
               placeholder="Your Role / Title *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors"
+              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="tel"
               placeholder="Phone Number *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors"
+              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="email"
               placeholder="Email Address *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors"
+              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
 
             <button
@@ -301,7 +390,8 @@ const Alignments = () => {
         </div>
       </div>
 
-      <div className="w-full border-t border-white/20" />
+      {/* Bottom divider — 10px margin from box bottom */}
+      <div className="w-full border-t border-white/20 mt-[10px]" />
     </div>
   );
 };

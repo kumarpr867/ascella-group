@@ -7,8 +7,10 @@ import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import PlusHeading from "../headings/Heading";
 import SecurityWaveSVG from "./SecurityWave";
 import TechnologyExecution from "./TechonologyExecution";
+import RevenueEnablement from "./Revenue";
 
-    // Image fades up on enter
+
+// Image fades up on enter
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
@@ -164,36 +166,8 @@ function ParticleImage({ src, alt, className, useRipple=false }: { src:string; a
 // ══════════════════════════════════════════════════════════════════════════════
 // WORKFORCE READINESS — ANIMATED SVG
 // ══════════════════════════════════════════════════════════════════════════════
-//
-// The SVG has two kinds of paths:
-//
-//   1. STRUCTURAL geometry  →  boxes, connector lines, rhombus nodes
-//      These stay static as fill="white" — exactly as original.
-//
-//   2. ARROW lines  →  in the original SVG these are filled paths that trace
-//      the line + tiny triangle arrowhead together.
-//
-//      We render each arrow as:
-//        • A <line> with stroke-dashoffset animation (the shaft)
-//        • A <polygon> with opacity animation (the arrowhead tip)
-//
-//      The line coordinates are extracted directly from the original filled paths
-//      (tail = where line meets structure, tip = arrowhead point).
-//      NO extra geometry is added — it's the same visual as the original,
-//      just split so CSS can animate it cleanly.
-//
-//   Animation per arrow (all looping, all different dur/delay):
-//     0%   → hidden, dashoffset = full length
-//     3%   → fade in
-//     40%  → fully drawn (tail→tip)          ← "inward" draw
-//     52%  → hold, arrowhead visible
-//     90%  → dashoffset = -length (erased)   ← "outward" erase
-//     95%  → fade out
-//     100% → invisible, ready to loop
-// ══════════════════════════════════════════════════════════════════════════════
 
 const WF_ARROWS = [
-  // id   tail-x   tail-y   tip-x    tip-y   arrowhead-polygon-points                          dur   delay
   { id:"a01", x1:249.5, y1:137.0, x2:308.7, y2:103.1, pts:"305.2,101.3 309.4,103.0 307.3,107.1 304.5,102.3", dur:7.0, del:0.0  },
   { id:"a02", x1:259.5, y1:102.0, x2:210.4, y2:73.8,  pts:"211.4,78.4 210.2,73.4 215.2,72.2 212.4,78.1",     dur:6.0, del:0.9  },
   { id:"a03", x1:273.7, y1:39.8,  x2:273.7, y2:1.0,   pts:"270.2,3.3 273.7,0.1 277.2,3.3 273.7,1.2",         dur:5.0, del:1.7  },
@@ -225,7 +199,7 @@ function WorkforceReadinessSVG({ className }: { className?: string }) {
     Math.sqrt((x2-x1)**2 + (y2-y1)**2);
 
   return (
-    <div className={className} style={{ position:"relative", display:"inline-block" }}>
+    <div className={className} style={{ position:"relative", display:"inline-block", width:"100%", height:"100%" }}>
       <style>{`
         @keyframes wf-line {
           0%          { stroke-dashoffset: var(--L); opacity: 0; }
@@ -242,10 +216,7 @@ function WorkforceReadinessSVG({ className }: { className?: string }) {
           88%, 100%   { opacity: 0; }
         }
       `}</style>
-
       <svg viewBox="0 0 632 370" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width:"100%", height:"100%" }}>
-
-        {/* ── STATIC STRUCTURAL GEOMETRY (all box/connector paths, fill=white, unchanged) ── */}
         <path fill="white" d="
 M195.088 138.247L194.839 137.813L146.46 165.677L146.71 166.111L146.959 166.544L195.338 138.68L195.088 138.247Z
 M146.71 166.111H146.21V243.819H146.71H147.21V166.111H146.71Z
@@ -339,36 +310,13 @@ M473.263 142.268H472.763V221.699H473.263H473.763V142.268H473.263Z
 M473.263 142.268L473.512 142.702L631.75 51.5637L631.5 51.1304L631.251 50.6972L473.013 141.835L473.263 142.268Z
 M98.3314 138.247L98.0818 137.813L97.3296 138.247L98.0818 138.68L98.3314 138.247Z
 "/>
-
-        {/* ── ANIMATED ARROWS ──
-            Each arrow = one <line> (the shaft, animated via stroke-dashoffset)
-                       + one <polygon> (the arrowhead, fades in when shaft is fully drawn)
-            Coordinates taken directly from the original SVG arrow filled paths.
-            Zero extra geometry — same visual, just animated.
-        */}
         {WF_ARROWS.map(({ id, x1, y1, x2, y2, pts, dur, del }) => {
           const L = dist(x1, y1, x2, y2);
           return (
             <g key={id}>
-              <line
-                x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke="white"
-                strokeWidth="0.75"
-                style={{
-                  strokeDasharray: L,
-                  strokeDashoffset: L,
-                  animation: `wf-line ${dur}s ${del}s infinite linear`,
-                  ["--L" as string]: L,
-                }}
-              />
-              <polygon
-                points={pts}
-                fill="white"
-                style={{
-                  opacity: 0,
-                  animation: `wf-head ${dur}s ${del}s infinite linear`,
-                }}
-              />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="0.75"
+                style={{ strokeDasharray: L, strokeDashoffset: L, animation: `wf-line ${dur}s ${del}s infinite linear`, ["--L" as string]: L }} />
+              <polygon points={pts} fill="white" style={{ opacity: 0, animation: `wf-head ${dur}s ${del}s infinite linear` }} />
             </g>
           );
         })}
@@ -377,14 +325,18 @@ M98.3314 138.247L98.0818 137.813L97.3296 138.247L98.0818 138.68L98.3314 138.247Z
   );
 }
 
-// ─── OwnershipSection ────────────────────────────────────────────────────────
-// Parallax REMOVED — image and content sit in normal document flow so they
-// never overlap on any screen size when scrolling.
+// ─── OwnershipSection ─────────────────────────────────────────────────────────
 function OwnershipSection({
-  title, description, tag, image, isLast, index, setActiveIndex,
+  title, description, tag, image, svgComponent, isLast, index, setActiveIndex,
 }: {
-  title: string; description: string; tag?: string; image: string;
-  isLast: boolean; index: number; setActiveIndex: (n: number) => void;
+  title: string;
+  description: string;
+  tag?: string;
+  image?: string;
+  svgComponent?: React.ReactNode;
+  isLast: boolean;
+  index: number;
+  setActiveIndex: (n: number) => void;
 }) {
   const ref      = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { amount: 0.2 });
@@ -417,10 +369,15 @@ function OwnershipSection({
         viewport={{ once: true, amount: 0.1 }}
         className="w-full flex justify-center mb-10 sm:mb-16 md:mb-20 lg:mb-24"
       >
-        {index === 2
-          ? <WorkforceReadinessSVG className={imgClass} />
-          : <ParticleImage src={image} alt={title} useRipple={index === 0} className={imgClass} />
-        }
+        {svgComponent ? (
+          // ✅ SVG component: wrap in a sized div matching imgClass
+          <div className={imgClass} style={{ display:"flex", alignItems:"center", justifyContent:"center" }}>
+            {svgComponent}
+          </div>
+        ) : image ? (
+          // ✅ PNG image with particle effect
+          <ParticleImage src={image} alt={title} useRipple={false} className={imgClass} />
+        ) : null}
       </motion.div>
 
       <motion.div
@@ -446,35 +403,41 @@ function OwnershipSection({
 export default function Ownership() {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const sections = [
+  const sections: {
+    title: string;
+    description: string;
+    tag?: string;
+    image?: string;
+    svgComponent?: React.ReactNode;
+  }[] = [
     {
       title: "Security & Risk Posture",
       description: "Security and risk posture focuses on keeping organisational risk visible and controlled. Security decisions link directly to business priorities and acceptable risk levels. Each control has a clear owner, review cycle, and response plan. This reduces surprises and limits the impact of incidents when issues occur.",
       tag: "#Resilience",
-      image: "/Security.png",
+      svgComponent: <SecurityWaveSVG />,           // ✅ FIXED: SVG component, not image path
     },
     {
       title: "Technology Execution",
       description: "Technology execution ensures systems work reliably as change increases. Platforms follow clear build, release, and run standards. Ownership stays consistent across development and operations to avoid gaps. This keeps delivery steady and reduces failures during growth.",
       tag: "#Scalability",
-      image: "/Technology.png",
+      svgComponent: <TechnologyExecution />,        // ✅ FIXED: SVG component, not image path
     },
     {
       title: "Workforce Readiness",
       description: "Workforce readiness prepares teams for real operating conditions. Roles and escalation paths stay clear before pressure hits. Training reflects actual scenarios instead of theory. Teams respond faster and make better decisions during incidents.",
       tag: "#Alignment",
-      image: "/Workforce.png",
+      svgComponent: <WorkforceReadinessSVG />,      // ✅ Inline SVG component
     },
     {
       title: "Operational Control",
       description: "Operational control brings structure to daily execution. Decisions follow defined paths instead of informal coordination. Signals focus on risk, progress, and dependencies. Work becomes predictable and less reactive over time.",
-      image: "/Operational.png",
+      image: "/Operational1.png",          // ✅ Interactive SVG with hover slab animation
     },
     {
       title: "Revenue Enablement",
       description: "Revenue enablement connects execution quality to business results. Technical priorities reflect revenue impact and customer trust. Launches follow readiness checks and clear success measures. Growth stays protected as execution becomes disciplined.",
       tag: "#Sustainability",
-      image: "/Revenue.png",
+      svgComponent: <RevenueEnablement />,          // ✅ FIXED: SVG component, not image path
     },
   ];
 
@@ -567,7 +530,7 @@ export default function Ownership() {
 
       </div>
 
-      <div className="relative  h-px w-full">
+      <div className="relative h-px w-full">
         <div className="mx-10 h-full bg-white/10" />
       </div>
     </section>

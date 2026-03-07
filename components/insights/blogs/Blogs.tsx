@@ -169,7 +169,7 @@ function CaseCard({
     item,
     variant = "default",
 }: {
-    item: blogs
+    item: (typeof blogs)[number]
     variant?: "default" | "featured"
 }) {
 

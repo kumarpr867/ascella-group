@@ -114,17 +114,8 @@ function WaveCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
   return <canvas ref={canvasRef} style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'auto',cursor:'crosshair',zIndex:20}} />;
 }
 
-function GlobeInner({ wrapRef }: { wrapRef: React.RefObject<HTMLDivElement> }) {
-  const [imgEl, setImgEl] = useState<HTMLImageElement | null>(null);
-  useEffect(() => {
-    const el = wrapRef.current?.querySelector('img') as HTMLImageElement | null;
-    if (el) setImgEl(el);
-  }, [wrapRef]);
-  return <WaveCanvas imgEl={imgEl} />;
-}
-
 // ══════════════════════════════════════════════════════════════════════════════
-// STYLES — Desktop unchanged, Mobile exactly like Figma
+// STYLES — Desktop unchanged, Mobile matches screenshot exactly
 // ══════════════════════════════════════════════════════════════════════════════
 const styles = `
 
@@ -232,9 +223,8 @@ const styles = `
   }
 
   /* ══════════════════════════════════════════
-     MOBILE (≤ 640px) — exact Figma layout
-     Layout is pure vertical flow, no absolute.
-     Section fits content naturally (no 100vh).
+     MOBILE (≤ 640px) — matches screenshot exactly
+     Order: nav-line → heading → subtext → engage btn → globe → gap-line → line → ascella
   ══════════════════════════════════════════ */
   @media (max-width:640px) {
 
@@ -249,16 +239,17 @@ const styles = `
       width:100%;
     }
 
-    /* ── Line 1: top border of section ── */
+    /* ── Horizontal grid line ── */
     .m-line {
-      width:100%; height:1px;
+      width:100%;
+      height:1px;
       background:rgba(255,255,255,.22);
       flex-shrink:0;
     }
 
-    /* ── Text content block ── */
+    /* ── Text content block: heading + subtext ── */
     .m-text-block {
-      padding:24px 28px 22px 28px;
+      padding:28px 28px 20px 28px;
     }
 
     .m-h2 {
@@ -267,6 +258,7 @@ const styles = `
       line-height:1.15;
       letter-spacing:-.01em;
       text-align:left;
+      margin:0;
     }
     .m-h2-center {
       display:block;
@@ -274,6 +266,7 @@ const styles = `
     }
     .m-dim { color:rgba(255,255,255,.28); }
 
+    /* Early-stage execution row */
     .m-subrow {
       margin-top:18px;
       margin-left:30px;
@@ -284,11 +277,11 @@ const styles = `
     }
     .m-subtext {
       font-size:8px;
-      
       line-height:1.65;
       text-transform:uppercase;
       letter-spacing:.18em;
       flex:1;
+      color:rgba(255,255,255,.65);
     }
     .m-arrow {
       flex-shrink:0;
@@ -298,67 +291,67 @@ const styles = `
       display:flex; align-items:center; justify-content:center;
     }
 
-    /* ── Line 2: below text, above globe ── */
-    /* (reuses .m-line) */
+    /* ── Engage With Us button — centered between subtext and globe ── */
+    .m-engage-zone {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 0 20px 0;
+    }
+
+    .m-engage-btn {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:12px 28px;
+      border:1px solid rgba(255,255,255,.45);
+      font-size:8px;
+      letter-spacing:.38em;
+      text-transform:uppercase;
+      background:transparent;
+      color:#fff;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:background .3s, color .3s;
+    }
+    .m-engage-btn:hover { background:#fff; color:#000; }
+    .m-engage-btn svg { display:block; }
 
     /* ── Globe block ── */
     .m-globe-block {
       width:100%;
-      height:240px;
+      height:260px;
       position:relative;
       overflow:visible;
     }
     .m-globe-wrapper {
       position:absolute;
-      width:240px; height:240px;
+      width:260px; height:260px;
       top:0; left:50%;
       transform:translateX(-50%) rotate(158.67deg);
     }
 
-    /* ── Line 3: footer top border ── */
-    /* (reuses .m-line) */
+    /* ── Double grid line zone with gap between them ── */
+    /* First line is .m-line above this zone */
+    .m-double-line-gap {
+      height:32px; /* visible margin / gap between the two lines */
+      width:100%;
+      flex-shrink:0;
+    }
 
-    /* ── Footer zone: vertical lines + centered button ── */
-   .m-footer-zone {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.m-engage-btn {
-  display: flex;
-  align-items: center;      /* vertical center */
-  justify-content: center;  /* horizontal center */
-  gap: 8px;                 /* space between text & svg */
-
-  padding: 10px 24px;
-  border: 1px solid rgba(255,255,255,.5);
-  font-size: 8px;
-  letter-spacing: .38em;
-  text-transform: uppercase;
-  background: transparent;
-  color: #fff;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background .3s, color .3s;
-}
-
-.m-engage-btn svg {
-  display: block;
-}
-
-    /* ── Ascella text: below footer line with side margins ── */
+    /* ── Ascella text block — padded left & right ── */
     .m-ascella {
-      padding:14px 30px 22px 24px;
+      padding:16px 28px 28px 28px;
     }
     .m-ascella p {
       font-size:10px;
       letter-spacing:.13em;
-      line-height:1.7;
+      line-height:1.75;
       text-transform:uppercase;
-      
+      color:rgba(255,255,255,.45);
       text-align:left;
+      margin:0;
     }
   }
 
@@ -437,15 +430,24 @@ const Controlled = () => {
         </footer>
 
         {/* ════════════════════════════════════════
-            MOBILE LAYOUT (hidden on desktop)
-            Pure document flow — no absolute tricks
+            MOBILE LAYOUT
+            Order (top → bottom):
+            1. Horizontal grid line (below navbar)
+            2. "Controlled execution…" heading
+            3. "Early-stage execution…" + arrow
+            4. "Engage With Us" button (centered)
+            5. Globe
+            6. Horizontal grid line
+            7. Gap (margin)
+            8. Horizontal grid line
+            9. "The Ascella Startups…" text
         ════════════════════════════════════════ */}
         <div className="m-layout">
 
-          {/* Line 1 — top of section */}
+          {/* 1 — Horizontal grid line (sits just below navbar) */}
           <div className="m-line" />
 
-          {/* Text block */}
+          {/* 2 & 3 — Heading + subtext */}
           <div className="m-text-block">
             <h2 className="m-h2">
               Controlled execution
@@ -458,10 +460,25 @@ const Controlled = () => {
             </div>
           </div>
 
-          {/* Line 2 — below text, above globe */}
-          
+          {/* 4 — Engage With Us button centered */}
+          <div className="m-engage-zone">
+            <Link href="/engageWithUs">
+              <button className="m-engage-btn">
+                Engage With Us
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="2" height="2" fill="#3D3D3D"/>
+                  <rect y="6" width="2" height="2" fill="#3D3D3D"/>
+                  <rect x="6" y="6" width="2" height="2" fill="#3D3D3D"/>
+                  <rect x="6" width="2" height="2" fill="#3D3D3D"/>
+                  <rect x="12" y="6" width="2" height="2" fill="#3D3D3D"/>
+                  <rect x="6" y="12" width="2" height="2" fill="#3D3D3D"/>
+                  <rect x="12" y="12" width="2" height="2" fill="#3D3D3D"/>
+                </svg>
+              </button>
+            </Link>
+          </div>
 
-          {/* Globe */}
+          {/* 5 — Globe */}
           <div className="m-globe-block">
             <div ref={mGlobeRef} className="m-globe-wrapper">
               <img src="/globe2.png" alt="" crossOrigin="anonymous"
@@ -470,33 +487,16 @@ const Controlled = () => {
             </div>
           </div>
 
-          {/* Line 3 — above footer */}
-          <div className="m-line" />
-          
-
-          {/* Footer zone */}
-          <div className="m-footer-zone">
-            
-            <Link href="/engageWithUs">
-              <button className="m-engage-btn">
-                Engage With Us <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="2" height="2" fill="#3D3D3D"/>
-<rect y="6" width="2" height="2" fill="#3D3D3D"/>
-<rect x="6" y="6" width="2" height="2" fill="#3D3D3D"/>
-<rect x="6" width="2" height="2" fill="#3D3D3D"/>
-<rect x="12" y="6" width="2" height="2" fill="#3D3D3D"/>
-<rect x="6" y="12" width="2" height="2" fill="#3D3D3D"/>
-<rect x="12" y="12" width="2" height="2" fill="#3D3D3D"/>
-</svg>
-
-              </button>
-            </Link>
-           
-
-          </div>
+          {/* 6 — First horizontal grid line after globe */}
           <div className="m-line" />
 
-          {/* Ascella text */}
+          {/* 7 — Gap between the two lines */}
+          <div className="m-double-line-gap" />
+
+          {/* 8 — Second horizontal grid line */}
+          <div className="m-line" />
+
+          {/* 9 — Ascella text with left/right padding */}
           <div className="m-ascella">
             <p>The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
           </div>

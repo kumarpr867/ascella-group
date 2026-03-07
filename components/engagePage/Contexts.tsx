@@ -2,524 +2,508 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-// ── Isometric Grid with Per-Cell Hover (dot-based, yellow) ───────────────────
+// ── Isometric Grid ────────────────────────────────────────────────────────────
 function IsometricHoverGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
   const rafRef    = useRef<number | null>(null);
+  const CELL_W = 100, CELL_H = 60;
 
-  const CELL_W = 100;
-  const CELL_H = 60;
-
-  const cellCenter = (col: number, row: number, offsetX: number, offsetY: number) => {
-    const x = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
-    const y = offsetY + row * (CELL_H / 2);
-    return { x, y };
-  };
-
-  const inDiamond = (px: number, py: number, cx: number, cy: number) => {
-    const dx = Math.abs(px - cx) / (CELL_W / 2);
-    const dy = Math.abs(py - cy) / (CELL_H / 2);
-    return dx + dy <= 1;
-  };
+  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
+    x: oX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2),
+    y: oY + row * (CELL_H / 2),
+  });
+  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
+    Math.abs(px - cx) / (CELL_W / 2) + Math.abs(py - cy) / (CELL_H / 2) <= 1;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resize = () => {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    };
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    resize(); window.addEventListener('resize', resize);
+    const onMove = (e: MouseEvent) => { const r = canvas.getBoundingClientRect(); mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }; };
     const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
-    canvas.addEventListener('mousemove', onMove);
-    canvas.addEventListener('mouseleave', onLeave);
-
+    canvas.addEventListener('mousemove', onMove); canvas.addEventListener('mouseleave', onLeave);
     const alphaMap = new Map<string, number>();
-    const DOTS_X = 15;
-    const DOTS_Y = 15;
-    const DOT_R  = 0.6;
-
+    const DOTS_X = 15, DOTS_Y = 15, DOT_R = 0.6;
     const loop = () => {
-      const W = canvas.width;
-      const H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
-
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      const cols    = Math.ceil(W / CELL_W) + 2;
-      const rows    = Math.ceil(H / (CELL_H / 2)) + 2;
-      const offsetX = -CELL_W / 2;
-      const offsetY = -CELL_H / 2;
-
+      const W = canvas.width, H = canvas.height; ctx.clearRect(0, 0, W, H);
+      const mx = mouseRef.current.x, my = mouseRef.current.y;
+      const cols = Math.ceil(W / CELL_W) + 2, rows = Math.ceil(H / (CELL_H / 2)) + 2;
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
+          const { x: cx, y: cy } = cellCenter(col, row, -CELL_W / 2, -CELL_H / 2);
           const key = `${col},${row}`;
-
-          const hovered = inDiamond(mx, my, cx, cy);
-          const target  = hovered ? 1 : 0;
-          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
-          alphaMap.set(key, current);
-
+          const prev = alphaMap.get(key) ?? 0;
+          const cur = prev + ((inDiamond(mx, my, cx, cy) ? 1 : 0) - prev) * 0.1;
+          alphaMap.set(key, cur);
           ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(cx,              cy - CELL_H / 2);
-          ctx.lineTo(cx + CELL_W / 2, cy);
-          ctx.lineTo(cx,              cy + CELL_H / 2);
-          ctx.lineTo(cx - CELL_W / 2, cy);
-          ctx.closePath();
-          ctx.clip();
-
-          for (let dy = 0; dy < DOTS_Y; dy++) {
-            for (let dx = 0; dx < DOTS_X; dx++) {
-              const px = cx - CELL_W / 2 + (dx + 0.5) * (CELL_W / DOTS_X);
-              const py = cy - CELL_H / 2 + (dy + 0.5) * (CELL_H / DOTS_Y);
-
-              if (!inDiamond(px, py, cx, cy)) continue;
-
-              const fdx  = (px - cx) / (CELL_W / 2);
-              const fdy  = (py - cy) / (CELL_H / 2);
-              const fade = Math.max(0, 1 - (Math.abs(fdx) + Math.abs(fdy)));
-
-              const baseAlpha  = fade * 0.18;
-              const hoverExtra = current * fade * 0.45;
-              const alpha      = baseAlpha + hoverExtra;
-
-              if (alpha < 0.01) continue;
-
-              ctx.beginPath();
-              ctx.arc(px, py, DOT_R + current * 0.4, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(234,197,52,${Math.min(1, alpha)})`;
-              ctx.fill();
-            }
+          ctx.beginPath(); ctx.moveTo(cx, cy - CELL_H/2); ctx.lineTo(cx + CELL_W/2, cy);
+          ctx.lineTo(cx, cy + CELL_H/2); ctx.lineTo(cx - CELL_W/2, cy); ctx.closePath(); ctx.clip();
+          for (let dy = 0; dy < DOTS_Y; dy++) for (let dx = 0; dx < DOTS_X; dx++) {
+            const px = cx - CELL_W/2 + (dx+0.5)*(CELL_W/DOTS_X);
+            const py = cy - CELL_H/2 + (dy+0.5)*(CELL_H/DOTS_Y);
+            if (!inDiamond(px, py, cx, cy)) continue;
+            const fade = Math.max(0, 1 - (Math.abs((px-cx)/(CELL_W/2)) + Math.abs((py-cy)/(CELL_H/2))));
+            const alpha = fade*0.18 + cur*fade*0.45; if (alpha < 0.01) continue;
+            ctx.beginPath(); ctx.arc(px, py, DOT_R + cur*0.4, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(234,197,52,${Math.min(1,alpha)})`; ctx.fill();
           }
-
           ctx.restore();
         }
       }
-
       rafRef.current = requestAnimationFrame(loop);
     };
     loop();
-
     return () => {
       window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', onMove);
-      canvas.removeEventListener('mouseleave', onLeave);
+      canvas.removeEventListener('mousemove', onMove); canvas.removeEventListener('mouseleave', onLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position:      'absolute',
-        inset:         0,
-        width:         '100%',
-        height:        '100%',
-        pointerEvents: 'auto',
-        cursor:        'crosshair',
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'auto', cursor:'crosshair' }} />;
 }
 
-const Isometric3DBox = ({
-  className,
-  opacity = 1,
-  style,
-}: {
-  className?: string;
-  opacity?: number;
-  style?: React.CSSProperties;
-}) => (
-  <svg
-    className={`${className} transform rotate-180`}
-    width="128"
-    height="75"
-    viewBox="0 0 128 75"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{ opacity, ...style }}
-  >
-    <path
-      d="M1 37.5V45L63.5 82L63.5 74.5L1 37.5Z"
-      fill="white"
-      fillOpacity="0.08"
-      stroke="white"
-      strokeOpacity="0.05"
-    />
-    <path
-      d="M127 37.5V45L63.5 82L63.5 74.5L127 37.5Z"
-      fill="white"
-      fillOpacity="0.12"
-      stroke="white"
-      strokeOpacity="0.05"
-    />
-    <path
-      d="M0.993164 37.498L16.251 46.3672L63.5049 74.4209L110.751 47.3418L127.011 37.5137C116.274 31.4326 100.696 22.4984 87.6855 14.9199C70.7188 4.91406 63.9238 0.624023 63.9238 0.624023L0.993164 37.498Z"
-      stroke="white"
-      strokeOpacity="0.12"
-    />
-  </svg>
+// ── Static Isometric Grid (for mobile, no hover — always lit) ─────────────────
+function IsometricStaticGrid() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef    = useRef<number | null>(null);
+  const CELL_W = 80, CELL_H = 48;
+
+  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
+    x: oX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2),
+    y: oY + row * (CELL_H / 2),
+  });
+  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
+    Math.abs(px - cx) / (CELL_W / 2) + Math.abs(py - cy) / (CELL_H / 2) <= 1;
+
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    resize(); window.addEventListener('resize', resize);
+    const DOTS_X = 12, DOTS_Y = 12, DOT_R = 0.7;
+    const draw = () => {
+      const W = canvas.width, H = canvas.height; ctx.clearRect(0, 0, W, H);
+      const cols = Math.ceil(W / CELL_W) + 2, rows = Math.ceil(H / (CELL_H / 2)) + 2;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const { x: cx, y: cy } = cellCenter(col, row, -CELL_W / 2, -CELL_H / 2);
+          ctx.save();
+          ctx.beginPath(); ctx.moveTo(cx, cy - CELL_H/2); ctx.lineTo(cx + CELL_W/2, cy);
+          ctx.lineTo(cx, cy + CELL_H/2); ctx.lineTo(cx - CELL_W/2, cy); ctx.closePath(); ctx.clip();
+          for (let dy = 0; dy < DOTS_Y; dy++) for (let dx = 0; dx < DOTS_X; dx++) {
+            const px = cx - CELL_W/2 + (dx+0.5)*(CELL_W/DOTS_X);
+            const py = cy - CELL_H/2 + (dy+0.5)*(CELL_H/DOTS_Y);
+            if (!inDiamond(px, py, cx, cy)) continue;
+            const fade = Math.max(0, 1 - (Math.abs((px-cx)/(CELL_W/2)) + Math.abs((py-cy)/(CELL_H/2))));
+            const alpha = fade * 0.55;
+            if (alpha < 0.01) continue;
+            ctx.beginPath(); ctx.arc(px, py, DOT_R, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(234,197,52,${Math.min(1,alpha)})`; ctx.fill();
+          }
+          ctx.restore();
+        }
+      }
+    };
+    draw();
+    window.addEventListener('resize', draw);
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', draw);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
+}
+
+// ─────────────────────────────────────────────
+// CONTACT SECTION — Desktop
+// ─────────────────────────────────────────────
+type ContactSectionProps = {
+  title: string; subtitle: string;
+  email?: { value: string }; contact?: { values: string[] };
+  location?: { address: string; postalCode: string }; workHours?: { hours: string };
+};
+const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
+  <div className="w-full bg-black text-white font-sans overflow-hidden">
+    <div className="relative h-[500px] border-b border-[#3D3D3D] flex items-center overflow-hidden" style={{ borderTop:'none' }}>
+      <div className="absolute inset-0 z-0 opacity-[0.06]" style={{ backgroundImage:`linear-gradient(30deg,#555 1px,transparent 1px),linear-gradient(-30deg,#555 1px,transparent 3px)`, backgroundSize:'64px 110px' }} />
+      <div className="absolute z-10" style={{ top:'5%', bottom:'38%', left:'60px', right:'-50px', WebkitMaskImage:'radial-gradient(ellipse 80% 80% at 45% 55%,black 15%,transparent 85%)', maskImage:'radial-gradient(ellipse 80% 80% at 45% 55%,black 15%,transparent 85%)', pointerEvents:'auto' }}>
+        <IsometricHoverGrid />
+        <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'150px', top:'90px', width:'100px', height:'60px', transform:'translate(-50%,10%)', objectFit:'fill', opacity:1, pointerEvents:'none', mixBlendMode:'screen' }} />
+        <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'350px', top:'90px', width:'100px', height:'60px', transform:'translate(-50%,20%)', objectFit:'fill', opacity:1, pointerEvents:'none', mixBlendMode:'screen' }} />
+      </div>
+      <div className="relative z-20 pt-60 pl-15 pointer-events-none">
+        <h3 className="text-[45px] mb-2 tracking-tighter leading-tight max-w-xl">{title}</h3>
+        <p className="text-gray-300 text-lg max-w-sm">{subtitle}</p>
+      </div>
+      <div className="absolute inset-0 z-30 pointer-events-none" />
+    </div>
+    <div className="flex flex-wrap md:flex-nowrap justify-center bg-black border-b border-[#3D3D3D]">
+      <div className="border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ width:'256px', height:'271px' }}>
+        <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
+          <div className="text-[13px] font-light truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
+        </div>
+        <div className="flex-1 p-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
+          <div className="text-[13px] font-light space-y-0.5">{(contact?.values??[]).slice(0,2).map((v,i)=><p key={i}>{v}</p>)}</div>
+        </div>
+      </div>
+      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303]" style={{ width:'256px', height:'271px' }}>
+        <img src="/Rectangle 9476.svg" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+      </div>
+      <div className="flex flex-col overflow-hidden" style={{ width:'256px', height:'271px' }}>
+        <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
+          <span className="text-[9px] uppercase tracking-[0.2em] mb-2 block">Location</span>
+          <p className="text-[12px] leading-snug">{location?.address??''}</p>
+          <p className="text-[11px] mt-1">{location?.postalCode}</p>
+        </div>
+        <div className="flex-1 p-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
+          <p className="text-[13px] font-light">{workHours?.hours}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 );
 
 // ─────────────────────────────────────────────
-// CONTACT SECTION
+// MOBILE CONTACT SECTION — with form appended inside same 20px padded column
 // ─────────────────────────────────────────────
-type ContactSectionProps = {
-  title: string;
-  subtitle: string;
-  email?: { value: string };
-  contact?: { values: string[] };
-  location?: { address: string; postalCode: string };
-  workHours?: { hours: string };
+type MobileContactSectionProps = {
+  title: string; subtitle: string;
+  email?: { value: string }; contact?: { values: string[] };
+  location?: { address: string; postalCode: string }; workHours?: { hours: string };
 };
-
-const ContactSection: React.FC<ContactSectionProps> = ({
-  title,
-  subtitle,
-  email,
-  contact,
-  location,
-  workHours,
-}) => {
-  return (
-    <div className="w-full bg-black text-white font-sans overflow-hidden">
-      {/* Header */}
-      <div
-        className="relative h-[500px] border-b border-[#3D3D3D] flex items-center overflow-hidden"
-        style={{ borderTop: 'none' }}
-      >
-        {/* Subtle background grid */}
-        <div
-          className="absolute inset-0 z-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `linear-gradient(30deg, #555 1px, transparent 1px), linear-gradient(-30deg, #555 1px, transparent 3px)`,
-            backgroundSize: '64px 110px',
-          }}
-        />
-
-        {/*
-          ── ISOMETRIC HOVER GRID ──
-          Starts from content left (pl-15 ≈ 60px), ends 50px after content end.
-          Content text starts ~60px from left, max-w-xl ≈ 576px → ends ~636px.
-          So grid: left=60px, width= content_width + 50px.
-          Height = upper 60% of header (300px), bottom-aligned to just above text.
-
-          Cell math (CELL_W=100, CELL_H=60, offsetX=-50, offsetY=-30):
-            Row 2 (y=30), Row 4 (y=90)
-            Center col of a ~600px wide strip: col=3 → x=250, col=4 → x=350
-
-          We place 2 vectors:
-            Cell A: col=2, row=4 → x=-50+200=150, y=-30+120=90  → center(150,90)  [left, more faded]
-            Cell B: col=4, row=4 → x=-50+400=350, y=-30+120=90  → center(350,90)  [right, brighter]
-        */}
-        <div
-          className="absolute z-10"
-          style={{
-            top:    '5%',
-            bottom: '38%',   // leaves bottom area clear for text
-            left:   '60px',  // aligns with pl-15 content start
-            right:  '-50px', // extends 50px past content end
-            // Radial fade: bright center, transparent edges
-            WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 45% 55%, black 15%, transparent 85%)',
-            maskImage:       'radial-gradient(ellipse 80% 80% at 45% 55%, black 15%, transparent 85%)',
-            pointerEvents:   'auto',
-          }}
-        >
-          {/* Hover dot-grid canvas */}
-          <IsometricHoverGrid />
-
-          {/* vector 55 — Cell A: col=2,row=4 → (150,90) — left, more faded */}
-          <img
-            src="/vector 55.png"
-            alt=""
-            style={{
-              position:      'absolute',
-              left:          '150px',
-              top:           '90px',
-              width:         '100px',
-              height:        '60px',
-              transform:     'translate(-50%, 10%)',
-              objectFit:     'fill',
-              opacity:       1,
-              pointerEvents: 'none',
-              mixBlendMode:  'screen',
-            }}
-          />
-
-          {/* vector 55 — Cell B: col=4,row=4 → (350,90) — center, brighter */}
-          <img
-            src="/vector 55.png"
-            alt=""
-            style={{
-              position:      'absolute',
-              left:          '350px',
-              top:           '90px',
-              width:         '100px',
-              height:        '60px',
-              transform:     'translate(-50%, 20%)',
-              objectFit:     'fill',
-              opacity:       1,
-              pointerEvents: 'none',
-              mixBlendMode:  'screen',
-            }}
-          />
-        </div>
-
-        {/* Text content — z-20 so it's always above grid */}
-        <div className="relative z-20 pt-60 pl-15 pointer-events-none">
-          <h3 className="text-[45px] mb-2 tracking-tighter leading-tight max-w-xl">
-            {title}
-          </h3>
-          <p className="text-gray-300 text-lg text-b1 max-w-sm">{subtitle}</p>
-        </div>
-
-        <div className="absolute inset-0 z-30 pointer-events-none" />
+const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
+  <div className="block lg:hidden w-full bg-black text-white" style={{ padding: '0 40px' }}>
+    {/* Isometric grid hero box with vector55 */}
+    <div className="w-full border border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
+      <div className="absolute inset-0 z-0">
+        <IsometricStaticGrid />
       </div>
+      <img
+        src="/vector 55.png"
+        alt=""
+        style={{
+          position: 'absolute', left: '50%', top: '50%',
+          width: '110px', height: '66px',
+          transform: 'translate(-80%, -60%)',
+          objectFit: 'fill', opacity: 0.9, pointerEvents: 'none',
+          mixBlendMode: 'screen', zIndex: 2,
+        }}
+      />
+      <img
+        src="/vector 55.png"
+        alt=""
+        style={{
+          position: 'absolute', left: '50%', top: '50%',
+          width: '110px', height: '66px',
+          transform: 'translate(10%, -20%)',
+          objectFit: 'fill', opacity: 0.9, pointerEvents: 'none',
+          mixBlendMode: 'screen', zIndex: 2,
+        }}
+      />
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}>
+        <h3 className="text-[22px] font-light leading-snug tracking-tight mb-1">{title}</h3>
+        <p className="text-gray-400 text-[13px]">{subtitle}</p>
+      </div>
+    </div>
 
-      {/* Grid Boxes */}
-      <div className="flex flex-wrap md:flex-nowrap justify-center bg-black border-b border-[#3D3D3D]">
-        {/* Left */}
-        <div
-          className="border-r border-[#3D3D3D] flex flex-col overflow-hidden"
-          style={{ width: '256px', height: '271px' }}
-        >
-          <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
-            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">
-              Email
-            </span>
-            <div className="text-[13px] font-light truncate">
-              {email?.value ? email.value.split('\n')[0] : ''}
-            </div>
-          </div>
-          <div className="flex-1 p-6 flex flex-col justify-center">
-            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">
-              Contact
-            </span>
-            <div className="text-[13px] font-light space-y-0.5">
-              {(contact?.values ?? []).slice(0, 2).map((v, i) => (
-                <p key={i}>{v}</p>
-              ))}
-            </div>
-          </div>
+    {/* Email box */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+      <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
+      {(email?.value ?? '').split('\n').map((v, i) => (
+        <p key={i} className="text-[13px] font-light">{v}</p>
+      ))}
+    </div>
+
+    {/* Contact box */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+      <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
+      {(contact?.values ?? []).map((v, i) => (
+        <p key={i} className="text-[13px] font-light">{v}</p>
+      ))}
+    </div>
+
+    {/* 3D image box */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 bg-[#030303] overflow-hidden" style={{ height: '200px' }}>
+      <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+    </div>
+
+    {/* Location box */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+      <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Location</span>
+      <p className="text-[13px] leading-snug">{location?.address ?? ''}</p>
+      <p className="text-[12px] mt-1 text-gray-400">{location?.postalCode}</p>
+    </div>
+
+    {/* Work Hours box */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+      <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
+      <p className="text-[13px] font-light">{workHours?.hours}</p>
+    </div>
+
+    {/* ── FORM — same column, same 20px padded wrapper, border continues ── */}
+    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-7">
+      <h5 className="text-xl font-light mb-2">Provide operating context to initiate alignment.</h5>
+      <p className="text-gray-400 text-xs mb-5">This form captures high-level operating information required to initiate an alignment conversation.</p>
+      <div className="border-t border-[#3D3D3D] w-[calc(100%+2.5rem)] -mx-5 mb-6" />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-white">Full Name</label>
+          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
         </div>
-
-        {/* Center */}
-      {/* Center */}
-<div
-  className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303]"
-  style={{ width: '256px', height: '271px' }}
->
-  <img
-    src="/Rectangle 9476.svg"
-    alt=""
-    style={{
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      display: 'block',
-    }}
-  />
-</div>
-
-        {/* Right */}
-        <div className="flex flex-col overflow-hidden" style={{ width: '256px', height: '271px' }}>
-          <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
-            <span className="text-[9px] uppercase tracking-[0.2em]  mb-2 block">
-              Location
-            </span>
-            <p className="text-[12px]  leading-snug">
-              {location?.address ?? ''}
-            </p>
-            <p className="text-[11px] mt-1">{location?.postalCode}</p>
-          </div>
-          <div className="flex-1 p-6 flex flex-col justify-center">
-            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">
-              Work Hours
-            </span>
-            <p className="text-[13px] font-light">{workHours?.hours}</p>
-          </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-white">Organisation name</label>
+          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-white">Role / position</label>
+          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-white">Email address</label>
+          <input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
+        </div>
+        <div className="col-span-2 flex flex-col gap-1">
+          <label className="text-xs text-white">Organisation type</label>
+          <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
+        </div>
+        <div className="col-span-2 flex flex-col gap-1">
+          <label className="text-xs text-white">Primary operating need</label>
+          <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
+        </div>
+        <div className="col-span-2 flex flex-col gap-1">
+          <textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" />
+        </div>
+        <div className="col-span-2 mt-1">
+          <button className="relative group w-max px-6 py-2 text-white text-sm">
+            <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
+            <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white" />
+            <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white" />
+            <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white" />
+            Submit
+          </button>
         </div>
       </div>
     </div>
-  );
-};
+
+    {/* bottom spacing */}
+   
+  </div>
+);
 
 // ─────────────────────────────────────────────
-// ACCORDION ITEM
+// DESKTOP ACCORDION ITEM (hover-based, unchanged)
 // ─────────────────────────────────────────────
-type AccordionItemProps = {
-  title: string;
-  index?: string;
-  description?: string;
-  open?: boolean;
-  onMouseEnter?: () => void;
-};
-
-const AccordionItem: React.FC<AccordionItemProps> = ({
-  title,
-  index,
-  description,
-  open = false,
-  onMouseEnter,
-}) => {
-  return (
-    <div
-      onMouseEnter={onMouseEnter}
-      className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${
-        open ? 'bg-[#0A0C10]' : 'hover:bg-[#050505]'
-      }`}
-    >
-      <div className="flex justify-between items-start">
-        <div className="max-w-xl">
-          <h4
-            className={`text-xl md:text-2xl font-light transition-colors ${
-              open ? 'text-white' : 'text-gray-300'
-            }`}
-          >
-            {title}
-            {open && <span className="text-white ml-2">•</span>}
-          </h4>
-          <div
-            className={`overflow-hidden transition-all duration-500 ${
-              open ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'
-            }`}
-          >
-            {description && (
-              <p className="text-sm text-white leading-relaxed">{description}</p>
-            )}
-          </div>
-        </div>
-        <div
-          className={`text-2xl font-light tracking-tighter transition-colors ${
-            open ? 'text-white' : 'text-gray-500'
-          }`}
-        >
-          {index}
+type AccordionItemProps = { title:string; index?:string; description?:string; open?:boolean; onMouseEnter?:()=>void; };
+const AccordionItem: React.FC<AccordionItemProps> = ({ title, index, description, open=false, onMouseEnter }) => (
+  <div onMouseEnter={onMouseEnter} className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${open?'bg-[#0A0C10]':'hover:bg-[#050505]'}`}>
+    <div className="flex justify-between items-start">
+      <div className="max-w-xl">
+        <h4 className={`text-xl md:text-2xl font-light transition-colors ${open?'text-white':'text-gray-300'}`}>
+          {title}{open&&<span className="text-white ml-2">•</span>}
+        </h4>
+        <div className={`overflow-hidden transition-all duration-500 ${open?'max-h-40 opacity-100 mt-4':'max-h-0 opacity-0'}`}>
+          {description&&<p className="text-sm text-white leading-relaxed">{description}</p>}
         </div>
       </div>
+      <div className={`text-2xl font-light tracking-tighter transition-colors ${open?'text-white':'text-gray-500'}`}>{index}</div>
     </div>
-  );
-};
+  </div>
+);
 
 // ─────────────────────────────────────────────
 // ICON SVGS
 // ─────────────────────────────────────────────
 const Icon2 = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
-    <path
-      d="M39.7154 12.4714L49.6871 29.7428L39.715 47.0156L19.7703 47.0153L9.7986 29.7438L19.7702 12.4702L39.7154 12.4714Z"
-      stroke="#3D3D3D"
-    />
-    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" />
-    <circle cx="29.5" cy="29.5" r="4" fill="white" stroke="#3D3D3D" />
+    <path d="M39.7154 12.4714L49.6871 29.7428L39.715 47.0156L19.7703 47.0153L9.7986 29.7438L19.7702 12.4702L39.7154 12.4714Z" stroke="#3D3D3D" />
+    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" /><circle cx="29.5" cy="29.5" r="4" fill="white" stroke="#3D3D3D" />
   </svg>
 );
-
 const Icon3 = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
-    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" />
-    <circle cx="29.5" cy="29.5" r="19" stroke="#3D3D3D" />
-    <path
-      d="M29.5 10.5C30.0026 10.5 30.5951 10.8657 31.2246 11.8096C31.8416 12.7348 32.4174 14.1067 32.9082 15.8467C33.8879 19.32 34.5 24.1477 34.5 29.5C34.5 34.8523 33.8879 39.68 32.9082 43.1533C32.4174 44.8933 31.8416 46.2652 31.2246 47.1904C30.5951 48.1343 30.0026 48.5 29.5 48.5C28.9974 48.5 28.4049 48.1343 27.7754 47.1904C27.1584 46.2652 26.5826 44.8933 26.0918 43.1533C25.1121 39.68 24.5 34.8523 24.5 29.5C24.5 24.1477 25.1121 19.32 26.0918 15.8467C26.5826 14.1067 27.1584 12.7348 27.7754 11.8096C28.4049 10.8657 28.9974 10.5 29.5 10.5Z"
-      stroke="#3D3D3D"
-    />
-    <path
-      d="M10.5 29.5C10.5 28.9974 10.8657 28.4049 11.8096 27.7754C12.7348 27.1584 14.1067 26.5826 15.8467 26.0918C19.32 25.1121 24.1477 24.5 29.5 24.5C34.8523 24.5 39.68 25.1121 43.1533 26.0918C44.8933 26.5826 46.2652 27.1584 47.1904 27.7754C48.1343 28.4049 48.5 28.9974 48.5 29.5C48.5 30.0025 48.1343 30.5951 47.1904 31.2246C46.2652 31.8416 44.8933 32.4174 43.1533 32.9082C39.68 33.8879 34.8523 34.5 29.5 34.5C24.1477 34.5 19.32 33.8879 15.8467 32.9082C14.1067 32.4174 12.7348 31.8416 11.8096 31.2246C10.8657 30.5951 10.5 30.0026 10.5 29.5Z"
-      stroke="#3D3D3D"
-    />
+    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" /><circle cx="29.5" cy="29.5" r="19" stroke="#3D3D3D" />
+    <path d="M29.5 10.5C30.0026 10.5 30.5951 10.8657 31.2246 11.8096C31.8416 12.7348 32.4174 14.1067 32.9082 15.8467C33.8879 19.32 34.5 24.1477 34.5 29.5C34.5 34.8523 33.8879 39.68 32.9082 43.1533C32.4174 44.8933 31.8416 46.2652 31.2246 47.1904C30.5951 48.1343 30.0026 48.5 29.5 48.5C28.9974 48.5 28.4049 48.1343 27.7754 47.1904C27.1584 46.2652 26.5826 44.8933 26.0918 43.1533C25.1121 39.68 24.5 34.8523 24.5 29.5C24.5 24.1477 25.1121 19.32 26.0918 15.8467C26.5826 14.1067 27.1584 12.7348 27.7754 11.8096C28.4049 10.8657 28.9974 10.5 29.5 10.5Z" stroke="#3D3D3D" />
+    <path d="M10.5 29.5C10.5 28.9974 10.8657 28.4049 11.8096 27.7754C12.7348 27.1584 14.1067 26.5826 15.8467 26.0918C19.32 25.1121 24.1477 24.5 29.5 24.5C34.8523 24.5 39.68 25.1121 43.1533 26.0918C44.8933 26.5826 46.2652 27.1584 47.1904 27.7754C48.1343 28.4049 48.5 28.9974 48.5 29.5C48.5 30.0025 48.1343 30.5951 47.1904 31.2246C46.2652 31.8416 44.8933 32.4174 43.1533 32.9082C39.68 33.8879 34.8523 34.5 29.5 34.5C24.1477 34.5 19.32 33.8879 15.8467 32.9082C14.1067 32.4174 12.7348 31.8416 11.8096 31.2246C10.8657 30.5951 10.5 30.0026 10.5 29.5Z" stroke="#3D3D3D" />
   </svg>
 );
-
 const Icon4 = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
-    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" />
-    <circle cx="24" cy="30" r="23.5" stroke="#3D3D3D" />
-    <circle cx="17.5" cy="29.5" r="17" stroke="#3D3D3D" />
-    <circle cx="10" cy="28" r="9.5" stroke="#3D3D3D" />
+    <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" /><circle cx="24" cy="30" r="23.5" stroke="#3D3D3D" />
+    <circle cx="17.5" cy="29.5" r="17" stroke="#3D3D3D" /><circle cx="10" cy="28" r="9.5" stroke="#3D3D3D" />
   </svg>
 );
-
 const Icon5 = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
     <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" />
-    <path
-      d="M29.5 9.5C30.1676 9.5 30.8925 9.92752 31.6299 10.9111C32.3606 11.8859 33.0398 13.3282 33.6191 15.1553C34.7761 18.804 35.5 23.8758 35.5 29.5C35.5 35.1242 34.7761 40.196 33.6191 43.8447C33.0398 45.6718 32.3606 47.1141 31.6299 48.0889C30.8925 49.0725 30.1676 49.5 29.5 49.5C28.8324 49.5 28.1075 49.0725 27.3701 48.0889C26.6394 47.1141 25.9602 45.6718 25.3809 43.8447C24.2239 40.196 23.5 35.1242 23.5 29.5C23.5 23.8758 24.2239 18.804 25.3809 15.1553C25.9602 13.3282 26.6394 11.8859 27.3701 10.9111C28.1075 9.92752 28.8324 9.5 29.5 9.5Z"
-      stroke="#3D3D3D"
-    />
-    <path
-      d="M9.5 29.5C9.5 28.8324 9.92752 28.1075 10.9111 27.3701C11.8859 26.6394 13.3282 25.9602 15.1553 25.3809C18.804 24.2239 23.8758 23.5 29.5 23.5C35.1242 23.5 40.196 24.2239 43.8447 25.3809C45.6718 25.9602 47.1141 26.6394 48.0889 27.3701C49.0725 28.1075 49.5 28.8324 49.5 29.5C49.5 30.1676 49.0725 30.8925 48.0889 31.6299C47.1141 32.3606 45.6718 33.0398 43.8447 33.6191C40.196 34.7761 35.1242 35.5 29.5 35.5C23.8758 35.5 18.804 34.7761 15.1553 33.6191C13.3282 33.0398 11.8859 32.3606 10.9111 31.6299C9.92752 30.8925 9.5 30.1676 9.5 29.5Z"
-      stroke="#3D3D3D"
-    />
-    <path
-      d="M15.3579 43.6422C14.8859 43.1701 14.6756 42.3552 14.8497 41.1383C15.0223 39.9323 15.5619 38.4322 16.4442 36.7306C18.2061 33.3325 21.2806 29.2343 25.2574 25.2574C29.2343 21.2805 33.3325 18.2061 36.7307 16.4441C38.4323 15.5618 39.9323 15.0223 41.1383 14.8497C42.3553 14.6755 43.1702 14.8858 43.6422 15.3579C44.1143 15.83 44.3246 16.6449 44.1504 17.8618C43.9779 19.0678 43.4383 20.5678 42.556 22.2695C40.794 25.6676 37.7196 29.7658 33.7427 33.7427C29.7658 37.7196 25.6676 40.794 22.2695 42.556C20.5679 43.4383 19.0678 43.9778 17.8618 44.1504C16.6449 44.3245 15.83 44.1142 15.3579 43.6422Z"
-      stroke="#3D3D3D"
-    />
-    <path
-      d="M43.642 43.6422C43.17 44.1142 42.3551 44.3245 41.1382 44.1504C39.9322 43.9778 38.4321 43.4383 36.7305 42.556C33.3324 40.794 29.2342 37.7196 25.2573 33.7427C21.2804 29.7658 18.206 25.6676 16.444 22.2695C15.5617 20.5678 15.0221 19.0678 14.8495 17.8618C14.6754 16.6449 14.8857 15.83 15.3578 15.3579C15.8298 14.8858 16.6447 14.6755 17.8617 14.8497C19.0677 15.0223 20.5677 15.5618 22.2693 16.4441C25.6675 18.2061 29.7657 21.2805 33.7426 25.2574C37.7194 29.2343 40.7939 33.3325 42.5558 36.7306C43.4381 38.4322 43.9777 39.9323 44.1503 41.1383C44.3244 42.3552 44.1141 43.1701 43.642 43.6422Z"
-      stroke="#3D3D3D"
-    />
+    <path d="M29.5 9.5C30.1676 9.5 30.8925 9.92752 31.6299 10.9111C32.3606 11.8859 33.0398 13.3282 33.6191 15.1553C34.7761 18.804 35.5 23.8758 35.5 29.5C35.5 35.1242 34.7761 40.196 33.6191 43.8447C33.0398 45.6718 32.3606 47.1141 31.6299 48.0889C30.8925 49.0725 30.1676 49.5 29.5 49.5C28.8324 49.5 28.1075 49.0725 27.3701 48.0889C26.6394 47.1141 25.9602 45.6718 25.3809 43.8447C24.2239 40.196 23.5 35.1242 23.5 29.5C23.5 23.8758 24.2239 18.804 25.3809 15.1553C25.9602 13.3282 26.6394 11.8859 27.3701 10.9111C28.1075 9.92752 28.8324 9.5 29.5 9.5Z" stroke="#3D3D3D" />
+    <path d="M9.5 29.5C9.5 28.8324 9.92752 28.1075 10.9111 27.3701C11.8859 26.6394 13.3282 25.9602 15.1553 25.3809C18.804 24.2239 23.8758 23.5 29.5 23.5C35.1242 23.5 40.196 24.2239 43.8447 25.3809C45.6718 25.9602 47.1141 26.6394 48.0889 27.3701C49.0725 28.1075 49.5 28.8324 49.5 29.5C49.5 30.1676 49.0725 30.8925 48.0889 31.6299C47.1141 32.3606 45.6718 33.0398 43.8447 33.6191C40.196 34.7761 35.1242 35.5 29.5 35.5C23.8758 35.5 18.804 34.7761 15.1553 33.6191C13.3282 33.0398 11.8859 32.3606 10.9111 31.6299C9.92752 30.8925 9.5 30.1676 9.5 29.5Z" stroke="#3D3D3D" />
+    <path d="M15.3579 43.6422C14.8859 43.1701 14.6756 42.3552 14.8497 41.1383C15.0223 39.9323 15.5619 38.4322 16.4442 36.7306C18.2061 33.3325 21.2806 29.2343 25.2574 25.2574C29.2343 21.2805 33.3325 18.2061 36.7307 16.4441C38.4323 15.5618 39.9323 15.0223 41.1383 14.8497C42.3553 14.6755 43.1702 14.8858 43.6422 15.3579C44.1143 15.83 44.3246 16.6449 44.1504 17.8618C43.9779 19.0678 43.4383 20.5678 42.556 22.2695C40.794 25.6676 37.7196 29.7658 33.7427 33.7427C29.7658 37.7196 25.6676 40.794 22.2695 42.556C20.5679 43.4383 19.0678 43.9778 17.8618 44.1504C16.6449 44.3245 15.83 44.1142 15.3579 43.6422Z" stroke="#3D3D3D" />
+    <path d="M43.642 43.6422C43.17 44.1142 42.3551 44.3245 41.1382 44.1504C39.9322 43.9778 38.4321 43.4383 36.7305 42.556C33.3324 40.794 29.2342 37.7196 25.2573 33.7427C21.2804 29.7658 18.206 25.6676 16.444 22.2695C15.5617 20.5678 15.0221 19.0678 14.8495 17.8618C14.6754 16.6449 14.8857 15.83 15.3578 15.3579C15.8298 14.8858 16.6447 14.6755 17.8617 14.8497C19.0677 15.0223 20.5677 15.5618 22.2693 16.4441C25.6675 18.2061 29.7657 21.2805 33.7426 25.2574C37.7194 29.2343 40.7939 33.3325 42.5558 36.7306C43.4381 38.4322 43.9777 39.9323 44.1503 41.1383C44.3244 42.3552 44.1141 43.1701 43.642 43.6422Z" stroke="#3D3D3D" />
   </svg>
 );
-
 const Icon6 = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59" fill="none">
     <circle cx="29.5" cy="29.5" r="29" stroke="#3D3D3D" />
-    <circle cx="30" cy="24" r="11.5" stroke="#3D3D3D" />
-    <circle cx="37" cy="33" r="11.5" stroke="#3D3D3D" />
-    <circle cx="22" cy="33" r="11.5" stroke="#3D3D3D" />
+    <circle cx="30" cy="24" r="11.5" stroke="#3D3D3D" /><circle cx="37" cy="33" r="11.5" stroke="#3D3D3D" /><circle cx="22" cy="33" r="11.5" stroke="#3D3D3D" />
   </svg>
 );
+
+// ─────────────────────────────────────────────
+// SHARED TYPE
+// ─────────────────────────────────────────────
+type AccordionData = { id: string; title: string; description: string };
+
+// ─────────────────────────────────────────────
+// MOBILE ACCORDION ITEM (click-based)
+// ─────────────────────────────────────────────
+type MobileAccItemProps = { title:string; index?:string; description?:string; open?:boolean; onClick?:()=>void; };
+const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description, open=false, onClick }) => (
+  <div onClick={onClick} className={`border-b border-[#3D3D3D] py-5 px-6 cursor-pointer transition-colors duration-300 ${open?'bg-[#0A0C10]':''}`}>
+    <div className="flex justify-between items-start gap-3">
+      <div className="flex-1">
+        <h4 className={`text-sm font-light leading-snug transition-colors ${open?'text-white':'text-gray-200'}`}>
+          {title}{open&&<span className="ml-2 text-white">•</span>}
+        </h4>
+        <div className={`overflow-hidden transition-all duration-300 ${open?'max-h-40 opacity-100 mt-3':'max-h-0 opacity-0'}`}>
+          {description&&<p className="text-xs text-gray-300 leading-relaxed">{description}</p>}
+        </div>
+      </div>
+      <span className={`text-xs font-light tracking-tighter shrink-0 mt-0.5 transition-colors ${open?'text-white':''}`}>{index}</span>
+    </div>
+  </div>
+);
+
+// ─────────────────────────────────────────────
+// MOBILE SECTION — alignment carousel + spacer + what happens next
+// ─────────────────────────────────────────────
+const mobileSlides = [
+  { icon: <Icon2 />, label: 'Operating structure and decision ownership' },
+  { icon: <Icon4 />, label: 'Accountability and escalation models' },
+  { icon: <Icon5 />, label: 'Current execution challenges and constraints' },
+  { icon: <Icon3 />, label: 'Risk, regulatory, and security considerations' },
+  { icon: <Icon6 />, label: 'Readiness for governed execution' },
+];
+
+const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordionData }) => {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [openItem, setOpenItem]       = useState<string | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd   = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) setActiveSlide(p => diff > 0 ? Math.min(p+1, mobileSlides.length-1) : Math.max(p-1, 0));
+    touchStartX.current = null;
+  };
+  const toggle = (id: string) => setOpenItem(prev => prev === id ? null : id);
+
+  return (
+    <div className="block lg:hidden w-full" style={{ padding: '0 40px' }}>
+
+      {/* ── "What alignment typically covers" heading ── */}
+      <div className="pt-8 pb-5 px-2">
+        <h3 className="text-2xl font-light">What alignment typically covers</h3>
+      </div>
+
+      {/* 1. Image box */}
+      <div className="w-full border border-[#3D3D3D] overflow-hidden" style={{ height: '240px' }}>
+        <img src="/alignment.png" alt="Alignment" className="w-full h-full object-cover" />
+      </div>
+
+      {/* 2. SVG carousel */}
+      <div
+        className="w-full border border-[#3D3D3D] border-t-0 flex flex-col items-center justify-center py-10 gap-5"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        style={{ minHeight: '180px' }}
+      >
+        <div className="flex flex-col items-center gap-5 w-full" style={{ transition: 'opacity 0.3s ease', opacity: 1 }}>
+          <div className="flex items-center justify-center" key={`icon-${activeSlide}`} style={{ animation: 'fadeIn 0.3s ease' }}>
+            {mobileSlides[activeSlide].icon}
+          </div>
+          <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8" style={{ animation: 'fadeIn 0.3s ease' }}>
+            {mobileSlides[activeSlide].label}
+          </p>
+        </div>
+        <div className="flex items-center gap-[7px]">
+          {mobileSlides.map((_, i) => (
+            <button key={i} onClick={() => setActiveSlide(i)} className="rounded-full transition-all duration-300"
+              style={{ width: i === activeSlide ? '8px' : '6px', height: i === activeSlide ? '8px' : '6px', background: i === activeSlide ? '#ffffff' : '#3a3a3a' }} />
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* 3. Spacer */}
+      <div className="w-full border border-[#3D3D3D] border-t-0" style={{ height: '44px' }} />
+
+      {/* 4. What Happens Next header */}
+      <div className="w-full border border-[#3D3D3D] border-t-0 px-5 pt-7 pb-7">
+        <div className="flex items-center gap-3 mb-4">
+          <svg width="14" height="14" viewBox="0 0 26 26" fill="none">
+            <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+            <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
+            <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+            <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+          </svg>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white font-light">WHAT HAPPENS NEXT</span>
+        </div>
+        <h3 className="text-[1.6rem] font-light leading-snug">
+          Each engagement progresses through a defined alignment pathway.
+        </h3>
+      </div>
+
+      {/* 5. Accordion items */}
+      <div className="w-full border border-[#3D3D3D] border-t-0">
+        {accordionData.map((item) => (
+          <MobileAccItem
+            key={item.id}
+            title={item.title}
+            index={`[${item.id}]`}
+            description={item.description}
+            open={openItem === item.id}
+            onClick={() => toggle(item.id)}
+          />
+        ))}
+        <div className="px-5 py-5 border-t border-[#3D3D3D]">
+          <p className="text-xs">No engagement proceeds without operating alignment.</p>
+        </div>
+      </div>
+
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────
 // MAIN PAGE COMPONENT
 // ─────────────────────────────────────────────
-
-const NAVBAR_HEIGHT = 64;
-
 const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
 
-  const boxBase =
-    'w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start';
-  const textStyle =
-    "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
-  const overlayCardStyle =
-    'w-full md:w-[289px] h-[109px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
+  const boxBase        = 'w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start';
+  const textStyle      = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
+  const overlayCard    = 'w-full md:w-[289px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
 
-  const accordionData = [
-    {
-      id: '01',
-      title: 'Review and context assessment',
-      description:
-        'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.',
-    },
-    {
-      id: '02',
-      title: 'Alignment conversation',
-      description:
-        'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.',
-    },
-    {
-      id: '03',
-      title: 'Engagement pathway definition',
-      description:
-        'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.',
-    },
+  const accordionData: AccordionData[] = [
+    { id:'01', title:'Review and context assessment',    description:'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
+    { id:'02', title:'Alignment conversation',           description:'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
+    { id:'03', title:'Engagement pathway definition',    description:'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
   ];
 
   return (
@@ -527,82 +511,44 @@ const ContextsPage = () => {
       <div className="relative w-full border border-[#3D3D3D] flex flex-col lg:flex-row items-start">
 
         {/* Background Grid */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(61,61,61,0.3) 1px, transparent 1px)`,
-            backgroundSize: '40px 40px',
-          }}
-        />
+        <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage:`linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`, backgroundSize:'40px 40px' }} />
 
-        {/* ── LEFT COLUMN — STICKY BELOW NAVBAR ── */}
-        <div
-          className="relative z-10 w-full lg:w-2/6 border-b lg:border-b-0 lg:border-r border-[#3D3D3D] p-7 flex flex-col bg-black lg:sticky lg:top-[64px] lg:h-[calc(100vh-64px)] lg:overflow-y-auto"
-        >
+        {/* ── LEFT COLUMN (FORM) — Desktop only (hidden on mobile) ── */}
+        <div className="hidden lg:flex relative z-10 w-full lg:w-2/6 lg:border-t-0 lg:border-r border-[#3D3D3D] p-7 flex-col bg-black order-2 lg:order-1 lg:sticky lg:top-[64px] lg:self-start">
           <header className="max-w-md">
-            <h5 className="text-2xl font-light mb-3">
-              Provide operating context to <br /> initiate alignment.
-            </h5>
-            <p className="text-gray-400 text-sm mb-1">
-              This form captures high-level operating information required to initiate an alignment
-              conversation.
-            </p>
+            <h5 className="text-2xl mb-3">Provide operating context to <br /> initiate alignment.</h5>
+            <p className="text-gray-300 text-sm mb-1">This form captures high-level operating information required to initiate an alignment conversation.</p>
           </header>
-
           <div className="border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7 my-4" />
-
           <div className="pt-6">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Full Name</label>
-                <input
-                  type="text"
-                  className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600"
-                />
+                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Organisation name</label>
-                <input
-                  type="text"
-                  className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600"
-                />
+                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Role / position</label>
-                <input
-                  type="text"
-                  className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600"
-                />
+                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-white">Email address</label>
-                <input
-                  type="email"
-                  className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600"
-                />
+                <input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
               </div>
-
               <div className="md:col-span-2 flex flex-col gap-1">
                 <label className="text-xs text-white">Organisation type</label>
-                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none">
-                  <option>Select...</option>
-                </select>
+                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
               </div>
-
               <div className="md:col-span-2 flex flex-col gap-1">
                 <label className="text-xs text-white">Primary operating need</label>
-                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none">
-                  <option>Select...</option>
-                </select>
+                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
               </div>
-
               <div className="md:col-span-2 flex flex-col gap-1">
-                <textarea
-                  placeholder="Describe your current execution or operating challenge..."
-                  className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700"
-                />
+                <textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" />
               </div>
-
               <div className="col-span-1 mt-2">
                 <button className="relative group w-max px-6 py-2 text-white text-sm">
                   <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
@@ -612,99 +558,96 @@ const ContextsPage = () => {
                   Submit
                 </button>
               </div>
-            </form>
-
+            </div>
             <div className="mt-8 border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7" />
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN — SCROLLABLE CONTENT ── */}
-        <div className="relative z-10 w-full lg:w-4/6 flex flex-col bg-black">
+        {/* ── RIGHT COLUMN (CONTENT) — Desktop right, Mobile full width ── */}
+        <div className="relative z-10 w-full lg:w-4/6 flex flex-col bg-black order-1 lg:order-2">
 
-          {/* HERO */}
-          <div className="min-h-[500px] md:h-[735px] relative p-6 md:p-15 flex flex-col justify-center border-b border-[#3D3D3D]">
-            <div className="absolute inset-0 z-0 opacity-15 overflow-hidden">
+          {/* Mobile top divider */}
+          <div className="block lg:hidden w-full border-t border-[#3D3D3D]" />
+
+          {/* ── HERO ── */}
+          <div className="relative border-b border-[#3D3D3D] overflow-hidden">
+            <div className="absolute inset-0 z-0 opacity-15">
               <img src="/engagement1.png" alt="" className="w-full h-full object-cover" />
             </div>
 
-            <div className="relative z-10 mb-12">
-              <h2 className="text-4xl md:text-6xl font-normal leading-tight">
-                Engagement begins <br />
-                with <span className="text-gray-400">operating alignment.</span>
-              </h2>
-              <p className="text-lg md:text-xl mt-4 font-light text-gray-400">
-                Not delivery discussions.
-              </p>
+            {/* MOBILE hero */}
+            <div className="block lg:hidden">
+              <div className="relative z-10 px-6 pt-8 pb-6">
+                <h2 className="text-4xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
+                <p className="text-lg mt-3 font-light text-gray-400">Not delivery discussions.</p>
+              </div>
+              <div className="relative z-10 px-6 pb-8 flex flex-col gap-3">
+                <div className={overlayCard} style={{ minHeight:'109px' }}>
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
+                  <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
+                </div>
+                <div className={overlayCard} style={{ minHeight:'109px' }}>
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
+                  <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
+                </div>
+              </div>
+              <div className="relative z-10 w-full border-t border-[#3D3D3D]" />
             </div>
 
-            <div className="relative z-20 flex flex-col md:flex-row gap-4">
-              <div className={overlayCardStyle}>
-                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">
-                  Initial alignment focus
-                </span>
-                <p className="text-[13px] leading-tight text-white font-light">
-                  The first interaction is designed to understand your operating environment,
-                  governance maturity, and execution constraints.
-                </p>
+            {/* DESKTOP hero (unchanged) */}
+            <div className="hidden lg:flex min-h-[500px] md:h-[735px] p-6 md:p-15 flex-col justify-center">
+              <div className="relative z-10 mb-12">
+                <h2 className="text-4xl md:text-6xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
+                <p className="text-lg md:text-xl mt-4 font-light text-gray-400">Not delivery discussions.</p>
               </div>
-              <div className={overlayCardStyle}>
-                <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">
-                  Objective
-                </span>
-                <p className="text-[13px] leading-tight text-white font-light">
-                  The objective is to determine whether a structured operating engagement is
-                  appropriate.
-                </p>
+              <div className="relative z-20 flex flex-col md:flex-row gap-4">
+                <div className={overlayCard} style={{ height:'109px' }}>
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
+                  <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
+                </div>
+                <div className={overlayCard} style={{ height:'109px' }}>
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
+                  <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* WHAT ALIGNMENT COVERS */}
-          <div className="w-full">
+          {/* ── MOBILE: carousel + spacer + what happens next ── */}
+          <MobileSections accordionData={accordionData} />
+
+          {/* ── MOBILE CONTACT SECTION + FORM (all in one 20px padded column) ── */}
+          <MobileContactSection
+            title="Single point of contact for engagement coordination"
+            subtitle="All engagement coordination is managed centrally."
+            email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
+            contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
+            location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
+            workHours={{ hours:'24/7 availability' }}
+          />
+
+          {/* ── DESKTOP: alignment grid (original, unchanged) ── */}
+          <div className="hidden lg:block w-full">
             <div className="px-6 md:px-12 pt-16 pb-6">
               <h3 className="text-3xl md:text-4xl font-light">What alignment typically covers</h3>
             </div>
-
             <div className="flex flex-wrap border-t border-[#3D3D3D]">
-              <div
-                className={`${boxBase} md:border-r border-[#3D3D3D] items-center justify-center pt-12 overflow-hidden`}
-              >
-                <img
-                  src="/alignment.png"
-                  alt="Alignment Symbol"
-                  className="w-[293px] h-[257px] object-cover"
-                />
+              <div className={`${boxBase} md:border-r border-[#3D3D3D] items-center justify-center pt-12 overflow-hidden`}>
+                <img src="/alignment.png" alt="Alignment Symbol" className="w-[293px] h-[257px] object-cover" />
               </div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
-                <Icon2 />
-                <p className={textStyle}>Operating structure and decision ownership</p>
-              </div>
-              <div className={`${boxBase} pt-26`}>
-                <Icon4 />
-                <p className={textStyle}>Accountability and escalation models</p>
-              </div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
-                <Icon5 />
-                <p className={textStyle}>
-                  Current execution challenges <br /> and constraints
-                </p>
-              </div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}>
-                <Icon3 />
-                <p className={textStyle}>Risk, regulatory, and security considerations</p>
-              </div>
-              <div className={`${boxBase} pt-26`}>
-                <Icon6 />
-                <p className={textStyle}>Readiness for governed execution</p>
-              </div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
+              <div className={`${boxBase} pt-26`}><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon5 /><p className={textStyle}>Current execution challenges <br /> and constraints</p></div>
+              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
+              <div className={`${boxBase} pt-26`}><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
             </div>
           </div>
 
-          {/* ACCORDION — WHAT HAPPENS NEXT */}
-          <div className="border-t border-[#3D3D3D] w-full">
+          {/* ── DESKTOP: What Happens Next accordion (original, unchanged) ── */}
+          <div className="hidden lg:block border-t border-[#3D3D3D] w-full">
             <div className="px-6 md:px-12 py-12">
               <div className="flex items-center gap-4 text-xs mb-8">
-                <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
                   <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
                   <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
                   <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
@@ -712,11 +655,8 @@ const ContextsPage = () => {
                 </svg>
                 <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
               </div>
-              <h3 className="text-3xl md:text-5xl font-light max-w-2xl leading-[1.1]">
-                Each engagement progresses through a defined alignment pathway.
-              </h3>
+              <h3 className="text-3xl md:text-5xl font-light max-w-2xl leading-[1.1]">Each engagement progresses through a defined alignment pathway.</h3>
             </div>
-
             <div className="border-t border-[#3D3D3D]">
               {accordionData.map((item) => (
                 <AccordionItem
@@ -728,27 +668,21 @@ const ContextsPage = () => {
                   onMouseEnter={() => setOpenAccordion(item.id)}
                 />
               ))}
-
               <div className="py-8 px-6 md:px-12">
-                <p className="text-sm">
-                  No engagement proceeds without operating alignment.
-                </p>
+                <p className="text-sm">No engagement proceeds without operating alignment.</p>
               </div>
             </div>
           </div>
 
-          {/* CONTACT SECTION */}
-          <div className="border-t border-[#3D3D3D]">
+          {/* DESKTOP CONTACT SECTION */}
+          <div className="hidden lg:block border-t border-[#3D3D3D]">
             <ContactSection
               title="Single point of contact for engagement coordination"
               subtitle="All engagement coordination is managed centrally."
-              email={{ value: 'ag@ascella.in\nhello@ascellagroup.com' }}
-              contact={{ values: ['+91 94545 10860', '+91 94699 40969'] }}
-              location={{
-                address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh',
-                postalCode: '160022',
-              }}
-              workHours={{ hours: 'Mon - Sat: 9:00 - 18:00' }}
+              email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
+              contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
+              location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
+              workHours={{ hours:'Mon - Sat: 9:00 - 18:00' }}
             />
           </div>
 
@@ -757,6 +691,7 @@ const ContextsPage = () => {
             <div className="w-1/6" />
           </div>
         </div>
+
       </div>
     </div>
   );

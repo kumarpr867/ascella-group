@@ -55,54 +55,37 @@ function DiffuseOwnershipIcon() {
 }
 
 // ── Priority Drift ────────────────────────────────────────────────────────────
-// Each arrow line animates so the line itself draws from the outer tip inward
-// toward the circle — then disappears and repeats. All timings are staggered.
-//
-// Technique: strokeDasharray = "len 9999" (full line visible).
-//            strokeDashoffset goes from -len (nothing visible, line starts at outer end)
-//            to 0 (full line drawn) → effectively the line "grows" from outer → inner.
-//            Then we reverse: offset goes 0 → len so line "retracts" inward → outer,
-//            giving the illusion of a line sliding from outside toward the circle.
-//
-// Actually simpler: offset from 0 → len means the dash (full line) moves from
-// inner→outer. We want outer→inner, so offset goes len → 0.
-
 function PriorityDriftIcon() {
-    // [x_outer, y_outer, x_inner, y_inner] — outer = tip of arrow, inner = near circle
     const lines: [number, number, number, number][] = [
-        [75.7985, 3.15,    75.7985, 39.8183],   // top
-        [75.7985, 148.455, 75.7985, 111.787],   // bottom
-        [3.15,    75.8064, 39.8183, 75.8064],   // left
-        [148.455, 75.8064, 111.787, 75.8064],   // right
-        [24.1791, 126.933, 50.1075, 101.005],   // SW
-        [127.42,  24.6819, 101.244, 50.3628],   // NE
-        [127.173, 127.181, 101.244, 101.252],   // SE
-        [24.179,  24.6819, 50.1074, 50.6103],   // NW
-        [138.719, 112.134, 107.138, 93.4966],   // ESE
-        [44.6363, 57.8155, 13.0556, 39.1783],   // WNW
-        [12.8807, 112.134, 44.4613, 93.4966],   // WSW
-        [106.963, 57.8155, 138.544, 39.1783],   // ENE
-        [39.4733, 138.726, 57.5043, 106.796],   // SSW
-        [93.7918, 44.6443, 111.823, 12.7137],   // NNE
-        [39.4733, 12.8887, 57.5043, 44.8194],   // NNW
-        [93.7918, 106.971, 111.823, 138.902],   // SSE
-        [5.57723, 57.1745, 40.9292, 66.9171],   // WNW2
-        [110.58,  85.0364, 145.932, 94.779 ],   // ESE2
-        [5.64883, 94.7089, 41.1455, 85.5072],   // WSW2
-        [110.545, 66.4459, 146.041, 57.2442],   // ENE2
-        [56.7952, 145.93,  66.7247, 110.63 ],   // SSW2
-        [85.2125, 41.0761, 95.1421, 5.77617],   // NNE2
-        [94.1202, 146.112, 85.2124, 110.541],   // SSE2
-        [66.7256, 40.9861, 57.8178, 5.41456],   // NNW2
+        [75.7985, 3.15,    75.7985, 39.8183],
+        [75.7985, 148.455, 75.7985, 111.787],
+        [3.15,    75.8064, 39.8183, 75.8064],
+        [148.455, 75.8064, 111.787, 75.8064],
+        [24.1791, 126.933, 50.1075, 101.005],
+        [127.42,  24.6819, 101.244, 50.3628],
+        [127.173, 127.181, 101.244, 101.252],
+        [24.179,  24.6819, 50.1074, 50.6103],
+        [138.719, 112.134, 107.138, 93.4966],
+        [44.6363, 57.8155, 13.0556, 39.1783],
+        [12.8807, 112.134, 44.4613, 93.4966],
+        [106.963, 57.8155, 138.544, 39.1783],
+        [39.4733, 138.726, 57.5043, 106.796],
+        [93.7918, 44.6443, 111.823, 12.7137],
+        [39.4733, 12.8887, 57.5043, 44.8194],
+        [93.7918, 106.971, 111.823, 138.902],
+        [5.57723, 57.1745, 40.9292, 66.9171],
+        [110.58,  85.0364, 145.932, 94.779 ],
+        [5.64883, 94.7089, 41.1455, 85.5072],
+        [110.545, 66.4459, 146.041, 57.2442],
+        [56.7952, 145.93,  66.7247, 110.63 ],
+        [85.2125, 41.0761, 95.1421, 5.77617],
+        [94.1202, 146.112, 85.2124, 110.541],
+        [66.7256, 40.9861, 57.8178, 5.41456],
     ];
 
     return (
         <svg width="152" height="152" viewBox="0 0 152 152" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-            {/* Static circle */}
             <circle cx="75.393" cy="76.2078" r="23.1609" stroke="white" strokeWidth="0.7" />
-
-            {/* Static arrowheads */}
             <polygon points="75.7985,0 73.7777,3.5 77.8192,3.5" fill="white" />
             <polygon points="75.7985,42.9683 77.8192,39.4683 73.7777,39.4683" fill="white" />
             <polygon points="75.7985,108.637 73.7777,112.137 77.8192,112.137" fill="white" />
@@ -131,43 +114,62 @@ function PriorityDriftIcon() {
             <path d="M84.3885 44.1165L87.2545 41.2669L83.3537 40.2097L84.3885 44.1165Z M95.6282 2.64429L92.7623 5.49384L96.6631 6.55101L95.6282 2.64429Z" fill="white"/>
             <path d="M94.9146 149.16L95.9874 145.264L92.0765 146.283L94.9146 149.16Z M84.0794 107.581L83.0066 111.477L86.9174 110.458L84.0794 107.581Z" fill="white"/>
             <path d="M67.5199 44.0343L68.5927 40.1378L64.6819 41.157L67.5199 44.0343Z M56.6848 2.45461L55.6119 6.35107L59.5228 5.33195L56.6848 2.45461Z" fill="white"/>
-
-            {/* ── Animated lines — each one slides from outer tip → inner (circle edge) ── */}
             {lines.map(([x1, y1, x2, y2], i) => {
                 const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-                // Each line gets its own cycle duration and start delay
                 const dur   = (3 + (i % 7) * 0.4).toFixed(1) + "s";
                 const delay = -((i * 0.37 + (i % 3) * 0.6) % 3).toFixed(2) + "s";
-
-                // dasharray = "len 9999" means the full line is one dash.
-                // dashoffset = len  → line is fully hidden (shifted past start)
-                // dashoffset = 0    → line is fully visible
-                // So animating from `len` to `0` makes the line appear to grow
-                // from x1,y1 toward x2,y2.
-                // Since x1,y1 = outer tip and x2,y2 = inner end,
-                // the line draws FROM the outer tip TOWARD the circle. ✓
                 return (
-                    <line
-                        key={i}
-                        x1={x1} y1={y1}
-                        x2={x2} y2={y2}
-                        stroke="white"
-                        strokeWidth="0.8"
-                        strokeLinecap="round"
-                        strokeDasharray={`${len} ${len + 1}`}
-                    >
-                        <animate
-                            attributeName="stroke-dashoffset"
-                            from={len}
-                            to={-len}
-                            dur={dur}
-                            begin={delay}
-                            repeatCount="indefinite"
-                            calcMode="linear"
-                        />
+                    <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="0.8" strokeLinecap="round" strokeDasharray={`${len} ${len + 1}`}>
+                        <animate attributeName="stroke-dashoffset" from={len} to={-len} dur={dur} begin={delay} repeatCount="indefinite" calcMode="linear" />
                     </line>
                 );
             })}
+        </svg>
+    );
+}
+
+// ── Leadership Drain ──────────────────────────────────────────────────────────
+function LeadershipDrainIcon() {
+    // Bottom-most (largest) triangle first, then upward
+    const triangles = [
+        { d: "M136.348 128.5H10.6523L73.5 1.12988L136.348 128.5Z", delay: 0 },
+        { d: "M136.251 101.5H10.749L73.5 0.943359L136.251 101.5Z",  delay: 0.7 },
+        { d: "M136.036 70.75H10.9639L73.5 0.75L136.036 70.75Z",     delay: 1.4 },
+        { d: "M135.601 45.25H11.3994L73.5 0.615234L135.601 45.25Z", delay: 2.1 },
+        { d: "M134.41 23.5H12.5898L73.5 0.53418L134.41 23.5Z",      delay: 2.8 },
+    ];
+
+    const totalCycle = 6; // seconds — full loop duration
+
+    return (
+        <svg width="147" height="172" viewBox="0 0 147 172" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <style>{`
+                @keyframes triReveal {
+                    0%   { opacity: 0; }
+                    8%   { opacity: 1; }
+                    75%  { opacity: 1; }
+                    90%  { opacity: 0; }
+                    100% { opacity: 0; }
+                }
+            `}</style>
+
+            {triangles.map((t, i) => (
+                <path
+                    key={i}
+                    d={t.d}
+                    stroke="white"
+                    strokeWidth="1"
+                    fill="none"
+                    style={{
+                        opacity: 0,
+                        animation: `triReveal ${totalCycle}s ease-in-out infinite`,
+                        animationDelay: `${t.delay}s`,
+                    }}
+                />
+            ))}
+
+            {/* Center vertical line — always visible */}
+            <path d="M73.5 2V128" stroke="white" strokeWidth="1" />
         </svg>
     );
 }
@@ -197,16 +199,7 @@ const items: ProblemItem[] = [
         title: "Leadership Drain",
         subHeading: "Focus lost to coordination",
         description: "Senior leaders spend time resolving handoffs and conflicts. Strategic work gives way to operational fixes. Energy drains as execution lacks structure.",
-        icon: (
-            <svg width="147" height="172" viewBox="0 0 147 172" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M134.41 23.5H12.5898L73.5 0.53418L134.41 23.5Z" stroke="white" />
-                <path d="M135.601 45.25H11.3994L73.5 0.615234L135.601 45.25Z" stroke="white" />
-                <path d="M136.036 70.75H10.9639L73.5 0.75L136.036 70.75Z" stroke="white" />
-                <path d="M136.251 101.5H10.749L73.5 0.943359L136.251 101.5Z" stroke="white" />
-                <path d="M136.348 128.5H10.6523L73.5 1.12988L136.348 128.5Z" stroke="white" />
-                <path d="M73.5 2V128" stroke="white" />
-            </svg>
-        ),
+        icon: <LeadershipDrainIcon />,
     },
 ];
 
@@ -235,17 +228,8 @@ export default function ExecutionProblemSection() {
                 </div>
             </motion.div>
 
-
-            <motion.div
-                className="border-b border-color"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-            >
-                <motion.div
-                    variants={fadeIn}
-                    style={{ willChange: "transform" }}
-                    className="mx-auto max-w-7xl px-10 flex items-center py-8">
+            <motion.div className="border-b border-color" initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <motion.div variants={fadeIn} style={{ willChange: "transform" }} className="mx-auto max-w-7xl px-10 flex items-center py-8">
                     <Heading text="Execution Policy" />
                 </motion.div>
             </motion.div>

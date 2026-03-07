@@ -32,7 +32,15 @@ export default function AnimatedSVG() {
     
 
     return (
-        <svg width="487" height="418" viewBox="0 0 487 418" fill="none" overflow="visible">
+        <svg
+        viewBox="0 0 600 500"                       // ← keep your actual numbers
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        width="100%"                                // ← was: width="600" (fixed px)
+        height="100%"                               // ← was: height="500" (fixed px)
+        preserveAspectRatio="xMidYMid meet"         // ← ADD THIS
+        style={{ width: "100%", height: "100%" }}   // ← ADD THIS
+      >
             {paths.map((d, i) => {
                 const isTopLayer = i === 0;
                 const isSecondLayer = i === 1;
@@ -84,87 +92,3 @@ export default function AnimatedSVG() {
         </svg>
     );
 }
-// export default function AnimatedSVG() {
-//   const mouseX = useMotionValue(0);
-//   const mouseY = useMotionValue(0);
-
-//   // Smooth spring for premium feel
-//   const smoothX = useSpring(mouseX, { stiffness: 60, damping: 20 });
-//   const smoothY = useSpring(mouseY, { stiffness: 60, damping: 20 });
-
-//   useEffect(() => {
-//     const handleMouseMove = (e: MouseEvent) => {
-//       const { innerWidth, innerHeight } = window;
-//       mouseX.set((e.clientX - innerWidth / 2) * 0.02);
-//       mouseY.set((e.clientY - innerHeight / 2) * 0.02);
-//     };
-
-//     window.addEventListener("mousemove", handleMouseMove);
-//     return () => window.removeEventListener("mousemove", handleMouseMove);
-//   }, [mouseX, mouseY]);
-
-//   // Floating animation for whole SVG
-//   const floatAnimation = {
-//     y: [0, -6, 6, 0],
-//   };
-
-//   return (
-//     <motion.svg
-//       width="487"
-//       height="418"
-//       viewBox="0 -40 487 458"
-//       fill="none"
-//       style={{
-//         x: smoothX,
-//         y: smoothY,
-//       }}
-//       animate={floatAnimation}
-//       transition={{
-//         duration: 10,
-//         repeat: Infinity,
-//         ease: "easeInOut",
-//       }}
-//     >
-//       {/* BACK LAYER */}
-//       <g opacity={0.3}>
-//         {paths.slice(2).map((d, i) => (
-//           <motion.path
-//             key={`back-${i}`}
-//             d={d}
-//             stroke="white"
-//             strokeWidth={1}
-//           />
-//         ))}
-//       </g>
-
-//       {/* MID LAYER */}
-//       <g opacity={0.6}>
-//         {paths.slice(1, 2).map((d, i) => (
-//           <motion.path
-//             key={`mid-${i}`}
-//             d={d}
-//             stroke="white"
-//             strokeWidth={1.2}
-//             strokeDasharray="1 7"
-//           />
-//         ))}
-//       </g>
-
-//       {/* TOP LAYER (Animated Dash) */}
-//       <g>
-//         <motion.path
-//           d={paths[0]}
-//           stroke="white"
-//           strokeWidth={1.4}
-//           strokeDasharray="3 4"
-//           animate={{ strokeDashoffset: [0, 40] }}
-//           transition={{
-//             duration: 6,
-//             repeat: Infinity,
-//             ease: "linear",
-//           }}
-//         />
-//       </g>
-//     </motion.svg>
-//   );
-// }
