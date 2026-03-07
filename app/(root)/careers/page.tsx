@@ -6,6 +6,8 @@ import Current from "@/components/careerPage/Current"
 import Applications from "@/components/careerPage/Applications"
 
 import StructuredDesigned from "@/components/careerPage/StructuredDesigned"
+import Faq from "@/components/Faq"
+import { careersFaqs } from "@/data/faqs/careersFaqs"
 
 export default function Careers(){
     return (
@@ -17,6 +19,7 @@ export default function Careers(){
             <Current/>
             <Applications/>
             <StructuredDesigned/>
+            <Faq faqs={careersFaqs} description="These questions outline how careers at Ascella are structured, how roles operate within governance-led environments, and what candidates should expect." />
         </>
     );
 }

@@ -27,8 +27,8 @@ export default function WhoWeWorkWith() {
 
 
               <div className="hidden lg:block border-l border-b border-color" />
-              <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-6">
-                <button onClick={() => router.push("/JD-Page")} className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
+              <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-4">
+                <button onClick={() => router.push("/engageWithUs")} className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
                   <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="1" />
                   </svg>

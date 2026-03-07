@@ -9,7 +9,6 @@ import {
     useReducedMotion,
 } from "framer-motion";
 import Image from "next/image";
-import PlusHeading from "../../headings/Heading";
 import { SECTIONS, EngagementLabel } from "./data";
 import Heading from "../../headings/Heading";
 
@@ -35,13 +34,8 @@ export default function Em3() {
         offset: ["start start", "end end"],
     });
 
-    const imageY = reduceMotion
-        ? 0
-        : useTransform(scrollYProgress, [0, 1], [-40, 40]);
-
-    const textY = reduceMotion
-        ? 0
-        : useTransform(scrollYProgress, [0, 1], [1, -1]);
+const imageY = 0;
+const textY = 0;
 
     useEffect(() => {
         const onScroll = () => setIsPaused(false);
@@ -82,19 +76,14 @@ export default function Em3() {
     }, [active, isPaused]);
 
     return (
-        <section className="mx-auto max-w-7xl px-10 my-40">
+        <section className="mx-auto max-w-7xl px-10 my-24">
             <header className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
-                <h1 className="text-2xl lg:text-3xl leading-tight">
-                    Engagement structures are{" "}
-                    <span className="text-gray-200">
-                        designed for operational alignment
-                    </span>
-                    , not transactional delivery.
+                <h1 className="text-[24px] lg:text-[36px] ">
+                    Engagement structures are designed for operational alignment, not transactional delivery.
                 </h1>
                 <p className="font-extralight text-[14px] md:text-[16px] lg:text-base">
-                    Ascella engagements are structured based on organisational maturity,
-                    execution complexity, and governance need.
+                    Ascella engagements are structured based on organisational maturity, execution complexity, and governance need.
                 </p>
             </header>
 
@@ -151,7 +140,7 @@ export default function Em3() {
                 ref={sectionRef}
                 className="relative h-[300vh] hidden md:block"
             >
-                <div className="sticky top-44 grid grid-cols-3 md:gap-16 lg:gap-32 w-full items-center">
+                <div className="sticky top-24 grid grid-cols-3 md:gap-16 lg:gap-32 w-full justify-center items-center">
 
                     <AnimatePresence mode="wait">
                         <motion.div

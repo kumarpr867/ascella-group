@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import PartialOutlineBtn from "../btns/PartialOutlineBtn"
+import { useRouter } from "next/navigation";
 
 // SVG center
 const CX = 308.958
@@ -273,6 +274,7 @@ function InteractiveSVG() {
 }
 
 export default function Prog() {
+    const router = useRouter();
     return (
         <section>
             <div className="border-y border-color">
@@ -305,10 +307,10 @@ export default function Prog() {
                                 body: "Each gate has standard evidence, owners, and timelines. Decisions either progress work or resolve blockers before impact widens. The result is steadier operations and fewer emergency escalations.",
                             },
                         ].map((item, i) => (
-                            <div key={i} className="border-b border-color p-6 lg:p-10 last:border-0">
-                                <h5 className="text-[18px] md:text-[20px] pb-10">{item.title}</h5>
-                                <p className="text-b2 pb-2 md:pr-48">{item.subtitle}</p>
-                                <p className="text-b2 text-gray-200">{item.body}</p>
+                            <div key={i} className="border-b flex flex-col gap-2 border-color p-6 lg:p-10 last:border-0">
+                                <h5 className="text-[18px] md:text-[20px]">{item.title}</h5>
+                                <p className="text-b2 md:pr-40">{item.subtitle}</p>
+                                <p className="text-b2 text-gray-200">{item.body}</p>    
                             </div>
                         ))}
                     </div>
@@ -322,7 +324,10 @@ export default function Prog() {
             <div className="w-full border-y border-color">
                 <div className="mx-10 xl:mx-auto max-w-7xl border-x border-color">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between p-6 lg:p-10">
-                        <PartialOutlineBtn text="See How It Works" size="sm" />
+                        <PartialOutlineBtn 
+                        text="See How It Works" 
+                        size="sm"
+                       onClick={() => router.push("/how-ascella-operates")} />
                         <p className="sm:w-xs text-left leading-relaxed text-b3 ">
                             Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>

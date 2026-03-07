@@ -1,8 +1,11 @@
+"use client"
+import { useRouter } from "next/navigation";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import PrecisionGrid from "../textures/PrecisionGrid";
 import Image from "next/image";
 
 export default function NotCapabilityProblem() {
+    const router = useRouter();
     return (
         <section className="mx-auto max-w-7xl px-10 my-30">
             <div className="overflow-hidden">
@@ -37,7 +40,10 @@ export default function NotCapabilityProblem() {
                                 </p>
 
                                 <div className="mt-6">
-                                    <PartialOutlineBtn text="View Execution Arms" bgColor="white" borderColor="black" />
+                                    <PartialOutlineBtn text="View Execution Arms" bgColor="white" borderColor="black"
+                                    onClick={()=>{
+                                        router.push("/execution-arms");
+                                    }} />
                                 </div>
                             </div>
                         </div>

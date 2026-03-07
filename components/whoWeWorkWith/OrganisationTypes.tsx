@@ -6,6 +6,7 @@ import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import Heading from "../headings/Heading";
+import { useRouter } from "next/navigation";
 
 interface OrganisationType {
   title: string;
@@ -78,6 +79,9 @@ const ORGANISATION_TYPES: OrganisationType[] = [
 
 
 export default function OrganisationTypes() {
+
+  const router = useRouter();
+
   const [activeRow, setActiveRow] = useState<number | null>(null);
 
   return (
@@ -145,6 +149,9 @@ export default function OrganisationTypes() {
                       type.icon
                     ) : (
                       <PartialOutlineBtn
+                        onClick={() => {
+                          router.push("/startups");
+                        }}
                         text="View Startup Programme"
                       />
                     )}
@@ -250,6 +257,9 @@ export default function OrganisationTypes() {
           <div className="border-t border-color" />
           <div className="border-b  py-5 border-color justify-center flex">
             <PartialOutlineBtn
+              onClick={() => {
+                router.push("/startups");
+              }}
               text="View Startup Programme"
             />
           </div>

@@ -253,7 +253,7 @@ export default function Accountability() {
     <section className="border-b border-color min-h-[720px] lg:min-h-[640px]">
 
 
-      <div className="  py-10 xl:py-10  xl:border-b border-color">
+      <div className="  py-10 xl:py-10 xl:border-b border-color">
         <div className="mx-auto max-w-7xl px-10 xl:px-0">
           <Heading text="Accountability Principle" />
         </div>

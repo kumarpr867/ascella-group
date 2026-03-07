@@ -1,5 +1,4 @@
 import Heading from "../headings/Heading";
-import PlusHeading from "../headings/Heading";
 
 type ProblemItem = {
   title: string;
@@ -61,7 +60,7 @@ const items: ProblemItem[] = [
 
 export default function DayZero() {
   return (
-    <section className="mx-auto max-w-7xl px-10 my-20 flex flex-col gap-28 flex-center">
+    <section className="mx-auto max-w-7xl px-10 my-24 flex flex-col gap-28 flex-center">
       <div className="flex flex-col flex-center gap-12 max-w-3xl text-center">
         <div className="">
           <Heading text="SECURITY FROM DAY ZERO" />

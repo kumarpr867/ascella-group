@@ -3,6 +3,7 @@ import EngagementBegins from "@/components/whoWeWorkWith/EngagementBegins";
 import EngagementPrinciple from "@/components/whoWeWorkWith/EngagementPrinciple";
 import OrganisationTypes from "@/components/whoWeWorkWith/OrganisationTypes";
 import WhoWeWorkWith from "@/components/whoWeWorkWith/WhoWeWorkWith";
+import { whoWeWorkWithFaqs } from "@/data/faqs/whoWeWorkWith";
 
 export default function page() {
   return (
@@ -11,7 +12,7 @@ export default function page() {
         <EngagementPrinciple />
         <OrganisationTypes />
         <EngagementBegins />
-        <Faq />
+        <Faq faqs={whoWeWorkWithFaqs} description="" />
     </>
   )
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence, animate, useInView } from "motion/react"
 import { useRef } from "react"
 import OutlineBtn from '../btns/OutlineBtn';
 import Heading from '@/components/headings/Heading';
+import { useRouter } from "next/navigation";
 
 const cards = [
     {
@@ -85,6 +86,9 @@ const cards = [
 const AUTO_DURATION = 5;
 
 export default function WhoWeWorkWith() {
+
+    const router = useRouter();
+
     const [activeIndex, setActiveIndex] = useState(0)
     const [progress, setProgress] = useState(0)
     const sectionRef = useRef(null)
@@ -133,7 +137,10 @@ export default function WhoWeWorkWith() {
                     <h3 className='w-full sm:w-3/4 lg:w-1/2 my-10 text-[16px] lg:text-[24px] leading-snug'>
                         Organisations that require control, accountability, and structured execution at scale
                     </h3>
-                    <OutlineBtn text='Engage With Us' color='white' />
+                    <OutlineBtn text='Engage With Us' color='white' 
+                    onClick={()=>{
+                        router.push("/engageWithUs");
+                    }}/>
                 </motion.div>
 
                 {/* ── Card Area ── */}

@@ -3,6 +3,7 @@ interface Props {
   size?: "sm" | "md" | "lg";
   color?: string; 
   className?: string;
+  onClick?: () => void;
 }
 
 export default function OutlineBtn({
@@ -10,6 +11,7 @@ export default function OutlineBtn({
   size = "md",
   color = "var(--color-gray-200)", 
   className = "",
+  onClick,
 }: Props) {
   const sizes = {
     sm: "px-3 py-1 text-xs",
@@ -19,6 +21,7 @@ export default function OutlineBtn({
 
   return (
     <button
+    onClick={onClick}
       className={`
         group flex items-center gap-3 border
         transition-all duration-200

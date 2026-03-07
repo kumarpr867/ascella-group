@@ -5,6 +5,7 @@ import Focuses from "@/components/startups/Focuses"
 import GovernanceModel from "@/components/startups/GovernanceModel"
 import Alignments from "@/components/startups/Alignments"
 import Faq from "@/components/Faq"
+import { startupFaqs } from "@/data/faqs/startupFaq"
 
 
 export default function startups() {
@@ -16,7 +17,7 @@ export default function startups() {
     <Focuses/>
     <GovernanceModel/>
     <Alignments/>
-    <Faq/>
+    <Faq faqs={startupFaqs} description={"Key questions about the Startups Programme, eligibility, structure, and how operating discipline is embedded before scale introduces structural complexity."}/>
     
     </>
   )

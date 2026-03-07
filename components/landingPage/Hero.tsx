@@ -3,6 +3,7 @@ import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
 import { PixelWorld } from "./glowEffect";
 import PlusText from "../headings/PlusText";
+import { useRouter } from "next/navigation";
 
 const EASE = cubicBezier(0.33, 1, 0.68, 1);
 
@@ -64,11 +65,11 @@ const globeAnim = {
 
 
 export default function Hero() {
+  const router = useRouter();
   return (
-    <section className="relative md:h-screen overflow-hidden bg-bg">
+    <section className="relative md:h-screen overflow-hidden">
 
       <div className="desktop hidden md:block">
-        <div className="absolute inset-x-0 bottom-0 h-[50vh] bg-linear-to-t from-black via-black/80 to-transparent z-2 pointer-events-none" />
 
         <motion.div
           variants={globeAnim}
@@ -110,7 +111,7 @@ export default function Hero() {
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Clear Ownership
               </p>
-              <p className="text-b3 text-gray-300 leading-snug">
+              <p className="text-b3 text-gray-100 leading-snug">
                 Defined responsibilities across teams ensure accountability at every
                 stage, reducing confusion and accelerating decision-making.
               </p>
@@ -120,7 +121,7 @@ export default function Hero() {
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Unified Control
               </p>
-              <p className="text-b3 text-gray-300 leading-snug">
+              <p className="text-b3 text-gray-100 leading-snug">
                 Integrated oversight across strategy, technology, and operations
                 provides a single source of truth and stronger organizational alignment.
               </p>
@@ -142,7 +143,7 @@ export default function Hero() {
                 Calm Execution
               </p>
               <div className="border-l border-color h-10" />
-              <p className="text-[12px] pr-32 text-gray-300 leading-snug">
+              <p className="text-[12px] pr-32 text-gray-100 leading-snug">
                 Structured processes and leadership ensure steady, predictable delivery.
               </p>
             </motion.div>
@@ -159,7 +160,7 @@ export default function Hero() {
         >
           <div className="mx-auto max-w-7xl px-10 flex flex-col md:flex-row justify-between gap-5">
 
-            <motion.h2 variants={fadeUp} className="text-gray-300 text-[36px] xl:text-[48px]">
+            <motion.h2 variants={fadeUp} className="text-gray-100 text-[36px] xl:text-[48px]">
               A Unified <br />
               <span className="text-white">Operating Group</span>
             </motion.h2>
@@ -173,8 +174,8 @@ export default function Hero() {
                 one operating layer.
               </p>
 
-              <div className="hidden md:flex justify-end">
-                <OutlineBtn text="Engage With Us" />
+              <div className="hidden md:flex justify-end  pointer-events-auto">
+                <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
               </div>
             </motion.div>
 
@@ -220,7 +221,7 @@ export default function Hero() {
         <motion.div variants={container} initial="hidden" animate="visible">
           <div className="mx-auto max-w-7xl px-10 flex flex-col gap-5">
 
-            <motion.h2 variants={fadeUp} className="text-gray-300 text-[36px]">
+            <motion.h2 variants={fadeUp} className="text-gray-100 text-[36px]">
               A Unified <br />
               <span className="text-white">Operating Group</span>
             </motion.h2>
@@ -249,7 +250,8 @@ export default function Hero() {
         </motion.div>
 
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="flex w-full justify-center">
-          <OutlineBtn text="Engage With Us" />
+
+          <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
         </motion.div>
 
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="border-t border-color p-5 my-6 flex justify-center">

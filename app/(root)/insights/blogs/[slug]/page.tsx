@@ -1,12 +1,15 @@
+import ReadingProgress from "@/components/ReadingProgress"
 import { blogsWithSlug } from "@/data/blogs"
+import { caseStudiesWithSlug } from "@/data/case-studies"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
 export async function generateStaticParams() {
-  return blogsWithSlug.map((blog) => ({
-    slug: blog.slug,
-  }))
+  return [
+    ...caseStudiesWithSlug.map((item) => ({ slug: item.slug })),
+    ...blogsWithSlug.map((item) => ({ slug: item.slug })),
+  ]
 }
 
 type Props = {
@@ -25,18 +28,23 @@ export default async function BlogPage({ params }: Props) {
   if (!blog) return notFound()
 
   return (
+    <div>
+    <ReadingProgress />
     <section className="relative border-y border-color mb-20">
-      <div className="max-w-7xl mx-auto md:border-x border-color">
-        <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[3fr_1.2fr] items-start">
+      <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
+        <div className="min-h-screen flex lg:flex-row flex-col">
 
           {/* MAIN CONTENT */}
-          <main className="border-r border-color min-w-0">
-            <div className="border-b border-color p-10">
-              <p className="text-b2  mb-4">
+          <main className="lg:border-r border-color min-w-0">
+            <div className="border-b border-color md:p-10 py-10">
+              <p className="md:block hidden text-b2 mb-4">
                 Ascella Group &nbsp;|&nbsp; {blog.category} &nbsp;|&nbsp; {blog.date}
               </p>
+              <p className="md:hidden block text-b3 mb-4">
+                Ascella Group | {blog.category} | {blog.date}
+              </p>
 
-              <h2 className="text-[24px] md:text-[36px] lg:text-[48px] font-light">
+              <h2 className="text-[20px] md:text-[36px] lg:text-[48px] font-light">
                 {blog.title}
               </h2>
             </div>
@@ -49,7 +57,7 @@ export default async function BlogPage({ params }: Props) {
               />
             </div>
 
-            <div className="text-gray-200 p-10 ">
+            <div className="text-gray-200 md:p-10 ">
 
               <p className="text-[12px] leading-regular my-4">
                 For decades, the world of Operational Technology (OT), the
@@ -73,10 +81,10 @@ export default async function BlogPage({ params }: Props) {
               </p>
               <p className="text-[12px] leading-regular my-4">In 2025, defending OT is becoming a board-level responsibility. The market for Operational Technology security is projected to explode to $50.29 billion by 2030, driven by the sheer urgency of protecting critical infrastructure from increasingly sophisticated ransomware and state-sponsored actors.</p>
               <p className="text-[12px] leading-regular my-4">We are seeing three major trends driving this urgency:</p>
-              <ol className="list-disc">
-                <li className="text-[12px] my-2">IT/OT Convergence: 70% of OT systems are projected to connect to IT networks in the coming year. Crucially, 75% of OT attacks now start as IT breaches, exploiting the trusted pathways between the corporate network and the plant floor</li>
-                <li className="text-[12px] my-2">Ransomware Evolution: Ransomware attacks on OT have surged by 300% in the past year alone. Attackers are now targeting industrial control systems directly, with devastating consequences. The average ransom demand for OT attacks has skyrocketed to $5 million, reflecting the critical nature of these systems.</li>
-                <li className="text-[12px] my-2">Regulatory Pressure: Governments worldwide are enacting stricter regulations for OT security. The U.S. has introduced the Cybersecurity Maturity Model Certification (CMMC) for critical infrastructure, while the EU is implementing the NIS2 Directive, mandating robust cybersecurity measures for essential services.</li>
+              <ol className="list-decimal">
+                <li className="text-[12px] my-2">IT/OT Convergence: 70% of OT systems are projected to connect to IT networks in the coming year. Crucially, 75% of OT attacks now start as IT breaches, exploiting the trusted pathways between the corporate network and the plant floor</li>
+                <li className="text-[12px] my-2">Ransomware Evolution: Ransomware attacks on OT have surged by 300% in the past year alone. Attackers are now targeting industrial control systems directly, with devastating consequences. The average ransom demand for OT attacks has skyrocketed to $5 million, reflecting the critical nature of these systems.</li>
+                <li className="text-[12px] my-2">Regulatory Pressure: Governments worldwide are enacting stricter regulations for OT security. The U.S. has introduced the Cybersecurity Maturity Model Certification (CMMC) for critical infrastructure, while the EU is implementing the NIS2 Directive, mandating robust cybersecurity measures for essential services.</li>
               </ol>
 
               <h3 className="text-white my-4">The Core Challenge: The “Insecure by Design” Legacy</h3>
@@ -268,31 +276,31 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="pt-10 relative">
-            <div className="sticky top-10 max-h-[calc(100vh-80px)] overflow-auto">
+          <aside className="relative pt-10 w-full lg:w-[360px]">
+            <div className=" sticky top-10">
 
-              {/* READ MORE Case Studies */}
+              {/* blogs */}
               <div>
-                <h3 className="text-lg font-medium px-10">
-                  Read more case studies
+                <h3 className="text-lg font-medium md:px-10 capitalize">
+                  Read More Blogs
                 </h3>
 
-                <div className="px-5 py-4">
+                <div className="md:px-10 sm:px-4 py-4">
                   {blogsWithSlug
-                    .filter((b) => b.slug !== blog.slug)
-                    .slice(0, 3)
+                    .filter((b) => b.slug !== blog?.slug)
+                    .slice(0, 2)
                     .map((item) => (
                       <Link
                         key={item.id}
                         href={`/insights/blogs/${item.slug}`}
                       >
-                        <div className="group bg-gray-500 border border-color rounded-xl p-4 hover:border-neutral-500 transition-all duration-300 mb-4">
+                        <div className="group bg-gray-500 border border-neutral-800 rounded-xl p-4 hover:border-neutral-500 transition-all duration-300 mb-4">
                           <div className="max-w-sm">
-                            <h5 className="text-[16px] md:text-[20px] font-light mb-2 line-clamp-1">
+                            <h5 className="text-[16px] md:text-[24px] font-light mb-2 line-clamp-1">
                               {item.title}
                             </h5>
 
-                            <p className="text-xs  mb-2 line-clamp-1">
+                            <p className="text-xs  mb-4 line-clamp-2">
                               {item.description}
                             </p>
                           </div>
@@ -300,7 +308,7 @@ export default async function BlogPage({ params }: Props) {
                           <div className="flex justify-between items-center">
 
                             <div className="w-6 h-6 border border-color p-1">
-                              <svg  viewBox="0 0 20 20" fill="true" xmlns="http://www.w3.org/2000/svg">
+                              <svg viewBox="0 0 20 20" fill="true" xmlns="http://www.w3.org/2000/svg">
                                 <line x1="10.25" y1="1.09278e-08" x2="10.25" y2="7" stroke="white" stroke-width="0.5" />
                                 <line x1="10.25" y1="13" x2="10.25" y2="20" stroke="white" stroke-width="0.5" />
                                 <line x1="13" y1="9.75" x2="20" y2="9.75" stroke="white" stroke-width="0.5" />
@@ -320,28 +328,30 @@ export default async function BlogPage({ params }: Props) {
                     ))}
                 </div>
               </div>
-              {/* READ MORE BLOGS */}
+
+
+              {/* case studies */}
               <div>
-                <h3 className="text-lg font-medium px-10">
-                  Read more blogs
+                <h3 className="text-lg font-medium md:px-10 capitalize">
+                  Read case studies
                 </h3>
 
-                <div className="px-5 py-4">
-                  {blogsWithSlug
-                    .filter((b) => b.slug !== blog.slug)
-                    .slice(0, 3)
+                <div className="md:px-10 sm:px-4 py-4">
+                  {caseStudiesWithSlug
+                    .filter((b) => b.slug !== blog?.slug)
+                    .slice(0, 2)
                     .map((item) => (
                       <Link
                         key={item.id}
-                        href={`/insights/blogs/${item.slug}`}
+                        href={`/insights/case-studies/${item.slug}`}
                       >
-                        <div className="group bg-gray-500 border border-color rounded-xl p-4 hover:border-neutral-500 transition-all duration-300 mb-4">
+                        <div className="group bg-gray-500 border border-neutral-800 rounded-xl p-4 hover:border-neutral-500 transition-all duration-300 mb-4">
                           <div className="max-w-sm">
-                            <h5 className="text-[16px] md:text-[20px] font-light mb-2 line-clamp-1">
+                            <h5 className="text-[16px] md:text-[24px] font-light mb-2 line-clamp-1">
                               {item.title}
                             </h5>
 
-                            <p className="text-xs  mb-2 line-clamp-1">
+                            <p className="text-xs  mb-4 line-clamp-2">
                               {item.description}
                             </p>
                           </div>
@@ -349,7 +359,7 @@ export default async function BlogPage({ params }: Props) {
                           <div className="flex justify-between items-center">
 
                             <div className="w-6 h-6 border border-color p-1">
-                              <svg  viewBox="0 0 20 20" fill="true" xmlns="http://www.w3.org/2000/svg">
+                              <svg viewBox="0 0 20 20" fill="true" xmlns="http://www.w3.org/2000/svg">
                                 <line x1="10.25" y1="1.09278e-08" x2="10.25" y2="7" stroke="white" stroke-width="0.5" />
                                 <line x1="10.25" y1="13" x2="10.25" y2="20" stroke="white" stroke-width="0.5" />
                                 <line x1="13" y1="9.75" x2="20" y2="9.75" stroke="white" stroke-width="0.5" />
@@ -369,6 +379,7 @@ export default async function BlogPage({ params }: Props) {
                     ))}
                 </div>
               </div>
+
 
             </div>
           </aside>
@@ -376,5 +387,6 @@ export default async function BlogPage({ params }: Props) {
       </div >
 
     </section >
+    </div>
   )
 }

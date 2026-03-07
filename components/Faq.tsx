@@ -5,146 +5,112 @@ import Image from "next/image";
 import Heading from "./headings/Heading";
 import ArrowButton from "./btns/Arrow";
 
-const faqs = [
-  {
-    question: "What is Ascella Group?",
-    answer:
-      "Ascella Group is a unified operating authority that designs and governs execution across security, technology, workforce, operations, and revenue.",
-  },
-  {
-    question: "Is Ascella a consulting company?",
-    answer:
-      "Ascella is not a consulting company. Work does not stop at advice or recommendations. Responsibility extends into execution, governance, and outcomes.",
-  },
-  {
-    question: "Does Ascella replace internal teams?",
-    answer: "Ascella does not replace internal teams. It provides structure, decision clarity, and control so internal teams can execute more effectively.",
-  },
-  {
-    question: "Is Ascella an agency or vendor?",
-    answer:
-      "Ascella is not positioned as an agency or a service vendor. Execution happens under a single operating authority with ownership retained through delivery.",
-  },
-  {
-    question: "When does Ascella typically get involved?",
-    answer:
-      "Engagements usually begin when execution becomes hard to manage across teams or vendors and ownership starts to blur.",
-  },
-  {
-    question: "Does Ascella work with existing vendors?",
-    answer:
-      "Yes. Existing vendors remain in place when useful. Ascella coordinates and governs their work to reduce fragmentation.",
-  },
+type FAQ = {
+  question: string;
+  answer: string;
+};
 
-];
+type Props = {
+  faqs: FAQ[];
+  description: string;
+};
 
-export default function Faq() {
+export default function Faq({ faqs, description }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
 
   const toggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-
   return (
     <>
+      {/* DESKTOP */}
       <section className="px-10 hidden md:grid mx-auto max-w-7xl py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]">
-        <div className="flex flex-col gap-8 py-6 row-span-2  max-w-md md:max-w-xs">
+        <div className="flex flex-col gap-4 py-6 row-span-2 max-w-md md:max-w-xs">
           <Heading text="FAQs" />
           <h3>Frequently Asked Questions</h3>
-          <p className="text-[16px] text-gray-200 ">
-            Common questions about how Ascella works, what it owns, and how engagements run. Written to help assess fit and set expectations early.
-          </p>
+          <p className="text-[16px] text-gray-200">{description}</p>
         </div>
 
         {faqs.map((faq, index) => {
-          const isOpen = activeIndex === index;
           const isHovered = hoveredIndex === index;
-          const isExpanded = isOpen || (!isOpen && isHovered);
+          const isOpen = activeIndex === index;
+
+          // 🔑 key change
+          const isExpanded = isHovered || isOpen;
 
           return (
             <div
               key={index}
-              onMouseEnter={() => {
-                if (activeIndex !== index) setHoveredIndex(index);
-              }}
-              onMouseLeave={() => {
-                if (activeIndex !== index) setHoveredIndex(null);
-              }}
-              className={`group relative min-h-56 xl:min-h-48 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"}`}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => toggle(index)}
+              className={`group cursor-pointer relative min-h-56 xl:min-h-48 flex flex-col border transition-all duration-500 ${isExpanded ? "border-white/20 bg-white/5" : "border-color"
+                }`}
             >
               <Image
                 src="/FaqCube.svg"
                 alt="FAQ Cube"
                 width={120}
                 height={120}
-                className={`absolute top-20 pointer-events-none transition-opacity duration-500 
-    ${isExpanded ? "opacity-10" : "opacity-15"}
-    ${index % 2 !== 0
-                    ? "left-1 -scale-x-100"   // odd boxes: left side, flipped
-                    : "right-1"                // even boxes: right side, normal
-                  }`}
+                className={`absolute bottom-0 pointer-events-none transition-opacity duration-500
+                ${isExpanded ? "opacity-10" : "opacity-15"}
+                ${index % 2 !== 0 ? "left-1 -scale-x-100" : "right-1"}`}
               />
+
               <div className="relative z-10 h-full p-4 md:p-6 lg:mr-10">
-                {/* bottom question */}
+                {/* Question Bottom */}
                 <h6
-                  className={`md:absolute md:bottom-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded ? "md:opacity-0 md:translate-y-2 md:pointer-events-none" : "opacity-100 translate-y-0"}`}
+                  className={`md:absolute md:bottom-8 md:left-8 md:right-10 transition-all duration-500 ${isExpanded
+                      ? "md:opacity-0 md:translate-y-2"
+                      : "opacity-100"
+                    }`}
                 >
                   {faq.question}
                 </h6>
-                {/* top question */}
+
+                {/* Question Top */}
                 <h6
-                  className={`hidden md:block md:absolute md:top-8 md:left-8 md:right-10 transition-all duration-500 ease-out ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
+                  className={`hidden md:block md:absolute md:top-8 md:left-8 md:right-10 transition-all duration-500 ${isExpanded
+                      ? "opacity-100"
+                      : "opacity-0 -translate-y-4"
+                    }`}
                 >
                   {faq.question}
                 </h6>
-                <div className={`overflow-hidden transition-all duration-500 ${isExpanded ? "max-h-96" : "max-h-0"}`}></div>
-                <p className={`absolute bottom-8 left-8 right-10 text-b3 text-white transition-all duration-500 delay-100 ease-cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
+
+                {/* Answer */}
+                <p
+                  className={`absolute top-20 left-8 right-10 text-b3 text-white transition-all duration-500 delay-100 ${isExpanded
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4 pointer-events-none"
+                    }`}
+                >
                   {faq.answer}
                 </p>
               </div>
-              {/* Arrow */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggle(index);
-                }}
-                aria-expanded={isOpen}
-                className={`absolute top-6 right-6 z-20 transition-transform duration-500 ${isOpen ? "rotate-90" : ""}
-    `}
-              >
-                <ArrowButton/>
-              </button>
             </div>
           );
         })}
       </section>
 
-
-      <section className="px-10 block md:hidden mx-auto max-w-7xl py-16 md:py-24">
-        {/* Header */}
-        <div className="flex flex-col gap-4 mb-10 max-w-md">
+      {/* MOBILE */}
+      <section className="px-10 block md:hidden mx-auto max-w-7xl py-16">
+        <div className="flex flex-col gap-4 mb-4 max-w-md">
           <Heading text="FAQs" />
           <h4>Frequently Asked Questions</h4>
-          <p className="text-b2 text-gray-200 leading-tight">
-            Common questions about how Ascella works, what it owns, and how engagements run.
-            Written to help assess fit and set expectations early.
+          <p className="text-[12px] text-gray-200">
+            {description}
           </p>
         </div>
 
-        {/* FAQ List */}
         <div className="flex flex-col divide-y divide-white/10">
           {faqs.map((faq, index) => {
             const isOpen = activeIndex === index;
 
             return (
-              <div
-                key={index}
-                className="py-6"
-              >
-                {/* Question Row */}
+              <div key={index} className="py-6">
                 <button
                   onClick={() => toggle(index)}
                   className="w-full flex items-center justify-between text-left"
@@ -159,17 +125,14 @@ export default function Faq() {
                   </div>
                 </button>
 
-                {/* Answer */}
                 <div
                   className={`grid transition-all duration-300 ${isOpen
-                    ? "grid-rows-[1fr] opacity-100 mt-4"
-                    : "grid-rows-[0fr] opacity-0"
+                      ? "grid-rows-[1fr] opacity-100 mt-4"
+                      : "grid-rows-[0fr] opacity-0"
                     }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-b3 text-white/80">
-                      {faq.answer}
-                    </p>
+                    <p className="text-b3 text-white/80">{faq.answer}</p>
                   </div>
                 </div>
               </div>

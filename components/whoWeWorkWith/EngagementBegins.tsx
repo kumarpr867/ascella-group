@@ -119,7 +119,7 @@ function ExploreNowBtn() {
       <div>
         <PartialOutlineBtn text="Begin Alignment"
           onClick={() => {
-            router.push(`/startups`);
+            router.push(`/engageWithUs`);
           }} />
       </div>
     </div>

@@ -7,8 +7,8 @@ import ParticleGlobeScene from "./ParticleGlobeScene"
 
 export default function ExecutionPods() {
   return (
-    <section className="mx-auto max-w-7xl px-5">
-      <div className="relative min-h-screen overflow-hidden">
+    <section className="mx-auto my-24 max-w-7xl px-5">
+      <div className="relative overflow-hidden">
 
         <PrecisionGrid />
         <Image src="/howAscellaOperates/blur.png"

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { slugify } from "@/utils/slugify";
-import { blogs } from "@/data/blogs";
+import { caseStudies } from "@/data/case-studies";
 
 interface CaseStudy {
     id: number;
@@ -33,7 +33,7 @@ export default function CaseStudies() {
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
 
-    const filtered = blogs.filter((item) => {
+    const filtered = caseStudies.filter((item) => {
         const matchesSearch = item.title
             .toLowerCase()
             .includes(search.toLowerCase());
@@ -224,7 +224,7 @@ function CaseCard({
 
                 {/* Button */}
                 <div className="flex justify-between items-center">
-                    <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                    <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                         <button className="self-start text-xs border border-white/40 px-2 md:px-4 py-1 md:py-2 hover:bg-white hover:text-black transition">
                             Read Now
                         </button>

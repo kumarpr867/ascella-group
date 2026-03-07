@@ -2,6 +2,7 @@
 import OutlineBtn from "../btns/OutlineBtn";
 import Heading from "../headings/Heading";
 import Image from "next/image"
+import { useRouter } from "next/navigation";
 
 const points = [
     {
@@ -80,8 +81,9 @@ const points = [
 ];
 
 export default function Governace() {
+    const router = useRouter();
     return (
-        <section className="flex flex-col my-20 *:xl:p-25">
+        <section className="flex flex-col my-24 xl:p-25">
             <div className="mx-auto max-w-7xl px-10 flex flex-col gap-6 mb-20">
                 <div className="flex flex-col gap-5 max-w-3xl">
                     <Heading text="Governance and Oversight" />
@@ -127,7 +129,8 @@ export default function Governace() {
             <div className="flex flex-col flex-center">
                 <div className=" w-0.5 h-10 bg-gray-400">
                 </div>
-                <OutlineBtn text="Explore With Us" />
+                <OutlineBtn text="Explore With Us"
+                onClick={() => router.push("/execution-arms")} />
             </div>
 
         </section>

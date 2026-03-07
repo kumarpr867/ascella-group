@@ -4,8 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { content } from "./data/content";
 import Heading from "../headings/Heading";
+import { useRouter } from "next/navigation";
 
 export default function Arms() {
+
+  const router = useRouter();
+
   const [index, setIndex] = useState(0);
   const total = content.length;
 
@@ -71,7 +75,11 @@ export default function Arms() {
               </p>
 
               {/* Button */}
-              <button className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
+              <button 
+              onClick={()=>{
+                router.push("/execution-arms")
+              }}
+              className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
                 See How Works Delivers
                 <span className="opacity-80 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
