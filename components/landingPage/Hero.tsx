@@ -99,7 +99,7 @@ export default function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-[60vh] bg-linear-to-t from-black via-black/80 to-transparent z-2 pointer-events-none" />
 
         {/* Top info row */}
-        <motion.div
+        {/* <motion.div
           variants={container}
           initial="hidden"
           animate="visible"
@@ -128,7 +128,7 @@ export default function Hero() {
             </motion.div>
 
           </div>
-        </motion.div>
+        </motion.div> */}
 
         <motion.div
           variants={container}

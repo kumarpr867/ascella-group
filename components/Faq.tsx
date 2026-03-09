@@ -36,8 +36,6 @@ export default function Faq({ faqs, description }: Props) {
         {faqs.map((faq, index) => {
           const isHovered = hoveredIndex === index;
           const isOpen = activeIndex === index;
-
-          // 🔑 key change
           const isExpanded = isHovered || isOpen;
 
           return (

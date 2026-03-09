@@ -198,9 +198,6 @@ const Footer = () => {
 
 
             <div className="w-full border-t border-color"></div>
-
-
-            <div className="h-[70px] w-full"></div>
         </footer>
     )
 }

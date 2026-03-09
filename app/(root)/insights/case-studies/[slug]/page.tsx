@@ -39,7 +39,7 @@ export default async function BlogPage({ params }: Props) {
         <div className="min-h-screen flex lg:flex-row flex-col">
 
           {/* MAIN CONTENT */}
-          <main className="lg:w-[60%] lg:border-r border-color min-w-0">
+          <main className="lg:w-[75%] lg:border-r border-color min-w-0">
             <div className="border-b border-color md:p-10 py-10">
               <p className="md:block hidden text-b2 mb-4">
                 Ascella Group &nbsp;|&nbsp; {caseStudy.category} &nbsp;|&nbsp; {caseStudy.date}
@@ -281,7 +281,7 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="relative pt-10 w-full lg:w-[360px]">
+          <aside className="relative pt-10 w-full lg:w-[250px]">
             <div className=" sticky top-10">
 
               <div>
