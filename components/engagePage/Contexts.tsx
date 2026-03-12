@@ -552,7 +552,7 @@ const ContextsPage = () => {
                     }}
                   />
                   <img
-                    src="/alignment.png"
+                    src="/alignment2.png"
                     alt="Alignment Symbol"
                     className="absolute inset-0 w-full h-full object-contain z-20"
                     style={{ padding:'24px' }}
