@@ -14,10 +14,10 @@ export default function ApplicationForm() {
                     {/* LEFT COLUMN */}
                     <aside className="order-2 lg:order-1 lg:border-r border-color">
                         <div className="w-full lg:sticky lg:top-24">
-                            <div className="lg:border-b border-color lg:p-5">
+                            <div className="lg:border-b border-color lg:px-4 pb-4">
                                 <button
                                     onClick={() => router.push("/JD-Page")}
-                                    className="hidden lg:flex mb-6 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
+                                    className="hidden lg:flex mb-2 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
                                     <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
                                         <path
                                             d="M11.707 4.85355H0.707031M0.707031 4.85355L5.20703 0.353546M0.707031 4.85355L5.20703 9.35355"
@@ -27,15 +27,15 @@ export default function ApplicationForm() {
                                     <p className="text-b3">See all jobs</p>
                                 </button>
 
-                                <h5 className="mb-2 tracking-wide">APPLY FOR THIS ROLE</h5>
+                                <h5 className="mb-2">APPLY FOR THIS ROLE</h5>
 
-                                <p className="text-b3 text-gray-100 w-xs">
+                                <p className="text-b3 text-gray-100 ">
                                     Applications are reviewed through Ascella's structured evaluation
                                     and alignment process.
                                 </p>
                             </div>
 
-                            <form className="space-y-5 mt-5 lg:mt-0 lg:p-5">
+                            <form className="space-y-2 mt-4 lg:mt-0 lg:px-4 pt-4">
                                 <div className="grid grid-cols-2 gap-2">
                                     <Input label="Full Name" />
                                     <Input label="Email" type="email" />
@@ -55,26 +55,17 @@ export default function ApplicationForm() {
                                     placeholder="Explain how your experience aligns with the responsibilities and operating context of this role."
                                 />
 
-                                <div>
-                                    <label className="block text-b2 mb-2 text-gray-300">
-                                        Upload CV
-                                    </label>
-                                    <label className="inline-flex cursor-pointer items-center justify-center text-b2  bg-gray-500 border border-color rounded-lg px-4 py-4 text-gray-100 placeholder:text-gray-300 outline-none hover:border-gray-200 transition resize-none ">
-                                        Upload File
-                                        <input type="file" className="hidden" />
-                                    </label>
-                                </div>
-
+                                <Input label="CV Link" />
                                 {/* Submit */}
-                                <div className="pt-6">
-                                    <PartialOutlineBtn text="Submit" />
+                                <div className="pt-2">
+                                    <PartialOutlineBtn text="Submit" size="sm" />
                                 </div>
                             </form>
                         </div>
                     </aside>
 
                     {/* RIGHT COLUMN */}
-                    <main className="order-1 lg:order-2 py-16 lg:py-24 lg:pr-16">
+                    <main className="order-1 lg:order-2 py-16 lg:py-10 lg:pr-16">
                         <div>
                             <div className="max-w-lg">
                                 <button
@@ -181,10 +172,10 @@ type InputProps = {
 function Input({ label, type = "text" }: InputProps) {
     return (
         <div>
-            <label className="block text-b2 mb-2 text-gray-100">{label}</label>
+            <label className="block text-b3 mb-1">{label}</label>
             <input
                 type={type}
-                className="w-full bg-gray-500 border border-color rounded-lg p-2 lg:p-4 text-b2 outline-none focus:border-gray-200 transition"
+                className="w-full bg-gray-500 border border-color rounded-lg p-2 text-b3 outline-none focus:border-gray-200 transition"
             />
         </div>
     );
@@ -198,11 +189,11 @@ type TextareaProps = {
 function Textarea({ label, placeholder }: TextareaProps) {
     return (
         <div>
-            <label className="block text-b2 mb-2 text-gray-100">{label}</label>
+            <label className="block text-b3 mb-1">{label}</label>
             <textarea
-                rows={5}
+                rows={3}
                 placeholder={placeholder}
-                className="w-full  bg-gray-500 border border-color rounded-lg p-4 text-b2 text-gray-100 placeholder:text-gray-300 outline-none focus:border-gray-200 transition resize-none"
+                className="w-full  bg-gray-500 border border-color rounded-lg p-2 text-b3 text-gray-100 placeholder:text-gray-300 outline-none focus:border-gray-200 transition resize-none"
             />
         </div>
     );

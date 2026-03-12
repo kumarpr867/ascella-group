@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import Heading from "../headings/Heading";
 import { motion, type Variants } from "motion/react";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
 
 const container: Variants = {
     hidden: {},
@@ -22,15 +24,15 @@ const fadeIn: Variants = {
 // ── Diffuse Ownership ─────────────────────────────────────────────────────────
 function DiffuseOwnershipIcon() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const rafRef    = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
     useEffect(() => {
         const canvas = canvasRef.current; if (!canvas) return;
         const ctx = canvas.getContext("2d")!;
         const cx = 74.5, cy = 74.5;
         const circles = [
-            { r: 74,  dotR: 4, speed:  0.003, a: Math.atan2(124 - cy, 129 - cx) },
-            { r: 54,  dotR: 4, speed: -0.004, a: Math.atan2(71  - cy, 44  - cx) },
-            { r: 31,  dotR: 4, speed:  0.005, a: Math.atan2(21  - cy, 76  - cx) },
+            { r: 74, dotR: 4, speed: 0.003, a: Math.atan2(124 - cy, 129 - cx) },
+            { r: 54, dotR: 4, speed: -0.004, a: Math.atan2(71 - cy, 44 - cx) },
+            { r: 31, dotR: 4, speed: 0.005, a: Math.atan2(21 - cy, 76 - cx) },
         ];
         const extra = { r: 74, dotR: 4, speed: 0.003, a: Math.atan2(105 - cy, 7 - cx) };
         const angles = circles.map(c => c.a);
@@ -57,14 +59,14 @@ function DiffuseOwnershipIcon() {
 // ── Priority Drift ────────────────────────────────────────────────────────────
 function PriorityDriftIcon() {
     const lines: [number, number, number, number][] = [
-        [75.7985, 3.15,    75.7985, 39.8183],
+        [75.7985, 3.15, 75.7985, 39.8183],
         [75.7985, 148.455, 75.7985, 111.787],
-        [3.15,    75.8064, 39.8183, 75.8064],
+        [3.15, 75.8064, 39.8183, 75.8064],
         [148.455, 75.8064, 111.787, 75.8064],
         [24.1791, 126.933, 50.1075, 101.005],
-        [127.42,  24.6819, 101.244, 50.3628],
+        [127.42, 24.6819, 101.244, 50.3628],
         [127.173, 127.181, 101.244, 101.252],
-        [24.179,  24.6819, 50.1074, 50.6103],
+        [24.179, 24.6819, 50.1074, 50.6103],
         [138.719, 112.134, 107.138, 93.4966],
         [44.6363, 57.8155, 13.0556, 39.1783],
         [12.8807, 112.134, 44.4613, 93.4966],
@@ -74,10 +76,10 @@ function PriorityDriftIcon() {
         [39.4733, 12.8887, 57.5043, 44.8194],
         [93.7918, 106.971, 111.823, 138.902],
         [5.57723, 57.1745, 40.9292, 66.9171],
-        [110.58,  85.0364, 145.932, 94.779 ],
+        [110.58, 85.0364, 145.932, 94.779],
         [5.64883, 94.7089, 41.1455, 85.5072],
         [110.545, 66.4459, 146.041, 57.2442],
-        [56.7952, 145.93,  66.7247, 110.63 ],
+        [56.7952, 145.93, 66.7247, 110.63],
         [85.2125, 41.0761, 95.1421, 5.77617],
         [94.1202, 146.112, 85.2124, 110.541],
         [66.7256, 40.9861, 57.8178, 5.41456],
@@ -94,29 +96,29 @@ function PriorityDriftIcon() {
             <polygon points="42.9683,75.8064 39.4683,73.7857 39.4683,77.8271" fill="white" />
             <polygon points="108.637,75.8064 112.137,77.8271 112.137,73.7857" fill="white" />
             <polygon points="151.605,75.8064 148.105,73.7857 148.105,77.8271" fill="white" />
-            <path d="M22.1992 129.408L26.103 128.362L23.2452 125.504L22.1992 129.408Z M52.5824 99.0249L48.6786 100.071L51.5364 102.929L52.5824 99.0249Z" fill="white"/>
-            <path d="M99.0168 52.5902L102.921 51.5442L100.063 48.6865L99.0168 52.5902Z M129.4 22.2071L125.496 23.2531L128.354 26.1108L129.4 22.2071Z" fill="white"/>
-            <path d="M129.4 129.408L128.354 125.504L125.496 128.362L129.4 129.408Z M99.017 99.0249L100.063 102.929L102.921 100.071L99.017 99.0249Z" fill="white"/>
-            <path d="M52.5823 52.5902L51.5363 48.6865L48.6785 51.5442L52.5823 52.5902Z M22.1991 22.2071L23.2451 26.1108L26.1029 23.2531L22.1991 22.2071Z" fill="white"/>
-            <path d="M141.447 113.709L139.426 110.209L137.405 113.709L141.447 113.709Z M104.235 92.2247L106.256 95.7247L108.276 92.2247L104.235 92.2247Z" fill="white"/>
-            <path d="M47.3643 59.3905L45.3435 55.8905L43.3228 59.3905L47.3643 59.3905Z M10.1527 37.9064L12.1734 41.4064L14.1941 37.9064L10.1527 37.9064Z" fill="white"/>
-            <path d="M10.1527 113.709L12.1734 110.209L14.1942 113.709L10.1527 113.709Z M47.3643 92.2247L45.3436 95.7247L43.3229 92.2247L47.3643 92.2247Z" fill="white"/>
-            <path d="M104.235 59.3905L106.256 55.8905L108.276 59.3905L104.235 59.3905Z M141.447 37.9064L139.426 41.4064L137.405 37.9064L141.447 37.9064Z" fill="white"/>
-            <path d="M37.8983 141.454L37.8983 137.413L41.3983 139.434L37.8983 141.454Z M59.3824 104.243L59.3824 108.284L55.8824 106.264L59.3824 104.243Z" fill="white"/>
-            <path d="M92.2168 47.3723L92.2168 43.3309L95.7168 45.3516L92.2168 47.3723Z M113.701 10.1607L113.701 14.2022L110.201 12.1814L113.701 10.1607Z" fill="white"/>
-            <path d="M37.8983 10.1608L37.8983 14.2022L41.3983 12.1815L37.8983 10.1608Z M59.3824 47.3724L59.3824 43.3309L55.8824 45.3516L59.3824 47.3724Z" fill="white"/>
-            <path d="M92.2168 104.243L92.2168 108.284L95.7168 106.264L92.2168 104.243Z M113.701 141.455L113.701 137.413L110.201 139.434L113.701 141.455Z" fill="white"/>
-            <path d="M2.53259 56.3666L5.39727 59.2174L6.43378 55.3111L2.53259 56.3666Z M44.0637 67.3866L41.199 64.5359L40.1625 68.4421L44.0637 67.3866Z" fill="white"/>
-            <path d="M107.536 84.2285L110.4 87.0793L111.437 83.173L107.536 84.2285Z M149.067 95.2486L146.202 92.3978L145.166 96.3041L149.067 95.2486Z" fill="white"/>
-            <path d="M2.6073 95.5284L6.51249 96.569L5.46106 92.6667L2.6073 95.5284Z M44.0959 84.3498L40.1908 83.3092L41.2422 87.2115L44.0959 84.3498Z" fill="white"/>
-            <path d="M107.503 67.2654L111.408 68.306L110.357 64.4037L107.503 67.2654Z M148.992 56.0867L145.087 55.0461L146.138 58.9484L148.992 56.0867Z" fill="white"/>
-            <path d="M55.9712 148.971L58.8371 146.121L54.9364 145.064L55.9712 148.971Z M67.2109 107.499L64.345 110.348L68.2457 111.405L67.2109 107.499Z" fill="white"/>
-            <path d="M84.3885 44.1165L87.2545 41.2669L83.3537 40.2097L84.3885 44.1165Z M95.6282 2.64429L92.7623 5.49384L96.6631 6.55101L95.6282 2.64429Z" fill="white"/>
-            <path d="M94.9146 149.16L95.9874 145.264L92.0765 146.283L94.9146 149.16Z M84.0794 107.581L83.0066 111.477L86.9174 110.458L84.0794 107.581Z" fill="white"/>
-            <path d="M67.5199 44.0343L68.5927 40.1378L64.6819 41.157L67.5199 44.0343Z M56.6848 2.45461L55.6119 6.35107L59.5228 5.33195L56.6848 2.45461Z" fill="white"/>
+            <path d="M22.1992 129.408L26.103 128.362L23.2452 125.504L22.1992 129.408Z M52.5824 99.0249L48.6786 100.071L51.5364 102.929L52.5824 99.0249Z" fill="white" />
+            <path d="M99.0168 52.5902L102.921 51.5442L100.063 48.6865L99.0168 52.5902Z M129.4 22.2071L125.496 23.2531L128.354 26.1108L129.4 22.2071Z" fill="white" />
+            <path d="M129.4 129.408L128.354 125.504L125.496 128.362L129.4 129.408Z M99.017 99.0249L100.063 102.929L102.921 100.071L99.017 99.0249Z" fill="white" />
+            <path d="M52.5823 52.5902L51.5363 48.6865L48.6785 51.5442L52.5823 52.5902Z M22.1991 22.2071L23.2451 26.1108L26.1029 23.2531L22.1991 22.2071Z" fill="white" />
+            <path d="M141.447 113.709L139.426 110.209L137.405 113.709L141.447 113.709Z M104.235 92.2247L106.256 95.7247L108.276 92.2247L104.235 92.2247Z" fill="white" />
+            <path d="M47.3643 59.3905L45.3435 55.8905L43.3228 59.3905L47.3643 59.3905Z M10.1527 37.9064L12.1734 41.4064L14.1941 37.9064L10.1527 37.9064Z" fill="white" />
+            <path d="M10.1527 113.709L12.1734 110.209L14.1942 113.709L10.1527 113.709Z M47.3643 92.2247L45.3436 95.7247L43.3229 92.2247L47.3643 92.2247Z" fill="white" />
+            <path d="M104.235 59.3905L106.256 55.8905L108.276 59.3905L104.235 59.3905Z M141.447 37.9064L139.426 41.4064L137.405 37.9064L141.447 37.9064Z" fill="white" />
+            <path d="M37.8983 141.454L37.8983 137.413L41.3983 139.434L37.8983 141.454Z M59.3824 104.243L59.3824 108.284L55.8824 106.264L59.3824 104.243Z" fill="white" />
+            <path d="M92.2168 47.3723L92.2168 43.3309L95.7168 45.3516L92.2168 47.3723Z M113.701 10.1607L113.701 14.2022L110.201 12.1814L113.701 10.1607Z" fill="white" />
+            <path d="M37.8983 10.1608L37.8983 14.2022L41.3983 12.1815L37.8983 10.1608Z M59.3824 47.3724L59.3824 43.3309L55.8824 45.3516L59.3824 47.3724Z" fill="white" />
+            <path d="M92.2168 104.243L92.2168 108.284L95.7168 106.264L92.2168 104.243Z M113.701 141.455L113.701 137.413L110.201 139.434L113.701 141.455Z" fill="white" />
+            <path d="M2.53259 56.3666L5.39727 59.2174L6.43378 55.3111L2.53259 56.3666Z M44.0637 67.3866L41.199 64.5359L40.1625 68.4421L44.0637 67.3866Z" fill="white" />
+            <path d="M107.536 84.2285L110.4 87.0793L111.437 83.173L107.536 84.2285Z M149.067 95.2486L146.202 92.3978L145.166 96.3041L149.067 95.2486Z" fill="white" />
+            <path d="M2.6073 95.5284L6.51249 96.569L5.46106 92.6667L2.6073 95.5284Z M44.0959 84.3498L40.1908 83.3092L41.2422 87.2115L44.0959 84.3498Z" fill="white" />
+            <path d="M107.503 67.2654L111.408 68.306L110.357 64.4037L107.503 67.2654Z M148.992 56.0867L145.087 55.0461L146.138 58.9484L148.992 56.0867Z" fill="white" />
+            <path d="M55.9712 148.971L58.8371 146.121L54.9364 145.064L55.9712 148.971Z M67.2109 107.499L64.345 110.348L68.2457 111.405L67.2109 107.499Z" fill="white" />
+            <path d="M84.3885 44.1165L87.2545 41.2669L83.3537 40.2097L84.3885 44.1165Z M95.6282 2.64429L92.7623 5.49384L96.6631 6.55101L95.6282 2.64429Z" fill="white" />
+            <path d="M94.9146 149.16L95.9874 145.264L92.0765 146.283L94.9146 149.16Z M84.0794 107.581L83.0066 111.477L86.9174 110.458L84.0794 107.581Z" fill="white" />
+            <path d="M67.5199 44.0343L68.5927 40.1378L64.6819 41.157L67.5199 44.0343Z M56.6848 2.45461L55.6119 6.35107L59.5228 5.33195L56.6848 2.45461Z" fill="white" />
             {lines.map(([x1, y1, x2, y2], i) => {
                 const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-                const dur   = (3 + (i % 7) * 0.4).toFixed(1) + "s";
+                const dur = (3 + (i % 7) * 0.4).toFixed(1) + "s";
                 const delay = -((i * 0.37 + (i % 3) * 0.6) % 3).toFixed(2) + "s";
                 return (
                     <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="0.8" strokeLinecap="round" strokeDasharray={`${len} ${len + 1}`}>
@@ -133,10 +135,10 @@ function LeadershipDrainIcon() {
     // Bottom-most (largest) triangle first, then upward
     const triangles = [
         { d: "M136.348 128.5H10.6523L73.5 1.12988L136.348 128.5Z", delay: 0 },
-        { d: "M136.251 101.5H10.749L73.5 0.943359L136.251 101.5Z",  delay: 0.7 },
-        { d: "M136.036 70.75H10.9639L73.5 0.75L136.036 70.75Z",     delay: 1.4 },
+        { d: "M136.251 101.5H10.749L73.5 0.943359L136.251 101.5Z", delay: 0.7 },
+        { d: "M136.036 70.75H10.9639L73.5 0.75L136.036 70.75Z", delay: 1.4 },
         { d: "M135.601 45.25H11.3994L73.5 0.615234L135.601 45.25Z", delay: 2.1 },
-        { d: "M134.41 23.5H12.5898L73.5 0.53418L134.41 23.5Z",      delay: 2.8 },
+        { d: "M134.41 23.5H12.5898L73.5 0.53418L134.41 23.5Z", delay: 2.8 },
     ];
 
     const totalCycle = 6; // seconds — full loop duration
@@ -204,49 +206,73 @@ const items: ProblemItem[] = [
 ];
 
 // ── Page section ──────────────────────────────────────────────────────────────
-export default function ExecutionProblemSection() {
+export default function ExecutionProblem() {
     return (
         <section className="my-24 border-b border-color">
-            <motion.div className="border-b border-color lg:px-15" variants={container} style={{ willChange: "transform" }} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-                <div className="hidden md:flex mx-auto max-w-7xl sm:px-4 flex-col md:flex-row md:justify-between gap-12 pb-12 px-20">
-                    <motion.p variants={fadeUp} style={{ willChange: "transform" }} className="max-w-md text-b3 leading-relaxed">
-                        Execution breaks when responsibility spreads across teams, vendors, and functions. Work continues, effort stays high, yet outcomes drift. Decisions slow, risks surface late, and delivery feels unstable. The failure sits in structure and ownership, not effort or intent.
-                    </motion.p>
-                    <motion.h3 variants={fadeUp} style={{ willChange: "transform" }} className="max-w-lg text-right">
-                        <span className="text-[18px] md:text-[36px] text-white">The Execution Problem </span>
-                        <span className="text-gray-400">Modern Organisations Face</span>
-                    </motion.h3>
+            <div className="border-b border-color lg:px-15" >
+                <div className="hidden md:flex mx-10 xl:mx-auto px-10 max-w-7xl flex-col md:flex-row md:justify-between gap-12 pb-12">
+
+                    <Reveal variants={slideInFromLeft(0.1)}>
+                        <p className="max-w-md text-b3 leading-relaxed">
+                            Execution breaks when responsibility spreads across teams, vendors, and
+                            functions. Work continues, effort stays high, yet outcomes drift.
+                            Decisions slow, risks surface late, and delivery feels unstable. The
+                            failure sits in structure and ownership, not effort or intent.
+                        </p>
+                    </Reveal>
+
+                    <Reveal variants={slideInFromRight(0.2)}>
+                        <h3 className="max-w-lg text-right">
+                            <span className="text-[18px] md:text-[36px] text-white">
+                                The Execution Problem
+                            </span>
+                            <span className="text-gray-200"> Modern Organisations Face</span>
+                        </h3>
+                    </Reveal>
+
                 </div>
                 <div className="md:hidden flex mx-auto max-w-7xl flex-col md:justify-between gap-12 pb-12 px-10">
                     <motion.h4 variants={fadeUp} style={{ willChange: "transform" }}>
                         <span className="text-white">The Execution Problem </span>
-                        <span className="text-gray-400">Modern Organisations Face</span>
+                        <span className="text-gray-200">Modern Organisations Face</span>
                     </motion.h4>
                     <motion.p variants={fadeUp} style={{ willChange: "transform" }} className="max-w-md text-b3 leading-relaxed">
                         Execution breaks when responsibility spreads across teams, vendors, and functions. Work continues, effort stays high, yet outcomes drift. Decisions slow, risks surface late, and delivery feels unstable. The failure sits in structure and ownership, not effort or intent.
                     </motion.p>
                 </div>
-            </motion.div>
+            </div>
 
-            <motion.div className="border-b border-color" initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <motion.div variants={fadeIn} style={{ willChange: "transform" }} className="mx-auto max-w-7xl px-10 flex items-center py-8">
-                    <Heading text="Execution Policy" />
-                </motion.div>
-            </motion.div>
+            <div className="border-b border-color">
+                <Reveal variants={slideInFromBottom(0.1)}>
+                    <div className="mx-auto max-w-7xl px-10 flex items-center py-8">
+                        <Heading text="Execution Policy" />
+                    </div>
+                </Reveal>
+            </div>
 
-            <motion.div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3" variants={container} style={{ willChange: "transform" }} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
+            <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3">
                 {items.map((item, index) => (
-                    <motion.div key={item.title} variants={fadeUp} style={{ willChange: "transform" }} className={`py-24 min-h-105 flex flex-col border-color ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""} px-10`}>
-                        <motion.div variants={fadeIn} style={{ willChange: "transform" }} className="pb-10 border-b border-color h-[200px]">
-                            {item.icon}
-                        </motion.div>
-                        <h5 className="mb-2 mt-6">{item.title}</h5>
-                        <div className="w-10 h-px mb-4" />
-                        <p className="text-b1 mb-4 text-gray-100 font-thin">{item.subHeading}</p>
-                        <p className="text-b3 leading-relaxed">{item.description}</p>
-                    </motion.div>
+                    <Reveal
+                        key={item.title}
+                        variants={slideInFromBottom(index * 0.15)}
+                    >
+                        <div
+                            className={`py-16 min-h-105 flex flex-col border-color 
+        ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""} px-10`}
+                        >
+                            <div className="pb-10 border-b border-color h-[200px]">
+                                {item.icon}
+                            </div>
+
+                            <h5 className="mb-4 mt-6">{item.title}</h5>
+
+                            <p className="text-b1 font-thin">{item.subHeading}</p>
+
+                            <p className="text-b3">{item.description}</p>
+                        </div>
+                    </Reveal>
                 ))}
-            </motion.div>
+            </div>
         </section>
     );
 }

@@ -166,7 +166,7 @@ export default function OperatingStructure() {
 
 
         {/* xl screen */}
-        <div className='hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around  border-x-0 xl:border-x  border-color '>
+        <div className='hidden mx-10 lg:mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around border-x border-color '>
           <div className="flex flex-col items-center py-8 ">
             <p className={"text-b3 mb-6"}>Governance</p>
             <div className={"w-full h-40 flex items-center justify-center"}>
@@ -223,7 +223,7 @@ export default function OperatingStructure() {
 
         {/* Hero text */}
         <div
-          className="relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden"
+          className="md:hidden relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden"
         >
           {/* Subtle diagonal lines background */}
           <div

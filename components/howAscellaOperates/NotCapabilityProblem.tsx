@@ -11,8 +11,8 @@ export default function NotCapabilityProblem() {
             <div className="overflow-hidden">
                 <div className="relative bg-gray-500">
                     <PrecisionGrid />
-                    <div className="px-6 sm:px-10 lg:px-24 py-15 ">
-                            <p className="text-[24px] xl:text-[36px] leading-7 lg:leading-12"> Execution rarely fails from lack of talent but from fragmented ownership<span className="text-gray-300"> and unclear control. Organisations rise or fall on how authority, accountability, and decision flow are structured as scale increases.</span></p>
+                    <div className="px-6 sm:px-10 lg:px-20 py-15 ">
+                        <p className="text-[24px] xl:text-[36px] leading-7 lg:leading-12"> Execution rarely fails from lack of talent but from fragmented ownership<span className="text-gray-300"> and unclear control. Organisations rise or fall on how authority, accountability, and decision flow are structured as scale increases.</span></p>
                     </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-stretch">

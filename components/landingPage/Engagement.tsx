@@ -8,36 +8,36 @@ import { useEffect, useRef, useState, useCallback } from "react"
 const ParticleSphere = dynamic(() => import("../howAscellaOperates/ParticleSphere"), { ssr: false })
 
 // ── Config (Slow & Smooth Tuning) ─────────────────────────────────────────────
-const SPACING       = 5;      
-const THRESHOLD     = 10;
-const HOVER_RADIUS  = 100;    
-const EXPLODE_FORCE = 4;      
+const SPACING = 5;
+const THRESHOLD = 10;
+const HOVER_RADIUS = 100;
+const EXPLODE_FORCE = 4;
 const EXPLODE_DECAY = 0.94;   // Higher decay = smoother slowdown
-const RETURN_LERP   = 0.02;   // Lower value = slower, more liquid morphing
-const CONNECT_DIST  = 32;     
+const RETURN_LERP = 0.02;   // Lower value = slower, more liquid morphing
+const CONNECT_DIST = 32;
 
 interface Particle {
-    ox: number; oy: number; 
-    cx: number; cy: number; 
-    x:  number; y:  number; 
-    vx: number; vy: number; 
+    ox: number; oy: number;
+    cx: number; cy: number;
+    x: number; y: number;
+    vx: number; vy: number;
     size: number;
     phase: number;
 }
 
 // ── ParticleCanvas ────────────────────────────────────────────────────────────
 function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
-    const canvasRef    = useRef<HTMLCanvasElement>(null);
-    const mouseRef     = useRef({ x: -9999, y: -9999 });
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const mouseRef = useRef({ x: -9999, y: -9999 });
     const particlesRef = useRef<Particle[]>([]);
-    const rafRef       = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
     const [mode, setMode] = useState<"image" | "circle">("image");
 
     // Timing slowed to 3 seconds for a more graceful transition
     useEffect(() => {
         const timer = setInterval(() => {
             setMode((prev) => (prev === "image" ? "circle" : "image"));
-        }, 3000); 
+        }, 3000);
         return () => clearInterval(timer);
     }, []);
 
@@ -45,8 +45,8 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const canvas = canvasRef.current;
         if (!canvas || !imgEl) return;
 
-        const rect    = canvas.getBoundingClientRect();
-        canvas.width  = rect.width;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
         canvas.height = rect.height;
 
         const W = canvas.width;
@@ -55,9 +55,9 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const centerY = H / 2;
         const circleRadius = Math.min(W, H) / 3.4;
 
-        const off    = document.createElement("canvas");
-        off.width    = W;
-        off.height   = H;
+        const off = document.createElement("canvas");
+        off.width = W;
+        off.height = H;
         const offCtx = off.getContext("2d")!;
 
         try {
@@ -77,10 +77,10 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
                             ox: x, oy: y,
                             cx: centerX + Math.cos(angle) * r,
                             cy: centerY + Math.sin(angle) * r,
-                            x: Math.random() * W, 
+                            x: Math.random() * W,
                             y: Math.random() * H,
                             vx: 0, vy: 0,
-                            size: 0.7, 
+                            size: 0.7,
                             phase: Math.random() * Math.PI * 2
                         });
                     }
@@ -126,7 +126,7 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 
                 p.vx *= EXPLODE_DECAY;
                 p.vy *= EXPLODE_DECAY;
-                
+
                 // Position update with very smooth LERP
                 p.x += (tx + floatX - p.x) * RETURN_LERP + p.vx;
                 p.y += (ty + floatY - p.y) * RETURN_LERP + p.vy;
@@ -169,7 +169,7 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const ro = new ResizeObserver(buildParticles);
         ro.observe(canvas);
         if (imgEl?.complete) buildParticles();
-        
+
         rafRef.current = requestAnimationFrame(loop);
         return () => {
             canvas.removeEventListener("mousemove", onMove);
@@ -264,12 +264,21 @@ export default function Engagement() {
                             <label className="block text-sm text-white font-light mb-1">Email Address</label>
                             <input type="email" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
                         </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Organisation Type</label>
-                            <select defaultValue="" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition">
-                                <option value="" disabled></option>
-                                <option>Something</option>
-                                <option>Something</option>
+                        <div className="relative">
+                            <label className="block text-sm text-white font-light mb-1">
+                                Organisation Type
+                            </label>
+
+                            <select
+                                defaultValue=""
+                                className="w-full bg-gray-500 text-white px-4 py-3 pr-10 border border-transparent focus:outline-none hover:bg-gray-600 transition cursor-pointer"
+                            >
+                                <option value="" disabled>Select Organisation</option>
+                                <option value="ascella-group">Ascella Group</option>
+                                <option value="ascella-infosec">Ascella Infosec</option>
+                                <option value="ascella-staffing">Ascella Staffing</option>
+                                <option value="ascella-engage">Ascella Engage</option>
+                                <option value="ascella-forge">Ascella Forge</option>
                             </select>
                         </div>
                         <div>
@@ -284,7 +293,7 @@ export default function Engagement() {
                     </form>
                 </div>
             </div>
-            
+
             <div className="border-t border-color">
                 <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
             </div>

@@ -18,7 +18,7 @@ export default function OperatingGroup() {
                 </div>
 
 
-                <div className="hidden lg:block mx-auto max-w-7xl px-10 py-10 border border-color">
+                <div className="hidden lg:block mx-auto max-w-7xl md:   px-10 lg:px-20 py-10 border border-color">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                         <h4>Ascella Group holds operating authority</h4>
                         <h4 >
@@ -34,7 +34,7 @@ export default function OperatingGroup() {
                             className="object-contain"
                         />
                     </div>
-                    {/* Bottom Text Blocks */}
+                    {/* Bottom Text Blocks
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
 
                         <div>
@@ -63,7 +63,7 @@ export default function OperatingGroup() {
                             </p>
                         </div>
 
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex flex-col lg:hidden mx-auto max-w-7xl px-10 py-10 border border-color">
                     <div className="flex flex-col gap-4">

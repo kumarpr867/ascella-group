@@ -1,8 +1,10 @@
 "use client"
+import { useEffect, useRef, useState } from "react";
 import OutlineBtn from "../btns/OutlineBtn";
 import Heading from "../headings/Heading";
 import Image from "next/image"
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 
 const points = [
     {
@@ -80,12 +82,62 @@ const points = [
     },
 ];
 
+const variants = {
+    enter: (direction: number) => ({
+        x: direction > 0 ? "100%" : "-100%",
+        opacity: 0
+    }),
+    center: {
+        x: 0,
+        opacity: 1
+    },
+    exit: (direction: number) => ({
+        x: direction < 0 ? "100%" : "-100%",
+        opacity: 0
+    })
+};
+
 export default function Governace() {
     const router = useRouter();
+    const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
+
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const paginate = (dir: number) => {
+        setPage(([prev]) => [
+            (prev + dir + points.length) % points.length,
+            dir
+        ]);
+    };
+
+    const swipeConfidenceThreshold = 60;
+
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    };
+
+    const startAutoSlide = () => {
+        stopAutoSlide();
+        timerRef.current = setInterval(() => {
+            paginate(1);
+        }, 5000);
+    };
+
+    const stopAutoSlide = () => {
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
+    useEffect(() => {
+        startAutoSlide();
+        return stopAutoSlide;
+    }, []);
     return (
         <section className="flex flex-col my-24 xl:p-25">
             <div className="mx-auto max-w-7xl px-10 flex flex-col gap-6 mb-20">
-                <div className="flex flex-col gap-5 max-w-3xl">
+                <div className="flex flex-col gap-5 max-w-2xl">
                     <Heading text="Governance and Oversight" />
                     <h3 className="text-[14px] md:text-[20px] lg:text-[36px]">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
                     </h3>
@@ -102,7 +154,7 @@ export default function Governace() {
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="hidden md:flex flex-col gap-5">
                         <div className="flex-center relative md:w-20 md:h-20">
-                        <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" fill />
+                            <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" fill />
                         </div>
                         <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
                     </div>
@@ -112,7 +164,8 @@ export default function Governace() {
                     <p className="text-gray-200 font-light max-w-lg">
                         Begins, Ascella establishes
                     </p>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                    {/* Desktop Grid */}
+                    <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
                         {points.map((point, index) => (
                             <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
                                 <div className="flex justify-between w-full">
@@ -124,13 +177,66 @@ export default function Governace() {
                             </div>
                         ))}
                     </div>
+                    {/* Mobile Carousel */}
+                    <div className="md:hidden mt-10 relative overflow-hidden">
+                        <AnimatePresence mode="wait" initial={false} custom={direction}>
+                            <motion.div
+                                key={page}
+                                custom={direction}
+                                variants={variants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: { type: "spring", stiffness: 220, damping: 30 },
+                                    opacity: { duration: 0.25 },
+                                }}
+                                drag="x"
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={0.25}
+                                onDragStart={stopAutoSlide}
+                                onDragEnd={(e, { offset, velocity }) => {
+                                    const swipe = swipePower(offset.x, velocity.x);
+
+                                    if (swipe < -swipeConfidenceThreshold) paginate(1);
+                                    else if (swipe > swipeConfidenceThreshold) paginate(-1);
+
+                                    startAutoSlide();
+                                }}
+                                className="flex flex-col gap-3 bg-gray-500 p-6 rounded-2xl"
+                            >
+                                <div className="flex justify-between">
+                                    {points[page].svg}
+                                    <span className="text-lg font-thin">{points[page].count}</span>
+                                </div>
+
+                                <h5>{points[page].heading}</h5>
+                                <p className="text-gray-300 text-sm">{points[page].description}</p>
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* dots */}
+                        <div className="flex justify-center gap-2 mt-5">
+                            {points.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => {
+                                        setPage([i, i > page ? 1 : -1]);
+                                        startAutoSlide();
+                                    }}
+                                    className={`h-2 rounded-full transition-all duration-300 ${i === page ? "w-6 bg-white" : "w-2 bg-gray-500"
+                                        }`}
+                                />
+                            ))}
+                        </div>
+                    </div>  
                 </div>
             </div>
             <div className="flex flex-col flex-center">
                 <div className=" w-0.5 h-10 bg-gray-400">
                 </div>
                 <OutlineBtn text="Explore With Us"
-                onClick={() => router.push("/execution-arms")} />
+                    onClick={() => router.push("/execution-arms")} />
             </div>
 
         </section>

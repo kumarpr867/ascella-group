@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import PlusHeading from "../headings/Heading";
 import Heading from "../headings/Heading";
 
 type Section = {
@@ -18,8 +17,8 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex justify-between items-center my-6">
-            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
+          <div className=" flex flex-col sm:flex-row justify-between sm:items-center my-6">
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-[16px] font">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Accountability is implied rather than explicitly assigned, leaving
@@ -27,8 +26,8 @@ const SECTIONS: Section[] = [
             authority and measurable ownership.
           </p>
         </div>
-        <div className="flex justify-between items-center my-6">
-          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-[16px] font">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200  mb-4">
           Accountability is architected into the operating system with named
@@ -48,8 +47,8 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex  mb-5 justify-between items-center my-6">
-            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-[16px] font">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Multiple leaders share influence over the same workstreams, approvals
@@ -58,8 +57,8 @@ const SECTIONS: Section[] = [
           </p>
         </div>
 
-        <div className="flex justify-between items-center my-6">
-          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-[16px] font">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200  mb-4">
           Each execution domain has a single accountable owner supported by
@@ -79,8 +78,8 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex  mb-5 justify-between items-center my-6">
-            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-[16px] font">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200  mb-4">
             Delayed decisions, duplicated effort, silent risk accumulation, and
@@ -88,8 +87,8 @@ const SECTIONS: Section[] = [
             end to end.
           </p>
         </div>
-        <div className="flex justify-between items-center my-6">
-          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-[16px] font">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200 mb-4">
           Clear ownership eliminates ambiguity, accelerates decision velocity,
@@ -110,7 +109,7 @@ const SECTIONS: Section[] = [
       <>
         <div className="border-b border-color">
           <div className="flex justify-between mb-5 items-center my-6">
-            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-b2 lg:text-b1">[ Risk increases ]</p>
+            <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-[16px] font">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200 mb-4">
             Work is divided across teams, vendors, and functions without a single
@@ -123,8 +122,8 @@ const SECTIONS: Section[] = [
             fragments → Risk compounds over time.
           </p>
         </div>
-        <div className="flex justify-between items-center my-6">
-          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-b2 lg:text-b1">[ Risk is controlled ]</p>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
+          <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-[16px] font">[ Risk is controlled ]</p>
         </div>
         <p className="text-b2 text-gray-200 mb-4">
           Workstreams operate through defined governance channels where one
@@ -157,7 +156,19 @@ function AccordionItem({
   isLast?: boolean;
 }) {
   const isActive = active === item.id;
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
+  const handleHover = () => {
+    hoverTimer.current = setTimeout(() => {
+      onToggle(item.id);
+    }, 200); // adjust delay here
+  };
+
+  const cancelHover = () => {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+    }
+  };
   return (
     <motion.div
       layout
@@ -166,11 +177,13 @@ function AccordionItem({
       }}
       className={`${isLast ? "" : "border-b border-color"}`}
     >
-      <motion.button
-        onClick={() => onToggle(item.id)}
-        className={`group w-full text-left p-4 transition-colors duration-300 ${titleClass} flex justify-between items-center`}
-        whileTap={{ scale: 0.98 }}
-      >
+     <motion.button
+  onClick={() => onToggle(item.id)}
+  onMouseEnter={handleHover}
+  onMouseLeave={cancelHover}
+  className={`group w-full text-left p-4 transition-colors duration-300 ${titleClass} flex justify-between items-center`}
+  whileTap={{ scale: 0.98 }}
+>
         <motion.h5
           className={
             showContent
@@ -242,6 +255,8 @@ function AccordionItem({
   );
 }
 
+
+
 export default function Accountability() {
   const [active, setActive] = useState<string>("overview");
 
@@ -264,7 +279,7 @@ export default function Accountability() {
             <div></div>
             <div className="pb-10">
               <h3>The Single <br /> Accountability Principle </h3>
-              <p className="text-b2 leading-tight mt-4">
+              <p className="text-b2 text-gray-200  mb-4">
                 A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
               </p>
             </div>

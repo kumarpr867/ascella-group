@@ -34,8 +34,8 @@ export default function ExecutionPods() {
             <p className="font-extralight text-b2">Specialised pods are assembled per engagement and operate within Ascella’s governance framework, ensuring flexibility in capability deployment without creating independent silos or fragmented authority.</p>
 
             {/* image for smaller screen */}
-            <div className="lg:hidden flex items-center justify-center z-1">
-              <Image src="/OperatingStructure/PodCircle.svg" alt={"cirlce image"} width={500} height={500} />
+            <div className="lg:hidden flex items-center justify-center z-1 w-[380px] h-[380px]">
+              <ParticleGlobeScene />
             </div>
             <div className="p-5 md:p-10 z-10 bg-white/70 text-gray-500 rounded-xl flex flex-col gap-5">
               <div className="flex gap-2 md:gap-5 items-center">

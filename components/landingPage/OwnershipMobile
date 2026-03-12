@@ -1,0 +1,79 @@
+<div className="flex flex-col gap-6 lg:hidden">
+
+        {/* Heading block */}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex flex-col gap-3"
+        >
+          <Heading text="How We Operate" />
+          <p className="font-light text-3xl text-white leading-tight">
+            Control is built before<br />
+            work begins
+          </p>
+          <p className="text-gray-100 font-light text-sm">
+            Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
+          </p>
+        </motion.div>
+
+        {/* First two cards */}
+        <ul className="flex flex-col gap-4">
+          {points.slice(0, 2).map((point, index) => (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+              className="flex flex-col gap-2 bg-gray-500 p-5 rounded-2xl"
+            >
+              <div className="flex justify-between w-full items-start">
+                <div aria-hidden="true">{point.svg}</div>
+                <span className="text-lg font-thin">{point.count}</span>
+              </div>
+              <h4 className="leading-tight font-light text-xl">{point.heading}</h4>
+              <p className="text-gray-300 text-sm">{point.description}</p>
+            </motion.li>
+          ))}
+        </ul>
+
+        {/* Image with particle hover — mobile center */}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex justify-center"
+        >
+          <Image
+            src="/HowWeOperate.png"
+            alt="How We Operate"
+            width={400}
+            height={400}
+            className="w-full max-w-xs sm:max-w-sm"
+          />
+        </motion.div>
+
+        {/* Last two cards */}
+        <ul className="flex flex-col gap-4">
+          {points.slice(2).map((point, index) => (
+            <motion.li
+              key={index + 2}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+              className="flex flex-col gap-2 bg-gray-500 p-5 rounded-2xl"
+            >
+              <div className="flex justify-between w-full items-start">
+                <div aria-hidden="true">{point.svg}</div>
+                <span className="text-lg font-thin">{point.count}</span>
+              </div>
+              <h4 className="leading-tight font-light text-xl">{point.heading}</h4>
+              <p className="text-gray-300 text-sm">{point.description}</p>
+            </motion.li>
+          ))}
+        </ul>
+      </div>

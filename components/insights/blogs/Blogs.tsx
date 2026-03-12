@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -18,6 +18,9 @@ const categories = [
     "Sales",
 ];
 export default function Blogs() {
+
+    const filterRef = useRef<HTMLDivElement>(null);
+
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
@@ -36,7 +39,6 @@ export default function Blogs() {
     });
 
     const featured = filtered.filter((item) => item.featured);
-    const allStudies = filtered.filter((item) => !item.featured);
     const isFilteredCategory = category !== "All";
     const dataToPaginate = filtered.filter((item) => !item.featured);
 
@@ -46,6 +48,22 @@ export default function Blogs() {
         (currentPage - 1) * BLOGS_PER_PAGE,
         currentPage * BLOGS_PER_PAGE
     );
+useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+        const el = filterRef.current;
+        if (!el) return;
+
+        if (!el.contains(event.target as Node)) {
+            setShowFilter(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, []);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" })
@@ -66,13 +84,7 @@ export default function Blogs() {
                             placeholder="Search by Title"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-gray-500 backdrop-blur-md  
-                   text-white text-sm pr-10 pl-4 py-2  
-                   placeholder-gray-100
-                   focus:outline-none focus:ring-2 focus:ring-white/20 
-                   focus:border-white/40
-                   transition-all duration-300"
-                        />
+                            className="w-full bg-gray-500 backdrop-blur-md text-white text-sm pr-10 pl-4 py-2 placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/40 transition-all duration-300" />
 
                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-100 cursor-pointer">
                             <svg
@@ -93,7 +105,7 @@ export default function Blogs() {
                     </div>
 
                     {/* filter */}
-                    <div className="relative">
+                    <div ref={filterRef} className="relative">
 
                         <button
                             onClick={() => setShowFilter(!showFilter)}
@@ -176,6 +188,11 @@ export default function Blogs() {
                         <CaseCard key={item.id} item={item} variant="default" />
                     ))}
                 </div>
+                {paginatedBlogs.length === 0 && (
+                    <p className="text-center text-white mt-10">
+                        No blogs found.
+                    </p>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
@@ -200,8 +217,8 @@ export default function Blogs() {
                                         key={index}
                                         onClick={() => setCurrentPage(page as number)}
                                         className={`transition ${currentPage === page
-                                                ? "text-white"
-                                                : "hover:text-white"
+                                            ? "text-white"
+                                            : "hover:text-white"
                                             }`}
                                     >
                                         {page}

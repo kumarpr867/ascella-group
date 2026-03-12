@@ -1,4 +1,3 @@
-import ReadingProgress from "@/components/ReadingProgress"
 import { blogsWithSlug } from "@/data/blogs"
 import { caseStudiesWithSlug } from "@/data/case-studies"
 import Image from "next/image"
@@ -29,7 +28,6 @@ export default async function BlogPage({ params }: Props) {
 
   return (
     <div>
-    <ReadingProgress />
     <section className="relative border-y border-color mb-20">
       <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
         <div className="min-h-screen flex lg:flex-row flex-col">

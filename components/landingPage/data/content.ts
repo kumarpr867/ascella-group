@@ -6,7 +6,7 @@ export const content = [
     description: "Ascella Infosec focuses on protecting organisations from operational and regulatory risk. Security work stays tied to business priorities, not checklists. Controls, audits, and response plans sit under clear ownership and review cycles. Exposure reduces because risks surface early and decisions stay accountable.",
     subDescription: "Risk governance, security architecture, compliance readiness, and incident preparedness.",
     outcome: "Reduced exposure and regulatory confidence.",
-    image: "/images/infosec.png" 
+    image: "/images/infosec.svg" 
   },
   {
     id: "labs",
