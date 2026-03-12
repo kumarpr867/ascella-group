@@ -38,12 +38,14 @@ const CurrentOpenings = () => {
     },
   ];
 
+  const cards = gridData.filter((item) => !item.empty);
+
   return (
     <>
       {/* ================= DESKTOP ================= */}
-      <div className="hidden lg:flex relative min-h-screen p-12 overflow-hidden flex-col items-start bg-black text-white">
+      <div className="hidden lg:flex h-screen px-10 overflow-hidden flex-col justify-center bg-black text-white relative -mt-20">
         {/* Background */}
-        <div className="absolute left-[-140px] top-[20%] w-3/4 h-full opacity-30 pointer-events-none z-0">
+        <div className="absolute left-[-100px] top-[20%] w-2/3 h-4/5 opacity-30 pointer-events-none z-0">
           <Image
             src="/current.png"
             alt="Background Decoration"
@@ -54,26 +56,26 @@ const CurrentOpenings = () => {
         </div>
 
         {/* Header */}
-        <div className="relative z-10 mb-16 max-w-4xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-gray-200 mb-4">
+        <div className="relative z-10 mb-5 pl-40 max-w-7xl mx-auto w-full mb-5">
+          <p className="text-b2 text-[14px] uppercase tracking-[0.3em] text-gray-200 ">
             Roles & Opportunities
           </p>
 
-          <h2 className="text-5xl font-light leading-tight">
+          <h3 className="text-4xl  leading-tight">
             Current openings are{" "}
             <span className="text-gray-200">aligned to</span>
             <br />
-            execution and governance needs.
-          </h2>
+            <span className="pl-40">execution and governance needs.</span>
+          </h3>
         </div>
 
         {/* Grid */}
-        <div className="relative z-10 w-full flex justify-end">
-          <div className="grid grid-cols-3 gap-6">
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex justify-end">
+          <div className="grid grid-cols-3 gap-2">
             {gridData.map((item) => (
               <div
                 key={item.id}
-                className={`p-8 w-[289px] h-[270px] flex flex-col justify-between transition-all duration-300 ${
+                className={`p-6 w-[260px] h-[220px] flex flex-col justify-between transition-all duration-300 ${
                   item.empty
                     ? "bg-transparent"
                     : "bg-black/60 backdrop-blur-md border border-neutral-800"
@@ -81,14 +83,14 @@ const CurrentOpenings = () => {
               >
                 {!item.empty && (
                   <>
-                    <div className="space-y-6">
+                    <div className="space-y-10">
                       <div className="opacity-80">{item.icon}</div>
-                      <h3 className="text-xl font-medium leading-snug">
+                      <h5 className="text-lg font-medium leading-snug">
                         {item.title}
-                      </h3>
+                      </h5>
                     </div>
 
-                    <p className="text-sm text-gray-200 leading-relaxed">
+                    <p className="text-b3 text-[12px] text-gray-200 leading-relaxed">
                       {item.description}
                     </p>
                   </>
@@ -100,53 +102,57 @@ const CurrentOpenings = () => {
       </div>
 
       {/* ================= MOBILE / TABLET ================= */}
-      <section className="lg:hidden relative bg-black text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-20">
+      <section className="lg:hidden bg-black text-white overflow-hidden">
+        {/* Top horizontal grid line */}
+        <div className="border-t border-neutral-800 w-full" />
+
+        {/* Content wrapper — same horizontal padding as FAQ mobile */}
+        <div className="px-10 pt-[10px] pb-20">
+
           {/* Header */}
-          <div className="max-w-3xl mb-12">
-            <p className="text-xs uppercase tracking-[0.3em] text-gray-200 mb-4">
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-200 mb-3">
               Roles & Opportunities
             </p>
-
-            <h2 className="text-3xl md:text-4xl font-light leading-tight">
+            <h3 className="text-3xl font-light leading-tight">
               Current openings are{" "}
-              <span className="text-gray-200">aligned to</span>
-              <br className="hidden sm:block" />
+              <span className="text-gray-400">aligned to</span>{" "}
               execution and governance needs.
-            </h2>
+            </h3>
           </div>
 
-          {/* Image */}
-          <div className="relative border border-neutral-800 min-h-[260px] mb-6">
-            <Image
-              src="/current.png"
-              alt="Decorative Image"
-              fill
-              className="object-contain"
-            />
-          </div>
+          {/* 5-row, 1-column grid */}
+          <div className="grid grid-cols-1">
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {gridData
-              .filter((item) => !item.empty)
-              .map((item) => (
-                <div
-                  key={item.id}
-                  className="p-6 min-h-[200px] flex flex-col justify-between bg-black/60 backdrop-blur-md border border-neutral-800 rounded-sm"
-                >
-                  <div className="space-y-6">
-                    <div className="opacity-80">{item.icon}</div>
-                    <h3 className="text-lg font-medium leading-snug">
-                      {item.title}
-                    </h3>
-                  </div>
+            {/* Row 1 — Image only */}
+            <div className="relative border border-neutral-800 min-h-[260px]">
+              <Image
+                src="/current.png"
+                alt="Decorative Image"
+                fill
+                className="object-contain"
+              />
+            </div>
 
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    {item.description}
-                  </p>
+            {/* Rows 2–5 — 4 Cards stacked */}
+            {cards.map((item) => (
+              <div
+                key={item.id}
+                className="p-6 min-h-[200px] flex flex-col justify-between border border-t-0 border-neutral-800"
+              >
+                <div className="space-y-6">
+                  <div className="opacity-80">{item.icon}</div>
+                  <h5 className="text-base font-medium leading-snug">
+                    {item.title}
+                  </h5>
                 </div>
-              ))}
+
+                <p className="text-[12px] text-gray-300 leading-relaxed mt-4">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+
           </div>
         </div>
       </section>

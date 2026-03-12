@@ -154,12 +154,6 @@ const Alignments = () => {
         </header>
       </div>
 
-      {/*
-        ── ISOMETRIC GRID STRIP ──
-        Desktop: 720px wide, 160px tall — same as before
-        Mobile: full width, 140px tall — vectors placed at proportional positions
-      */}
-
       {/* Desktop grid (md and above) */}
       <div
         className="relative my-[-20px] hidden md:block"
@@ -180,71 +174,42 @@ const Alignments = () => {
       >
         <IsometricHoverGrid />
 
-        {/* vector at col=3, row=4 → (250, 90) */}
         <img
           src="/vector 55.png"
           alt=""
           style={{
-            position:      'absolute',
-            left:          '250px',
-            top:           '90px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.55,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
+            position: 'absolute', left: '250px', top: '90px',
+            width: '100px', height: '60px',
+            transform: 'translate(-50%, -50%)',
+            objectFit: 'fill', opacity: 0.55,
+            pointerEvents: 'none', mixBlendMode: 'screen',
           }}
         />
-
-        {/* vector at col=4, row=4 → (350, 90) */}
         <img
           src="/vector 55.png"
           alt=""
           style={{
-            position:      'absolute',
-            left:          '350px',
-            top:           '90px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.75,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
+            position: 'absolute', left: '350px', top: '90px',
+            width: '100px', height: '60px',
+            transform: 'translate(-50%, -50%)',
+            objectFit: 'fill', opacity: 0.75,
+            pointerEvents: 'none', mixBlendMode: 'screen',
           }}
         />
-
-        {/* vector at col=5, row=4 → (450, 90) — extra cell for desktop */}
         <img
           src="/vector 55.png"
           alt=""
           style={{
-            position:      'absolute',
-            left:          '450px',
-            top:           '90px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.4,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
+            position: 'absolute', left: '450px', top: '90px',
+            width: '100px', height: '60px',
+            transform: 'translate(-50%, -50%)',
+            objectFit: 'fill', opacity: 0.4,
+            pointerEvents: 'none', mixBlendMode: 'screen',
           }}
         />
       </div>
 
       {/* Mobile grid (below md) */}
-      {/*
-        On mobile canvas is full width (let's call it W px).
-        CELL_W=100, CELL_H=60, offsetX=-50, offsetY=-30
-        We place vectors at row=3 (y = -30+3*30 = 60), odd row so +50 offset:
-          col=1 → x = -50 + 100 + 50 = 100  → center(100, 60)
-          col=2 → x = -50 + 200 + 50 = 200  → center(200, 60)
-          col=3 → x = -50 + 300 + 50 = 300  → center(300, 60)
-        Canvas height = 140px, center y = 70 → row=3 y=60 is close to center, good.
-      */}
       <div
         className="relative my-[-20px] block md:hidden w-full"
         style={{
@@ -263,135 +228,84 @@ const Alignments = () => {
       >
         <IsometricHoverGrid />
 
-        {/* Mobile: 3 vectors on odd row=3 (y=60) — centered roughly around mid-screen */}
-        {/* col=1 odd → x=100 */}
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position:      'absolute',
-            left:          '100px',
-            top:           '60px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.45,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
-          }}
-        />
-        {/* col=2 odd → x=200 */}
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position:      'absolute',
-            left:          '200px',
-            top:           '60px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.75,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
-          }}
-        />
-        {/* col=3 odd → x=300 */}
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position:      'absolute',
-            left:          '300px',
-            top:           '60px',
-            width:         '100px',
-            height:        '60px',
-            transform:     'translate(-50%, -50%)',
-            objectFit:     'fill',
-            opacity:       0.45,
-            pointerEvents: 'none',
-            mixBlendMode:  'screen',
-          }}
-        />
+        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '100px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.45, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '200px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.75, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '300px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.45, pointerEvents: 'none', mixBlendMode: 'screen' }} />
       </div>
 
-      {/* --- FORM CONTAINER BOX --- */}
-      {/*
-        Desktop: max-w-[720px], centered, no horizontal margin
-        Mobile: mx-[10px] so 10px gap on left and right
-        Box bottom: 10px margin from grid line (mb-[10px] on grid, or mt-[10px] on box)
-      */}
+      {/* ── FORM CONTAINER BOX ── */}
+      {/* Mobile: mx-10 (40px) matches footer. Desktop: max-w-[480px] centered */}
       <div
         className="
           w-full
-          mx-[10px] md:mx-auto
-          max-w-[calc(100%-20px)] md:max-w-[720px]
-          min-h-[720px]
-          border border-[#3D3D3D] rounded-[12px]
+          mx-10 md:mx-auto
+          max-w-[calc(100%-80px)] md:max-w-[480px]
+          border border-[#3D3D3D] rounded-[8px]
           bg-[#000]/90 backdrop-blur-md
           flex flex-col items-center
-          px-5 md:px-[100px]
+          px-5 md:px-[60px]
           z-20 relative
           mt-[10px]
         "
-        style={{ paddingTop: '60px', paddingBottom: '60px' }}
+        style={{ paddingTop: '24px', paddingBottom: '24px' }}
       >
 
         {/* Top Icon */}
-        <div className="mb-10 flex justify-center">
-          <img src="/image-1.png" alt="Icon" className="w-16 h-16 md:w-24 md:h-24 object-contain" />
+        <div className="mb- flex justify-center">
+          <img src="/image-1.png" alt="Icon" className="w-14 h-14 md:w-20 md:h-20 object-contain" />
         </div>
 
         {/* Form Content */}
-        <div className="w-full flex flex-col gap-5 text-center">
-          <div className="flex flex-col gap-3">
-            <h3 className="text-2xl md:text-3xl font-normal tracking-tight text-white/90">
+        <div className="w-full flex flex-col gap-4 text-center">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl md:text-2xl font-normal tracking-tight text-white/90">
               Let's Get You Started
             </h3>
-            <p className="text-white/40 text-sm max-w-[400px] mx-auto leading-relaxed">
+            <p className="text-white/40 text-xs md:text-sm max-w-[340px] mx-auto leading-relaxed">
               Fill out the form below and we'll get in touch to explore how Ascella can help power your success
             </p>
           </div>
 
-          <form className="flex flex-col gap-4 text-left" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-3 text-left mt-1" onSubmit={(e) => e.preventDefault()}>
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
+              className="w-full bg-[#0A0A0A] border border-[#2a2a2a] p-2 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="text"
               placeholder="Your Role / Title *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
+              className="w-full bg-[#0A0A0A] border border-[#2a2a2a] p-2 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="tel"
               placeholder="Phone Number *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
+              className="w-full bg-[#0A0A0A] border border-[#2a2a2a] p-2 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
             <input
               type="email"
               placeholder="Email Address *"
               required
-              className="w-full bg-[#0A0A0A] border border-[#262626] p-4 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
+              className="w-full bg-[#0A0A0A] border border-[#2a2a2a] p-2 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
 
-            <button
-              type="submit"
-              className="mt-6 w-full bg-white text-black font-semibold py-4 rounded-md hover:bg-gray-200 transition-all active:scale-[0.98] text-base"
-            >
-              Next
-            </button>
+            {/* Centered compact submit button */}
+            <div className="mt-5 flex justify-center">
+              <button
+                type="submit"
+                className="bg-white text-black font-semibold py-2.5 px-10 rounded-md hover:bg-gray-200 transition-all active:scale-[0.98] text-sm"
+              >
+                Next
+              </button>
+            </div>
           </form>
         </div>
       </div>
 
-      {/* Bottom divider — 10px margin from box bottom */}
-      <div className="w-full border-t border-white/20 mt-[10px]" />
+      {/* Bottom divider */}
+      <div className="w-full border-t border-white/20 mt-[50px]" />
     </div>
   );
 };

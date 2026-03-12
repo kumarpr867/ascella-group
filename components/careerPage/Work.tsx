@@ -11,7 +11,7 @@ export default function Work() {
           <div className="sm:border-r border-color" />
 
           <div className="sm:border-r border-color sm:px-6 py-16 md:px-12 md:py-16">
-            <div className="hidden lg:flex flex-col md:flex-row md:justify-between md:items-start gap-8">
+            <div className="hidden lg:flex flex-col md:flex-row md:justify-between md:items-end gap-8">
 
               {/* Left Side: Headline */}
               <div className="max-w-sm xl:max-w-3xl pt-20">
@@ -34,8 +34,8 @@ export default function Work() {
               </div>
 
               {/* Right Side: Paragraph */}
-              <div className="md:w-[280px] pt-30">
-                <p className="text-[12px] md:text-[11px]  tracking-widest leading-relaxed text-white/40 uppercase">
+              <div className="md:w-[280px]">
+                <p className="text-[12px] md:text-[11px] tracking-widest leading-relaxed text-white/40 ">
                   Ascella roles operate inside defined accountability,
                   structured execution, and central oversight frameworks.
                 </p>
@@ -71,7 +71,7 @@ export default function Work() {
               src="/work.svg"
               alt="Work visual"
               fill
-              className="object-cover object-center" // 'object-cover' ensures it fills the div without distortion
+              className="object-cover object-center"
               priority
             />
           </div>

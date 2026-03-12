@@ -272,7 +272,7 @@ export default function Eligibility() {
   ];
 
   return (
-    <section className="w-full min-h-screen bg-black text-white flex flex-col lg:flex-row items-start lg:items-center px-6 md:px-12 lg:px-24 py-12">
+    <section className="w-full min-h-screen bg-black pl-12 text-white flex flex-col lg:flex-row items-start lg:items-center px-6 md:px-12 lg:px-24 py-12">
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start lg:items-center">
 
         {/* ── Left: SVG Graphic ── */}

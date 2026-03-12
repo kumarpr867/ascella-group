@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import "../globals.css";
 import Navbar from "@/components/Navbar";
 import Loader from "@/components/Loader/Loader";
+import ScrollToTop from "@/components/ScrollToTop";
 import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );

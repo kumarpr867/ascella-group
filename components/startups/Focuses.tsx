@@ -30,10 +30,18 @@ const focusData = [
 ];
 
 export default function Focuses() {
- const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
- const handleToggle = (index: number) => {
+  const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const handleMouseEnter = (index: number) => {
+    setActiveIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveIndex(null);
   };
 
   return (
@@ -41,8 +49,12 @@ export default function Focuses() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
 
-        .focuses-section * {
+        .focuses-section *,
+        .focuses-section *::before,
+        .focuses-section *::after {
           box-sizing: border-box;
+          margin: 0;
+          padding: 0;
         }
 
         .focuses-section {
@@ -52,22 +64,19 @@ export default function Focuses() {
           font-family: 'Montserrat', sans-serif;
         }
 
-        /* ── Top edge-to-edge line ── */
         .top-line {
           width: 100%;
           height: 1px;
           background: rgba(255,255,255,0.10);
         }
 
-        /* ── Header block ── */
+        /* ══════════════════════════════════
+           HEADER
+        ══════════════════════════════════ */
         .header-wrapper {
           width: 100%;
           padding: 0 48px;
         }
-        @media (max-width: 768px) {
-          .header-wrapper { padding: 0 20px; }
-        }
-
         .header-inner {
           max-width: 1440px;
           margin: 0 auto;
@@ -77,14 +86,6 @@ export default function Focuses() {
           padding: 56px 0 64px;
           align-items: start;
         }
-        @media (max-width: 768px) {
-          .header-inner {
-            grid-template-columns: 1fr;
-            gap: 24px;
-            padding: 40px 0 48px;
-          }
-        }
-
         .header-left p {
           font-size: 10px;
           letter-spacing: 0.3em;
@@ -92,221 +93,234 @@ export default function Focuses() {
           color: rgba(255,255,255,0.55);
           max-width: 320px;
           font-weight: 300;
+          margin-top: 15px;
+          margin-left: 75px;
         }
-        @media (max-width: 768px) {
-          .header-left p { max-width: 100%; }
-        }
-
-        .header-right {
-          text-align: right;
-        }
-        @media (max-width: 768px) {
-          .header-right { text-align: left; }
-        }
-
+        .header-right { text-align: right; }
         .header-right h3 {
           font-size: clamp(22px, 3vw, 38px);
           font-weight: 400;
           letter-spacing: -0.04em;
           line-height: 1.08;
-          margin: 0;
+          margin-right: 70px;
         }
-
         .header-right .line-white { color: #fff; display: block; }
         .header-right .line-muted { color: #555; display: block; }
 
-        /* ── Accordion ── */
-        .accordion-wrapper {
-          width: 100%;
-        }
+        /* ══════════════════════════════════
+           ACCORDION
+        ══════════════════════════════════ */
+        .accordion-wrapper { width: 100%; }
 
         .accordion-item {
           width: 100%;
           border-top: 1px solid rgba(255,255,255,0.10);
           cursor: pointer;
-          transition: background 0.4s ease;
+          transition: background 0.35s ease;
         }
         .accordion-item:last-child {
           border-bottom: 1px solid rgba(255,255,255,0.10);
         }
-        .accordion-item:hover {
-          background: rgba(255,255,255,0.02);
-        }
+        .accordion-item:hover { background: rgba(255,255,255,0.02); }
 
         .accordion-content-wrapper {
           max-width: 1440px;
           margin: 0 auto;
           padding: 0 48px;
         }
-        @media (max-width: 768px) {
-          .accordion-content-wrapper { padding: 0 20px; }
-        }
 
         .accordion-row {
-          display: grid;
-          grid-template-columns: 120px 1fr 120px;
+          position: relative;
+          display: flex;
           align-items: center;
+          justify-content: center;
           padding: 36px 0;
-          gap: 16px;
-          transition: padding 0.5s ease;
-        }
-        @media (max-width: 1024px) {
-          .accordion-row {
-            grid-template-columns: 72px 1fr 72px;
-          }
-        }
-        @media (max-width: 768px) {
-          .accordion-row {
-            grid-template-columns: 1fr;
-            padding: 28px 0;
-            gap: 8px;
-          }
+          width: 100%;
+          min-height: 80px;
         }
 
-        .acc-id {
-          font-size: clamp(14px, 1.6vw, 22px);
+        .acc-id-left {
+          position: absolute;
+          left: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: clamp(14px, 1.5vw, 22px);
           font-weight: 300;
-          transition: opacity 0.4s ease;
-          user-select: none;
           white-space: nowrap;
+          user-select: none;
+          letter-spacing: 0.05em;
+          transition: opacity 0.4s ease;
+          line-height: 1;
         }
-        .acc-id-right { text-align: right; }
-        .acc-id.inactive { opacity: 0.18; }
-        .acc-id.active   { opacity: 1; }
-
-        @media (max-width: 768px) {
-          .acc-id-left  { display: none; }
-          .acc-id-right { display: none; }
+        .acc-id-right {
+          position: absolute;
+          right: 25px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: clamp(14px, 1.5vw, 22px);
+          font-weight: 300;
+          white-space: nowrap;
+          user-select: none;
+          letter-spacing: 0.05em;
+          transition: opacity 0.4s ease;
+          line-height: 1;
         }
+        .acc-id-left.inactive,
+        .acc-id-right.inactive { opacity: 0.18; }
+        .acc-id-left.active,
+        .acc-id-right.active   { opacity: 1; }
 
-        .acc-center {
+        .acc-title-group {
           display: flex;
-          flex-direction: column;
           align-items: center;
-        }
-        @media (max-width: 768px) {
-          .acc-center { align-items: flex-start; }
-        }
-
-        .acc-title-row {
-          display: flex;
-          align-items: center;
-          gap: 14px;
+          gap: 12px;
+          flex-shrink: 0;
         }
 
         .acc-dot {
-          width: 6px;
-          height: 6px;
           border-radius: 50%;
           background: #22d3ee;
-          transition: transform 0.4s ease, opacity 0.4s ease;
           flex-shrink: 0;
+          transition: transform 0.4s ease, opacity 0.4s ease,
+                      width 0.4s ease, height 0.4s ease;
         }
-        .acc-dot.hidden-dot {
-          transform: scale(0);
-          opacity: 0;
-        }
-        .acc-dot.visible-dot {
-          transform: scale(1);
-          opacity: 1;
-        }
+        .acc-dot.hidden-dot  { width: 0; height: 0; transform: scale(0); opacity: 0; }
+        .acc-dot.visible-dot { width: 7px; height: 7px; transform: scale(1); opacity: 1; }
 
         .acc-title {
           font-size: clamp(20px, 2.6vw, 36px);
-          letter-spacing: -0.07em;
+          letter-spacing: -0.06em;
           line-height: 1;
-          transition: color 0.4s ease, font-weight 0.4s ease;
           user-select: none;
+          transition: color 0.4s ease, font-weight 0.3s ease;
+          text-align: center;
         }
-        .acc-title.inactive { color: #404040; font-weight: 300; }
+        .acc-title.inactive { color: #3a3a3a; font-weight: 300; }
         .acc-title.active   { color: #fff;    font-weight: 400; }
+        .accordion-item:hover .acc-title.inactive { color: #606060; }
 
-        @media (max-width: 768px) {
-          .acc-title { font-size: clamp(18px, 5.5vw, 28px); }
-        }
-
-        /* Mobile id shown below title */
-        .acc-id-mobile {
-          display: none;
-          font-size: 10px;
-          letter-spacing: 0.25em;
-          color: #333;
-          margin-top: 4px;
-        }
-        @media (max-width: 768px) {
-          .acc-id-mobile { display: block; }
-        }
-
-        /* Description expand */
-        .acc-desc-wrap {
+        .acc-desc-outer {
           overflow: hidden;
-          transition: max-height 0.65s ease, opacity 0.65s ease, margin-top 0.65s ease;
           width: 100%;
+          transition: max-height 0.60s cubic-bezier(0.4,0,0.2,1),
+                      opacity    0.50s ease;
+        }
+        .acc-desc-outer.closed { max-height: 0;    opacity: 0; }
+        .acc-desc-outer.open   { max-height: 260px; opacity: 1; }
+
+        .acc-desc-inner {
           display: flex;
           justify-content: center;
-        }
-        .acc-desc-wrap.closed {
-          max-height: 0;
-          opacity: 0;
-          margin-top: 0;
-        }
-        .acc-desc-wrap.open {
-          max-height: 200px;
-          opacity: 1;
-          margin-top: 24px;
-        }
-        @media (max-width: 768px) {
-          .acc-desc-wrap { justify-content: flex-start; }
-          .acc-desc-wrap.open { margin-top: 16px; }
+          padding: 22px 0 38px;
         }
 
         .acc-desc {
-          max-width: 480px;
+          max-width: 500px;
           text-align: center;
-          font-size: clamp(11px, 1.1vw, 13px);
+          font-size: clamp(11px, 1vw, 13px);
           color: rgba(255,255,255,0.45);
-          line-height: 1.75;
+          line-height: 1.8;
           font-weight: 300;
           letter-spacing: 0.02em;
-          padding: 0 16px;
-          border-left: 1px solid rgba(255,255,255,0.07);
-          border-right: 1px solid rgba(255,255,255,0.07);
+          padding: 0 20px;
+          border-left:  1px solid rgba(255,255,255,0.08);
+          border-right: 1px solid rgba(255,255,255,0.08);
         }
+
+        /* ══════════════════════════════════
+           TABLET ≤ 1024px
+        ══════════════════════════════════ */
+        @media (max-width: 1024px) {
+          .acc-title { font-size: clamp(16px, 2.2vw, 28px); }
+        }
+
+        /* ══════════════════════════════════
+           MOBILE ≤ 768px
+        ══════════════════════════════════ */
         @media (max-width: 768px) {
+          .header-wrapper { padding: 0 40px; }
+          .header-inner {
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 32px 0 40px;
+          }
+          .header-left { display: none; }
+          .header-right { text-align: left; }
+          .header-right h3 {
+            margin-right: 0;
+            font-size: clamp(17px, 5vw, 26px);
+          }
+
+          .accordion-content-wrapper { padding: 0 40px; }
+
+          .accordion-row {
+            position: static;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px 0;
+            min-height: unset;
+            gap: 8px;
+          }
+
+          .acc-id-left {
+            position: static;
+            transform: none;
+            font-size: 10px;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+          }
+          .acc-id-right {
+            position: static;
+            transform: none;
+            font-size: 10px;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+          }
+
+          .acc-mobile-spacer {
+            display: block !important;
+            flex: 1;
+            min-width: 0;
+            height: 1px;
+          }
+          .acc-mobile-spacer.active-m { flex: 0; }
+
+          .acc-title {
+            font-size: clamp(13px, 4vw, 21px);
+          }
+          .acc-dot.visible-dot { width: 5px; height: 5px; }
+
+          .acc-desc-inner { padding: 14px 0 26px; }
           .acc-desc {
-            text-align: left;
             max-width: 100%;
-            padding: 0 0 0 12px;
-            border-right: none;
-            border-left: 1px solid rgba(255,255,255,0.12);
+            font-size: 11px;
+            padding: 0 10px;
           }
         }
 
-        /* Arrow indicator on mobile */
-        .acc-arrow {
-          display: none;
-          margin-left: auto;
-          font-size: 16px;
-          color: rgba(255,255,255,0.3);
-          transition: transform 0.4s ease, color 0.4s ease;
-          flex-shrink: 0;
+        /* ══════════════════════════════════
+           VERY SMALL ≤ 400px
+        ══════════════════════════════════ */
+        @media (max-width: 400px) {
+          .acc-title { font-size: clamp(11px, 3.6vw, 17px); }
+          .acc-id-left,
+          .acc-id-right { font-size: 9px; }
+          .accordion-row { gap: 6px; }
         }
-        @media (max-width: 768px) {
-          .acc-arrow { display: block; }
-        }
-        .acc-arrow.rotated { transform: rotate(180deg); color: #22d3ee; }
       `}</style>
 
       <section className="focuses-section">
-        {/* Top edge-to-edge line */}
         <div className="top-line" />
 
-        {/* Header */}
+        {/* ── Header ── */}
         <div className="header-wrapper">
           <div className="header-inner">
             <div className="header-left">
               <p>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                nascetur ridiculus mus.
               </p>
             </div>
             <div className="header-right">
@@ -322,15 +336,19 @@ export default function Focuses() {
           </div>
         </div>
 
-        {/* Accordion */}
+        {/* ── Accordion ── */}
         <div className="accordion-wrapper">
           {focusData.map((item, index) => {
             const isActive = activeIndex === index;
+            const state = isActive ? 'active' : 'inactive';
+
             return (
               <div
                 key={item.id}
                 className="accordion-item"
                 onClick={() => handleToggle(index)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
                 role="button"
                 aria-expanded={isActive}
                 tabIndex={0}
@@ -339,42 +357,32 @@ export default function Focuses() {
                 <div className="accordion-content-wrapper">
                   <div className="accordion-row">
 
-                    {/* Left ID */}
-                    <span className={`acc-id acc-id-left ${isActive ? 'active' : 'inactive'}`}>
-                      [{item.id}]
-                    </span>
+                    <span className={`acc-id-left ${state}`}>[{item.id}]</span>
 
-                    {/* Center */}
-                    <div className="acc-center">
-                      <div className="acc-title-row">
-                        {/* Left dot */}
-                        <span className={`acc-dot ${isActive ? 'visible-dot' : 'hidden-dot'}`} />
+                    <div
+                      className={`acc-mobile-spacer ${isActive ? 'active-m' : ''}`}
+                      style={{ display: 'none' }}
+                    />
 
-                        <h3 className={`acc-title ${isActive ? 'active' : 'inactive'}`}>
-                          {item.title}
-                        </h3>
-
-                        {/* Right dot */}
-                        <span className={`acc-dot ${isActive ? 'visible-dot' : 'hidden-dot'}`} />
-
-                        {/* Mobile arrow */}
-                        <span className={`acc-arrow ${isActive ? 'rotated' : ''}`}>▾</span>
-                      </div>
-
-                      {/* Mobile id */}
-                      <span className="acc-id-mobile">[{item.id}]</span>
-
-                      {/* Description */}
-                      <div className={`acc-desc-wrap ${isActive ? 'open' : 'closed'}`}>
-                        <p className="acc-desc">{item.description}</p>
-                      </div>
+                    <div className="acc-title-group">
+                      <span className={`acc-dot ${isActive ? 'visible-dot' : 'hidden-dot'}`} />
+                      <h3 className={`acc-title ${state}`}>{item.title}</h3>
+                      <span className={`acc-dot ${isActive ? 'visible-dot' : 'hidden-dot'}`} />
                     </div>
 
-                    {/* Right ID */}
-                    <span className={`acc-id acc-id-right ${isActive ? 'active' : 'inactive'}`}>
-                      [{item.id}]
-                    </span>
+                    <div
+                      className={`acc-mobile-spacer ${isActive ? 'active-m' : ''}`}
+                      style={{ display: 'none' }}
+                    />
 
+                    <span className={`acc-id-right ${state}`}>[{item.id}]</span>
+
+                  </div>
+
+                  <div className={`acc-desc-outer ${isActive ? 'open' : 'closed'}`}>
+                    <div className="acc-desc-inner">
+                      <p className="acc-desc">{item.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>

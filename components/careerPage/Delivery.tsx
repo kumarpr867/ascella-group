@@ -1,348 +1,277 @@
 "use client"
 import React from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
 
-/* ------------------ PRECISE DOTTED RING ------------------ */
-const PreciseDotted: React.FC<{
-  radius: number;
-  count: number;
-  size: number;
-}> = ({ radius, count, size }) => {
-  return (
-    <group>
-      {Array.from({ length: count }).map((_, i) => {
-        const theta = (i / count) * Math.PI * 2;
-        return (
-          <mesh
-            key={i}
-            position={[Math.cos(theta) * radius, Math.sin(theta) * radius, 0]}
-          >
-            <circleGeometry args={[size, 8]} />
-            <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-};
-
-/* ------------------ HALF VERTICAL LINE — center to top outer ring ------------------ */
-const HalfVerticalLine = ({ outerR }: { outerR: number }) => (
-  <mesh position={[0, outerR / 2, 0]}>
-    <planeGeometry args={[0.008, outerR]} />
-    <meshBasicMaterial color="#ffffff" transparent opacity={0.85} />
-  </mesh>
-);
-
-/* ------------------ ROTATING DOTTED DIAGONAL — auto-rotates + follows mouse on hover ------------------ */
-const RotatingDottedDiagonal = ({ outerR }: { outerR: number }) => {
-  const dotCount = 38;
-  const groupRef = React.useRef<THREE.Group>(null);
-  const targetAngleRef = React.useRef((135 * Math.PI) / 180);
-  const currentAngleRef = React.useRef((135 * Math.PI) / 180);
+/* ------------------ RADAR CANVAS ------------------ */
+const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false }) => {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const mouseRef = React.useRef<{ x: number; y: number } | null>(null);
   const isHoveredRef = React.useRef(false);
-  const autoSpeedRef = React.useRef(0.3); // radians per second
+  const currentAngleRef = React.useRef((135 * Math.PI) / 180);
+  const targetsRef = React.useRef([
+    { angle: 0.5,  radius: 0.83, timer: 0,    interval: 4   },
+    { angle: 2.3,  radius: 0.57, timer: -1.5, interval: 5   },
+    { angle: 4.1,  radius: 0.47, timer: -2,   interval: 4.5 },
+  ]);
+  const lastTimeRef = React.useRef(0);
+  const animRef = React.useRef(0);
 
-  const { gl, camera } = useThree();
+  const draw = React.useCallback((timestamp: number) => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  React.useEffect(() => {
-    const canvas = gl.domElement;
+    const delta = Math.min((timestamp - lastTimeRef.current) / 1000, 0.05);
+    lastTimeRef.current = timestamp;
 
-    const onMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    const W = container.clientWidth;
+    const H = container.clientHeight;
 
-      // Project mouse to world space at z=0
-      const vector = new THREE.Vector3(x, y, 0.5).unproject(camera);
-      const dir = vector.sub(camera.position).normalize();
-      const distance = -camera.position.z / dir.z;
-      const worldPos = camera.position.clone().addScaledVector(dir, distance);
+    if (!W || !H) {
+      animRef.current = requestAnimationFrame(draw);
+      return;
+    }
 
-      targetAngleRef.current = Math.atan2(worldPos.y, worldPos.x);
-      isHoveredRef.current = true;
-    };
+    const dpr = window.devicePixelRatio || 1;
+    if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
 
-    const onMouseLeave = () => {
-      isHoveredRef.current = false;
-    };
+    // Desktop: maxR = H/2 (circle fills full section height, touches top+bottom borders)
+    // Mobile: maxR = W/2 - margin (circle fits within horizontal margins)
+    const maxR = fillHeight ? H / 2 : W / 2 - 24;
+    const cx = fillHeight ? (W / 2 - maxR * 0.08) : W / 2;
+    const cy = H / 2;
 
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mouseleave', onMouseLeave);
-    return () => {
-      canvas.removeEventListener('mousemove', onMouseMove);
-      canvas.removeEventListener('mouseleave', onMouseLeave);
-    };
-  }, [gl, camera]);
+    /* ---- outer solid ring ---- */
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
 
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
+    /* ---- 0.66 ring ---- */
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR * 0.66, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
 
-    if (isHoveredRef.current) {
-      // Smooth lerp toward mouse angle
-      let diff = targetAngleRef.current - currentAngleRef.current;
-      // Normalize diff to [-PI, PI]
+    /* ---- dotted ring at 0.83 ---- */
+    for (let i = 0; i < 80; i++) {
+      const theta = (i / 80) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(
+        cx + Math.cos(theta) * maxR * 0.83,
+        cy + Math.sin(theta) * maxR * 0.83,
+        maxR * 0.0078, 0, Math.PI * 2
+      );
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fill();
+    }
+
+    /* ---- dotted ring at 0.47 ---- */
+    for (let i = 0; i < 56; i++) {
+      const theta = (i / 56) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(
+        cx + Math.cos(theta) * maxR * 0.47,
+        cy + Math.sin(theta) * maxR * 0.47,
+        maxR * 0.0078, 0, Math.PI * 2
+      );
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fill();
+    }
+
+    /* ---- inner tiny rings ---- */
+    [0.16, 0.25, 0.36, 0.50].forEach((fr, i) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR * fr, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,255,255,${0.16 - i * 0.02})`;
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    });
+
+    /* ---- center dot ---- */
+    ctx.beginPath();
+    ctx.arc(cx, cy, maxR * 0.019, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    /* ---- half vertical line: center → top ---- */
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx, cy - maxR);
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.lineWidth = maxR * 0.003;
+    ctx.stroke();
+
+    /* ---- rotating dotted diagonal ---- */
+    if (isHoveredRef.current && mouseRef.current) {
+      const mx = mouseRef.current.x - cx;
+      const my = mouseRef.current.y - cy;
+      const targetAngle = Math.atan2(my, mx);
+      let diff = targetAngle - currentAngleRef.current;
       while (diff > Math.PI) diff -= Math.PI * 2;
       while (diff < -Math.PI) diff += Math.PI * 2;
       currentAngleRef.current += diff * Math.min(delta * 8, 1);
     } else {
-      // Auto clockwise rotation (subtract = clockwise in standard coords)
-      currentAngleRef.current -= autoSpeedRef.current * delta;
+      currentAngleRef.current -= 0.3 * delta;
     }
 
-    groupRef.current.rotation.z = currentAngleRef.current - (135 * Math.PI) / 180;
-  });
-
-  // Build dots along 135° direction (upper-left) — we'll rotate the group
-  const dots = Array.from({ length: dotCount }).map((_, i) => {
-    const angle135 = (135 * Math.PI) / 180;
-    const t = (i / (dotCount - 1)) * outerR + 0.08;
-    if (t > outerR) return null;
-    return (
-      <mesh key={i} position={[Math.cos(angle135) * t, Math.sin(angle135) * t, 0]}>
-        <circleGeometry args={[0.018, 8]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.28 + (i / dotCount) * 0.15} />
-      </mesh>
-    );
-  });
-
-  return <group ref={groupRef}>{dots}</group>;
-};
-
-/* ------------------ ANIMATED TARGET — blink on jump ------------------ */
-const AnimatedTarget: React.FC<{
-  ringRadius: number;
-  size?: number;
-  interval?: number;
-  initialAngle?: number;
-}> = ({ ringRadius, size = 0.09, interval = 4, initialAngle }) => {
-  const meshRef = React.useRef<THREE.Mesh>(null);
-  const matRef = React.useRef<THREE.MeshBasicMaterial>(null);
-  const angleRef = React.useRef(initialAngle ?? Math.random() * Math.PI * 2);
-  const lastTimeRef = React.useRef(-(Math.random() * interval));
-  const blinkRef = React.useRef(0);
-
-  useFrame(({ clock }) => {
-    const elapsed = clock.getElapsedTime();
-    if (elapsed - lastTimeRef.current >= interval) {
-      lastTimeRef.current = elapsed;
-      angleRef.current = Math.random() * Math.PI * 2;
-      blinkRef.current = elapsed;
+    const dotCount = 38;
+    for (let i = 0; i < dotCount; i++) {
+      const t = (i / (dotCount - 1)) * maxR;
+      const px = cx + Math.cos(currentAngleRef.current) * t;
+      const py = cy + Math.sin(currentAngleRef.current) * t;
+      ctx.beginPath();
+      ctx.arc(px, py, maxR * 0.0064, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${0.28 + (i / dotCount) * 0.15})`;
+      ctx.fill();
     }
-    if (meshRef.current) {
-      meshRef.current.position.x = Math.cos(angleRef.current) * ringRadius;
-      meshRef.current.position.y = Math.sin(angleRef.current) * ringRadius;
-    }
-    if (matRef.current) {
-      if (blinkRef.current > 0) {
-        const since = elapsed - blinkRef.current;
-        matRef.current.opacity = since < 0.3 ? since / 0.3 : 1;
-        if (since >= 0.3) blinkRef.current = 0;
-      } else {
-        matRef.current.opacity = 1;
+
+    /* ---- animated blinking targets ---- */
+    const elapsed = timestamp / 1000;
+    targetsRef.current.forEach((target) => {
+      if (elapsed - target.timer >= target.interval) {
+        target.timer = elapsed;
+        target.angle = Math.random() * Math.PI * 2;
       }
-    }
-  });
+      const r = maxR * target.radius;
+      const px = cx + Math.cos(target.angle) * r;
+      const py = cy + Math.sin(target.angle) * r;
+      const s = maxR * 0.032;
+      const since = elapsed - target.timer;
+      const opacity = since < 0.3 ? since / 0.3 : 1;
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(px - s / 2, py - s / 2, s, s);
+      ctx.restore();
+    });
+
+    animRef.current = requestAnimationFrame(draw);
+  }, [fillHeight]);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      isHoveredRef.current = true;
+    };
+    const onLeave = () => { isHoveredRef.current = false; };
+
+    canvas.addEventListener('mousemove', onMove);
+    canvas.addEventListener('mouseleave', onLeave);
+    lastTimeRef.current = performance.now();
+    animRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      canvas.removeEventListener('mousemove', onMove);
+      canvas.removeEventListener('mouseleave', onLeave);
+    };
+  }, [draw]);
 
   return (
-    <mesh ref={meshRef}>
-      <boxGeometry args={[size, size, size]} />
-      <meshBasicMaterial ref={matRef} color="#ffffff" transparent opacity={1} />
-    </mesh>
+    <div ref={containerRef} style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%' }} />
+    </div>
   );
 };
-
-
-const OUTER_R = 2.82;
-
-const RadarScene = () => {
-  const { viewport } = useThree()
-  const r = OUTER_R
-
-  const isMobile = viewport.width < 6
-
-  // 🔑 MOBILE: scale based only on height
-  // 🔑 DESKTOP: scale based on min dimension
-  const fitSize = isMobile
-    ? viewport.height * 0.75
-    : Math.min(viewport.width, viewport.height) * 0.75
-
-  const scale = fitSize / (r * 2)
-
-  return (
-    <group
-      scale={[scale, scale, scale]}
-      position={[0, 0, 0]}   // ✅ ALWAYS CENTER
-    >
-      <mesh>
-        <ringGeometry args={[r, r + 0.018, 256]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
-      </mesh>
-
-      <mesh>
-        <ringGeometry args={[r * 0.66, r * 0.66 + 0.012, 256]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
-      </mesh>
-
-      <PreciseDotted radius={r * 0.83} count={80} size={0.022} />
-      <PreciseDotted radius={r * 0.47} count={56} size={0.022} />
-
-      {[0.16, 0.25, 0.36, 0.50].map((fr, i) => (
-        <mesh key={i}>
-          <ringGeometry args={[fr, fr + 0.013, 128]} />
-          <meshBasicMaterial
-            color="#ffffff"
-            transparent
-            opacity={0.16 - i * 0.02}
-          />
-        </mesh>
-      ))}
-
-      <mesh>
-        <circleGeometry args={[0.055, 32]} />
-        <meshBasicMaterial color="#ffffff" />
-      </mesh>
-
-      <HalfVerticalLine outerR={r} />
-      <RotatingDottedDiagonal outerR={r} />
-
-      <AnimatedTarget ringRadius={r * 0.83} size={0.09} interval={4} initialAngle={0.5} />
-      <AnimatedTarget ringRadius={r * 0.57} size={0.09} interval={5} initialAngle={2.3} />
-      <AnimatedTarget ringRadius={r * 0.47} size={0.08} interval={4.5} initialAngle={4.1} />
-    </group>
-  )
-}
 
 /* ------------------ MAIN DELIVERY COMPONENT ------------------ */
 const Delivery = () => {
   return (
     <section className="w-full border-y border-color my-20">
-      <div className="flex flex-col lg:pl-20 lg:flex-row w-full min-h-[700px] lg:min-h-[90vh]">
+
+      {/* ===================== DESKTOP (lg+) ===================== */}
+      <div className="hidden lg:flex flex-row w-full min-h-[90vh]">
 
         {/* LEFT */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-between px-6 md:px-16 py-16 lg:py-24">
-          <div className="max-w-xl">
-            <h3 className="text-3xl md:text-4xl font-light leading-tight mb-8 tracking-tight">
+        <div className="w-1/2 flex flex-col justify-between pl-30 pr-16 py-12">
+          <div className="max-w-[360px]">
+            <h3 className="text-3xl font-light leading-tight mb-2 tracking-tight">
               Delivery is organised through governed pods under central oversight.
             </h3>
-
-            <p className="text-sm text-gray-200 leading-relaxed">
+            <p className="text-b2 text-[12px] text-gray-200 leading-relaxed">
               Teams operate within small, accountable pods aligned to specific execution outcomes.
               Pods are coordinated through Ascella's governance layer, performance measurement
               frameworks, and escalation structures. Collaboration across execution arms occurs
               through defined operating pathways.
             </p>
           </div>
-
-          <div className="hidden lg:flex items-center gap-4 mt-16 lg:mt-0">
-            <div className="border border-white/25 rounded-full w-11 h-11 flex items-center justify-center text-xl">
+          <div className="flex items-center gap-4 pt-30 max-w-[360px]">
+            <div className="border border-white/25 rounded-full w-11 h-11 flex items-center justify-center text-xl shrink-0">
               ↗
             </div>
-            <span className="text-lg font-light">
-              Pods execute. Governance coordinates.
-            </span>
+            <span className="text-lg font-light">Pods execute. Governance coordinates.</span>
           </div>
-
         </div>
 
-        {/* RIGHT */}
-        <div className="w-full lg:w-1/2 relative h-[500px] md:h-[650px] lg:h-auto">
-          <Canvas
-            camera={{ position: [0, 0, 6], fov: 50 }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <RadarScene />
-          </Canvas>
+        {/* RIGHT — canvas fills full height, circle touches top+bottom borders */}
+        <div className="w-1/2 relative  self-stretch pr-10">
+          <RadarCanvas fillHeight={true} />
         </div>
 
-        <div className="lg:hidden flex items-center px-10 gap-4 mb-10 lg:mt-0">
-          <div className="border border-white/25 rounded-full w-11 h-11 flex items-center justify-center text-xl">
+      </div>
+
+      {/* ===================== MOBILE (< lg) =====================
+          Layout top to bottom:
+          [top border — from section]
+          [content block — px-6 margin]
+          [circle block — px-6 margin, square aspect]
+          [full-width divider line]
+          [pods execute row — px-6 margin]
+          [bottom border — from section]
+      ============================================================ */}
+      <div className="lg:hidden flex flex-col w-full">
+
+        {/* Content block */}
+        <div className="px-6 pt-10 pb-8">
+          <h3 className="text-2xl font-light leading-tight mb-5 tracking-tight">
+            Delivery is organised through governed pods under central oversight.
+          </h3>
+          <p className="text-xs text-gray-300 leading-relaxed">
+            Teams operate within small, accountable pods aligned to specific execution outcomes.
+            Pods are coordinated through Ascella's governance layer, performance measurement
+            frameworks, and escalation structures. Collaboration across execution arms occurs
+            through defined operating pathways.
+          </p>
+        </div>
+
+        {/* Circle block — square, with horizontal margin */}
+        <div className="mx-6 relative" style={{ aspectRatio: '1 / 1' }}>
+          <RadarCanvas fillHeight={false} />
+        </div>
+
+        {/* Full-width divider */}
+        <div className="w-full border-t border-white/15 mt-8" />
+
+        {/* Pods execute row */}
+        <div className="flex items-center gap-4 px-6 py-6">
+          <div className="border border-white/25 rounded-full w-10 h-10 flex items-center justify-center text-lg shrink-0">
             ↗
           </div>
-          <span className="text-lg font-light">
-            Pods execute. Governance coordinates.
-          </span>
+          <span className="text-base font-light">Pods execute. Governance coordinates.</span>
         </div>
+
+        {/* Bottom divider */}
+        <div className="w-full border-t border-white/15" />
 
       </div>
 
     </section>
   );
-};
-
-/* ------------------ STYLES ------------------ */
-const styles: Record<string, React.CSSProperties> = {
-  mainContainer: {
-    display: 'flex',
-    flex: 1,
-    padding: '0 80px',
-    minHeight: 0,
-  },
-  contentWrapper: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-  },
-  leftSide: {
-    width: '38%',
-    marginTop: '120px',
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: '80px',
-  },
-  rightSide: {
-    width: '56%',
-    display: 'flex',
-    alignItems: 'stretch',
-    justifyContent: 'center',
-  },
-  canvasContainer: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-  },
-  canvas: {
-    position: 'absolute',
-    inset: 0,
-    width: '100%',
-    height: '100%',
-  },
-  headline: {
-    fontSize: '36px',
-    fontWeight: '400',
-    lineHeight: '1.1',
-    marginBottom: '30px',
-    letterSpacing: '-0.01em',
-  },
-  description: {
-    color: 'var(--color-gray-300)',
-    maxWidth: '440px',
-    lineHeight: '1.6',
-    marginBottom: 'auto',
-    fontSize: '14px',
-  },
-  footerTag: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '15px',
-    marginTop: 'auto',
-  },
-  arrowIcon: {
-    border: '1px solid rgba(255,255,255,0.25)',
-    borderRadius: '50%',
-    width: '44px',
-    height: '44px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '30px',
-  },
-  footerText: {
-    fontSize: '18px',
-    fontWeight: '400',
-  },
 };
 
 export default Delivery;

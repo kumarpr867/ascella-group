@@ -82,7 +82,7 @@ const GovernanceModel = () => {
         {/* ── HEADING OVERLAY (desktop only) ── */}
         <div className="absolute z-30 flex flex-col items-center text-center pointer-events-none w-[30%] hidden md:flex"
              style={{ top: '600px', left: '29.16%', transform: 'translate(-50%, -50%)' }}>
-          <div className="border border-blue-500/40 px-3 py-1 mb-4 bg-black">
+          <div className="  py-1 mb-4 bg-black">
             <span className="text-[9px] tracking-[0.3em] uppercase text-white">Governance Model</span>
           </div>
           <h2 className="text-3xl font-light leading-tight">
@@ -108,8 +108,8 @@ const GovernanceModel = () => {
           </div>
           <div className={`${colWidth} border-r border-gray-400`}></div>
           <div className={`${colWidth} border-r border-gray-400 pt-30 pr-4 pl-4`}>
-            <h3 className="text-xl font-[20px] mb-10">Operating Framework</h3>
-            <p className="text-gray-300 text-xs leading-relaxed">
+            <h3 className="text-xl font-[20px] mb-6">Operating Framework</h3>
+            <p className="text-gray-200 text-b3  leading-relaxed">
               Startups in the programme operate within Ascella's governance framework from the outset. <br />
               Decision rights, accountability paths, and escalation mechanisms are established before execution expands across teams, systems, or external partners.
             </p>
@@ -131,8 +131,8 @@ const GovernanceModel = () => {
           </div>
           <div className={`${colWidth} border-r border-gray-400 pt-30 pl-4`}>
             <div className="relative z-20">
-              <h3 className="text-xl font-normal mb-12">Progressive Introduction</h3>
-              <p className="text-gray-300 text-xs">
+              <h3 className="text-xl font-normal mb-6">Progressive Introduction</h3>
+              <p className="text-gray-200 text-b3 pr-3">
                 Governance structures are introduced gradually as scale increases. Early-stage flexibility is preserved while accountability and oversight mature in parallel with organisational growth.
               </p>
             </div>
@@ -262,11 +262,11 @@ const GovernanceModel = () => {
             className="relative z-10 py-8"
             style={{ paddingLeft: 'calc(12% + 16px)', paddingRight: 'calc(12% + 16px)' }}
           >
-            <h3 className="text-lg font-normal mb-4 text-white">Operating Framework</h3>
+            <h3 className="text-lg  mb-4 text-white">Operating Framework</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
               Startups in the programme operate within Ascella's governance framework from the outset.
             </p>
-            <p className="text-gray-300 text-xs leading-relaxed mt-3">
+            <p className="text-gray-300 text-xs text-montserrat leading-relaxed mt-3">
               Decision rights, accountability paths, and escalation mechanisms are established before execution expands across teams, systems, or external partners.
             </p>
           </div>

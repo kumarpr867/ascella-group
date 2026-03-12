@@ -115,7 +115,7 @@ function WaveCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// STYLES — Desktop unchanged, Mobile matches screenshot exactly
+// STYLES
 // ══════════════════════════════════════════════════════════════════════════════
 const styles = `
 
@@ -125,71 +125,135 @@ const styles = `
   .ctrl-section { position:relative; width:100%; background:#000; color:#fff; }
 
   /* ══════════════════════════════════════════
-     DESKTOP (≥ 641px) — original layout
+     DESKTOP (≥ 641px)
+     - Section height = exactly 100vh (navbar is outside this section, above it)
+     - So: section fills remaining viewport after navbar
+     - Main content frame = 100vh - navbar(80px) - footer(100px)
+     - Footer = bottom 100px of section
   ══════════════════════════════════════════ */
   @media (min-width:641px) {
-    .ctrl-section { display:flex; flex-direction:column; min-height:100vh; }
-
-    /* Grid lines */
-    .d-gl-top   { position:absolute; top:0;       left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-nav   { position:absolute; top:100px;   left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-foot  { position:absolute; bottom:100px;left:0; right:0;        height:1px; background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-left  { position:absolute; top:0; bottom:0; left:96px;          width:1px;  background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-right { position:absolute; top:0; bottom:0; right:96px;         width:1px;  background:rgba(255,255,255,.2); z-index:50; }
-
-    /* Globe */
-    .d-globe-container {
-      position:absolute; top:100px; bottom:100px; left:96px; right:96px;
-      overflow:hidden; z-index:10;
+    .ctrl-section {
+      display:flex;
+      flex-direction:column;
+      /* Fill exactly the viewport height minus the navbar */
+      height:calc(100vh - 80px);
+      overflow:hidden;
     }
+
+    .d-gl-top   { position:absolute; top:0; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-foot  { position:absolute; bottom:100px; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-left  { position:absolute; top:0; bottom:0; left:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-right { position:absolute; top:0; bottom:0; right:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
+
+    .d-globe-container {
+      position:absolute;
+      left:96px;
+      bottom:100px;
+      top:0;
+      right:50%;
+      overflow:hidden;
+      z-index:10;
+    }
+
     .d-globe-wrapper {
-      position:absolute; width:761px; height:677px; top:30px; left:-200px;
+      position:absolute;
+      width:761px;
+      height:677px;
+      bottom:-60px;
+      left:-320px;
       transform:rotate(158.67deg);
     }
 
-    /* Content */
+    /* Content layer fills the section minus footer */
     .d-content {
-      position:relative; z-index:40; display:flex; flex-direction:column;
-      min-height:100vh; pointer-events:none;
+      position:relative;
+      z-index:40;
+      display:flex;
+      flex-direction:column;
+      /* Main area = full section height minus footer 100px */
+      height:calc(100vh - 80px - 100px);
+      flex-shrink:0;
+      pointer-events:none;
     }
-    .d-nav-sp   { height:100px; }
-    .d-foot-sp  { height:100px; }
+
     .d-main {
-      flex:1; display:flex; flex-direction:column;
-      justify-content:center; align-items:flex-end; padding:0 160px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-end;
+      padding:0 160px;
     }
+
     .d-inner { max-width:900px; padding-right:176px; }
-    .d-h2 { font-size:clamp(32px,3.5vw,48px); font-weight:300; line-height:1.05; letter-spacing:-.02em; }
-    .d-indent { padding-left:96px; display:block; }
-    .d-subrow {
-      margin-top:32px; display:flex; align-items:center;
-      justify-content:flex-end; gap:32px; pointer-events:auto; cursor:pointer;
+
+    .d-h2 {
+      font-size:clamp(32px,3.5vw,48px);
+      font-weight:300;
+      line-height:1.05;
+      letter-spacing:-.02em;
     }
-    .d-subtext { font-size:10px; color:rgba(255,255,255,.5); max-width:300px; line-height:1.6; text-transform:uppercase; letter-spacing:.2em; }
+    .d-indent { padding-left:96px; display:block; }
+
+    .d-subrow {
+      margin-top:32px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:32px;
+      pointer-events:auto;
+      cursor:pointer;
+    }
+    .d-subtext {
+      font-size:10px;
+      color:rgba(255,255,255,.5);
+      max-width:300px;
+      line-height:1.6;
+      text-transform:uppercase;
+      letter-spacing:.2em;
+    }
     .d-arrow {
-      flex-shrink:0; width:40px; height:40px;
-      border:1px solid rgba(255,255,255,.2); border-radius:50%;
+      flex-shrink:0;
+      width:40px; height:40px;
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:50%;
       display:flex; align-items:center; justify-content:center;
-      transition:background .7s,color .7s;
+      transition:background .7s, color .7s;
     }
     .d-subrow:hover .d-arrow { background:#fff; color:#000; }
 
-    /* Footer */
+    /* Footer — exactly 100px, pinned at the bottom of the section */
     .d-footer {
-      height:100px; display:flex; align-items:center;
-      justify-content:space-between; padding:0 128px;
-      pointer-events:auto; position:relative; z-index:50;
+      height:100px;
+      flex-shrink:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 128px;
+      pointer-events:auto;
+      position:relative;
+      z-index:50;
     }
     .d-engage {
-      padding:16px 32px; border:1px solid rgba(255,255,255,.15);
-      font-size:10px; letter-spacing:.4em; text-transform:uppercase;
-      background:transparent; color:#fff; cursor:pointer; white-space:nowrap;
-      transition:background .3s,color .3s;
+      padding:16px 32px;
+      border:1px solid rgba(255,255,255,.15);
+      font-size:10px;
+      letter-spacing:.4em;
+      text-transform:uppercase;
+      background:transparent;
+      color:#fff;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:background .3s, color .3s;
     }
     .d-engage:hover { background:#fff; color:#000; }
     .d-ascella {
-      font-size:9px; letter-spacing:.15em; max-width:320px;
-      text-align:right; text-transform:uppercase; line-height:1.5;
+      font-size:9px;
+      letter-spacing:.1em;
+      max-width:220px;
+      text-align:left;
+      
+      line-height:1.5;
       color:rgba(255,255,255,.45);
     }
 
@@ -198,13 +262,13 @@ const styles = `
   }
 
   /* ══════════════════════════════════════════
-     TABLET tweaks
+     TABLET tweaks (641px – 1023px)
   ══════════════════════════════════════════ */
   @media (min-width:641px) and (max-width:1023px) {
     .d-gl-left  { left:40px; }
     .d-gl-right { right:40px; }
-    .d-globe-container { left:40px; right:40px; }
-    .d-globe-wrapper   { width:560px; height:500px; top:20px; left:-80px; }
+    .d-globe-container { left:40px; right:55%; bottom:100px; top:0; }
+    .d-globe-wrapper   { width:560px; height:500px; bottom:-40px; left:-220px; }
     .d-main  { padding:0 60px; }
     .d-inner { padding-right:40px; }
     .d-indent { padding-left:60px; }
@@ -217,29 +281,25 @@ const styles = `
   @media (min-width:1440px) {
     .d-gl-left  { left:120px; }
     .d-gl-right { right:120px; }
-    .d-globe-container { left:120px; right:120px; }
-    .d-globe-wrapper   { width:900px; height:800px; top:40px; left:-220px; }
+    .d-globe-container { left:120px; right:50%; bottom:100px; top:0; }
+    .d-globe-wrapper   { width:900px; height:800px; bottom:-280px; left:-380px; }
     .d-footer { padding:0 160px; }
   }
 
   /* ══════════════════════════════════════════
-     MOBILE (≤ 640px) — matches screenshot exactly
-     Order: nav-line → heading → subtext → engage btn → globe → gap-line → line → ascella
+     MOBILE (≤ 640px)
   ══════════════════════════════════════════ */
   @media (max-width:640px) {
 
-    /* Hide all desktop elements */
-    .d-gl-top, .d-gl-nav, .d-gl-foot, .d-gl-left, .d-gl-right,
+    .d-gl-top, .d-gl-foot, .d-gl-left, .d-gl-right,
     .d-globe-container, .d-content, .d-footer { display:none !important; }
 
-    /* Mobile wrapper — simple flex column */
     .m-layout {
       display:flex;
       flex-direction:column;
       width:100%;
     }
 
-    /* ── Horizontal grid line ── */
     .m-line {
       width:100%;
       height:1px;
@@ -247,10 +307,7 @@ const styles = `
       flex-shrink:0;
     }
 
-    /* ── Text content block: heading + subtext ── */
-    .m-text-block {
-      padding:28px 28px 20px 28px;
-    }
+    .m-text-block { padding:28px 28px 20px 28px; }
 
     .m-h2 {
       font-size:22px;
@@ -260,13 +317,9 @@ const styles = `
       text-align:left;
       margin:0;
     }
-    .m-h2-center {
-      display:block;
-      text-align:center;
-    }
+    .m-h2-center { display:block; text-align:center; }
     .m-dim { color:rgba(255,255,255,.28); }
 
-    /* Early-stage execution row */
     .m-subrow {
       margin-top:18px;
       margin-left:30px;
@@ -291,14 +344,12 @@ const styles = `
       display:flex; align-items:center; justify-content:center;
     }
 
-    /* ── Engage With Us button — centered between subtext and globe ── */
     .m-engage-zone {
       display:flex;
       align-items:center;
       justify-content:center;
       padding:24px 0 20px 0;
     }
-
     .m-engage-btn {
       display:flex;
       align-items:center;
@@ -318,7 +369,6 @@ const styles = `
     .m-engage-btn:hover { background:#fff; color:#000; }
     .m-engage-btn svg { display:block; }
 
-    /* ── Globe block ── */
     .m-globe-block {
       width:100%;
       height:260px;
@@ -332,23 +382,14 @@ const styles = `
       transform:translateX(-50%) rotate(158.67deg);
     }
 
-    /* ── Double grid line zone with gap between them ── */
-    /* First line is .m-line above this zone */
-    .m-double-line-gap {
-      height:32px; /* visible margin / gap between the two lines */
-      width:100%;
-      flex-shrink:0;
-    }
+    .m-double-line-gap { height:32px; width:100%; flex-shrink:0; }
 
-    /* ── Ascella text block — padded left & right ── */
-    .m-ascella {
-      padding:16px 28px 28px 28px;
-    }
+    .m-ascella { padding:16px 28px 28px 28px; }
     .m-ascella p {
       font-size:10px;
       letter-spacing:.13em;
       line-height:1.75;
-      text-transform:uppercase;
+    
       color:rgba(255,255,255,.45);
       text-align:left;
       margin:0;
@@ -360,7 +401,6 @@ const styles = `
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 const Controlled = () => {
-  // Desktop globe ref
   const dGlobeRef = useRef<HTMLDivElement>(null);
   const [dImgEl, setDImgEl] = useState<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -368,7 +408,6 @@ const Controlled = () => {
     if (el) setDImgEl(el);
   }, []);
 
-  // Mobile globe ref
   const mGlobeRef = useRef<HTMLDivElement>(null);
   const [mImgEl, setMImgEl] = useState<HTMLImageElement | null>(null);
   useEffect(() => {
@@ -383,28 +422,35 @@ const Controlled = () => {
       <section className="ctrl-section">
 
         {/* ════════════════════════════════════════
-            DESKTOP LAYOUT (hidden on mobile)
+            DESKTOP LAYOUT
         ════════════════════════════════════════ */}
 
-        {/* Grid lines */}
         <div className="d-gl-top" />
-        <div className="d-gl-nav" />
         <div className="d-gl-foot" />
         <div className="d-gl-left" />
         <div className="d-gl-right" />
 
-        {/* Globe */}
         <div className="d-globe-container">
           <div ref={dGlobeRef} className="d-globe-wrapper">
-            <img src="/globe2.png" alt="" crossOrigin="anonymous"
-              style={{position:'absolute',width:'100%',height:'100%',display:'block',opacity:0.55,objectFit:'contain'}} />
+            <img
+              src="/globe2.png"
+              alt=""
+              crossOrigin="anonymous"
+              style={{
+                position:'absolute',
+                width:'100%',
+                height:'100%',
+                display:'block',
+                opacity:0.55,
+                objectFit:'contain'
+              }}
+            />
             <WaveCanvas imgEl={dImgEl} />
           </div>
         </div>
 
-        {/* Content */}
+        {/* Main content */}
         <div className="d-content">
-          <div className="d-nav-sp" />
           <div className="d-main">
             <div className="d-inner">
               <h2 className="d-h2">
@@ -418,7 +464,6 @@ const Controlled = () => {
               </div>
             </div>
           </div>
-          <div className="d-foot-sp" />
         </div>
 
         {/* Footer */}
@@ -431,23 +476,11 @@ const Controlled = () => {
 
         {/* ════════════════════════════════════════
             MOBILE LAYOUT
-            Order (top → bottom):
-            1. Horizontal grid line (below navbar)
-            2. "Controlled execution…" heading
-            3. "Early-stage execution…" + arrow
-            4. "Engage With Us" button (centered)
-            5. Globe
-            6. Horizontal grid line
-            7. Gap (margin)
-            8. Horizontal grid line
-            9. "The Ascella Startups…" text
         ════════════════════════════════════════ */}
         <div className="m-layout">
 
-          {/* 1 — Horizontal grid line (sits just below navbar) */}
           <div className="m-line" />
 
-          {/* 2 & 3 — Heading + subtext */}
           <div className="m-text-block">
             <h2 className="m-h2">
               Controlled execution
@@ -460,7 +493,6 @@ const Controlled = () => {
             </div>
           </div>
 
-          {/* 4 — Engage With Us button centered */}
           <div className="m-engage-zone">
             <Link href="/engageWithUs">
               <button className="m-engage-btn">
@@ -478,7 +510,6 @@ const Controlled = () => {
             </Link>
           </div>
 
-          {/* 5 — Globe */}
           <div className="m-globe-block">
             <div ref={mGlobeRef} className="m-globe-wrapper">
               <img src="/globe2.png" alt="" crossOrigin="anonymous"
@@ -487,16 +518,10 @@ const Controlled = () => {
             </div>
           </div>
 
-          {/* 6 — First horizontal grid line after globe */}
           <div className="m-line" />
-
-          {/* 7 — Gap between the two lines */}
           <div className="m-double-line-gap" />
-
-          {/* 8 — Second horizontal grid line */}
           <div className="m-line" />
 
-          {/* 9 — Ascella text with left/right padding */}
           <div className="m-ascella">
             <p>The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
           </div>

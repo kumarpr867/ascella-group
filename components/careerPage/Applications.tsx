@@ -8,18 +8,18 @@ const Applications: React.FC = () => {
 
       <div className="w-full max-w-5xl mb-16 self-start pl-30">
         <div className="flex items-center gap-2 mb-3">
-          <svg width="14" height="14" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
             <rect x="10.833" y="15.1667" width="4.33333" height="10.8333" fill="white"/>
             <rect x="15.167" y="10.8333" width="10.8333" height="4.33333" fill="white"/>
             <rect y="10.8333" width="10.8333" height="4.33333" fill="white"/>
           </svg>
-          <h2 className="text-zinc-400 text-[10px] tracking-[0.4em] uppercase">Application Process</h2>
+          <h2 className=" text-[16px] tracking-[0.4em] uppercase">Application Process</h2>
         </div>
-        <h3 className="text-5xl mb-5 leading-tight max-w-5xl text-zinc-100">
+        <h3 className="text-2.5xl mb-3 leading-tight max-w-[713px] ">
           Applications follow a structured evaluation and alignment process designed to ensure operating and accountability fit.
         </h3>
-        <p className="text-zinc-500 text-base max-w-2xl leading-relaxed">
+        <p className="text-gray-300  max-w-2xl leading-relaxed">
           The objective of the process is not only to <br/>
           evaluate experience, but to confirm readiness
           <br /> to operate within structured delivery models

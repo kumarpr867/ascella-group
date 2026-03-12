@@ -12,7 +12,7 @@ import RevenueEnablement from "./Revenue";
 
 // Image fades up on enter
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 };
 const fadeUpDelayed: Variants = {
@@ -345,56 +345,65 @@ function OwnershipSection({
     if (isInView) setActiveIndex(index);
   }, [isInView, index, setActiveIndex]);
 
-  const imgClass = `
-    w-[180px] h-[180px]
-    sm:w-[280px] sm:h-[280px]
-    md:w-[380px] md:h-[380px]
-    lg:w-[480px] lg:h-[480px]
-    xl:w-[550px] xl:h-[550px]
-  `;
-
   return (
     <div
       ref={ref}
-      className="relative flex flex-col items-start
-        mx-0 my-0
-        pt-6 pb-10 px-10
-        sm:pt-8 sm:pb-16 sm:px-8
-        md:pt-12 md:pb-24 md:px-12
-        lg:pt-16 lg:pb-32 lg:px-16
-      "
+      className="relative flex flex-col"
+      style={{ minHeight: "100vh", overflow: "visible" }}
     >
+      {/* Image — fixed height block, overflow visible so animation doesn't clip */}
       <motion.div
         variants={fadeUp} initial="hidden" whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="w-full flex justify-center mb-10 sm:mb-16 md:mb-20 lg:mb-24"
+        className="flex justify-center items-center lg:pt-16"
+        style={{ height: "calc(100vh - 280px)", overflow: "visible", paddingTop: "2rem", paddingLeft: "2rem", paddingRight: "2rem" }}
       >
         {svgComponent ? (
-          // ✅ SVG component: wrap in a sized div matching imgClass
-          <div className={imgClass} style={{ display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div
+            style={{
+              width: "min(420px, 55vw)",
+              height: "min(420px, calc(100vh - 320px))",
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "visible",
+            }}
+          >
             {svgComponent}
           </div>
         ) : image ? (
-          // ✅ PNG image with particle effect
-          <ParticleImage src={image} alt={title} useRipple={false} className={imgClass} />
+          <ParticleImage
+            src={image}
+            alt={title}
+            useRipple={false}
+            className=""
+            style={{
+              width: "min(420px, 55vw)",
+              height: "min(420px, calc(100vh - 320px))",
+              flexShrink: 0,
+            } as React.CSSProperties}
+          />
         ) : null}
       </motion.div>
 
+      {/* Content — sits below the image in the same viewport */}
       <motion.div
         variants={fadeUpDelayed} initial="hidden" whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
         className="w-full max-w-xl"
+        style={{ padding: "1.5rem 2rem 2.5rem 3.5rem", flexShrink: 0 }}
       >
-        <h3 className="font-light tracking-tight text-2xl sm:text-3xl lg:text-4xl mb-4 sm:mb-6 lg:mb-8">
+        <h3 className="font-light tracking-tight text-2xl sm:text-3xl lg:text-4xl mb-4 sm:mb-5 lg:mb-6">
           {title}
         </h3>
-        <p className="text-white/50 leading-relaxed text-sm sm:text-base mb-4 sm:mb-6 lg:mb-8">
+        <p className="text-white/50 leading-relaxed text-sm sm:text-base mb-3 sm:mb-4 lg:mb-5">
           {description}
         </p>
         {tag && <div className="text-xs sm:text-sm tracking-widest text-white/80">{tag}</div>}
       </motion.div>
 
-      {!isLast && <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />}
+
     </div>
   );
 }
@@ -413,31 +422,32 @@ export default function Ownership() {
     {
       title: "Security & Risk Posture",
       description: "Security and risk posture focuses on keeping organisational risk visible and controlled. Security decisions link directly to business priorities and acceptable risk levels. Each control has a clear owner, review cycle, and response plan. This reduces surprises and limits the impact of incidents when issues occur.",
-      tag: "#Resilience",
-      svgComponent: <SecurityWaveSVG />,           // ✅ FIXED: SVG component, not image path
+      tag: "Resilience",
+      svgComponent: <SecurityWaveSVG />,
     },
     {
       title: "Technology Execution",
       description: "Technology execution ensures systems work reliably as change increases. Platforms follow clear build, release, and run standards. Ownership stays consistent across development and operations to avoid gaps. This keeps delivery steady and reduces failures during growth.",
-      tag: "#Scalability",
-      svgComponent: <TechnologyExecution />,        // ✅ FIXED: SVG component, not image path
+      tag: "Scalability",
+      svgComponent: <TechnologyExecution />,
     },
     {
       title: "Workforce Readiness",
       description: "Workforce readiness prepares teams for real operating conditions. Roles and escalation paths stay clear before pressure hits. Training reflects actual scenarios instead of theory. Teams respond faster and make better decisions during incidents.",
-      tag: "#Alignment",
-      svgComponent: <WorkforceReadinessSVG />,      // ✅ Inline SVG component
+      tag: "Alignment",
+      svgComponent: <WorkforceReadinessSVG />,
     },
     {
       title: "Operational Control",
       description: "Operational control brings structure to daily execution. Decisions follow defined paths instead of informal coordination. Signals focus on risk, progress, and dependencies. Work becomes predictable and less reactive over time.",
-      image: "/Operational1.png",          // ✅ Interactive SVG with hover slab animation
+      tag:"Governance",
+      image: "/Operational1.png",
     },
     {
       title: "Revenue Enablement",
       description: "Revenue enablement connects execution quality to business results. Technical priorities reflect revenue impact and customer trust. Launches follow readiness checks and clear success measures. Growth stays protected as execution becomes disciplined.",
-      tag: "#Sustainability",
-      svgComponent: <RevenueEnablement />,          // ✅ FIXED: SVG component, not image path
+      tag: "Sustainability",
+      svgComponent: <RevenueEnablement />,
     },
   ];
 
@@ -447,22 +457,26 @@ export default function Ownership() {
 
   return (
     <section className="relative">
-      <div className="relative h-px w-full mt-30 border-t border-color">
+      <div className="sticky top-0 z-50 h-px w-full mt-30 border-t border-color bg-black">
         <div className="mx-8 h-full" />
       </div>
 
       <div className="mx-auto w-full relative">
 
         {/* ══ DESKTOP lg+ ══ */}
-        <div className="hidden lg:grid lg:grid-cols-[10%_25%_55%_10%] relative">
-          <div className="absolute inset-0 flex pointer-events-none z-0">
-            <div className="h-full w-[10%] border-r border-color" />
-            <div className="h-full w-[25%] border-r border-color" />
-            <div className="h-full w-[55%] border-r border-color" />
+        <div className="hidden lg:flex lg:flex-row relative">
+
+          {/* Fixed-width left spacer col — 10% */}
+          <div className="w-[10%] shrink-0 relative">
+            <div className="sticky top-0 h-screen border-r border-color" />
           </div>
-          <div className="z-10 h-full" />
-          <aside className="relative z-10 p-12">
-            <div className="sticky top-24">
+
+          {/* Sticky sidebar — 25% */}
+          <div className="w-[25%] shrink-0 relative">
+            {/* Grid border that spans full height */}
+            <div className="absolute inset-0 border-r border-color pointer-events-none" />
+            {/* Sticky content */}
+            <aside className="sticky top-0 h-screen z-10 p-12 flex flex-col">
               <PlusHeading text="OWNERSHIP" />
               <ul className="mt-20 space-y-6">
                 {sections.map((item, idx) => (
@@ -472,26 +486,30 @@ export default function Ownership() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-32"><PartialOutlineBtn text="Explore More" /></div>
-            </div>
-          </aside>
-          <main className="relative z-10">
+              <div className="mt-auto "><PartialOutlineBtn text="Explore Responsibility" /></div>
+            </aside>
+          </div>
+
+          {/* Scrollable main content — 55% */}
+          <main className="w-[55%] shrink-0 relative z-10">
+            <div className="absolute inset-0 border-r border-color pointer-events-none" />
             {sections.map((item, index) => (
               <div key={item.title} data-ownership-section>
                 <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />
               </div>
             ))}
           </main>
-          <div className="z-10 h-full" />
+
+          {/* Right spacer — 10% */}
+          <div className="w-[10%] shrink-0" />
         </div>
 
         {/* ══ TABLET sm–lg ══ */}
-        <div className="hidden sm:grid lg:hidden grid-cols-[30%_70%] relative">
-          <div className="absolute inset-0 pointer-events-none z-0">
-            <div className="h-full w-[30%] border-r border-color" />
-          </div>
-          <aside className="relative z-10 px-6 pt-10 pb-6">
-            <div className="sticky top-20">
+        <div className="hidden sm:flex lg:hidden flex-row relative">
+          {/* Sticky sidebar — 30% */}
+          <div className="w-[30%] shrink-0 relative">
+            <div className="absolute inset-0 border-r border-color pointer-events-none" />
+            <aside className="sticky top-0 h-screen z-10 px-6 pt-10 pb-6 flex flex-col">
               <PlusHeading text="OWNERSHIP" />
               <ul className="mt-10 space-y-4">
                 {sections.map((item, idx) => (
@@ -501,10 +519,11 @@ export default function Ownership() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-12"><PartialOutlineBtn text="Explore More" /></div>
-            </div>
-          </aside>
-          <main className="relative z-10">
+              <div className="mt-auto pb-8"><PartialOutlineBtn text="Explore More" /></div>
+            </aside>
+          </div>
+          {/* Scrollable main — 70% */}
+          <main className="w-[70%] shrink-0 relative z-10">
             {sections.map((item, index) => (
               <div key={item.title} data-ownership-section>
                 <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />

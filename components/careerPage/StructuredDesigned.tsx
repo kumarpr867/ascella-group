@@ -4,7 +4,7 @@ import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 
 export default function EngagementBegins() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center mx-auto max-w-7xl px-10 xl:px-0 my-30">
+    <section className="relative min-h-screen flex flex-col items-center justify-center mx-auto max-w-7xl px-10 xl:px-0 my-15">
       <HeaderSection />
       <ArchitectureDiagram />
       <ExploreNowBtn />
@@ -14,10 +14,9 @@ export default function EngagementBegins() {
 
 function HeaderSection() {
   return (
-    <div className="flex flex-col items-center text-center gap-6 mb-12 md:mb-24">
-      <h3 className="text-[20px] sm:text-[24px] md:text-[36px] font-light">
-        Centralised Career<br />
-        Communication Channel
+    <div className="flex flex-col items-center text-center gap-6 mb-8 md:mb-20">
+      <h3 className="text-[16px] sm:text-[24px] md:text-[36px] ">
+        WORKING AT ASCELLA IS <br /> STRUCTURED BY DESIGN.
       </h3>
       <p className="text-[12px] sm:text-[16px] md:max-w-1/2">
         All applications, candidate correspondence, and role coordination are handled through a single governance-led process to ensure consistency, discretion, and accountability.
@@ -28,7 +27,7 @@ function HeaderSection() {
 
 function ArchitectureDiagram() {
   return (
-    <div className="relative w-full h-[500px] lg:h-[700px] mx-auto overflow-hidden mt-10">
+    <div className="relative w-full h-[500px] lg:h-[500px] mx-auto overflow-hidden ">
       <div className="absolute inset-0">
         <VerticalLine />
         <HorizontalText />
@@ -117,11 +116,14 @@ function ExploreNowBtn() {
         Career enquiries are routed through a structured review framework to maintain clarity, control, and defined ownership across every interaction.
       </p>
       <div>
-        <PartialOutlineBtn text="Join Ascella"
+        <PartialOutlineBtn text="Explore Opportunities"
           onClick={() => {
             router.push(`/JD-Page`);
           }} />
       </div>
+
+        <div className="absolute bottom-[-50px] w-screen h-[1px] bg-zinc-800/50 left-1/2 -translate-x-1/2"></div>
     </div>
+    
   );
 }

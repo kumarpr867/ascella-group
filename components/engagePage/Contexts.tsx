@@ -65,7 +65,7 @@ function IsometricHoverGrid() {
   return <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'auto', cursor:'crosshair' }} />;
 }
 
-// ── Static Isometric Grid (for mobile, no hover — always lit) ─────────────────
+// ── Static Isometric Grid (mobile) ───────────────────────────────────────────
 function IsometricStaticGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number | null>(null);
@@ -142,37 +142,50 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
       </div>
       <div className="absolute inset-0 z-30 pointer-events-none" />
     </div>
-    <div className="flex flex-wrap md:flex-nowrap justify-center bg-black border-b border-[#3D3D3D]">
-      <div className="border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ width:'256px', height:'271px' }}>
-        <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
-          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
-          <div className="text-[13px] font-light truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
+
+    {/* ★ FIX: w-full flex, no justify-center, each box flex-1 */}
+    <div className="w-full flex bg-black border-b border-[#3D3D3D]">
+
+      {/* Left box: Email + Contact — flex-1 so it stretches full */}
+      <div className="flex-1 border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ height:'271px' }}>
+        <div className="flex-1 px-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase tracking-[0.2em]  text-gray-300 mb-2 block">Email</span>
+          <div className="text-[13px]  truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
         </div>
-        <div className="flex-1 p-6 flex flex-col justify-center">
-          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
+        {/* Full-bleed divider — no px so touches both borders */}
+        <div className="w-full border-t border-[#3D3D3D]" />
+        <div className="flex-1 px-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Contact</span>
           <div className="text-[13px] font-light space-y-0.5">{(contact?.values??[]).slice(0,2).map((v,i)=><p key={i}>{v}</p>)}</div>
         </div>
       </div>
-      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303]" style={{ width:'256px', height:'271px' }}>
+
+      {/* Middle box: image — fixed width */}
+      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0" style={{ width:'256px', height:'271px' }}>
         <img src="/Rectangle 9476.svg" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
       </div>
-      <div className="flex flex-col overflow-hidden" style={{ width:'256px', height:'271px' }}>
-        <div className="flex-1 p-6 flex flex-col justify-center border-b border-[#3D3D3D]">
-          <span className="text-[9px] uppercase tracking-[0.2em] mb-2 block">Location</span>
+
+      {/* Right box: Location + Work Hours — flex-1 so it stretches full */}
+      <div className="flex-1 flex flex-col overflow-hidden" style={{ height:'271px' }}>
+        <div className="flex-1 px-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase text-gray-300 tracking-[0.2em] mb-2 block">Location</span>
           <p className="text-[12px] leading-snug">{location?.address??''}</p>
           <p className="text-[11px] mt-1">{location?.postalCode}</p>
         </div>
-        <div className="flex-1 p-6 flex flex-col justify-center">
-          <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
-          <p className="text-[13px] font-light">{workHours?.hours}</p>
+        {/* Full-bleed divider */}
+        <div className="w-full border-t border-[#3D3D3D]" />
+        <div className="flex-1 px-6 flex flex-col justify-center">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Work Hours</span>
+          <p className="text-[13px] ">{workHours?.hours}</p>
         </div>
       </div>
+
     </div>
   </div>
 );
 
 // ─────────────────────────────────────────────
-// MOBILE CONTACT SECTION — with form appended inside same 20px padded column
+// MOBILE CONTACT SECTION
 // ─────────────────────────────────────────────
 type MobileContactSectionProps = {
   title: string; subtitle: string;
@@ -180,108 +193,48 @@ type MobileContactSectionProps = {
   location?: { address: string; postalCode: string }; workHours?: { hours: string };
 };
 const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
-  <div className="block lg:hidden w-full bg-black text-white" style={{ padding: '0 40px' }}>
-    {/* Isometric grid hero box with vector55 */}
-    <div className="w-full border border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
-      <div className="absolute inset-0 z-0">
-        <IsometricStaticGrid />
-      </div>
-      <img
-        src="/vector 55.png"
-        alt=""
-        style={{
-          position: 'absolute', left: '50%', top: '50%',
-          width: '110px', height: '66px',
-          transform: 'translate(-80%, -60%)',
-          objectFit: 'fill', opacity: 0.9, pointerEvents: 'none',
-          mixBlendMode: 'screen', zIndex: 2,
-        }}
-      />
-      <img
-        src="/vector 55.png"
-        alt=""
-        style={{
-          position: 'absolute', left: '50%', top: '50%',
-          width: '110px', height: '66px',
-          transform: 'translate(10%, -20%)',
-          objectFit: 'fill', opacity: 0.9, pointerEvents: 'none',
-          mixBlendMode: 'screen', zIndex: 2,
-        }}
-      />
-      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}>
+  <div className="block lg:hidden w-full bg-black text-white">
+    <div className="w-full border-b border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
+      <div className="absolute inset-0 z-0"><IsometricStaticGrid /></div>
+      <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'50%', top:'50%', width:'110px', height:'66px', transform:'translate(-80%,-60%)', objectFit:'fill', opacity:0.9, pointerEvents:'none', mixBlendMode:'screen', zIndex:2 }} />
+      <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'50%', top:'50%', width:'110px', height:'66px', transform:'translate(10%,-20%)', objectFit:'fill', opacity:0.9, pointerEvents:'none', mixBlendMode:'screen', zIndex:2 }} />
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none" style={{ background:'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}>
         <h3 className="text-[22px] font-light leading-snug tracking-tight mb-1">{title}</h3>
         <p className="text-gray-400 text-[13px]">{subtitle}</p>
       </div>
     </div>
-
-    {/* Email box */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
-      {(email?.value ?? '').split('\n').map((v, i) => (
-        <p key={i} className="text-[13px] font-light">{v}</p>
-      ))}
+      {(email?.value ?? '').split('\n').map((v, i) => (<p key={i} className="text-[13px] font-light">{v}</p>))}
     </div>
-
-    {/* Contact box */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
-      {(contact?.values ?? []).map((v, i) => (
-        <p key={i} className="text-[13px] font-light">{v}</p>
-      ))}
+      {(contact?.values ?? []).map((v, i) => (<p key={i} className="text-[13px] font-light">{v}</p>))}
     </div>
-
-    {/* 3D image box */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 bg-[#030303] overflow-hidden" style={{ height: '200px' }}>
-      <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+    <div className="w-full border-b border-[#3D3D3D] bg-[#030303] overflow-hidden" style={{ height:'200px' }}>
+      <img src="/Rectangle 9476.svg" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
     </div>
-
-    {/* Location box */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Location</span>
       <p className="text-[13px] leading-snug">{location?.address ?? ''}</p>
       <p className="text-[12px] mt-1 text-gray-400">{location?.postalCode}</p>
     </div>
-
-    {/* Work Hours box */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-5">
+    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
       <p className="text-[13px] font-light">{workHours?.hours}</p>
     </div>
-
-    {/* ── FORM — same column, same 20px padded wrapper, border continues ── */}
-    <div className="w-full border border-[#3D3D3D] border-t-0 px-5 py-7">
+    <div className="w-full px-5 py-7">
       <h5 className="text-xl font-light mb-2">Provide operating context to initiate alignment.</h5>
       <p className="text-gray-400 text-xs mb-5">This form captures high-level operating information required to initiate an alignment conversation.</p>
       <div className="border-t border-[#3D3D3D] w-[calc(100%+2.5rem)] -mx-5 mb-6" />
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white">Full Name</label>
-          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white">Organisation name</label>
-          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white">Role / position</label>
-          <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-xs text-white">Email address</label>
-          <input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-        </div>
-        <div className="col-span-2 flex flex-col gap-1">
-          <label className="text-xs text-white">Organisation type</label>
-          <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
-        </div>
-        <div className="col-span-2 flex flex-col gap-1">
-          <label className="text-xs text-white">Primary operating need</label>
-          <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
-        </div>
-        <div className="col-span-2 flex flex-col gap-1">
-          <textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" />
-        </div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Full Name</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Organisation name</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Role / position</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Email address</label><input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
+        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Organisation type</label><select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Primary operating need</label><select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+        <div className="col-span-2 flex flex-col gap-1"><textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" /></div>
         <div className="col-span-2 mt-1">
           <button className="relative group w-max px-6 py-2 text-white text-sm">
             <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
@@ -293,14 +246,11 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
         </div>
       </div>
     </div>
-
-    {/* bottom spacing */}
-   
   </div>
 );
 
 // ─────────────────────────────────────────────
-// DESKTOP ACCORDION ITEM (hover-based, unchanged)
+// DESKTOP ACCORDION ITEM
 // ─────────────────────────────────────────────
 type AccordionItemProps = { title:string; index?:string; description?:string; open?:boolean; onMouseEnter?:()=>void; };
 const AccordionItem: React.FC<AccordionItemProps> = ({ title, index, description, open=false, onMouseEnter }) => (
@@ -357,13 +307,10 @@ const Icon6 = () => (
   </svg>
 );
 
-// ─────────────────────────────────────────────
-// SHARED TYPE
-// ─────────────────────────────────────────────
 type AccordionData = { id: string; title: string; description: string };
 
 // ─────────────────────────────────────────────
-// MOBILE ACCORDION ITEM (click-based)
+// MOBILE ACCORDION ITEM
 // ─────────────────────────────────────────────
 type MobileAccItemProps = { title:string; index?:string; description?:string; open?:boolean; onClick?:()=>void; };
 const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description, open=false, onClick }) => (
@@ -383,7 +330,7 @@ const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description
 );
 
 // ─────────────────────────────────────────────
-// MOBILE SECTION — alignment carousel + spacer + what happens next
+// MOBILE SECTIONS
 // ─────────────────────────────────────────────
 const mobileSlides = [
   { icon: <Icon2 />, label: 'Operating structure and decision ownership' },
@@ -408,291 +355,321 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
   const toggle = (id: string) => setOpenItem(prev => prev === id ? null : id);
 
   return (
-    <div className="block lg:hidden w-full" style={{ padding: '0 40px' }}>
-
-      {/* ── "What alignment typically covers" heading ── */}
-      <div className="pt-8 pb-5 px-2">
+    <div className="block lg:hidden w-full">
+      <div className="pt-8 pb-5 px-6">
         <h3 className="text-2xl font-light">What alignment typically covers</h3>
       </div>
-
-      {/* 1. Image box */}
-      <div className="w-full border border-[#3D3D3D] overflow-hidden" style={{ height: '240px' }}>
+      <div className="w-full border-t border-[#3D3D3D] overflow-hidden" style={{ height:'240px' }}>
         <img src="/alignment.png" alt="Alignment" className="w-full h-full object-cover" />
       </div>
-
-      {/* 2. SVG carousel */}
-      <div
-        className="w-full border border-[#3D3D3D] border-t-0 flex flex-col items-center justify-center py-10 gap-5"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        style={{ minHeight: '180px' }}
-      >
-        <div className="flex flex-col items-center gap-5 w-full" style={{ transition: 'opacity 0.3s ease', opacity: 1 }}>
-          <div className="flex items-center justify-center" key={`icon-${activeSlide}`} style={{ animation: 'fadeIn 0.3s ease' }}>
-            {mobileSlides[activeSlide].icon}
-          </div>
-          <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8" style={{ animation: 'fadeIn 0.3s ease' }}>
-            {mobileSlides[activeSlide].label}
-          </p>
+      <div className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ minHeight:'180px' }}>
+        <div className="flex flex-col items-center gap-5 w-full">
+          <div className="flex items-center justify-center" key={`icon-${activeSlide}`}>{mobileSlides[activeSlide].icon}</div>
+          <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8">{mobileSlides[activeSlide].label}</p>
         </div>
         <div className="flex items-center gap-[7px]">
           {mobileSlides.map((_, i) => (
-            <button key={i} onClick={() => setActiveSlide(i)} className="rounded-full transition-all duration-300"
-              style={{ width: i === activeSlide ? '8px' : '6px', height: i === activeSlide ? '8px' : '6px', background: i === activeSlide ? '#ffffff' : '#3a3a3a' }} />
+            <button key={i} onClick={() => setActiveSlide(i)} className="rounded-full transition-all duration-300" style={{ width: i===activeSlide?'8px':'6px', height: i===activeSlide?'8px':'6px', background: i===activeSlide?'#ffffff':'#3a3a3a' }} />
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
-      {/* 3. Spacer */}
-      <div className="w-full border border-[#3D3D3D] border-t-0" style={{ height: '44px' }} />
-
-      {/* 4. What Happens Next header */}
-      <div className="w-full border border-[#3D3D3D] border-t-0 px-5 pt-7 pb-7">
+      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <div className="w-full border-t border-[#3D3D3D]" style={{ height:'44px' }} />
+      <div className="w-full border-t border-[#3D3D3D] px-5 pt-7 pb-7">
         <div className="flex items-center gap-3 mb-4">
-          <svg width="14" height="14" viewBox="0 0 26 26" fill="none">
-            <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
-            <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
-            <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-            <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-          </svg>
+          <svg width="14" height="14" viewBox="0 0 26 26" fill="none"><rect x="10.833" width="4.33333" height="10.8333" fill="white"/><rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/><rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/><rect y="10.8334" width="10.8333" height="4.33333" fill="white"/></svg>
           <span className="text-[10px] uppercase tracking-[0.3em] text-white font-light">WHAT HAPPENS NEXT</span>
         </div>
-        <h3 className="text-[1.6rem] font-light leading-snug">
-          Each engagement progresses through a defined alignment pathway.
-        </h3>
+        <h3 className="text-[1.6rem] font-light leading-snug">Each engagement progresses through a defined alignment pathway.</h3>
       </div>
-
-      {/* 5. Accordion items */}
-      <div className="w-full border border-[#3D3D3D] border-t-0">
+      <div className="w-full border-t border-[#3D3D3D]">
         {accordionData.map((item) => (
-          <MobileAccItem
-            key={item.id}
-            title={item.title}
-            index={`[${item.id}]`}
-            description={item.description}
-            open={openItem === item.id}
-            onClick={() => toggle(item.id)}
-          />
+          <MobileAccItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description} open={openItem===item.id} onClick={() => toggle(item.id)} />
         ))}
         <div className="px-5 py-5 border-t border-[#3D3D3D]">
           <p className="text-xs">No engagement proceeds without operating alignment.</p>
         </div>
       </div>
-
     </div>
   );
 };
 
 // ─────────────────────────────────────────────
-// MAIN PAGE COMPONENT
+// MAIN PAGE
 // ─────────────────────────────────────────────
 const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
 
-  const boxBase        = 'w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start';
-  const textStyle      = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
-  const overlayCard    = 'w-full md:w-[289px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
+  const boxBase     = 'w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start';
+  const textStyle   = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
+  const overlayCard = 'w-full md:w-[289px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
 
   const accordionData: AccordionData[] = [
-    { id:'01', title:'Review and context assessment',    description:'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
-    { id:'02', title:'Alignment conversation',           description:'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
-    { id:'03', title:'Engagement pathway definition',    description:'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
+    { id:'01', title:'Review and context assessment',  description:'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
+    { id:'02', title:'Alignment conversation',         description:'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
+    { id:'03', title:'Engagement pathway definition',  description:'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white md:pl-25 md:pr-25 font-sans">
-      <div className="relative w-full border border-[#3D3D3D] flex flex-col lg:flex-row items-start">
+    <div className="min-h-screen bg-black text-white font-sans">
 
-        {/* Background Grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage:`linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`, backgroundSize:'40px 40px' }} />
+      {/* ════════════════════════════════════════════════════
+          DESKTOP  (lg+)
+      ════════════════════════════════════════════════════ */}
+      <div className="hidden lg:block mx-10 xl:mx-auto max-w-7xl">
+        <div
+          className="grid w-full border border-[#3D3D3D] h-screen overflow-hidden"
+          style={{
+            gridTemplateColumns: '2fr 4fr',
+            backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`,
+            backgroundSize: '40px 40px',
+          }}
+        >
+          {/* LEFT COLUMN */}
+          <div
+            className="bg-black border-r border-[#3D3D3D] flex flex-col h-full overflow-y-auto"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            <style>{`.lfc::-webkit-scrollbar{display:none}`}</style>
 
-        {/* ── LEFT COLUMN (FORM) — Desktop only (hidden on mobile) ── */}
-        <div className="hidden lg:flex relative z-10 w-full lg:w-2/6 lg:border-t-0 lg:border-r border-[#3D3D3D] p-7 flex-col bg-black order-2 lg:order-1 lg:sticky lg:top-[64px] lg:self-start">
-          <header className="max-w-md">
-            <h5 className="text-2xl mb-3">Provide operating context to <br /> initiate alignment.</h5>
-            <p className="text-gray-300 text-sm mb-1">This form captures high-level operating information required to initiate an alignment conversation.</p>
-          </header>
-          <div className="border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7 my-4" />
-          <div className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-white">Full Name</label>
-                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-white">Organisation name</label>
-                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-white">Role / position</label>
-                <input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-white">Email address</label>
-                <input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" />
-              </div>
-              <div className="md:col-span-2 flex flex-col gap-1">
-                <label className="text-xs text-white">Organisation type</label>
-                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
-              </div>
-              <div className="md:col-span-2 flex flex-col gap-1">
-                <label className="text-xs text-white">Primary operating need</label>
-                <select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select>
-              </div>
-              <div className="md:col-span-2 flex flex-col gap-1">
-                <textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" />
-              </div>
-              <div className="col-span-1 mt-2">
-                <button className="relative group w-max px-6 py-2 text-white text-sm">
-                  <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
-                  <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white" />
-                  <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white" />
-                  <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white" />
-                  Submit
-                </button>
-              </div>
-            </div>
-            <div className="mt-8 border-t border-[#3D3D3D] w-[calc(100%+3.5rem)] -mx-7" />
-          </div>
-        </div>
+            <div className="lfc p-6 mt-10 flex flex-col bg-black h-full">
+              <header className="max-w-md">
+                <h5 className="text-xl mb-2 font-light leading-snug">
+                  Provide operating context to <br /> initiate alignment.
+                </h5>
+                <p className="text-gray-300 text-xs mb-1">
+                  This form captures high-level operating information required to initiate an alignment conversation.
+                </p>
+              </header>
 
-        {/* ── RIGHT COLUMN (CONTENT) — Desktop right, Mobile full width ── */}
-        <div className="relative z-10 w-full lg:w-4/6 flex flex-col bg-black order-1 lg:order-2">
+              <div className="border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6 my-3" />
 
-          {/* Mobile top divider */}
-          <div className="block lg:hidden w-full border-t border-[#3D3D3D]" />
-
-          {/* ── HERO ── */}
-          <div className="relative border-b border-[#3D3D3D] overflow-hidden">
-            <div className="absolute inset-0 z-0 opacity-15">
-              <img src="/engagement1.png" alt="" className="w-full h-full object-cover" />
-            </div>
-
-            {/* MOBILE hero */}
-            <div className="block lg:hidden">
-              <div className="relative z-10 px-6 pt-8 pb-6">
-                <h2 className="text-4xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
-                <p className="text-lg mt-3 font-light text-gray-400">Not delivery discussions.</p>
-              </div>
-              <div className="relative z-10 px-6 pb-8 flex flex-col gap-3">
-                <div className={overlayCard} style={{ minHeight:'109px' }}>
-                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
-                  <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
+              <div className="pt-3 flex-1 flex flex-col">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Full Name</label>
+                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Organisation name</label>
+                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Role / position</label>
+                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Email address</label>
+                    <input type="email" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
+                  </div>
+                  <div className="col-span-2 flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Organisation type</label>
+                    <select className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none">
+                      <option>Select...</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2 flex flex-col gap-1">
+                    <label className="text-[11px] text-white">Primary operating need</label>
+                    <select className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none">
+                      <option>Select...</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2 flex flex-col gap-1">
+                    <textarea
+                      placeholder="Describe your current execution or operating challenge..."
+                      className="bg-transparent border border-gray-800 p-2 rounded text-xs text-white focus:outline-none focus:border-white resize-none placeholder-gray-400"
+                      style={{ height:'72px' }}
+                    />
+                  </div>
+                  <div className="col-span-1 mt-4">
+                    <button className="relative group w-max px-6 py-2 text-white text-xs">
+                      <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
+                      <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white" />
+                      <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white" />
+                      <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white" />
+                      Submit
+                    </button>
+                  </div>
                 </div>
-                <div className={overlayCard} style={{ minHeight:'109px' }}>
-                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
-                  <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
-                </div>
-              </div>
-              <div className="relative z-10 w-full border-t border-[#3D3D3D]" />
-            </div>
 
-            {/* DESKTOP hero (unchanged) */}
-            <div className="hidden lg:flex min-h-[500px] md:h-[735px] p-6 md:p-15 flex-col justify-center">
-              <div className="relative z-10 mb-12">
-                <h2 className="text-4xl md:text-6xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
-                <p className="text-lg md:text-xl mt-4 font-light text-gray-400">Not delivery discussions.</p>
-              </div>
-              <div className="relative z-20 flex flex-col md:flex-row gap-4">
-                <div className={overlayCard} style={{ height:'109px' }}>
-                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
-                  <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
-                </div>
-                <div className={overlayCard} style={{ height:'109px' }}>
-                  <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
-                  <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
-                </div>
+                <div className="mt-15 border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6" />
               </div>
             </div>
           </div>
 
-          {/* ── MOBILE: carousel + spacer + what happens next ── */}
-          <MobileSections accordionData={accordionData} />
+          {/* RIGHT COLUMN */}
+          <div className="flex flex-col bg-black h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
 
-          {/* ── MOBILE CONTACT SECTION + FORM (all in one 20px padded column) ── */}
-          <MobileContactSection
-            title="Single point of contact for engagement coordination"
-            subtitle="All engagement coordination is managed centrally."
-            email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
-            contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
-            location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
-            workHours={{ hours:'24/7 availability' }}
-          />
-
-          {/* ── DESKTOP: alignment grid (original, unchanged) ── */}
-          <div className="hidden lg:block w-full">
-            <div className="px-6 md:px-12 pt-16 pb-6">
-              <h3 className="text-3xl md:text-4xl font-light">What alignment typically covers</h3>
-            </div>
-            <div className="flex flex-wrap border-t border-[#3D3D3D]">
-              <div className={`${boxBase} md:border-r border-[#3D3D3D] items-center justify-center pt-12 overflow-hidden`}>
-                <img src="/alignment.png" alt="Alignment Symbol" className="w-[293px] h-[257px] object-cover" />
+            {/* HERO */}
+            <div
+              className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0"
+              style={{ height:'87.8vh' }}
+            >
+              <img
+                src="/engagement1.png"
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ opacity: 0.15 }}
+              />
+              <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-15">
+                <div className="mb-12 mt-50">
+                  <h2 className="text-3xl md:text-5xl leading-tight">
+                    Engagement begins <br />with <span className="text-gray-400">operating alignment.</span>
+                  </h2>
+                  <p className="text-lg md:text-xl mt-2 text-gray-400">Not delivery discussions.</p>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className={overlayCard} style={{ height:'109px' }}>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
+                    <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
+                  </div>
+                  <div className={overlayCard} style={{ height:'109px' }}>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
+                    <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
+                  </div>
+                </div>
               </div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
-              <div className={`${boxBase} pt-26`}><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon5 /><p className={textStyle}>Current execution challenges <br /> and constraints</p></div>
-              <div className={`${boxBase} pt-26 md:border-r border-[#3D3D3D]`}><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
-              <div className={`${boxBase} pt-26`}><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
             </div>
-          </div>
 
-          {/* ── DESKTOP: What Happens Next accordion (original, unchanged) ── */}
-          <div className="hidden lg:block border-t border-[#3D3D3D] w-full">
-            <div className="px-6 md:px-12 py-12">
-              <div className="flex items-center gap-4 text-xs mb-8">
-                <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
-                  <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
-                  <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
-                  <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-                  <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-                </svg>
-                <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
+            {/* Alignment grid */}
+            <div className="w-full">
+              <div className="px-3 md:px-12 pt-16 pb-16">
+                <h3 className="text-3xl md:text-4xl ">What alignment typically covers</h3>
               </div>
-              <h3 className="text-3xl md:text-5xl font-light max-w-2xl leading-[1.1]">Each engagement progresses through a defined alignment pathway.</h3>
+              <div
+                className="w-full border-t border-[#3D3D3D]"
+                style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr' }}
+              >
+                <div
+                  className="relative border-r border-b border-[#3D3D3D] overflow-hidden"
+                  style={{ height:'257px', background:'#0a0a0a' }}
+                >
+                  <div
+                    className="absolute inset-0 z-10"
+                    style={{
+                      backgroundImage:'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)',
+                      backgroundSize:'14px 14px',
+                    }}
+                  />
+                  <img
+                    src="/alignment.png"
+                    alt="Alignment Symbol"
+                    className="absolute inset-0 w-full h-full object-contain z-20"
+                    style={{ padding:'24px' }}
+                  />
+                </div>
+
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                  <div className="flex flex-col gap-6"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
+                </div>
+
+                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                  <div className="flex flex-col gap-6"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
+                </div>
+
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                  <div className="flex flex-col gap-6"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
+                </div>
+
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                  <div className="flex flex-col gap-6"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
+                </div>
+
+                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                  <div className="flex flex-col gap-6"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
+                </div>
+              </div>
             </div>
+
+            {/* What Happens Next */}
+            <div className="border-t border-[#3D3D3D] w-full">
+              <div className="px-6 md:px-12 py-12">
+                <div className="flex items-center gap-4 text-xs mb-8">
+                  <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
+                    <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+                    <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
+                    <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                    <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                  </svg>
+                  <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
+                </div>
+                <h3 className="text-3xl md:text-4xl max-w-2xl leading-[1.1]">
+                  Each engagement progresses through a defined alignment pathway.
+                </h3>
+              </div>
+              <div className="border-t border-[#3D3D3D]">
+                {accordionData.map((item) => (
+                  <AccordionItem
+                    key={item.id}
+                    title={item.title}
+                    index={`[${item.id}]`}
+                    description={item.description}
+                    open={openAccordion === item.id}
+                    onMouseEnter={() => setOpenAccordion(item.id)}
+                  />
+                ))}
+                <div className="py-8 px-6 md:px-12">
+                  <p className="text-sm">No engagement proceeds without operating alignment.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact */}
             <div className="border-t border-[#3D3D3D]">
-              {accordionData.map((item) => (
-                <AccordionItem
-                  key={item.id}
-                  title={item.title}
-                  index={`[${item.id}]`}
-                  description={item.description}
-                  open={openAccordion === item.id}
-                  onMouseEnter={() => setOpenAccordion(item.id)}
-                />
-              ))}
-              <div className="py-8 px-6 md:px-12">
-                <p className="text-sm">No engagement proceeds without operating alignment.</p>
-              </div>
+              <ContactSection
+                title="Single point of contact for engagement coordination"
+                subtitle="All engagement coordination is managed centrally."
+                email={{ value:'hello@ascella.group' }}
+                contact={{ values:['+91 16045 10860'] }}
+                location={{ address:'3rd Floor, SCO-50/51, Sector 34B, Chandigarh', postalCode:'160022' }}
+                workHours={{ hours:'24/7 availability ' }}
+              />
             </div>
-          </div>
 
-          {/* DESKTOP CONTACT SECTION */}
-          <div className="hidden lg:block border-t border-[#3D3D3D]">
-            <ContactSection
-              title="Single point of contact for engagement coordination"
-              subtitle="All engagement coordination is managed centrally."
-              email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
-              contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
-              location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
-              workHours={{ hours:'Mon - Sat: 9:00 - 18:00' }}
-            />
+            {/* Bottom decor */}
+            <div className="w-full border-t border-[#3D3D3D] flex" style={{ height: '60px' }}><div className="w-1/6" /></div>
           </div>
+        </div>
+      </div>
 
-          {/* BOTTOM DECOR BAR */}
-          <div className="w-full border-t border-[#3D3D3D] flex h-16">
-            <div className="w-1/6" />
+      {/* ════════════════════════════════════════════════════
+          MOBILE  (< lg)
+      ════════════════════════════════════════════════════ */}
+      <div className="block lg:hidden mx-10 border-x border-[#3D3D3D]">
+
+        {/* Hero */}
+        <div className="relative border-b border-[#3D3D3D] overflow-hidden">
+          <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity:0.15 }} />
+          <div className="relative z-10 px-6 pt-8 pb-6">
+            <h2 className="text-4xl font-normal leading-tight">
+              Engagement begins <br />with <span className="text-gray-400">operating alignment.</span>
+            </h2>
+            <p className="text-lg mt-3 font-light text-gray-400">Not delivery discussions.</p>
+          </div>
+          <div className="relative z-10 px-6 pb-8 flex flex-col gap-3">
+            <div className={overlayCard} style={{ minHeight:'109px' }}>
+              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
+              <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
+            </div>
+            <div className={overlayCard} style={{ minHeight:'109px' }}>
+              <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
+              <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
+            </div>
           </div>
         </div>
 
+        <MobileSections accordionData={accordionData} />
+
+        <MobileContactSection
+          title="Single point of contact for engagement coordination"
+          subtitle="All engagement coordination is managed centrally."
+          email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
+          contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
+          location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
+          workHours={{ hours:'24/7 availability' }}
+        />
       </div>
+
     </div>
   );
 };

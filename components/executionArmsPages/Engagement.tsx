@@ -48,11 +48,11 @@ export default function Engagement() {
 
   return (
     <section className="relative w-full bg-black text-white overflow-hidden border-t border-white/20">
-
-      {/* MASTER VERTICAL LINES — match footer border-x pattern */}
-      {/* Desktop: fixed px offsets | Mobile/tablet: mx-5 equivalent = 20px */}
-      <div className="absolute inset-y-0 left-5 lg:left-[120px] w-px bg-white/20 z-20" />
-      <div className="absolute inset-y-0 right-5 lg:right-[120px] w-px bg-white/20 z-20" />
+      
+      {/* V-LINES ALIGNMENT */}
+      <div className="absolute inset-0 pointer-events-none z-20">
+        <div className="mx-10 xl:mx-auto max-w-7xl h-full border-x border-white/20" />
+      </div>
 
       <div className="relative z-10 w-full flex flex-col">
 
@@ -62,11 +62,7 @@ export default function Engagement() {
         {/* MID CONTENT BOX */}
         <div className="w-full border-b border-white/20 relative">
 
-          {/*
-            Mobile:  mx-5  (matches footer mobile: mx-5 border-x border-color)
-            Desktop: mx-[120px]
-          */}
-          <div className="relative mx-5 lg:mx-[120px] overflow-hidden min-h-[460px] md:min-h-[583px]">
+          <div className="relative mx-10 xl:mx-auto max-w-7xl overflow-hidden min-h-[460px] md:min-h-[583px]">
 
             {/* Background Image */}
             <div
@@ -87,31 +83,46 @@ export default function Engagement() {
               </Canvas>
             </div>
 
-            {/* UI Content */}
-            <div className="relative z-10 flex flex-col items-start justify-center h-full min-h-[460px] md:min-h-[583px] px-6 md:pl-32 lg:pl-44 py-12 md:py-16">
+            {/* UI Content Wrapper */}
+            {/* key-change: flex-col items-center handles horizontal centering of the block */}
+            <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[460px] md:min-h-[583px] px-6 md:px-10 py-12 md:py-16">
+              
+              {/* Inner Container: text-left ensures vertical alignment between elements */}
+              <div className="max-w-4xl flex flex-col items-start text-left">
+                
+                <div className="mb-3 md:mb-4">
+                  <h5 className="text-xs md:text-base text-white/70 tracking-widest uppercase">
+                    Ready to Engage Ascella Group?
+                  </h5>
+                </div>
 
-              <div className="w-full mb-3 md:mb-4">
-                <h5 className="text-xs md:text-base text-white/70 tracking-widest font-light">
-                  Ready to Engage Ascella Group?
-                </h5>
-              </div>
+                <div className=" md:mb-8">
+             <h3 className="lg:max-w-[651px] lg:h-[114px] text-[24px] md:text-[30px] lg:text-[32px] leading-[1.2] tracking-tight lg:line-clamp-2">
+  Engagement begins with{' '}
+  <span className="text-white/30">
+    alignment of operating structure and accountability.
+  </span>
+</h3>
+                </div>
 
-              <div className="w-full mb-8 md:mb-10">
-                <h1 className="text-[24px] md:text-[42px] lg:text-[52px] leading-[1.1] font-light max-w-3xl">
-                  Engagement begins with{' '}
-                  <span className="text-white/30">
-                    alignment of operating structure and accountability.
-                  </span>
-                </h1>
-              </div>
+                <div>
+                  <Link href="/engageWithUs">
+                    <button className="group relative px-3 md:px-4 py-3 md:py-2 border border-white/30 text-[9px] md:text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all duration-500">
+                      Engage With Us
+                      <span className="inline-block ml-3 md:ml-4 text-base md:text-lg group-hover:translate-x-2 transition-transform duration-300"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="2" height="2" fill="#3D3D3D"/>
+<rect y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="12" y="6" width="2" height="2" fill="#3D3D3D"/>
+<rect x="6" y="12" width="2" height="2" fill="#3D3D3D"/>
+<rect x="12" y="12" width="2" height="2" fill="#3D3D3D"/>
+</svg>
+</span>
+                    </button>
+                  </Link>
+                </div>
 
-              <div className="w-full">
-                <Link href="/engageWithUs">
-                  <button className="group relative px-6 md:px-8 py-3 md:py-4 border border-white/30 text-[9px] md:text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all duration-500">
-                    Engage With Us
-                    <span className="inline-block ml-3 md:ml-4 text-base md:text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
-                  </button>
-                </Link>
               </div>
             </div>
           </div>

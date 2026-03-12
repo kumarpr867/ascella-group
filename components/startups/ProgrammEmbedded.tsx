@@ -177,7 +177,7 @@ const ProgramEmbedded = () => {
       {/* ══════════════════════════════════════════════
           DESKTOP / MAC LAYOUT (hidden on mobile)
       ══════════════════════════════════════════════ */}
-      <div className="hidden md:block w-[1286px] border-l border-[#3D3D3D] relative z-10">
+      <div className="hidden md:block w-[1292px] border-l border-[#3D3D3D] relative z-10">
 
         {/* --- TOP ROW (Hero Section) --- */}
         <div className="relative w-full h-[450px] border-b border-r border-[#3D3D3D] flex flex-col justify-end p-12 overflow-hidden">
@@ -243,7 +243,7 @@ const ProgramEmbedded = () => {
 
           {/* Hero text */}
           <div className="max-w-2xl mb-4 relative z-30">
-            <h3 className="text-[36px] leading-[1.1] tracking-tight">
+            <h3 className="text-[36px]  text-regular leading-[1.1] tracking-tight">
               The Startups Programme embeds
               <span className="block text-white/40">
                 operating structure, governance, and accountability before scale begins.
@@ -261,12 +261,12 @@ const ProgramEmbedded = () => {
               <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
             </div>
             <div className="space-y-5">
-              <h5 className="text-[20px] font-light leading-tight">
+              <h5 className="text-[20px]  leading-tight">
                 Why operating structure is introduced early
               </h5>
-              <div className="text-[12px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
-                <p>Most early-stage companies prioritise product, growth, and funding.</p>
-                <p>Operating structure — governance, accountability, and execution control — is often deferred until complexity forces reactive changes.</p>
+              <div className=" text-b3 text-[10px] text-white/40 space-y-2 max-w-[360px]">
+                <p>Most early stage companies prioritise product, growth, and funding.</p>
+                <p>Operating structure governance, accountability, and execution control is often deferred until complexity forces reactive changes.</p>
                 <p>Introducing structure early prevents execution debt.</p>
               </div>
             </div>
@@ -280,9 +280,9 @@ const ProgramEmbedded = () => {
               alt="Execution structure"
             />
             <div className="relative z-10">
-              <p className="text-[16px] font-light  border-white/40 pl-4">
+              <h5 className="text-[20px]  border-white/40 pl-7">
                 Early structure prevents <br /> later execution debt.
-              </p>
+              </h5>
             </div>
           </div>
 
@@ -291,11 +291,11 @@ const ProgramEmbedded = () => {
             <div className="absolute top-10 left-10">
               <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
             </div>
-            <div className="space-y-6">
-              <h3 className="text-[22px] font-light leading-tight">
+            <div className="space-y-5">
+              <h5 className="text-[20px]  leading-tight">
                 How the programme supports controlled scale
-              </h3>
-              <div className="text-[13px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
+              </h5>
+              <div className=" text-B2 text-[10px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
                 <p>The Startups Programme introduces governance models and execution discipline from the beginning.</p>
                 <p>This ensures teams and systems remain aligned as the organisation grows.</p>
                 <p>Scale becomes deliberate, not improvised.</p>

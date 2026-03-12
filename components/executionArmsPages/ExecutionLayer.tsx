@@ -2,22 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 
-const categories = ['Infosec', 'Software Labs', 'Engage', 'Forge', 'Staffing'];
-
-const SPACING   = 3;
-const THRESHOLD = 15;
-const RADIUS    = 120; // Increased radius for wider "glow" influence
-const LERP      = 0.15; // Slightly faster reaction
-
-type Particle = {
-  x: number;
-  y: number;
-  baseAlpha: number;
-  currentAlpha: number;
-  size: number;
-  vx: number; // velocity for bubbling effect
-  vy: number;
-};
+const categories = ['Infosec', 'Software Labs' , 'Staffing', 'Engage', 'Forge'];
 
 // ── Isometric Grid with Per-Cell Hover ────────────────────────────────────────
 function IsometricHoverGrid() {
@@ -131,213 +116,10 @@ function IsometricHoverGrid() {
   );
 }
 
-// ── Particle Image Panel ──────────────────────────────────────────────────────
-function ParticleImagePanel({ imageSrc = '/Rectangle 5046.svg' }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef    = useRef<HTMLCanvasElement>(null);
-  const imgElRef     = useRef<HTMLImageElement>(null);
-  const scanRef      = useRef<{ x: number; y: number; rowH: number }>({ x: 0, y: 0, rowH: 120 });
-  const particlesRef = useRef<Particle[]>([]);
-  const rafRef       = useRef<number | null>(null);
-  
-  // Speed increased to cover full area faster (~5 seconds for typical heights)
-  const SCAN_SPEED   = 2.8; 
-
-  const buildParticles = () => {
-    const canvas    = canvasRef.current;
-    const container = containerRef.current;
-    const imgEl     = imgElRef.current;
-    if (!canvas || !container) return;
-
-    const W = container.offsetWidth  || 300;
-    const H = container.offsetHeight || 440;
-    canvas.width  = W;
-    canvas.height = H;
-
-    let builtFromImage = false;
-
-    if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
-      const off    = document.createElement('canvas');
-      off.width    = W;
-      off.height   = H;
-      const offCtx = off.getContext('2d');
-      if (offCtx) {
-        try {
-          offCtx.drawImage(imgEl, 0, 0, W, H);
-          const { data } = offCtx.getImageData(0, 0, W, H);
-          const pts: Particle[] = [];
-          for (let y = 0; y < H; y += SPACING) {
-            for (let x = 0; x < W; x += SPACING) {
-              const i          = (y * W + x) * 4;
-              const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-              if (brightness > THRESHOLD) {
-                pts.push({ 
-                    x, y, 
-                    baseAlpha: 0, 
-                    currentAlpha: 0, 
-                    size: Math.random() * 0.8 + 0.4,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: (Math.random() - 0.5) * 2
-                });
-              }
-            }
-          }
-          if (pts.length > 0) {
-            particlesRef.current = pts;
-            builtFromImage = true;
-          }
-        } catch { /* Fallback used below */ }
-      }
-    }
-
-    if (!builtFromImage) {
-      const pts: Particle[] = [];
-      const GAP = SPACING * 2;
-      const cx  = W / 2;
-      const cy  = H / 2;
-      for (let y = 20; y < H - 20; y += GAP) {
-        for (let x = 20; x < W - 20; x += GAP) {
-          const dx  = (x - cx) / (W * 0.38);
-          const dy  = (y - cy) / (H * 0.44);
-          const r   = Math.sqrt(dx * dx + dy * dy);
-          const band1 = Math.abs(Math.abs(dx) - Math.abs(dy)) < 0.18 && r < 0.95;
-          const band2 = r < 0.85 && Math.abs(dx) < 0.55 && Math.abs(dy) < 0.55;
-          if (band1 || band2) {
-            pts.push({ 
-                x, y, 
-                baseAlpha: 0, 
-                currentAlpha: 0, 
-                size: Math.random() * 0.9 + 0.3,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2
-            });
-          }
-        }
-      }
-      particlesRef.current = pts;
-    }
-
-    const rowH = H / 4;
-    scanRef.current = { x: 0, y: rowH / 2, rowH };
-  };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx    = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const loop = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const scan = scanRef.current;
-      scan.x += SCAN_SPEED;
-      
-      // Wrap logic: when scan reaches right, jump to next vertical segment
-      if (scan.x > canvas.width + RADIUS) {
-        scan.x = -RADIUS;
-        scan.y += scan.rowH;
-        if (scan.y > canvas.height) scan.y = scan.rowH / 2;
-      }
-
-      for (const p of particlesRef.current) {
-        const dx   = p.x - scan.x;
-        const dy   = p.y - scan.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        // Intensity of the "light" hitting the particle
-        const t    = Math.max(0, 1 - dist / RADIUS);
-        const ease = t * t * (3 - 2 * t);
-
-        p.currentAlpha += (ease - p.currentAlpha) * LERP;
-
-        if (p.currentAlpha < 0.005) continue;
-
-        // "Bubble Out" effect logic
-        // We displace the render position based on the brightness (ease)
-        const bubbleShift = ease * 12; // How far they "pop" out
-        const scatterSize = p.size * (1 + ease * 7); // Size increases significantly when lit
-
-        // 1. Draw Glow/Scatter Layer
-        if (ease > 0.03) {
-          ctx.beginPath();
-          ctx.arc(p.x + (p.vx * bubbleShift), p.y + (p.vy * bubbleShift), scatterSize, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${p.currentAlpha * 0.35})`; // Brighter scatter
-          ctx.fill();
-        }
-
-        // 2. Draw Core Particle Layer
-        ctx.beginPath();
-        ctx.arc(p.x + (p.vx * bubbleShift * 0.5), p.y + (p.vy * bubbleShift * 0.5), p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(1, p.currentAlpha * 1.5)})`;
-        ctx.fill();
-      }
-
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    loop();
-
-    const t1 = setTimeout(() => buildParticles(), 50);
-    const t2 = setTimeout(() => buildParticles(), 300);
-
-    const ro = new ResizeObserver(() => buildParticles());
-    if (containerRef.current) ro.observe(containerRef.current);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      ro.disconnect();
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}
-    >
-      <img
-        ref={imgElRef}
-        src={imageSrc}
-        alt=""
-        crossOrigin="anonymous"
-        onLoad={buildParticles}
-        style={{
-          position:     'absolute',
-          inset:        0,
-          width:        '100%',
-          height:       '100%',
-          objectFit:    'cover',
-          opacity:      1,
-          pointerEvents:'none',
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{
-          position:     'absolute',
-          inset:        0,
-          width:        '100%',
-          height:       '100%',
-          pointerEvents:'none',
-          zIndex:       10,
-        }}
-      />
-    </div>
-  );
-}
-
-// ── Desktop right panel wrapper ──────────────────────────────────────────────
-function DesktopParticlePanel({ imageSrc = '/Rectangle 5046.svg' }) {
-  return (
-    <div style={{ position: 'relative', height: '100%', width: '100%', borderRight: '1px solid rgba(255,255,255,0.1)' }}>
-      <ParticleImagePanel imageSrc={imageSrc} />
-    </div>
-  );
-}
-
 // ── Main Page Component ──────────────────────────────────────────────────────
 const ExecutionLayer = () => {
+  const imageSrc = "/Rectangle 5046.svg";
+
   return (
     <div className="relative w-full min-h-screen bg-black text-white font-sans overflow-hidden">
 
@@ -382,7 +164,7 @@ const ExecutionLayer = () => {
               Controlled execution units for{' '}
               <span className="text-neutral-500">complex operating environments</span>
             </h2>
-            <p className="text-[13px] leading-relaxed text-white">
+            <p className="text-[12px] leading-relaxed text-white">
               Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
             </p>
           </div>
@@ -398,22 +180,27 @@ const ExecutionLayer = () => {
           </span>
         </div>
 
+        {/* Static Image Replacement for Mobile */}
         <div className="relative w-full border-b border-white/10 bg-black" style={{ height: '500px', flexShrink: 0 }}>
-          <ParticleImagePanel imageSrc="/Rectangle 5046.svg" />
+          <img 
+            src={imageSrc} 
+            alt="Execution Layer" 
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <div className="grid grid-cols-3 border-b border-white/10" style={{ flexShrink: 0 }}>
           <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
-            <span className="text-[7px] uppercase mb-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
-            <span className="text-xl font-light">05.</span>
+            <span className="text-xl font-light">5</span>
+            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
           </div>
           <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
-            <span className="text-[7px] uppercase mb-1 text-white/50 tracking-wider leading-tight">Governance Authority</span>
-            <span className="text-xl">Single.</span>
+            <span className="text-xl">Single</span>
+            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Governance Authority</span>
           </div>
           <div className="flex flex-col justify-center px-3 py-5">
-            <span className="text-[7px] uppercase mb-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
-            <span className="text-xl">Continuous.</span>
+            <span className="text-xl">Continuous</span>
+            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
           </div>
         </div>
         <div className="flex-1"></div>
@@ -445,6 +232,8 @@ const ExecutionLayer = () => {
 
           <div className="border-r border-white/10"></div>
           <div className="relative p-8 lg:p-12 xl:p-24 pt-8 lg:pt-10 flex flex-col justify-start border-r border-white/10 overflow-hidden">
+            
+            {/* Vector Overlays Restored */}
             <div className="absolute z-0 pointer-events-none left-0 right-0" style={{ top: '55%', bottom: 0 }}>
               <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <image href="/vector 55.png" x="200" y="60"  width="100" height="60" opacity="30" preserveAspectRatio="xMidYMid meet" />
@@ -477,7 +266,7 @@ const ExecutionLayer = () => {
 
             <div className="relative z-10">
               <div className="mb-4">
-                <span className="relative inline-block border bg-blur border-white/30 px-4 py-1 text-[10px] tracking-widest uppercase text-white/60 font-medium bg-black/50">
+                <span className="relative inline-block border border-white/30 px-4 py-1 text-[10px] tracking-widest uppercase text-white/60 font-medium bg-black/50">
                   <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white"></span>
                   <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white"></span>
                   <span className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-white"></span>
@@ -485,7 +274,7 @@ const ExecutionLayer = () => {
                   Execution Layer
                 </span>
               </div>
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-Montserrat leading-[1.1] mb-4 tracking-tight max-w-3xl">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl  mb-4 tracking-tight max-w-xl">
                 Controlled execution <br /> units for <span className="text-neutral-500">complex <br />operating environments</span>
               </h2>
               <p className="text-sm max-w-lg leading-relaxed">
@@ -494,7 +283,15 @@ const ExecutionLayer = () => {
             </div>
           </div>
 
-          <DesktopParticlePanel imageSrc="/Rectangle 5046.svg" />
+          {/* Static Image Replacement for Desktop */}
+          <div className="relative h-full w-full border-r border-white/10 overflow-hidden">
+            <img
+              src={imageSrc}
+              alt="Execution Layer Illustration"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            />
+          </div>
+          
           <div className="bg-black"></div>
 
           <div className="border-t border-r border-white/10"></div>
@@ -511,16 +308,16 @@ const ExecutionLayer = () => {
 
           <div className="border-t border-r border-white/10 grid grid-cols-3 h-full">
             <div className="flex flex-col justify-center px-2 lg:px-4 border-r border-white/10">
-              <span className="text-[7px] lg:text-[8px] uppercase mb-1">Execution Arms</span>
-              <span className="text-lg xl:text-xl font-light">05.</span>
+              <span className="text-lg xl:text-xl text-gray-300">5</span>
+              <span className="text-[7px] lg:text-[8px] uppercase mt-1">Execution Arms</span>
             </div>
             <div className="flex flex-col justify-center px-2 lg:px-4 border-r border-white/10">
-              <span className="text-[7px] lg:text-[8px] uppercase mb-1">Governance Authority</span>
-              <span className="text-lg xl:text-xl">Single.</span>
+              <span className="text-lg xl:text-xl text-gray-300 ">Single</span>
+              <span className="text-[7px] lg:text-[8px] uppercase mt-1">Governance Authority</span>
             </div>
-            <div className="flex flex-col justify-center px-2 lg:px-4">
-              <span className="text-[7px] lg:text-[8px] uppercase mb-1 leading-tight">Oversight & Accountability</span>
-              <span className="text-lg xl:text-xl">Continuous.</span>
+            <div className="flex flex-col justify-center px-2 lg:px-2">
+              <span className="text-gray-300 xl:text-xl">Continuous</span>
+              <span className="text-[7px] lg:text-[8px] uppercase mt-1 leading-tight">Oversight & Accountability</span>
             </div>
           </div>
           <div className="border-t border-white/10"></div>
