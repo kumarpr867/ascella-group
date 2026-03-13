@@ -1,6 +1,57 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useMotionValueEvent } from 'motion/react';
+
+// ── Scroll direction hook ─────────────────────────────────────────────────────
+function useScrollDirection() {
+  const [direction, setDirection] = useState<'down' | 'up'>('down');
+  const { scrollY } = useScroll();
+  const lastY = useRef(0);
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    if (latest > lastY.current) setDirection('down');
+    else if (latest < lastY.current) setDirection('up');
+    lastY.current = latest;
+  });
+
+  return direction;
+}
+
+// ── Direction-aware reveal wrapper ───────────────────────────────────────────
+const RevealOnScroll: React.FC<{
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ children, delay = 0, className, style }) => {
+  const direction = useScrollDirection();
+
+  const variants = {
+    hidden:  {
+      opacity: 0,
+      y: direction === 'down' ? 50 : -50,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as any, delay },
+    },
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.15 }}
+      variants={variants}
+      className={className}
+      style={style}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 // ── Isometric Grid ────────────────────────────────────────────────────────────
 function IsometricHoverGrid({
@@ -110,14 +161,6 @@ function IsometricHoverGrid({
   );
 }
 
-// ── IsoBox — vector55.png snapped perfectly to a grid cell ───────────────────
-//
-// Uses the EXACT same formula as the canvas loop:
-//   offsetX = -cellW/2,  offsetY = -cellH/2
-//   cx = offsetX + col*cellW + (row%2===0 ? 0 : cellW/2)
-//   cy = offsetY + row*(cellH/2)
-// Image is centred on (cx, cy) and sized cellW × cellH → fits diamond exactly.
-//
 interface IsoBoxProps {
   src?: string;
   cellW: number;
@@ -170,40 +213,17 @@ type ContactSectionProps = {
 
 const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
   <div className="w-full bg-black text-white font-sans overflow-hidden">
-
-    <div
-      className="relative border-b border-[#3D3D3D] flex items-end overflow-hidden"
-      style={{ height: '500px' }}
-    >
-      {/* Grid — masked */}
-      <div
-        className="absolute inset-0"
-        style={{
-          WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)',
-          maskImage:       'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)',
-          pointerEvents:   'auto',
-        }}
-      >
+    <div className="relative border-b border-[#3D3D3D] flex items-end overflow-hidden" style={{ height: '500px' }}>
+      <div className="absolute inset-0" style={{ WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)', maskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)', pointerEvents: 'auto' }}>
         <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
       </div>
-
-      {/*
-        Desktop tiles — cellW=100, cellH=60
-        col=1, row=5 → cx = -50 + 100 = 50   (half off left edge ✓)
-        col=4, row=5 → cx = -50 + 400 = 350  (fully visible ~35% from left ✓)
-        row=5 (odd)  → cy = -30 + 5*30 = 120 → ~38% down in 500px container ✓
-      */}
       <IsoBox cellW={100} cellH={60} col={1} row={5} opacity={0.55} zIndex={10} />
       <IsoBox cellW={100} cellH={60} col={4} row={5} opacity={0.9}  zIndex={10} />
-
-      {/* Hero text */}
       <div className="relative z-20 pl-15 pointer-events-none pb-10">
         <h3 className="text-[45px] mb-2 tracking-tighter leading-tight max-w-xl">{title}</h3>
         <p className="text-gray-300 text-lg max-w-sm">{subtitle}</p>
       </div>
     </div>
-
-    {/* Info row */}
     <div className="w-full flex bg-black border-b border-[#3D3D3D]">
       <div className="flex-1 border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ height: '271px' }}>
         <div className="flex-1 px-6 flex flex-col justify-center">
@@ -218,10 +238,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           </div>
         </div>
       </div>
-      <div
-        className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0"
-        style={{ width: '256px', height: '271px' }}
-      >
+      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0" style={{ width: '256px', height: '271px' }}>
         <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </div>
       <div className="flex-1 flex flex-col overflow-hidden" style={{ height: '271px' }}>
@@ -251,40 +268,17 @@ type MobileContactSectionProps = {
 
 const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
   <div className="block lg:hidden w-full bg-black text-white">
-
     <div className="w-full border-b border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
-
-      {/* Grid */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          WebkitMaskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)',
-          maskImage:       'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)',
-          pointerEvents:   'none',
-        }}
-      >
+      <div className="absolute inset-0 z-0" style={{ WebkitMaskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)', maskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)', pointerEvents: 'none' }}>
         <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
       </div>
-
-      {/*
-        Mobile tiles — cellW=60, cellH=36
-        col=1, row=5 → cx = -30 + 60 = 30   (half off left edge ✓)
-        col=4, row=5 → cx = -30 + 240 = 210 (fully visible ✓)
-        row=5 (odd)  → cy = -18 + 5*18 = 72 → ~28% down in 260px ✓
-      */}
       <IsoBox cellW={60} cellH={36} col={1} row={5} opacity={0.5} zIndex={2} />
       <IsoBox cellW={60} cellH={36} col={4} row={5} opacity={0.9} zIndex={2} />
-
-      {/* Text overlay */}
-      <div
-        className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}
-      >
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}>
         <h3 className="text-[22px] font-light leading-snug tracking-tight mb-1">{title}</h3>
         <p className="text-gray-400 text-[13px]">{subtitle}</p>
       </div>
     </div>
-
     <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
       {(email?.value ?? '').split('\n').map((v, i) => (<p key={i} className="text-[13px] font-light">{v}</p>))}
@@ -444,11 +438,7 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
       <div className="w-full border-t border-[#3D3D3D] overflow-hidden" style={{ height: '240px' }}>
         <img src="/alignment2.png" alt="Alignment" className="w-full h-full object-cover" />
       </div>
-      <div
-        className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5"
-        onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
-        style={{ minHeight: '180px' }}
-      >
+      <div className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ minHeight: '180px' }}>
         <div className="flex flex-col items-center gap-5 w-full">
           <div className="flex items-center justify-center" key={`icon-${activeSlide}`}>{mobileSlidesData[activeSlide].icon}</div>
           <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8">{mobileSlidesData[activeSlide].label}</p>
@@ -486,6 +476,18 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
 };
 
 // ─────────────────────────────────────────────
+// ENTRY ANIMATIONS (page load — no scroll needed)
+// ─────────────────────────────────────────────
+const slideFromLeft = {
+  hidden:  { opacity: 0, x: -60 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } },
+};
+const slideFromRight = {
+  hidden:  { opacity: 0, x: 60 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } },
+};
+
+// ─────────────────────────────────────────────
 // MAIN PAGE
 // ─────────────────────────────────────────────
 const ContextsPage = () => {
@@ -514,9 +516,14 @@ const ContextsPage = () => {
             backgroundSize: '40px 40px',
           }}
         >
-
-          {/* ── LEFT COLUMN — sticky ── */}
-          <div className="bg-black border-r border-[#3D3D3D] flex-shrink-0" style={{ width: '33.333%' }}>
+          {/* ── LEFT COLUMN — slides in from left on load ── */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={slideFromLeft}
+            className="bg-black border-r border-[#3D3D3D] flex-shrink-0"
+            style={{ width: '33.333%' }}
+          >
             <div className="sticky top-0 h-screen flex flex-col" style={{ overflow: 'hidden' }}>
               <style>{`.lfc::-webkit-scrollbar{display:none}.lfc{scrollbar-width:none}`}</style>
               <div className="lfc p-6 mt-10 flex flex-col h-full overflow-y-auto">
@@ -554,13 +561,19 @@ const ContextsPage = () => {
                 <div style={{ height: '65px' }} />
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* ── RIGHT COLUMN — scrollable ── */}
+          {/* ── RIGHT COLUMN ── */}
           <div className="flex flex-col bg-black min-h-screen" style={{ flex: 1 }}>
 
-            {/* HERO */}
-            <div className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0" style={{ height: '87.8vh' }}>
+            {/* HERO — slides in from right on load */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={slideFromRight}
+              className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0"
+              style={{ height: '87.8vh' }}
+            >
               <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
               <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-15">
                 <div className="mb-12 mt-50">
@@ -580,38 +593,40 @@ const ContextsPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Alignment grid */}
-            <div className="w-full">
+            {/* Alignment grid heading — direction-aware */}
+            <RevealOnScroll>
               <div className="px-3 md:px-12 pt-16 pb-16">
                 <h3 className="text-3xl md:text-4xl">What alignment typically covers</h3>
               </div>
-              <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-                <div className="relative border-r border-b border-[#3D3D3D] overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
-                  <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
-                  <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
-                </div>
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
-                  <div className="flex flex-col gap-6"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
-                </div>
-                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
-                  <div className="flex flex-col gap-6"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
-                </div>
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
-                  <div className="flex flex-col gap-6"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
-                </div>
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
-                  <div className="flex flex-col gap-6"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
-                </div>
-                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
-                  <div className="flex flex-col gap-6"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
-                </div>
-              </div>
+            </RevealOnScroll>
+
+            {/* Alignment grid cells — direction-aware, staggered */}
+            <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <RevealOnScroll delay={0}   className="relative border-r border-b border-[#3D3D3D] overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
+                <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
+                <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.1} className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
+                <div className="flex flex-col gap-6"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.2} className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
+                <div className="flex flex-col gap-6"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.3} className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
+                <div className="flex flex-col gap-6"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.4} className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
+                <div className="flex flex-col gap-6"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
+              </RevealOnScroll>
+              <RevealOnScroll delay={0.5} className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
+                <div className="flex flex-col gap-6"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
+              </RevealOnScroll>
             </div>
 
-            {/* What Happens Next */}
-            <div className="border-t border-[#3D3D3D] w-full">
+            {/* What Happens Next — direction-aware */}
+            <RevealOnScroll className="border-t border-[#3D3D3D] w-full">
               <div className="px-6 md:px-12 py-12">
                 <div className="flex items-center gap-4 text-xs mb-8">
                   <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
@@ -625,17 +640,19 @@ const ContextsPage = () => {
                 <h3 className="text-3xl md:text-4xl max-w-2xl leading-[1.1]">Each engagement progresses through a defined alignment pathway.</h3>
               </div>
               <div className="border-t border-[#3D3D3D]">
-                {accordionData.map((item) => (
-                  <AccordionItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description} open={openAccordion === item.id} onMouseEnter={() => setOpenAccordion(item.id)} />
+                {accordionData.map((item, i) => (
+                  <RevealOnScroll key={item.id} delay={i * 0.1}>
+                    <AccordionItem title={item.title} index={`[${item.id}]`} description={item.description} open={openAccordion === item.id} onMouseEnter={() => setOpenAccordion(item.id)} />
+                  </RevealOnScroll>
                 ))}
-                <div className="py-8 px-6 md:px-12">
+                <RevealOnScroll delay={0.3} className="py-8 px-6 md:px-12">
                   <p className="text-sm">No engagement proceeds without operating alignment.</p>
-                </div>
+                </RevealOnScroll>
               </div>
-            </div>
+            </RevealOnScroll>
 
-            {/* Contact */}
-            <div className="border-t border-[#3D3D3D]">
+            {/* Contact — direction-aware */}
+            <RevealOnScroll className="border-t border-[#3D3D3D]">
               <ContactSection
                 title="Single point of contact for engagement coordination"
                 subtitle="All engagement coordination is managed centrally."
@@ -644,7 +661,7 @@ const ContextsPage = () => {
                 location={{ address: '3rd Floor, SCO-50/51, Sector 34B, Chandigarh', postalCode: '160022' }}
                 workHours={{ hours: '24/7 availability' }}
               />
-            </div>
+            </RevealOnScroll>
 
             <div className="w-full border-t border-[#3D3D3D]" />
             <div style={{ height: '88px' }} />
@@ -656,7 +673,6 @@ const ContextsPage = () => {
           MOBILE  (< lg)
       ════════════════════════════════════════════════════ */}
       <div className="block lg:hidden mx-10 border-x border-[#3D3D3D]">
-
         <div className="relative border-b border-[#3D3D3D] overflow-hidden">
           <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
           <div className="relative z-10 px-6 pt-8 pb-6">
@@ -674,9 +690,7 @@ const ContextsPage = () => {
             </div>
           </div>
         </div>
-
         <MobileSections accordionData={accordionData} />
-
         <MobileContactSection
           title="Single point of contact for engagement coordination"
           subtitle="All engagement coordination is managed centrally."

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,7 +41,7 @@ const ScrollToTop = () => {
           exit={{ opacity: 0, y: 20, scale: 0.8 }}
           transition={{ 
             duration: 0.3,
-            ease: "easeOut"
+            ease: [0.16, 1, 0.3, 1] as any
           }}
           onClick={scrollToTop}
           className="fixed bottom-8 right-8 z-50 w-12 h-12 flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-lg hover:bg-white/20 transition-all duration-300 group"

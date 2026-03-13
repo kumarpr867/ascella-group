@@ -1,11 +1,45 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "motion/react";
+
+// --- Animation Variants ---
+const leftReveal = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] as any } 
+  }
+};
+
+const rightReveal = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { 
+      duration: 0.8, 
+      ease: [0.21, 0.47, 0.32, 0.98] as any,
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    } 
+  }
+};
+
+const itemFadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.5 } 
+  }
+};
 
 const GeometricSVG = () => {
   return (
     <div className="w-[294px] h-[265px] max-w-full">
-      <svg width="294" height="265" viewBox="0 0 294 265" fill="none" xmlns="http://www.w3.org/2000/svg">
+     <svg width="294" height="265" viewBox="0 0 294 265" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_2061_1284)">
 <path d="M121.389 124.669L126.253 124.314L121.303 98.1423L112.041 98.8134L121.389 124.669ZM125.605 123.815L121.761 124.096L112.798 99.3046L120.858 98.7203L125.605 123.815Z" fill="#CFCFCF"/>
 <path d="M130.683 124.675L130.249 98.8052L120.747 98.135L125.7 124.322L130.683 124.675ZM129.712 99.313L130.128 124.09L126.158 123.808L121.413 98.7278L129.712 99.313Z" fill="#CFCFCF"/>
@@ -254,7 +288,6 @@ const GeometricSVG = () => {
 </clipPath>
 </defs>
 </svg>
-
     </div>
   );
 };
@@ -275,8 +308,14 @@ export default function Eligibility() {
     ">
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start lg:items-center">
 
-        {/* ── Left: SVG Graphic ── */}
-        <div className="flex flex-col gap-2 lg:gap-8">
+        {/* ── Left: SVG Graphic (Slide from Left) ── */}
+        <motion.div 
+          className="flex flex-col gap-2 lg:gap-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={leftReveal}
+        >
           <div className="mx-auto lg:mx-0" style={{ flexShrink: 0 }}>
             <GeometricSVG />
           </div>
@@ -284,13 +323,19 @@ export default function Eligibility() {
             <span className="text-white">Engagement</span>{" "}
             is selective by design.
           </p>
-        </div>
+        </motion.div>
 
-        {/* ── Right: Content ── */}
-        <div className="flex flex-col space-y-4 md:space-y-8">
+        {/* ── Right: Content (Slide from Right) ── */}
+        <motion.div 
+          className="flex flex-col space-y-4 md:space-y-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={rightReveal}
+        >
 
           {/* Label */}
-          <div className="flex items-center gap-1 text-xs tracking-[0.2em]">
+          <motion.div variants={itemFadeUp} className="flex items-center gap-1 text-xs tracking-[0.2em]">
             <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
               <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
@@ -298,18 +343,19 @@ export default function Eligibility() {
               <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
             </svg>
             <span>ELIGIBILITY CRITERIA</span>
-          </div>
+          </motion.div>
 
           {/* Heading */}
-          <h3 className="text-xl md:text-3xl leading-tight max-w-xl">
+          <motion.h3 variants={itemFadeUp} className="text-xl md:text-3xl leading-tight max-w-xl">
             The programme is designed{" "}
             <span className="text-gray-400">for startups
             preparing for structured, accountable execution at scale.
             </span>
-          </h3>
+          </motion.h3>
 
           {/* Card */}
-          <div
+          <motion.div
+            variants={itemFadeUp}
             className="backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-2xl"
             style={{
               background: "rgba(255,255,255,0.04)",
@@ -395,8 +441,8 @@ export default function Eligibility() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
       </div>
     </section>

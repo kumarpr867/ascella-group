@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import Heading from "../headings/Heading";
 import Reveal from "@/utils/Reveal";
@@ -187,7 +187,7 @@ export default function HowWeOperate() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0 }
                 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
                 className="flex flex-col gap-2.5 bg-gray-500 p-5 xl:p-6 rounded-2xl"
               >
                 <div className="flex justify-between w-full items-start">

@@ -2,8 +2,10 @@
 import React, { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import Heading from '../headings/Heading';
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
 const SLIDES = [
   {
@@ -11,7 +13,7 @@ const SLIDES = [
     deployedText: "When organisations require security, resilience, and regulatory alignment embedded directly into execution environments rather than layered on afterward.",
     mainTitle: "Ascella Infosec",
     mainDesc: "Security architecture, risk governance frameworks, compliance readiness, and incident preparedness structures that remain aligned to regulatory and operational requirements.",
-    image: { src: "/Rectangle 5023.png", rotate: -20, scale: 1.1 }
+    image: { src: "/images/rectangle-50233.png", rotate: -20, scale: 1.1 }
   },
   {
     roleTitle: "Technology and engineering execution arm responsible for building and maintaining secure, scalable systems.",
@@ -50,6 +52,7 @@ const SectionHeader = ({ title }: { title: string }) => (
     <Heading text={title} className="text-white" />
   </div>
 );
+
 const fadeIn = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.6 } },
@@ -93,30 +96,55 @@ export default function Role() {
       <div className="w-full h-[1px] bg-white/10 shrink-0 z-30" />
 
       {/* ============ MOBILE (< lg) ============ */}
-      {/* ONLY CHANGE: mx-10 wrapper added — same as footer margin */}
       <div className="flex-1 lg:hidden flex flex-col relative" onClick={handleMobileClick}>
         <AnimatePresence mode="wait">
           <motion.div key={current} variants={fadeIn} initial="initial" animate="animate" exit="exit" className="absolute inset-0 flex flex-col z-10">
             <div className="mx-10 p-[18px_0px_0] shrink-0">
-              <SectionHeader title="Role" />
-              <h4 className="text-[15px] leading-[1.55]">
-                <span className="font-bold text-white">{activeData.roleTitle.split(' ').slice(0, 6).join(' ')} </span>
-                <span className="font-normal text-zinc-500">{activeData.roleTitle.split(' ').slice(6).join(' ')}</span>
-              </h4>
+              <Reveal variants={slideInFromBottom(0.1)}>
+                <SectionHeader title="Role" />
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.2)}>
+                <h4 className="text-[15px] leading-[1.55]">
+                  <span className="font-bold text-white">{activeData.roleTitle.split(' ').slice(0, 6).join(' ')} </span>
+                  <span className="font-normal text-zinc-500">{activeData.roleTitle.split(' ').slice(6).join(' ')}</span>
+                </h4>
+              </Reveal>
             </div>
+            
             <div className="flex-1 flex flex-col items-center justify-center overflow-visible gap-[14px]">
-              <div style={{ position: 'relative', width: '88vw', height: '52vw', maxHeight: '260px', transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})`, overflow: 'visible' }}>
-                <Image src={activeData.image.src} alt="" fill className="object-contain" style={{ filter: 'grayscale(1) brightness(2)' }} priority />
-              </div>
+              <div style={{ 
+  position: 'relative', 
+  width: '88vw', 
+  height: '52vw', 
+  maxHeight: '260px', 
+  transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})`, 
+  overflow: 'visible' 
+}}>
+  <Image 
+    src={activeData.image.src} 
+    alt={activeData.mainTitle} 
+    fill 
+    className="object-contain grayscale" // Filter ko simple rakha hai
+    style={{ filter: 'brightness(1.5)' }} 
+    priority 
+  />
+</div>
               <DotsRow />
             </div>
+
             <div className="mx-10 p-[0_0px_18px] shrink-0">
               <div className="mb-[14px]">
-                <SectionHeader title="When it's deployed" />
-                <p className="text-[12px] leading-[1.65]">{activeData.deployedText}</p>
+                <Reveal variants={slideInFromBottom(0.1)}>
+                  <SectionHeader title="When it's deployed" />
+                  <p className="text-[12px] leading-[1.65]">{activeData.deployedText}</p>
+                </Reveal>
               </div>
-              <h3 className="text-[26px] font-light tracking-tight mb-[8px]">{activeData.mainTitle}</h3>
-              <p className="text-[11.5px] text-zinc-500 leading-[1.65]">{activeData.mainDesc}</p>
+              <Reveal variants={slideInFromBottom(0.2)}>
+                <h3 className="text-[26px] font-light tracking-tight mb-[8px]">{activeData.mainTitle}</h3>
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.3)}>
+                <p className="text-[11.5px] text-zinc-500 leading-[1.65]">{activeData.mainDesc}</p>
+              </Reveal>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -124,7 +152,6 @@ export default function Role() {
 
       {/* ============ DESKTOP (lg+) ============ */}
       <div className="hidden lg:block flex-1 relative">
-        {/* Navigation Arrows */}
         <div className="absolute inset-y-0 left-0 w-24 flex items-center justify-center z-50">
           <button onClick={prev} disabled={current === 0} className={`p-4 transition-all ${current === 0 ? 'opacity-10 blur-[2px] cursor-not-allowed' : 'opacity-100 hover:scale-110 active:scale-95'}`}>
             <ChevronLeft size={48} strokeWidth={1} />
@@ -138,7 +165,6 @@ export default function Role() {
 
         <AnimatePresence mode="wait">
           <motion.div key={current} variants={fadeIn} initial="initial" animate="animate" exit="exit" className="absolute inset-0 flex flex-col z-10">
-            {/* Background Image Container - 3x Opacity Enhancement */}
             <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
               <div className="relative w-[75vw] h-[75vh]" style={{ transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})` }}>
                 <Image 
@@ -151,30 +177,37 @@ export default function Role() {
               </div>
             </div>
 
-            {/* Main Content Grid */}
             <main className="relative z-20 flex-1 grid grid-cols-12 px-24 h-full">
               <div className="col-span-5 flex flex-col justify-between py-24 h-full">
                 <div className="max-w-md">
-                  <SectionHeader title="Role" />
-                  <h4 className="text-xl md:text-2xl leading-snug">
-                    <span className="font-bold text-white">{activeData.roleTitle.split(' ').slice(0, 4).join(' ')}</span>
-                    <span className="font-bold text-zinc-500">{' ' + activeData.roleTitle.split(' ').slice(4).join(' ')}</span>
-                  </h4>
+                  <Reveal variants={slideInFromBottom(0.1)}>
+                    <SectionHeader title="Role" />
+                    <h4 className="text-xl md:text-2xl leading-snug">
+                      <span className="font-bold text-white">{activeData.roleTitle.split(' ').slice(0, 4).join(' ')}</span>
+                      <span className="font-bold text-zinc-500">{' ' + activeData.roleTitle.split(' ').slice(4).join(' ')}</span>
+                    </h4>
+                  </Reveal>
                 </div>
                 <div className="max-w-sm">
-                  <SectionHeader title="When it's deployed" />
-                  <p className="text-sm text-zinc-400 leading-relaxed">{activeData.deployedText}</p>
+                  <Reveal variants={slideInFromBottom(0.1)}>
+                    <SectionHeader title="When it's deployed" />
+                    <p className="text-sm text-zinc-400 leading-relaxed">{activeData.deployedText}</p>
+                  </Reveal>
                 </div>
               </div>
 
               <div className="col-span-7 flex flex-col justify-end items-end py-24 h-full">
                 <div className="max-w-xl text-right">
-                  <h3 className="text-4xl md:text-3xl  tracking-tighter mb-6 uppercase ">
-                    {activeData.mainTitle}
-                  </h3>
-                  <p className="text-sm md:text-base  leading-relaxed">
-                    {activeData.mainDesc}
-                  </p>
+                  <Reveal variants={slideInFromBottom(0.1)}>
+                    <h3 className="text-4xl md:text-3xl tracking-tighter mb-6 uppercase">
+                      {activeData.mainTitle}
+                    </h3>
+                  </Reveal>
+                  <Reveal variants={slideInFromBottom(0.2)}>
+                    <p className="text-sm md:text-base leading-relaxed">
+                      {activeData.mainDesc}
+                    </p>
+                  </Reveal>
                 </div>
               </div>
             </main>

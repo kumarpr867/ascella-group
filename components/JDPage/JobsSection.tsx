@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import { useRouter } from "next/navigation";
 

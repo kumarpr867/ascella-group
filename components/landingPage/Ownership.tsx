@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { motion, useInView, type Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import PlusHeading from "../headings/Heading";
 import SecurityWaveSVG from "./SecurityWave";
@@ -163,11 +163,11 @@ const IsoBox: React.FC<IsoBoxProps> = ({
 // Image fades up on enter
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } },
 };
 const fadeUpDelayed: Variants = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut", delay: 0.2 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any, delay: 0.2 } },
 };
 
 const SPACING = 3;
@@ -625,20 +625,16 @@ export default function Ownership() {
         <div className="mx-8 h-full" />
       </div>
 
-      <div className="mx-auto w-full relative">
+      {/* ── Outer wrapper: mx-10 xl:mx-auto max-w-7xl — matches Prog exactly ── */}
+      <div className="mx-10 xl:mx-auto max-w-7xl relative">
 
         {/* ══ DESKTOP lg+ ══ */}
-        <div className="hidden lg:flex lg:flex-row relative">
+        <div className="hidden lg:flex lg:flex-row relative border-x border-color">
 
-          {/* Fixed-width left spacer col — 10% */}
-          <div className="w-[10%] shrink-0 relative">
-            <div className="sticky top-0 h-screen border-r border-color" />
-          </div>
-
-          {/* Sticky sidebar — 25% */}
-          <div className="w-[25%] shrink-0 relative">
+          {/* Sticky sidebar */}
+          <div className="w-[32%] shrink-0 relative">
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
-            <aside className="sticky top-0 h-screen z-10 p-12 flex flex-col">
+            <aside className="sticky top-0 h-screen z-10 px-10 py-10 flex flex-col">
               <PlusHeading text="OWNERSHIP" />
 
               <ul className="mt-20 space-y-6">
@@ -650,18 +646,6 @@ export default function Ownership() {
                 ))}
               </ul>
 
-              {/*
-                ── Isometric grid — fills the gap between nav list and button ──
-                Sits in the flex gap (mt-auto pushes it up from button).
-                3 tiles in one row, all within a single contained frame.
-
-                cellW=100, cellH=60
-                Container: 220px × 132px (fits 2 cells wide + some padding)
-                col=1,row=2 (even): cx=-50+100=50,   cy=-30+60=30  → left tile
-                col=2,row=2:        cx=-50+200=150,   cy=30         → centre tile
-                col=3,row=2:        cx=-50+300=250,   cy=30         → right tile (clips nicely at edge)
-              */}
-              {/* flex-1 fills all remaining space between nav list and button */}
               <div className="flex-1 flex items-center justify-center">
                 <div
                   className="relative overflow-hidden"
@@ -682,22 +666,18 @@ export default function Ownership() {
             </aside>
           </div>
 
-          {/* Scrollable main content — 55% */}
-          <main className="w-[55%] shrink-0 relative z-10">
-            <div className="absolute inset-0 border-r border-color pointer-events-none" />
+          {/* Scrollable main content */}
+          <main className="flex-1 relative z-10">
             {sections.map((item, index) => (
               <div key={item.title} data-ownership-section>
                 <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />
               </div>
             ))}
           </main>
-
-          {/* Right spacer — 10% */}
-          <div className="w-[10%] shrink-0" />
         </div>
 
         {/* ══ TABLET sm–lg ══ */}
-        <div className="hidden sm:flex lg:hidden flex-row relative">
+        <div className="hidden sm:flex lg:hidden flex-row relative border-x border-color">
           <div className="w-[30%] shrink-0 relative">
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
             <aside className="sticky top-0 h-screen z-10 px-6 pt-10 pb-6 flex flex-col">
@@ -730,7 +710,7 @@ export default function Ownership() {
               <div className="pb-8"><PartialOutlineBtn text="Explore More" /></div>
             </aside>
           </div>
-          <main className="w-[70%] shrink-0 relative z-10">
+          <main className="flex-1 relative z-10">
             {sections.map((item, index) => (
               <div key={item.title} data-ownership-section>
                 <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />
@@ -740,11 +720,11 @@ export default function Ownership() {
         </div>
 
         {/* ══ MOBILE <sm ══ */}
-        <div className="sm:hidden">
-          <div className="w-full border-b border-white/10 px-10 pt-8 pb-4">
+        <div className="sm:hidden border-x border-color">
+          <div className="w-full border-b border-white/10 px-4 pt-8 pb-4">
             <PlusHeading text="OWNERSHIP" />
           </div>
-          <div className="mx-10">
+          <div className="px-4">
             <div className="py-2">
               {sections.map((item, index) => (
                 <div key={item.title} data-ownership-section>

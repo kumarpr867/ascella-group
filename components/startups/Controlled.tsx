@@ -1,6 +1,37 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { motion } from 'motion/react';
+
+// --- Reveal Animation Variants ---
+
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2,
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] as any } 
+  }
+};
+
+const footerItemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 1, ease: [0.21, 0.47, 0.32, 0.98] as any, delay: 0.4 } 
+  }
+};
 
 const SPACING   = 3;
 const THRESHOLD = 8;
@@ -212,10 +243,6 @@ const styles = `
     .d-footer { padding:0 160px; }
   }
 
-  /* ══════════════════════════════════════════
-     MOBILE — ONLY CHANGE: padding 28px → 40px
-     to match footer mx-10
-  ══════════════════════════════════════════ */
   @media (max-width:640px) {
     .d-gl-top, .d-gl-foot, .d-gl-left, .d-gl-right,
     .d-globe-container, .d-content, .d-footer { display:none !important; }
@@ -227,10 +254,7 @@ const styles = `
       width:100%; height:1px;
       background:rgba(255,255,255,.22); flex-shrink:0;
     }
-
-    /* ONLY CHANGE: 28px → 40px on left/right */
     .m-text-block { padding:28px 40px 20px 40px; }
-
     .m-h2 {
       font-size:22px; font-weight:300;
       line-height:1.15; letter-spacing:-.01em;
@@ -284,8 +308,6 @@ const styles = `
     }
 
     .m-double-line-gap { height:32px; width:100%; flex-shrink:0; }
-
-    /* ONLY CHANGE: 28px → 40px on left/right */
     .m-ascella { padding:16px 40px 28px 40px; }
     .m-ascella p {
       font-size:10px; letter-spacing:.13em;
@@ -335,44 +357,78 @@ const Controlled = () => {
 
         <div className="d-content">
           <div className="d-main">
-            <div className="d-inner">
-              <h2 className="d-h2">
+            <motion.div 
+              className="d-inner"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={containerVariants}
+            >
+              <motion.h2 variants={itemVariants} className="d-h2">
                 Controlled execution
                 <span className="d-indent">units for <span className="dim">complex</span></span>
                 <span className="d-indent dim">operating environments</span>
-              </h2>
-              <div className="d-subrow">
+              </motion.h2>
+              <motion.div variants={itemVariants} className="d-subrow">
                 <p className="d-subtext">Early-stage execution succeeds or fails based on operating structure.</p>
                 <div className="d-arrow"><span style={{fontSize:'20px',fontWeight:300}}>↓</span></div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
 
         <footer className="d-footer">
-          <Link href="/engageWithUs">
-            <button className="d-engage">Engage With Us <span style={{marginLeft:'8px',opacity:.3}}>:::</span></button>
-          </Link>
-          <p className="d-ascella">The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={footerItemVariants}
+          >
+            <Link href="/engageWithUs">
+              <button className="d-engage">Engage With Us <span style={{marginLeft:'8px',opacity:.3}}>:::</span></button>
+            </Link>
+          </motion.div>
+          
+          <motion.p 
+            className="d-ascella"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={footerItemVariants}
+          >
+            The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.
+          </motion.p>
         </footer>
 
         {/* ════════ MOBILE ════════ */}
         <div className="m-layout">
           <div className="m-line" />
 
-          <div className="m-text-block">
-            <h2 className="m-h2">
+          <motion.div 
+            className="m-text-block"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+          >
+            <motion.h2 variants={itemVariants} className="m-h2">
               Controlled execution
               <span className="m-h2-center">units for <span className="m-dim">complex</span></span>
               <span className="m-h2-center m-dim">operating environments</span>
-            </h2>
-            <div className="m-subrow">
+            </motion.h2>
+            <motion.div variants={itemVariants} className="m-subrow">
               <p className="m-subtext">Early-stage execution succeeds or fails based on operating structure.</p>
               <div className="m-arrow"><span style={{fontSize:'16px',fontWeight:300}}>↓</span></div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="m-engage-zone">
+          <motion.div 
+            className="m-engage-zone"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={footerItemVariants}
+          >
             <Link href="/engageWithUs">
               <button className="m-engage-btn">
                 Engage With Us
@@ -387,7 +443,7 @@ const Controlled = () => {
                 </svg>
               </button>
             </Link>
-          </div>
+          </motion.div>
 
           <div className="m-globe-block">
             <div ref={mGlobeRef} className="m-globe-wrapper">
@@ -401,9 +457,15 @@ const Controlled = () => {
           <div className="m-double-line-gap" />
           <div className="m-line" />
 
-          <div className="m-ascella">
+          <motion.div 
+            className="m-ascella"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={footerItemVariants}
+          >
             <p>The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
-          </div>
+          </motion.div>
         </div>
 
       </section>

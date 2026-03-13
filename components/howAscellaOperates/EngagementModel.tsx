@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll } from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "motion/react";
 import Image from "next/image";
 import { SECTIONS, EngagementLabel } from "../../data/EngagementModelData";
 import Heading from "../headings/Heading";
@@ -144,7 +144,7 @@ export default function Em3() {
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -16 }}
-                            transition={{ duration: 0.35, ease: "easeOut" }}
+                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as any }}
                             className="max-w-sm flex flex-col gap-5"
                         >
                             <h2 className="text-xl">{section.title}</h2>
@@ -161,7 +161,7 @@ export default function Em3() {
                             initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.96 }}
-                            transition={{ duration: 0.35, ease: "easeOut" }}
+                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as any }}
                             className="flex flex-col items-center gap-5"
                         >
                             <div className="w-full flex gap-2">

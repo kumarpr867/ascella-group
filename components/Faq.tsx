@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Heading from "./headings/Heading";
 import ArrowButton from "./btns/Arrow";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 type FAQ = {
   question: string;
@@ -27,7 +27,7 @@ export default function Faq({ faqs, description }: Props) {
   // Refined Scroll-trigger animation settings
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { ease: "easeOut", duration: 0.8 } },
+    visible: { opacity: 1, y: 0, transition: { ease: [0.16, 1, 0.3, 1] as any, duration: 0.8 } },
   };
 
   return (

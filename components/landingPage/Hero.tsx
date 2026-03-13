@@ -82,7 +82,7 @@ export default function Hero() {
               repeat: Infinity,
               repeatType: "loop",
               duration: 2,
-              ease: "linear"
+              ease: [0, 0, 1, 1]
             }}
             className="w-[70vw] max-w-[900px] aspect-square pointer-events-auto">
             <PixelWorld

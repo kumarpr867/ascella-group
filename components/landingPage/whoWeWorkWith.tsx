@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence, animate, useInView } from "framer-motion"
+import { motion, AnimatePresence, animate, useInView } from "motion/react"
 import { useRef } from "react"
 import OutlineBtn from '../btns/OutlineBtn';
 import Heading from '@/components/headings/Heading';
@@ -106,7 +106,7 @@ export default function WhoWeWorkWith() {
 
         controlsRef.current = animate(progress, 100, {
             duration: remaining,
-            ease: "linear",
+            ease: [0, 0, 1, 1],
             onUpdate: (latest) => setProgress(latest),
             onComplete: () => {
                 setProgress(0)
@@ -126,7 +126,7 @@ export default function WhoWeWorkWith() {
             className='my-10 border-y border-color py-20 overflow-hidden'
             initial={{ opacity: 0, y: 80 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1.1, ease: "easeOut" }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] as any }}
         >
 
             <div className="flex flex-col h-auto lg:h-screen">

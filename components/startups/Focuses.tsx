@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 
 const focusData = [
   {
@@ -28,6 +29,25 @@ const focusData = [
       'Stress-testing operational workflows to ensure the infrastructure can handle 10x growth without performance degradation.',
   },
 ];
+
+// Animation Variants
+const slideFromLeft = {
+  hidden: { opacity: 0, x: -60 },
+  visible: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } 
+  }
+};
+
+const slideFromRight = {
+  hidden: { opacity: 0, x: 60 },
+  visible: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } 
+  }
+};
 
 export default function Focuses() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -62,6 +82,7 @@ export default function Focuses() {
           background: #000;
           color: #fff;
           font-family: 'Montserrat', sans-serif;
+          overflow-x: hidden;
         }
 
         .top-line {
@@ -71,7 +92,7 @@ export default function Focuses() {
         }
 
         /* ══════════════════════════════════
-           HEADER
+            HEADER
         ══════════════════════════════════ */
         .header-wrapper {
           width: 100%;
@@ -109,7 +130,7 @@ export default function Focuses() {
         .header-right .line-muted { color: #555; display: block; }
 
         /* ══════════════════════════════════
-           ACCORDION
+            ACCORDION
         ══════════════════════════════════ */
         .accordion-wrapper { width: 100%; }
 
@@ -204,7 +225,7 @@ export default function Focuses() {
           overflow: hidden;
           width: 100%;
           transition: max-height 0.60s cubic-bezier(0.4,0,0.2,1),
-                      opacity    0.50s ease;
+                      opacity     0.50s ease;
         }
         .acc-desc-outer.closed { max-height: 0;    opacity: 0; }
         .acc-desc-outer.open   { max-height: 260px; opacity: 1; }
@@ -229,14 +250,14 @@ export default function Focuses() {
         }
 
         /* ══════════════════════════════════
-           TABLET ≤ 1024px
+            TABLET ≤ 1024px
         ══════════════════════════════════ */
         @media (max-width: 1024px) {
           .acc-title { font-size: clamp(16px, 2.2vw, 28px); }
         }
 
         /* ══════════════════════════════════
-           MOBILE ≤ 768px
+            MOBILE ≤ 768px
         ══════════════════════════════════ */
         @media (max-width: 768px) {
           .header-wrapper { padding: 0 40px; }
@@ -301,7 +322,7 @@ export default function Focuses() {
         }
 
         /* ══════════════════════════════════
-           VERY SMALL ≤ 400px
+            VERY SMALL ≤ 400px
         ══════════════════════════════════ */
         @media (max-width: 400px) {
           .acc-title { font-size: clamp(11px, 3.6vw, 17px); }
@@ -317,13 +338,24 @@ export default function Focuses() {
         {/* ── Header ── */}
         <div className="header-wrapper">
           <div className="header-inner">
-            <div className="header-left">
+            <motion.div 
+              className="header-left"
+              variants={slideFromLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               <p>
                 Early-stage teams often prioritise product velocity and fundraising momentum while postponing formal operating controls and governance clarity.
-
               </p>
-            </div>
-            <div className="header-right">
+            </motion.div>
+            <motion.div 
+              className="header-right"
+              variants={slideFromRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
               <h3>
                 <span className="line-white">The Startups Programme embeds</span>
                 <span className="line-muted">
@@ -332,7 +364,7 @@ export default function Focuses() {
                   before scale introduces complexity.
                 </span>
               </h3>
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -341,11 +373,16 @@ export default function Focuses() {
           {focusData.map((item, index) => {
             const isActive = activeIndex === index;
             const state = isActive ? 'active' : 'inactive';
+            const isEven = index % 2 === 0;
 
             return (
-              <div
+              <motion.div
                 key={item.id}
                 className="accordion-item"
+                variants={isEven ? slideFromLeft : slideFromRight}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
                 onClick={() => handleToggle(index)}
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
@@ -385,7 +422,7 @@ export default function Focuses() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

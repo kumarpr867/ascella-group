@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Reveal from "@/utils/Reveal"
+import { slideInFromBottom } from "@/utils/motion"
 
 const categories = ['Infosec', 'Software Labs' , 'Staffing', 'Engage', 'Forge'];
 
@@ -153,7 +155,7 @@ const ExecutionLayer = () => {
             </div>
 
             <div style={{ position: 'relative', zIndex: 10 }}>
-              <div className="mb-5">
+              <Reveal variants={slideInFromBottom(0.1)} className="mb-5">
                 <span className="relative inline-block border border-white/30 px-4 py-1.5 text-[10px] tracking-[0.25em] uppercase text-white/60 font-medium bg-black/50">
                   <span className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t border-l border-white"></span>
                   <span className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t border-r border-white"></span>
@@ -161,14 +163,18 @@ const ExecutionLayer = () => {
                   <span className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b border-r border-white"></span>
                   Execution Layer
                 </span>
-              </div>
-              <h4 className="text-[1.5rem] font-Montserrat leading-[1.05] mb-5 tracking-tight">
-                Controlled execution units for{' '}
-                <span className="text-neutral-500">complex operating environments</span>
-              </h4>
-              <p className="text-[12px] font-Montserrat leading-relaxed text-white">
-                Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
-              </p>
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.2)}>
+                <h4 className="text-[1.5rem] font-Montserrat leading-[1.05] mb-5 tracking-tight">
+                  Controlled execution units for{' '}
+                  <span className="text-neutral-500">complex operating environments</span>
+                </h4>
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.3)}>
+                <p className="text-[12px] font-Montserrat leading-relaxed text-white">
+                  Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
+                </p>
+              </Reveal>
             </div>
           </div>
 
@@ -222,7 +228,7 @@ const ExecutionLayer = () => {
           <div className="border-b border-white/10"></div>
           <div className="border-b border-white/10"></div>
           <div className="relative border-b border-white/10 flex items-end">
-            <div>
+            <Reveal variants={slideInFromBottom(0.1)}>
               <span className="relative px-4 py-2 text-[10px] tracking-[0.2em] uppercase text-white bg-black border border-white/20 inline-block z-20">
                 <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white/60"></span>
                 <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white/60"></span>
@@ -230,7 +236,7 @@ const ExecutionLayer = () => {
                 <span className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-white/60"></span>
                 All Execution Arms Operational
               </span>
-            </div>
+            </Reveal>
           </div>
           <div className="border-b border-white/10"></div>
 
@@ -268,7 +274,7 @@ const ExecutionLayer = () => {
             </div>
 
             <div className="relative z-10">
-              <div className="mb-4">
+              <Reveal variants={slideInFromBottom(0.1)} className="mb-4">
                 <span className="relative inline-block border border-white/30 px-4 py-1 text-[10px] tracking-widest uppercase text-white/60 font-medium bg-black/50">
                   <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white"></span>
                   <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white"></span>
@@ -276,13 +282,17 @@ const ExecutionLayer = () => {
                   <span className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-white"></span>
                   Execution Layer
                 </span>
-              </div>
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl  mb-4 tracking-tight max-w-xl">
-                Controlled execution <br /> units for <span className="text-neutral-500">complex <br />operating environments</span>
-              </h2>
-              <p className="text-sm max-w-lg leading-relaxed">
-                Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
-              </p>
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.2)}>
+                <h2 className="text-3xl lg:text-4xl xl:text-5xl  mb-4 tracking-tight max-w-xl">
+                  Controlled execution <br /> units for <span className="text-neutral-500">complex <br />operating environments</span>
+                </h2>
+              </Reveal>
+              <Reveal variants={slideInFromBottom(0.3)}>
+                <p className="text-sm max-w-lg leading-relaxed">
+                  Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
+                </p>
+              </Reveal>
             </div>
           </div>
 

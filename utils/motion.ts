@@ -1,4 +1,4 @@
-import { Variants } from "framer-motion";
+import { Variants } from "motion/react";
 
 export const slideInFromTop = (delay: number = 0): Variants => {
   return {

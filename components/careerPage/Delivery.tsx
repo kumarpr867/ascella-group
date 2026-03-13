@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import React from 'react';
+import { motion } from 'motion/react';
 
 const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -8,9 +9,9 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
   const isHoveredRef = React.useRef(false);
   const currentAngleRef = React.useRef((135 * Math.PI) / 180);
   const targetsRef = React.useRef([
-    { angle: 0.5,  radius: 0.83, timer: 0,    interval: 4   },
-    { angle: 2.3,  radius: 0.57, timer: -1.5, interval: 5   },
-    { angle: 4.1,  radius: 0.47, timer: -2,   interval: 4.5 },
+    { angle: 0.5, radius: 0.83, timer: 0, interval: 4 },
+    { angle: 2.3, radius: 0.57, timer: -1.5, interval: 5 },
+    { angle: 4.1, radius: 0.47, timer: -2, interval: 4.5 },
   ]);
   const lastTimeRef = React.useRef(0);
   const animRef = React.useRef(0);
@@ -167,12 +168,37 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
 };
 
 const Delivery = () => {
+  // Animation Variants
+  const revealLeft = {
+    hidden: { opacity: 0, x: -60 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } 
+    }
+  };
+
+  const revealRight = {
+    hidden: { opacity: 0, x: 60 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } 
+    }
+  };
+
   return (
-    <section className="w-full border-y border-color my-20">
+    <section className="w-full border-y border-color my-20 overflow-hidden">
 
       {/* ===================== DESKTOP (lg+) ===================== */}
       <div className="hidden lg:flex flex-row w-full min-h-[90vh]">
-        <div className="w-1/2 flex flex-col justify-between pl-30 pr-16 py-12">
+        <motion.div 
+          className="w-1/2 flex flex-col justify-between pl-30 pr-16 py-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={revealLeft}
+        >
           <div className="max-w-[360px]">
             <h3 className="text-3xl font-light leading-tight mb-2 tracking-tight">
               Delivery is organised through governed pods under central oversight.
@@ -190,21 +216,32 @@ const Delivery = () => {
             </div>
             <span className="text-lg font-light">Pods execute. Governance coordinates.</span>
           </div>
-        </div>
-        <div className="w-1/2 relative self-stretch">
-          {/* right-10 = 40px matching footer desktop mx-10 */}
+        </motion.div>
+
+        <motion.div 
+          className="w-1/2 relative self-stretch"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={revealRight}
+        >
           <div className="absolute inset-0 right-10">
             <RadarCanvas fillHeight={true} />
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* ===================== MOBILE (< lg) ===================== */}
-      {/* ONLY CHANGE: px-6 → px-10 and mx-6 → mx-10 to match footer */}
       <div className="lg:hidden flex flex-col w-full">
 
         {/* Content block */}
-        <div className="px-10 pt-10 pb-8">
+        <motion.div 
+          className="px-10 pt-10 pb-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={revealLeft}
+        >
           <h3 className="text-2xl font-light leading-tight mb-5 tracking-tight">
             Delivery is organised through governed pods under central oversight.
           </h3>
@@ -214,23 +251,36 @@ const Delivery = () => {
             frameworks, and escalation structures. Collaboration across execution arms occurs
             through defined operating pathways.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Circle block — square, with horizontal margin */}
-        <div className="mx-10 relative" style={{ aspectRatio: '1 / 1' }}>
+        {/* Circle block */}
+        <motion.div 
+          className="mx-10 relative" 
+          style={{ aspectRatio: '1 / 1' }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+        >
           <RadarCanvas fillHeight={false} />
-        </div>
+        </motion.div>
 
         {/* Full-width divider */}
         <div className="w-full border-t border-white/15 mt-8" />
 
         {/* Pods execute row */}
-        <div className="flex items-center gap-4 px-10 py-6">
+        <motion.div 
+          className="flex items-center gap-4 px-10 py-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={revealLeft}
+        >
           <div className="border border-white/25 rounded-full w-10 h-10 flex items-center justify-center text-lg shrink-0">
             ↗
           </div>
           <span className="text-base font-light">Pods execute. Governance coordinates.</span>
-        </div>
+        </motion.div>
 
         {/* Bottom divider */}
         <div className="w-full border-t border-white/15" />

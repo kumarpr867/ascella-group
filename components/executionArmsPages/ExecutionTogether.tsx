@@ -1,8 +1,10 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
-// ── Isometric Grid with Per-Cell Hover (UPDATED VISIBILITY & IMAGES) ──────────────────────
+// ── Isometric Grid with Per-Cell Hover (CODE PRESERVED) ──────────────────────
 function IsometricHoverGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
@@ -17,8 +19,6 @@ function IsometricHoverGrid() {
   const LINE_WIDTH = 0.5;
 
   // Configuration for Vector55 insertion:
-  // List specific {col, row} coordinates for the 3 target boxes.
-  // Coordinates are based on the cellCenter indexing.
   const vectorImagesConfig = [
     { col: 2, row: 4 }, // Target box 1
     { col: 5, row: 7 }, // Target box 2
@@ -49,7 +49,6 @@ function IsometricHoverGrid() {
       img.src = '/vector 55.png'; // Ensure this path is correct
       img.onload = () => {
         vector55Ref.current = img;
-        // Optional: Re-trigger render loop once loaded, but RAF handles it
       };
     }
 
@@ -63,7 +62,6 @@ function IsometricHoverGrid() {
       }
     };
 
-    // ResizeObserver watches the parent div directly — fires whenever size actually changes
     const ro = new ResizeObserver(() => syncSize());
     if (canvas.parentElement) ro.observe(canvas.parentElement);
     syncSize();
@@ -79,7 +77,6 @@ function IsometricHoverGrid() {
     const alphaMap = new Map<string, number>();
 
     const loop = () => {
-      // If canvas has no size yet, try syncing and skip this frame
       if (canvas.width === 0 || canvas.height === 0) {
         syncSize();
         rafRef.current = requestAnimationFrame(loop);
@@ -97,7 +94,6 @@ function IsometricHoverGrid() {
       const offsetX = -CELL_W / 2;
       const offsetY = -CELL_H / 2;
 
-      // Ensure vector55 image is loaded before attempting to draw
       const vectorImage = vector55Ref.current;
 
       for (let row = 0; row < rows; row++) {
@@ -110,7 +106,6 @@ function IsometricHoverGrid() {
           const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
           alphaMap.set(key, current);
 
-          // Path for the dynamic diamond mesh
           ctx.beginPath();
           ctx.moveTo(cx,              cy - CELL_H / 2);
           ctx.lineTo(cx + CELL_W / 2, cy);
@@ -118,14 +113,12 @@ function IsometricHoverGrid() {
           ctx.lineTo(cx - CELL_W / 2, cy);
           ctx.closePath();
 
-          // VISIBILITY UPDATE: Increase grid line opacity and visibility
           const baseLineAlpha = 0.2;
           const hoverBoostAlpha = 0.3;
           ctx.strokeStyle = `rgba(180, 180, 180, ${baseLineAlpha + current * hoverBoostAlpha})`;
           ctx.lineWidth   = LINE_WIDTH;
           ctx.stroke();
 
-          // VECTOR55.PNG DRAW LOGIC:
           if (vectorImage) {
             const shouldDrawVector = vectorImagesConfig.some(
               (config) => config.col === col && config.row === row
@@ -139,7 +132,6 @@ function IsometricHoverGrid() {
             }
           }
 
-          // Preserve fill on hover
           if (current > 0.005) {
             ctx.fillStyle = `rgba(163,163,163,${current * 0.15})`;
             ctx.fill();
@@ -174,7 +166,7 @@ function IsometricHoverGrid() {
   );
 }
 
-// ── Responsive hook (NO CHANGE) ────────────────────────────────────────────────────────────
+// ── Responsive hook (CODE PRESERVED) ────────────────────────────────────────────────────────────
 function useBreakpoint() {
   const [bp, setBp] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [screenW, setScreenW] = useState(375);
@@ -193,7 +185,7 @@ function useBreakpoint() {
   return { bp, screenW };
 }
 
-// ── Config per breakpoint (NO CHANGE) ──────────────────────────────────────────────────────
+// ── Config per breakpoint (CODE PRESERVED) ──────────────────────────────────────────────────────
 const CONFIG = {
   mobile:  { cardW: 90,  cardH: 116, leftStep: 72,  topStep: 8,  gridTop: 108, gridBottom: -40,  liftY: -30, scale: 1.05 },
   tablet:  { cardW: 160, cardH: 206, leftStep: 128, topStep: 12, gridTop: 196, gridBottom: -80,  liftY: -50, scale: 1.05 },
@@ -206,7 +198,6 @@ const ExecutionTogether = () => {
   const { bp, screenW } = useBreakpoint();
   const isMobile = bp === 'mobile';
 
-  // Mobile computation (NO CHANGE)
   const mobileCfg = (() => {
     const totalCards = 5;
     const pagePadding = 80; // 40px left + 40px right to match footer mx-10
@@ -240,61 +231,68 @@ const ExecutionTogether = () => {
         fontFamily: 'sans-serif',
         paddingTop: isMobile ? 36 : 48,
         paddingBottom: isMobile ? 16 : 48,
-        // ONLY CHANGE: mobile padding matches footer mx-10 = 40px
         paddingLeft: isMobile ? 40 : 40,
         paddingRight: isMobile ? 40 : 40,
       }}
     >
-      {/* ── Header (NO CHANGE) ────────────────────────────────────────────────────────── */}
+      {/* ── Header (REVEAL ADDED) ────────────────────────────────────────────────────────── */}
       <div
         className="text-center z-50"
         style={{ maxWidth: isMobile ? '100%' : 900, marginBottom: isMobile ? 24 : 48 }}
       >
-        <div
-          className="flex items-center justify-center gap-2 text-white uppercase"
-          style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: isMobile ? 20 : 32 }}
-        >
-          <Plus size={isMobile ? 14 : 18} strokeWidth={1.5} />
-          How Execution Arms Work Together
-        </div>
+        <Reveal variants={slideInFromBottom(0.1)}>
+          <div
+            className="flex items-center justify-center gap-2 text-white uppercase"
+            style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: isMobile ? 20 : 32 }}
+          >
+            <Plus size={isMobile ? 14 : 18} strokeWidth={1.5} />
+            How Execution Arms Work Together
+          </div>
+        </Reveal>
 
-        <h3
-          className="font-light tracking-tight"
+        <Reveal variants={slideInFromBottom(0.2)}>
+          <h3
+            className="font-light tracking-tight"
+            style={{
+              fontSize: isMobile ? 20 : bp === 'tablet' ? 28 : 36,
+              lineHeight: 1.1,
+              marginBottom: isMobile ? 16 : 24,
+            }}
+          >
+            Ascella Group sits above execution.{' '}
+            {!isMobile && <br />}
+            Execution arms deliver specialised work{' '}
+            {!isMobile && <br />}
+            within <span className="text-gray-400">Ascella's operating structure.</span>
+          </h3>
+        </Reveal>
+
+        <Reveal variants={slideInFromBottom(0.3)}>
+          <p
+            className="text-white leading-relaxed mx-auto"
+            style={{ fontSize: isMobile ? 12 : 14, maxWidth: isMobile ? 300 : 420 }}
+          >
+            Governance, accountability, and performance oversight remain central ensuring coordinated execution without fragmented ownership.
+          </p>
+        </Reveal>
+      </div>
+
+      {/* ── Ascella badge (REVEAL ADDED) ─────────────────────────────────────────────────── */}
+      <Reveal variants={slideInFromBottom(0.4)}>
+        <div
+          className="bg-[#111] rounded border border-gray-400 text-white uppercase z-50"
           style={{
-            fontSize: isMobile ? 20 : bp === 'tablet' ? 28 : 36,
-            lineHeight: 1.1,
-            marginBottom: isMobile ? 16 : 24,
+            padding: isMobile ? '7px 20px' : '10px 32px',
+            fontSize: 11,
+            letterSpacing: '0.4em',
+            marginBottom: isMobile ? 24 : 40,
           }}
         >
-          Ascella Group sits above execution.{' '}
-          {!isMobile && <br />}
-          Execution arms deliver specialised work{' '}
-          {!isMobile && <br />}
-          within <span className="text-gray-400">Ascella's operating structure.</span>
-        </h3>
+          Ascella
+        </div>
+      </Reveal>
 
-        <p
-          className="text-white leading-relaxed mx-auto"
-          style={{ fontSize: isMobile ? 12 : 14, maxWidth: isMobile ? 300 : 420 }}
-        >
-          Governance, accountability, and performance oversight remain central ensuring coordinated execution without fragmented ownership.
-        </p>
-      </div>
-
-      {/* ── Ascella badge (NO CHANGE) ─────────────────────────────────────────────────── */}
-      <div
-        className="bg-[#111] rounded border border-gray-400 text-white uppercase z-50"
-        style={{
-          padding: isMobile ? '7px 20px' : '10px 32px',
-          fontSize: 11,
-          letterSpacing: '0.4em',
-          marginBottom: isMobile ? 24 : 40,
-        }}
-      >
-        Ascella
-      </div>
-
-      {/* ── Cards area (Layout preserved, structure preserved) ────────────────────── */}
+      {/* ── Cards area (ALL CODE PRESERVED) ────────────────────── */}
       <div
         className="relative flex justify-center items-start w-full"
         style={{ height: containerH + (isMobile ? 10 : 80) }}
@@ -325,7 +323,7 @@ const ExecutionTogether = () => {
             <IsometricHoverGrid />
           </div>
 
-          {/* Cards (NO CHANGE) */}
+          {/* Cards */}
           {executionArms.map((arm, index) => {
             const isExpanded = activeId === arm.id;
             const topPx  = (totalCards - 1 - index) * cfg.topStep;
@@ -351,7 +349,6 @@ const ExecutionTogether = () => {
                 }}
               >
                 <div className="relative w-full h-full">
-                  {/* Card shape and color preserved */}
                   <div className="absolute inset-0 transition-all duration-500">
                     {isExpanded ? (
                       <div className="w-full h-full bg-[#D1D1D1] rounded-sm shadow-2xl" />
@@ -374,12 +371,10 @@ const ExecutionTogether = () => {
                     )}
                   </div>
 
-                  {/* Content (NO CHANGE) */}
                   <div
                     className={`relative z-10 w-full h-full flex flex-col transition-colors duration-500 ${isExpanded ? 'text-black' : 'text-white'}`}
                     style={{ padding: isMobile ? '12px' : '24px' }}
                   >
-                    {/* ID */}
                     <span
                       className="font-mono transition-all duration-500"
                       style={{
@@ -395,7 +390,6 @@ const ExecutionTogether = () => {
                       {arm.id}
                     </span>
 
-                    {/* Icon */}
                     <div
                       className="transition-all duration-500"
                       style={{
@@ -418,21 +412,22 @@ const ExecutionTogether = () => {
                       }}
                     />
 
-                    {/* Text */}
                     {isExpanded ? (
                       <div className="mt-auto">
-                        <p
-                          className="leading-snug font-medium text-gray-800"
-                          style={{ fontSize: isMobile ? 10 : 13, marginBottom: isMobile ? 12 : 32 }}
-                        >
-                          {arm.desc}
-                        </p>
-                        <h4
-                          className="font-semibold text-right tracking-tight"
-                          style={{ fontSize: isMobile ? 13 : 20 }}
-                        >
-                          {arm.name}
-                        </h4>
+                        <Reveal variants={slideInFromBottom(0.1)}>
+                          <p
+                            className="leading-snug font-medium text-gray-800"
+                            style={{ fontSize: isMobile ? 10 : 13, marginBottom: isMobile ? 12 : 32 }}
+                          >
+                            {arm.desc}
+                          </p>
+                          <h4
+                            className="font-semibold text-right tracking-tight"
+                            style={{ fontSize: isMobile ? 13 : 20 }}
+                          >
+                            {arm.name}
+                          </h4>
+                        </Reveal>
                       </div>
                     ) : (
                       <span
@@ -458,7 +453,7 @@ const ExecutionTogether = () => {
         </div>
       </div>
 
-      {/* ── Footer (NO CHANGE) ────────────────────────────────────────────────────────── */}
+      {/* ── Footer (REVEAL ADDED) ────────────────────────────────────────────────────────── */}
       <div
         className="w-full"
         style={{
@@ -467,49 +462,51 @@ const ExecutionTogether = () => {
           flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'space-between',
           alignItems: isMobile ? 'flex-end' : 'flex-end',
-          gap: isMobile ? 0: 0,
           paddingTop: 16,
           paddingBottom: 16,
         }}
       >
-        <h5
-          className="text-gray-300 leading-relaxed"
-          style={{ fontSize: 12, letterSpacing: '0.03em', maxWidth: 200, alignSelf: isMobile ? 'flex-start' : 'auto' }}
-        >
-          Governance is designed <br />in, not enforced later.
-        </h5>
+        <Reveal variants={slideInFromBottom(0.5)}>
+          <h5
+            className="text-gray-300 leading-relaxed"
+            style={{ fontSize: 12, letterSpacing: '0.03em', maxWidth: 200, alignSelf: isMobile ? 'flex-start' : 'auto' }}
+          >
+            Governance is designed <br />in, not enforced later.
+          </h5>
+        </Reveal>
 
-        <div
-          className="bg-[#D1D1D1] text-black rounded-sm flex items-center shadow-2xl"
-          style={{
-            gap: isMobile ? 14 : 14,
-            padding: isMobile ? '14px 16px' : '20px 24px',
-            width: isMobile ? 'auto' : 'auto',
-            maxWidth: isMobile ? '80%' : 400,
-            alignSelf: isMobile ? 'flex-end' : 'auto',
-          }}
-        >
-          {/* SVG logo preserved */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none" style={{ flexShrink: 0 }}>
-            <rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="21" y="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="28" y="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="0" y="14" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="7" y="0" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
-            <rect x="21" y="0" width="7" height="7" fill="#3D3D3D"/>
-          </svg>
-          <div>
-            <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: isMobile ? 15 : 18 }}>
-              Ascella Group
-            </h4>
-            <p className="text-gray-800 text-b3 text-[12px]" style={{ fontSize: isMobile ? 12 : 14 }}>
-              Coordinated execution without  loss of control.
-            </p>
+        <Reveal variants={slideInFromBottom(0.6)}>
+          <div
+            className="bg-[#D1D1D1] text-black rounded-sm flex items-center shadow-2xl"
+            style={{
+              gap: isMobile ? 14 : 14,
+              padding: isMobile ? '14px 16px' : '20px 24px',
+              width: isMobile ? 'auto' : 'auto',
+              maxWidth: isMobile ? '80%' : 400,
+              alignSelf: isMobile ? 'flex-end' : 'auto',
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="28" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="0" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="7" y="0" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="0" width="7" height="7" fill="#3D3D3D"/>
+            </svg>
+            <div>
+              <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: isMobile ? 15 : 18 }}>
+                Ascella Group
+              </h4>
+              <p className="text-gray-800 text-[12px]" style={{ fontSize: isMobile ? 12 : 14 }}>
+                Coordinated execution without loss of control.
+              </p>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </div>
 
       <div className="absolute bottom-0 left-0 w-full bg-gray-400/60 z-10" style={{ height: 1 }} />

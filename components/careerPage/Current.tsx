@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { LayoutGrid, Target, Settings, ShieldCheck } from "lucide-react";
+import { motion } from "motion/react";
 
 const CurrentOpenings = () => {
   const gridData = [
@@ -40,12 +41,46 @@ const CurrentOpenings = () => {
 
   const cards = gridData.filter((item) => !item.empty);
 
+  // Animation Variants
+  const revealLeft = {
+    hidden: { opacity: 0, x: -70 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } 
+    }
+  };
+
+  const revealRight = {
+    hidden: { opacity: 0, x: 70 },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } 
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
   return (
-    <>
+    <div className="overflow-hidden bg-black text-white">
       {/* ================= DESKTOP ================= */}
-      <div className="hidden lg:flex h-screen px-10 overflow-hidden flex-col justify-center bg-black text-white relative -mt-20">
-        {/* Background */}
-        <div className="absolute left-[-100px] top-[20%] w-2/3 h-4/5 opacity-30 pointer-events-none z-0">
+      <div className="hidden lg:flex h-screen px-10 flex-col justify-center relative -mt-20">
+        
+        {/* Background Image - Reveal Left */}
+        <motion.div 
+          className="absolute left-[-100px] top-[20%] w-2/3 h-4/5 opacity-30 pointer-events-none z-0"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 0.3, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] as any }}
+        >
           <Image
             src="/current.png"
             alt="Background Decoration"
@@ -53,28 +88,41 @@ const CurrentOpenings = () => {
             className="object-contain object-left-top"
             priority
           />
-        </div>
+        </motion.div>
 
-        {/* Header */}
-        <div className="relative z-10 mb-5 pl-40 max-w-7xl mx-auto w-full mb-5">
+        {/* Header - Reveal Left */}
+        <motion.div 
+          className="relative z-10 mb-5 pl-40 max-w-7xl mx-auto w-full"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={revealLeft}
+        >
           <p className="text-b2 text-[14px] uppercase tracking-[0.3em] text-gray-200 ">
             Roles & Opportunities
           </p>
 
-          <h3 className="text-4xl  leading-tight">
+          <h3 className="text-4xl leading-tight">
             Current openings are{" "}
             <span className="text-gray-200">aligned to</span>
             <br />
             <span className="pl-40">execution and governance needs.</span>
           </h3>
-        </div>
+        </motion.div>
 
-        {/* Grid */}
+        {/* Grid - Reveal Right with Stagger */}
         <div className="relative z-10 w-full max-w-7xl mx-auto flex justify-end">
-          <div className="grid grid-cols-3 gap-2">
+          <motion.div 
+            className="grid grid-cols-3 gap-2"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {gridData.map((item) => (
-              <div
+              <motion.div
                 key={item.id}
+                variants={revealRight}
                 className={`p-6 w-[260px] h-[220px] flex flex-col justify-between transition-all duration-300 ${
                   item.empty
                     ? "bg-transparent"
@@ -95,22 +143,25 @@ const CurrentOpenings = () => {
                     </p>
                   </>
                 )}
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* ================= MOBILE / TABLET ================= */}
-      <section className="lg:hidden bg-black text-white overflow-hidden">
-        {/* Top horizontal grid line */}
+      <section className="lg:hidden bg-black text-white">
         <div className="border-t border-neutral-800 w-full" />
 
-        {/* Content wrapper — same horizontal padding as FAQ mobile */}
         <div className="px-10 pt-[10px] pb-20">
-
-          {/* Header */}
-          <div className="mb-6">
+          {/* Header Mobile - Reveal Left */}
+          <motion.div 
+            className="mb-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={revealLeft}
+          >
             <p className="text-xs uppercase tracking-[0.3em] text-gray-200 mb-3">
               Roles & Opportunities
             </p>
@@ -119,44 +170,55 @@ const CurrentOpenings = () => {
               <span className="text-gray-400">aligned to</span>{" "}
               execution and governance needs.
             </h3>
-          </div>
+          </motion.div>
 
-          {/* 5-row, 1-column grid */}
           <div className="grid grid-cols-1">
-
-            {/* Row 1 — Image only */}
-            <div className="relative border border-neutral-800 min-h-[260px]">
+            {/* Row 1 Image - Subtle Reveal */}
+            <motion.div 
+              className="relative border border-neutral-800 min-h-[260px]"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
               <Image
                 src="/current.png"
                 alt="Decorative Image"
                 fill
                 className="object-contain"
               />
-            </div>
+            </motion.div>
 
-            {/* Rows 2–5 — 4 Cards stacked */}
-            {cards.map((item) => (
-              <div
-                key={item.id}
-                className="p-6 min-h-[200px] flex flex-col justify-between border border-t-0 border-neutral-800"
-              >
-                <div className="space-y-6">
-                  <div className="opacity-80">{item.icon}</div>
-                  <h5 className="text-base font-medium leading-snug">
-                    {item.title}
-                  </h5>
-                </div>
+            {/* Mobile Cards - Reveal Right Staggered */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {cards.map((item) => (
+                <motion.div
+                  key={item.id}
+                  variants={revealRight}
+                  className="p-6 min-h-[200px] flex flex-col justify-between border border-t-0 border-neutral-800"
+                >
+                  <div className="space-y-6">
+                    <div className="opacity-80">{item.icon}</div>
+                    <h5 className="text-base font-medium leading-snug">
+                      {item.title}
+                    </h5>
+                  </div>
 
-                <p className="text-[12px] text-gray-300 leading-relaxed mt-4">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-
+                  <p className="text-[12px] text-gray-300 leading-relaxed mt-4">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,23 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
+
+// --- Reveal Animation Variants ---
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] as any } 
+  }
+};
 
 // ── Isometric Grid with Per-Cell Hover ────────────────────────────────────────
 function IsometricHoverGrid() {
@@ -221,21 +239,33 @@ const ProgramEmbedded = () => {
             />
           </div>
 
-          <div className="max-w-2xl mb-4 relative z-30">
-            <h3 className="text-[36px] text-regular leading-[1.1] tracking-tight">
+          <motion.div 
+            className="max-w-2xl mb-4 relative z-30"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+          >
+            <motion.h3 variants={itemVariants} className="text-[36px] text-regular leading-[1.1] tracking-tight">
               The Startups Programme embeds
               <span className="block text-white/40">
                 operating structure, governance, and accountability before scale begins.
               </span>
-            </h3>
-          </div>
+            </motion.h3>
+          </motion.div>
         </div>
 
         {/* --- BOTTOM ROW (3 BOXES) --- */}
-        <div className="flex w-full">
+        <motion.div 
+          className="flex w-full"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+        >
 
           {/* Box 1 */}
-          <div className={boxClass}>
+          <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
             </div>
@@ -249,10 +279,10 @@ const ProgramEmbedded = () => {
                 <p>Introducing structure early prevents execution debt.</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Box 2 (Image Box) */}
-          <div className={boxClass}>
+          <motion.div variants={itemVariants} className={boxClass}>
             <img
               src="/Rectangle 9444.png"
               className="absolute inset-0 w-full h-full object-cover opacity-80"
@@ -263,10 +293,10 @@ const ProgramEmbedded = () => {
                 Early structure prevents <br /> later execution debt.
               </h5>
             </div>
-          </div>
+          </motion.div>
 
           {/* Box 3 */}
-          <div className={boxClass}>
+          <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
             </div>
@@ -280,9 +310,9 @@ const ProgramEmbedded = () => {
                 <p>Scale becomes deliberate, not improvised.</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </div>
 
       {/* ══════════════════════════════════════════════
@@ -338,28 +368,35 @@ const ProgramEmbedded = () => {
             />
           </div>
 
-          {/* ONLY CHANGE: px-5 → px-10 to match footer mx-10 */}
-          <div className="relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-[150px]">
-            <h3 className="text-[20px] leading-[1.2] tracking-tight font-light">
+          <motion.div 
+            className="relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-[150px]"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+          >
+            <motion.h3 variants={itemVariants} className="text-[20px] leading-[1.2] tracking-tight font-light">
               The Startups Programme embeds
               <span className="block text-white/40">
                 operating structure, governance, and accountability before scale begins.
               </span>
-            </h3>
-          </div>
+            </motion.h3>
+          </motion.div>
         </div>
 
-        {/* ── MIDDLE HORIZONTAL LINE (edge to edge) ── */}
+        {/* ── MIDDLE HORIZONTAL LINE ── */}
         <div className="w-full border-t border-[#3D3D3D]" />
 
         {/* ── MOBILE CAROUSEL SECTION ── */}
-        <div
+        <motion.div
           className="relative w-full bg-black overflow-hidden cursor-pointer select-none"
           style={{ minHeight: '340px' }}
           onClick={handleSlideClick}
           key={`slide-${activeSlide}`}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
         >
-          {/* ONLY CHANGE: left/right border lines 20px → 40px to match footer mx-10 */}
           <div
             className="absolute top-0 bottom-0 border-l border-[#3D3D3D] z-10"
             style={{ left: '40px' }}
@@ -373,7 +410,6 @@ const ProgramEmbedded = () => {
           {currentSlide.type === 'image' && (
             <div
               className="relative z-20 flex flex-col justify-between h-full"
-              /* ONLY CHANGE: padding sides 36px → 40px */
               style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
             >
               <div className="absolute inset-0" style={{ left: '40px', right: '40px', top: 0, bottom: 0, overflow: 'hidden' }}>
@@ -415,7 +451,6 @@ const ProgramEmbedded = () => {
           {currentSlide.type === 'text' && (
             <div
               className="relative z-20 flex flex-col justify-between h-full"
-              /* ONLY CHANGE: padding sides 36px → 40px */
               style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
             >
               <div>
@@ -455,9 +490,9 @@ const ProgramEmbedded = () => {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* ── BOTTOM HORIZONTAL LINE (edge to edge) ── */}
+        {/* ── BOTTOM HORIZONTAL LINE ── */}
         <div className="w-full border-t border-[#3D3D3D]" />
 
       </div>
