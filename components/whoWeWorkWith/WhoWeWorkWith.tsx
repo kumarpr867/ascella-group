@@ -11,13 +11,13 @@ export default function WhoWeWorkWith() {
   return (
     <>
       <section className="hidden md:block border-y border-color">
-        <div className="mx-auto max-w-7xl ">
+        <div className="mx-10 xl:mx-auto max-w-7xl ">
           <div className="grid grid-cols-1 md:grid-cols-2 border-x border-color">
-            <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-auto lg:grid-rows-[minmax(220px,auto)_1fr_minmax(200px,auto)] md:border-r border-color">
+            <div className="grid grid-cols-1 lg:grid-cols-2 md:border-r border-color">
 
 
-              <div className="border-b border-color px-6 py-6 lg:px-8 lg:py-10">
-                <h2 className="leading">
+              <div className="border-b border-color flex flex-col lg:items-center justify-center px-6 py-6">
+                <h2 className="">
                   Who We <span className="text-gray-200">Work With</span>
                 </h2>
                 <p className="mt-6 text-b2 font-light max-w-xs">
@@ -27,7 +27,7 @@ export default function WhoWeWorkWith() {
 
 
               <div className="hidden lg:block border-l border-b border-color" />
-              <div className="border-b border-color px-6 py-8 lg:px-8 flex items-center gap-4">
+              <div className="border-b border-color px-6 py-6 lg:py-0 flex items-center gap-4">
                 <button onClick={() => router.push("/engageWithUs")} className="flex flex-center border border-color p-3 rounded-4xl hover:scale-110 transition">
                   <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="1" />
@@ -36,17 +36,17 @@ export default function WhoWeWorkWith() {
                 <p className="text-[14px]">Engagements are selective by design.</p>
               </div>
 
-              <div className="border-b lg:border-l border-color px-6 py-8 lg:p-10 flex items-center">
+              <div className="border-b lg:border-l border-color px-6 py-6 lg:py-0 flex items-center">
                 <p className="text-b2 text-gray-100 max-w-md">
                   Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.
                 </p>
               </div>
 
-              <div className="px-6 py-10 lg:p-10 flex items-end">
-                <PlusText text="Scroll Down" />
+              <div className="px-6 py-10 lg:p-10 flex items-end opacity-50">
+                <PlusText text="Scroll Down"  />
               </div>
 
-              <div className="relative lg:border-l border-color">
+              <div className="relative lg:border-l border-color md:h-[240px] md:w-[384px]">
                 <Image
                   src="/whoWeWorkWith/map.svg"
                   alt="Map"

@@ -28,49 +28,43 @@ export default function GeneralApplication() {
           <input
             type="text"
             placeholder="Full Name"
-            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-300 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
+            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-100 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
           />
 
           <input
             type="text"
             placeholder="Your Role / Title"
-            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-300 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
+            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-100 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
           />
 
           <input
             type="tel"
             placeholder="Phone Number"
-            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-300 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
+            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-100 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
           />
 
           <input
             type="email"
             placeholder="Email Address"
-            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-300 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
+            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-100 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
           />
-
-          {/* Upload */}
-          <label className="relative flex items-center justify-center p-2 md:h-20 md:w-50 rounded bg-gray-500 border border-color cursor-pointer hover:border-white transition hover:scale-105">
-            <span className="text-b2 text-gray-200 ">Upload CV</span>
-
-            <input
-              type="file"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              accept=".pdf,.doc,.docx"
-            />
-          </label>
+          <input
+            type="url"
+            placeholder="Add CV URL"
+            className="w-full bg-gray-500 border border-color rounded p-2 md:p-4 text-b3 text-white placeholder:text-gray-100 focus:outline-none focus:border-gray-200 hover:border-white transition hover:scale-105"
+          />
 
 
           <button
             type="submit"
-            className="mt-4 bg-gray-100 text-black py-1 md:py-3 rounded text-[20px] hover:bg-white  hover:scale-105 transition ease-in-out"
+            className="mt-4 bg-gray-100 text-black py-1 md:py-3 rounded text-[16px] hover:bg-white  hover:scale-105 transition ease-in-out"
           >
             Submit
           </button>
         </form>
 
         {/* Footer note */}
-        <p className="text-b2 text-gray-300 text-center tracking-tighter leading-snug">
+        <p className="text-b3 text-gray-200 text-center tracking-tighter leading-snug">
           If you prefer not to complete the form, you may submit your profile directly by email. Please include your CV and a short summary of your operating background.
         </p>
         <div className="">

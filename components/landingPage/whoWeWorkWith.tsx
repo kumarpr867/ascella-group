@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence, animate, useInView } from "motion/react"
+import { motion, AnimatePresence, animate, useInView } from "framer-motion"
 import { useRef } from "react"
 import OutlineBtn from '../btns/OutlineBtn';
 import Heading from '@/components/headings/Heading';
@@ -88,30 +88,35 @@ const AUTO_DURATION = 5;
 export default function WhoWeWorkWith() {
 
     const router = useRouter();
-
+    const [paused, setPaused] = useState(false)
     const [activeIndex, setActiveIndex] = useState(0)
     const [progress, setProgress] = useState(0)
     const sectionRef = useRef(null)
     const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
 
-    useEffect(() => {
-        let controls: any
+    const controlsRef = useRef<any>(null)
 
-        const startTimer = () => {
-            setProgress(0)
-            controls = animate(0, 100, {
-                duration: AUTO_DURATION,
-                ease: "linear",
-                onUpdate: (latest) => setProgress(latest),
-                onComplete: () => {
-                    setActiveIndex((prev) => (prev + 1) % cards.length)
-                }
-            })
+    useEffect(() => {
+        if (paused) {
+            controlsRef.current?.stop()
+            return
         }
 
-        startTimer()
-        return () => controls?.stop()
-    }, [activeIndex])
+        const remaining = AUTO_DURATION * (1 - progress / 100)
+
+        controlsRef.current = animate(progress, 100, {
+            duration: remaining,
+            ease: "linear",
+            onUpdate: (latest) => setProgress(latest),
+            onComplete: () => {
+                setProgress(0)
+                setActiveIndex((prev) => (prev + 1) % cards.length)
+            }
+        })
+
+        return () => controlsRef.current?.stop()
+
+    }, [paused, activeIndex])
 
     const card = cards[activeIndex]
 
@@ -134,25 +139,44 @@ export default function WhoWeWorkWith() {
                     transition={{ delay: 0.4, duration: 0.8 }}
                 >
                     <Heading text='Who We Work With' />
-                    <h3 className='w-full sm:w-3/4 lg:w-1/2 my-10 text-[16px] lg:text-[24px] leading-snug'>
+                    <h3 className='w-full sm:w-3/4 lg:w-1/2 my-5 text-[16px] lg:text-[24px] leading-snug'>
                         Organisations that require control, accountability, and structured execution at scale
                     </h3>
-                    <OutlineBtn text='Engage With Us' color='white' 
-                    onClick={()=>{
-                        router.push("/engageWithUs");
-                    }}/>
+                    <OutlineBtn text='Engage With Us' color='white'
+                        onClick={() => {
+                            router.push("/engageWithUs");
+                        }} />
                 </motion.div>
 
                 {/* ── Card Area ── */}
-                <div className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pb-4 ">
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    variants={{
+                        hidden: {},
+                        visible: {
+                            transition: {
+                                staggerChildren: 0.12
+                            }
+                        }
+                    }}
+                    className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pb-4 ">
 
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeIndex}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.5 }}
+                            onMouseDown={(e) => {
+                                if (e.button === 0) setPaused(true)
+                            }}
+                            onMouseUp={() => setPaused(false)}
+                            onMouseLeave={() => setPaused(false)}
+                            onTouchStart={() => setPaused(true)}
+                            onTouchEnd={() => setPaused(false)}
+                            initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            exit={{ opacity: 0, y: -40, filter: "blur(10px)" }}
+                            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                             className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-10 w-full"
                         >
 
@@ -190,37 +214,50 @@ export default function WhoWeWorkWith() {
                             </div>
 
                             {/* Content */}
-                            <div className="flex flex-col w-full max-w-xs sm:max-w-sm lg:max-w-md text-center px-2 sm:px-0">
+                            <motion.div
+                                variants={{
+                                    hidden: {},
+                                    visible: {
+                                        transition: { staggerChildren: 0.14 }
+                                    }
+                                }}
+                                initial="hidden"
+                                animate="visible"
+                                exit="hidden"
+                                className="flex flex-col w-full max-w-xs sm:max-w-sm lg:max-w-md text-center px-2 sm:px-0"
+                            >
 
                                 <motion.h5
-                                    initial={{ opacity: 0, filter: "blur(10px)", y: 15 }}
-                                    animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                                    exit={{ opacity: 0, filter: "blur(15px)", y: -15 }}
-                                    transition={{ delay: 0.15, duration: 0.6 }}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 15, filter: "blur(6px)" },
+                                        visible: { opacity: 1, y: 0, filter: "blur(0px)" }
+                                    }}
+                                    transition={{ duration: 0.5 }}
                                     className="leading-snug mb-3 sm:mb-4 text-lg sm:text-xl lg:text-2xl uppercase"
                                 >
                                     {card.heading}
                                 </motion.h5>
 
                                 <motion.p
-                                    initial={{ opacity: 0, filter: "blur(10px)", y: 15 }}
-                                    animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                                    exit={{ opacity: 0, filter: "blur(15px)", y: -15 }}
-                                    transition={{ delay: 0.3, duration: 0.6 }}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 15, filter: "blur(6px)" },
+                                        visible: { opacity: 1, y: 0, filter: "blur(0px)" }
+                                    }}
+                                    transition={{ duration: 0.6 }}
                                     className="text-sm sm:text-base leading-relaxed text-white/70"
                                 >
                                     {card.description}
                                 </motion.p>
 
-                            </div>
+                            </motion.div>
 
 
                         </motion.div>
                     </AnimatePresence>
 
-                </div>
+                </motion.div>
             </div>
 
-        </motion.section>
+        </motion.section >
     )
 }

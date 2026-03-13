@@ -103,53 +103,79 @@ export default function Hero() {
           variants={container}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 top-[10vh] z-5 pointer-events-none"
+          className="absolute inset-x-0 top-[10vh] z-5 "
         >
           <div className="hidden md:flex mx-auto max-w-7xl px-10 gap-10 justify-between">
 
-            <motion.div variants={fadeUp} className="flex max-w-md gap-10">
+            <motion.div
+              variants={fadeUp}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+              className="flex flex-col max-w-md cursor-default"
+            >
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Clear Ownership
               </p>
-              <p className="text-b3 text-gray-100 leading-snug">
+
+              <motion.div
+                variants={{
+                  rest: { height: 0, opacity: 0 },
+                  hover: { height: 40, opacity: 1 }
+                }}
+                transition={{ duration: 0.45, ease: EASE }}
+                className="border-l border-4 border-color overflow-hidden"
+              />
+
+              <motion.p
+                variants={{
+                  rest: { opacity: 0, y: -6 },
+                  hover: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.45, ease: EASE }}
+                className="text-b3 pr-32 text-gray-100 leading-snug"
+              >
                 Defined responsibilities across teams ensure accountability at every
                 stage, reducing confusion and accelerating decision-making.
-              </p>
+              </motion.p>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="flex max-w-md gap-10">
+
+            <motion.div
+              variants={fadeUp}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+              className="flex flex-col items-end max-w-xs cursor-default"
+            >
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Unified Control
               </p>
-              <p className="text-b3 text-gray-100 leading-snug">
+              <motion.div
+                variants={{
+                  rest: { height: 0, opacity: 0 },
+                  hover: { height: 40, opacity: 1 }
+                }}
+                transition={{ duration: 0.45, ease: EASE }}
+                className="border-l border-color overflow-hidden"
+              />
+
+              <motion.p
+                variants={{
+                  rest: { opacity: 0, y: -6 },
+                  hover: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.45, ease: EASE }}
+                className="text-b3 text-gray-100 leading-snug"
+              >
                 Integrated oversight across strategy, technology, and operations
                 provides a single source of truth and stronger organizational alignment.
-              </p>
+              </motion.p>
             </motion.div>
 
           </div>
         </motion.div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="hidden md:block absolute inset-x-0 top-[30vh] z-5 pointer-events-none"
-        >
-          <div className="mx-auto max-w-7xl px-10 flex flex-col">
-
-            <motion.div variants={fadeUp} className="flex flex-col max-w-xs gap-2">
-              <p className="text-[14px] shrink-0 tracking-widest uppercase">
-                Calm Execution
-              </p>
-              <div className="border-l border-color h-10" />
-              <p className="text-[12px] pr-32 text-gray-100 leading-snug">
-                Structured processes and leadership ensure steady, predictable delivery.
-              </p>
-            </motion.div>
-
-          </div>
-        </motion.div>
 
         {/* Bottom Content */}
         <motion.div
@@ -187,7 +213,7 @@ export default function Hero() {
           variants={fadeIn}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 bottom-20 z-5"
+          className="absolute inset-x-0 bottom-0 z-5"
         >
           <motion.div
             variants={scaleX}

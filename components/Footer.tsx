@@ -1,6 +1,8 @@
 import PartialOutlineBtn from "./btns/PartialOutlineBtn"
 import Link from "next/link"
 import Image from "next/image"
+import { slideInFromBottom } from "@/utils/motion"
+import Reveal from "@/utils/Reveal"
 
 const ArrowIcon = () => (
     <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,11 +63,11 @@ const footerSections: FooterSection[] = [
 const Footer = () => {
     return (
         <footer className="mb-2 lg:mb-10 w-full">
-            <div className="border-y border-color">
+            <div className="border-b md:border-b-0 border-t border-color">
 
                 {/* md join us */}
                 <div className="md:hidden border-b border-color">
-                    <div className="flex  flex-col mx-10 py-7 px-5 border-x border-color">
+                    <div className="flex  flex-col mx-10 py-4 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Join Us
                         </label>
@@ -88,18 +90,17 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="md:mx-10 xl:mx-auto max-w-7xl flex flex-col sm:flex-row md:border-x border-color">
+                <div className="md:mx-10 xl:mx-auto max-w-7xl flex flex-col sm:flex-row ">
                     <div className="w-full grid grid-cols-1 md:grid-cols-4 ">
                         {footerSections.map((section, i) => (
-                            <div
-                                key={i}
-                                className={`py-7 px-5 lg:p-10 border-x  border-color mx-10 md:mx-0 border-b md:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
+                            <Reveal key={i} variants={slideInFromBottom(i * 0.12)}
+                                className={`py-4 lg:py-7 px-5 lg:p-10 border-x  border-color mx-10 md:mx-0 border-b md:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
                             >
                                 <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
                                     {section.title}
                                 </p>
 
-                                <ul className="space-y-2 text-xs md:text-sm text-gray-100">
+                                <ul className="space-y-2 text-b3 md:text-b2 text-gray-100">
                                     {section.items.map((item, idx) => (
                                         <li key={idx}>
                                             <Link
@@ -115,15 +116,15 @@ const Footer = () => {
                                         </li>
                                     ))}
                                 </ul>
-                            </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div className="block md:hidden mx-10 border-x border-color">
-                <div className="flex flex-col p-6">
-                    <h4 className="text[36px] md:text-[64px] leading-tight mb-2">
+            <Reveal variants={slideInFromBottom(0.1)} className="block md:hidden mx-10 border-x border-color">
+                <div className="flex flex-col px-5 py-4">
+                    <h4 className="text[36px] md:text-[64px] leading-tight mb-1">
                         Control. Structure. Execution.
                     </h4>
                     <p className="text-b3 text-gray-100">
@@ -132,20 +133,20 @@ const Footer = () => {
                         framework.
                     </p>
                 </div>
-            </div>
-            <div className="border-t border-color">
+            </Reveal>
+            <Reveal variants={slideInFromBottom(0.1)} className="border-t border-color">
                 <div className="block md:hidden mx-10 border-x border-color">
-                    <div className="flex items-center justify-between p-6">
-                        <Image src={"/logo2.png"} alt={""} width={50} height={50} />
-                        <p className="text-[14px] text-gray-100">
+                    <div className="flex items-center justify-between px-5 py-4">
+                        <Image src={"/logo2.png"} alt={""} width={30} height={30} />
+                        <p className="text-[12px] text-gray-100">
                             Copyright  @  Ascella Group
                         </p>
                     </div>
                 </div>
-            </div>
+            </Reveal>
 
-            <div className="hidden md:block mx-10 xl:mx-auto max-w-7xl border-x border-color">
-                <div className="p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
+            <Reveal variants={slideInFromBottom(0.1)} className="hidden md:block mx-10 xl:mx-auto max-w-7xl border-x border-color">
+                <div className="px-5 py-4 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
                     <div>
                         <div className="flex flex-col mb-10 md:mb-20">
                             <h3 className="text[36px] md:text-[52px] leading-tight mb-2">
@@ -194,13 +195,10 @@ const Footer = () => {
                         </p>
                     </div>
                 </div>
-            </div>
+            </Reveal>
 
 
             <div className="w-full border-t border-color"></div>
-
-
-            <div className="h-[70px] w-full"></div>
         </footer>
     )
 }

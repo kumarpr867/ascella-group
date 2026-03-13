@@ -12,7 +12,7 @@ export default function page() {
         <EngagementPrinciple />
         <OrganisationTypes />
         <EngagementBegins />
-        <Faq faqs={whoWeWorkWithFaqs} description="" />
+        <Faq faqs={whoWeWorkWithFaqs} description="Common questions about the types of organisations Ascella Group works with, the industries we understand best, and the situations where our involvement typically makes sense" />
     </>
   )
 }

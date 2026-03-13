@@ -1,5 +1,4 @@
 import Hero from "@/components/landingPage/Hero";
-import ExecutionProblemSection from "@/components/landingPage/ExecutionReality";
 import Ownership from "@/components/landingPage/Ownership";
 import Arms from "@/components/landingPage/Arms";
 import HowWeOperate from "@/components/landingPage/HowWeOperate";
@@ -8,13 +7,14 @@ import Engagement from "@/components/landingPage/Engagement";
 import Prog from "@/components/landingPage/Prog";
 import WhoWeWorkWith from "@/components/landingPage/whoWeWorkWith";
 import { landingPageFaqs } from "@/data/faqs/LandingPageFaqs";
+import ExecutionProblem from "@/components/landingPage/ExecutionProblem";
 
 
 export default function Home() {
   return (
     <div>
       <Hero />
-      <ExecutionProblemSection />
+      <ExecutionProblem />
       <Prog />
       <Ownership />
       <Arms /> 

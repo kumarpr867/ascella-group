@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -29,6 +29,12 @@ const categories = [
 
 
 export default function CaseStudies() {
+
+    const filterRef = useRef<HTMLDivElement>(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const CASES_PER_PAGE = 6;
+
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
@@ -45,8 +51,39 @@ export default function CaseStudies() {
     });
 
     const featured = filtered.filter((item) => item.featured);
-    const allStudies = filtered.filter((item) => !item.featured);
     const isFilteredCategory = category !== "All";
+    const dataToPaginate = filtered.filter((item) => !item.featured);
+
+    const totalPages = Math.ceil(dataToPaginate.length / CASES_PER_PAGE);
+
+    const paginatedStudies = dataToPaginate.slice(
+        (currentPage - 1) * CASES_PER_PAGE,
+        currentPage * CASES_PER_PAGE
+    );
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const el = filterRef.current;
+            if (!el) return;
+
+            if (!el.contains(event.target as Node)) {
+                setShowFilter(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, category]);
+    // Scroll to top when page changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
 
     return (
         <section className="mb-20">
@@ -88,7 +125,7 @@ export default function CaseStudies() {
                     </div>
 
                     {/* filter */}
-                    <div className="relative">
+                    <div ref={filterRef} className="relative">
 
                         <button
                             onClick={() => setShowFilter(!showFilter)}
@@ -166,12 +203,56 @@ export default function CaseStudies() {
                 </h2>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-15 ">
-                    {(isFilteredCategory ? filtered : allStudies).map((item) => (
+                    {paginatedStudies.map((item) => (
                         <CaseCard key={item.id} item={item} variant="default" />
                     ))}
                 </div>
-
+                {paginatedStudies.length === 0 && (
+                    <p className="text-center text-white mt-10">
+                        No case studies found.
+                    </p>
+                )}
             </div>
+            {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-6 mt-20 text-sm text-white/60">
+
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((p) => p - 1)}
+                        className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                    >
+                        ← Previous
+                    </button>
+
+                    <div className="flex items-center gap-3">
+                        {getPagination(currentPage, totalPages).map((page, index) =>
+                            page === "..." ? (
+                                <span key={index}>...</span>
+                            ) : (
+                                <button
+                                    key={index}
+                                    onClick={() => setCurrentPage(page as number)}
+                                    className={`transition ${currentPage === page
+                                            ? "text-white"
+                                            : "hover:text-white"
+                                        }`}
+                                >
+                                    {page}
+                                </button>
+                            )
+                        )}
+                    </div>
+
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage((p) => p + 1)}
+                        className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+            )}
         </section>
     );
 }
@@ -194,7 +275,7 @@ function CaseCard({
         >
 
             {/* Image */}
-            <div className={`relative overflow-hidden border border-color ${isFeatured? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
+            <div className={`relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
                 <Image
                     src={item.image}
                     alt={item.title}
@@ -239,4 +320,37 @@ function CaseCard({
             </div>
         </motion.div>
     )
+}
+
+function getPagination(current: number, total: number) {
+  const delta = 1
+  const range: (number | string)[] = []
+  const rangeWithDots: (number | string)[] = []
+
+  let l
+
+  for (let i = 1; i <= total; i++) {
+    if (
+      i === 1 ||
+      i === total ||
+      (i >= current - delta && i <= current + delta)
+    ) {
+      range.push(i)
+    }
+  }
+
+  for (let i of range) {
+    if (l) {
+      if ((i as number) - l === 2) {
+        rangeWithDots.push(l + 1)
+      } else if ((i as number) - l !== 1) {
+        rangeWithDots.push("...")
+      }
+    }
+
+    rangeWithDots.push(i)
+    l = i as number
+  }
+
+  return rangeWithDots
 }

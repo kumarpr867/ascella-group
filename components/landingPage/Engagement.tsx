@@ -4,40 +4,42 @@ import Link from "next/link"
 import Image from "next/image"
 import dynamic from "next/dynamic"
 import { useEffect, useRef, useState, useCallback } from "react"
+import Reveal from "@/utils/Reveal"
+import { slideInFromBottom } from "@/utils/motion"
 
 const ParticleSphere = dynamic(() => import("../howAscellaOperates/ParticleSphere"), { ssr: false })
 
 // ── Config (Slow & Smooth Tuning) ─────────────────────────────────────────────
-const SPACING       = 5;      
-const THRESHOLD     = 10;
-const HOVER_RADIUS  = 100;    
-const EXPLODE_FORCE = 4;      
+const SPACING = 5;
+const THRESHOLD = 10;
+const HOVER_RADIUS = 100;
+const EXPLODE_FORCE = 4;
 const EXPLODE_DECAY = 0.94;   // Higher decay = smoother slowdown
-const RETURN_LERP   = 0.02;   // Lower value = slower, more liquid morphing
-const CONNECT_DIST  = 32;     
+const RETURN_LERP = 0.02;   // Lower value = slower, more liquid morphing
+const CONNECT_DIST = 32;
 
 interface Particle {
-    ox: number; oy: number; 
-    cx: number; cy: number; 
-    x:  number; y:  number; 
-    vx: number; vy: number; 
+    ox: number; oy: number;
+    cx: number; cy: number;
+    x: number; y: number;
+    vx: number; vy: number;
     size: number;
     phase: number;
 }
 
 // ── ParticleCanvas ────────────────────────────────────────────────────────────
 function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
-    const canvasRef    = useRef<HTMLCanvasElement>(null);
-    const mouseRef     = useRef({ x: -9999, y: -9999 });
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const mouseRef = useRef({ x: -9999, y: -9999 });
     const particlesRef = useRef<Particle[]>([]);
-    const rafRef       = useRef<number | null>(null);
+    const rafRef = useRef<number | null>(null);
     const [mode, setMode] = useState<"image" | "circle">("image");
 
     // Timing slowed to 3 seconds for a more graceful transition
     useEffect(() => {
         const timer = setInterval(() => {
             setMode((prev) => (prev === "image" ? "circle" : "image"));
-        }, 3000); 
+        }, 3000);
         return () => clearInterval(timer);
     }, []);
 
@@ -45,8 +47,8 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const canvas = canvasRef.current;
         if (!canvas || !imgEl) return;
 
-        const rect    = canvas.getBoundingClientRect();
-        canvas.width  = rect.width;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
         canvas.height = rect.height;
 
         const W = canvas.width;
@@ -55,9 +57,9 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const centerY = H / 2;
         const circleRadius = Math.min(W, H) / 3.4;
 
-        const off    = document.createElement("canvas");
-        off.width    = W;
-        off.height   = H;
+        const off = document.createElement("canvas");
+        off.width = W;
+        off.height = H;
         const offCtx = off.getContext("2d")!;
 
         try {
@@ -77,10 +79,10 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
                             ox: x, oy: y,
                             cx: centerX + Math.cos(angle) * r,
                             cy: centerY + Math.sin(angle) * r,
-                            x: Math.random() * W, 
+                            x: Math.random() * W,
                             y: Math.random() * H,
                             vx: 0, vy: 0,
-                            size: 0.7, 
+                            size: 0.7,
                             phase: Math.random() * Math.PI * 2
                         });
                     }
@@ -126,7 +128,7 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 
                 p.vx *= EXPLODE_DECAY;
                 p.vy *= EXPLODE_DECAY;
-                
+
                 // Position update with very smooth LERP
                 p.x += (tx + floatX - p.x) * RETURN_LERP + p.vx;
                 p.y += (ty + floatY - p.y) * RETURN_LERP + p.vy;
@@ -169,7 +171,7 @@ function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
         const ro = new ResizeObserver(buildParticles);
         ro.observe(canvas);
         if (imgEl?.complete) buildParticles();
-        
+
         rafRef.current = requestAnimationFrame(loop);
         return () => {
             canvas.removeEventListener("mousemove", onMove);
@@ -214,15 +216,15 @@ export default function Engagement() {
             </div>
 
             <div className="xl:mx-auto mx-10 full max-w-7xl flex flex-col py-10 px-4 sm:px-6 md:px-10 border-x border-color">
-                <div className="flex justify-center md:justify-between mb-10 md:mb-15">
-                    <h1 className="uppercase text-xl sm:text-2xl text-gray-200 text-thin text-center md:text-left">
+                <Reveal variants={slideInFromBottom(0.1)} className="flex justify-center md:justify-between mb-10ff">
+                    <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-center md:text-left">
                         <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
                     </h1>
                     <div className="hidden md:flex flex-col font-light">
                         <Link href={"/"}>hello@ascella.group</Link>
                         <p>+91 16045 10860</p>
                     </div>
-                </div>
+                </Reveal>
                 <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
                     <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
 
@@ -232,7 +234,7 @@ export default function Engagement() {
                             className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px]"
                         />
 
-                        <div className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
+                        <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
                             <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
                                 <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
                                 <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
@@ -244,47 +246,56 @@ export default function Engagement() {
                                 <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
                                 <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
                             </div>
-                        </div>
+                        </Reveal>
                     </div>
+                    
+                        <form className="w-full md:max-w-md space-y-2 md:space-y-4">
+                            <Reveal variants={slideInFromBottom(0.1)}>
+                                <label className="block text-b2">Full Name</label>
+                                <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.1)}>
+                                <label className="block text-b2">Organisation</label>
+                                <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.1)}>
+                                <label className="block text-b2">Role / Position</label>
+                                <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.1)}>
+                                <label className="block text-b2">Email Address</label>
+                                <input type="email" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.1)} className="relative">
+                                <label className="block text-b2">
+                                    Organisation Type
+                                </label>
 
-                    <form className="w-full md:max-w-md space-y-4 sm:space-y-5">
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Full Name</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Organisation</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Role / Position</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Email Address</label>
-                            <input type="email" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">Organisation Type</label>
-                            <select defaultValue="" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition">
-                                <option value="" disabled></option>
-                                <option>Something</option>
-                                <option>Something</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white font-light mb-1">
-                                Describe your current operating or execution challenge
-                            </label>
-                            <textarea rows={4} className="w-full bg-gray-500 px-4 py-3 resize-none focus:outline-none focus:border-white transition" />
-                        </div>
-                        <button type="submit" className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black transition">
-                            Consult Now
-                        </button>
-                    </form>
+                                <select
+                                    defaultValue=""
+                                    className="w-full bg-gray-500 text-white px-4 py-3 pr-10 border border-transparent focus:outline-none hover:bg-gray-600 transition cursor-pointer"
+                                >
+                                    <option value="" disabled>Select Organisation</option>
+                                    <option value="ascella-group">Ascella Group</option>
+                                    <option value="ascella-infosec">Ascella Infosec</option>
+                                    <option value="ascella-staffing">Ascella Staffing</option>
+                                    <option value="ascella-engage">Ascella Engage</option>
+                                    <option value="ascella-forge">Ascella Forge</option>
+                                </select>
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.1)}>
+                                <label className="block text-b2">
+                                    Describe your current operating or execution challenge
+                                </label>
+                                <textarea rows={3} className="w-full bg-gray-500 px-4 py-2 resize-none focus:outline-none focus:border-white transition" />
+                            </Reveal>
+                            <button type="submit" className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black transition">
+                                Consult Now
+                            </button>
+                        </form>
                 </div>
             </div>
-            
+
             <div className="border-t border-color">
                 <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
             </div>

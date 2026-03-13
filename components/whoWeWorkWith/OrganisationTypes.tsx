@@ -131,7 +131,7 @@ export default function OrganisationTypes() {
                 </div>
                 <div className="relative">
                   <div
-                    className={`absolute left-0 right-0 -top-25 h-56
+                    className={`absolute left-0 right-0 -top-25 h-52
                           transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
                           ${isActive
                         ? "opacity-100 scale-100 [clip-path:inset(0%)]"
@@ -157,8 +157,7 @@ export default function OrganisationTypes() {
                     )}
                   </div>
 
-                  <div className="pl-0 lg:pl-10">
-
+                  <div className="">
                     <h2 className="text-xl">Typical Need</h2>
                     <p className="font-light text-gray-200 text-sm leading-tight lg:pr-14">{type.typicalNeed}</p>
                   </div>

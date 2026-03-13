@@ -1,4 +1,3 @@
-import ReadingProgress from "@/components/ReadingProgress"
 import { blogsWithSlug } from "@/data/blogs"
 import { caseStudiesWithSlug } from "@/data/case-studies"
 import Image from "next/image"
@@ -29,13 +28,12 @@ export default async function BlogPage({ params }: Props) {
 
   return (
     <div>
-    <ReadingProgress />
     <section className="relative border-y border-color mb-20">
       <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
         <div className="min-h-screen flex lg:flex-row flex-col">
 
           {/* MAIN CONTENT */}
-          <main className="lg:border-r border-color min-w-0">
+          <main className="lg:w-[75%] lg:border-r border-color min-w-0">
             <div className="border-b border-color md:p-10 py-10">
               <p className="md:block hidden text-b2 mb-4">
                 Ascella Group &nbsp;|&nbsp; {blog.category} &nbsp;|&nbsp; {blog.date}
@@ -276,7 +274,7 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="relative pt-10 w-full lg:w-[360px]">
+          <aside className="relative pt-10 w-full lg:w-[250px]">
             <div className=" sticky top-10">
 
               {/* blogs */}

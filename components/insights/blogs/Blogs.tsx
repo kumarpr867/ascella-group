@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -18,9 +18,14 @@ const categories = [
     "Sales",
 ];
 export default function Blogs() {
+
+    const filterRef = useRef<HTMLDivElement>(null);
+
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const BLOGS_PER_PAGE = 6;
 
     const filtered = blogs.filter((item) => {
         const matchesSearch = item.title
@@ -34,9 +39,38 @@ export default function Blogs() {
     });
 
     const featured = filtered.filter((item) => item.featured);
-    const allStudies = filtered.filter((item) => !item.featured);
     const isFilteredCategory = category !== "All";
+    const dataToPaginate = filtered.filter((item) => !item.featured);
 
+    const totalPages = Math.ceil(dataToPaginate.length / BLOGS_PER_PAGE);
+
+    const paginatedBlogs = dataToPaginate.slice(
+        (currentPage - 1) * BLOGS_PER_PAGE,
+        currentPage * BLOGS_PER_PAGE
+    );
+useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+        const el = filterRef.current;
+        if (!el) return;
+
+        if (!el.contains(event.target as Node)) {
+            setShowFilter(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    }, [currentPage])
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, category]);
     return (
         <section className="mb-20">
 
@@ -50,13 +84,7 @@ export default function Blogs() {
                             placeholder="Search by Title"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-gray-500 backdrop-blur-md  
-                   text-white text-sm pr-10 pl-4 py-2  
-                   placeholder-gray-100
-                   focus:outline-none focus:ring-2 focus:ring-white/20 
-                   focus:border-white/40
-                   transition-all duration-300"
-                        />
+                            className="w-full bg-gray-500 backdrop-blur-md text-white text-sm pr-10 pl-4 py-2 placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/40 transition-all duration-300" />
 
                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-100 cursor-pointer">
                             <svg
@@ -77,7 +105,7 @@ export default function Blogs() {
                     </div>
 
                     {/* filter */}
-                    <div className="relative">
+                    <div ref={filterRef} className="relative">
 
                         <button
                             onClick={() => setShowFilter(!showFilter)}
@@ -146,6 +174,7 @@ export default function Blogs() {
                                 <CaseCard key={item.id} item={item} variant="featured" />
                             ))}
                         </div>
+
                     </>
                 )}
 
@@ -154,11 +183,61 @@ export default function Blogs() {
                     {isFilteredCategory ? `${category} Blogs` : "All Blogs"}
                 </h2>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-15 ">
-                    {(isFilteredCategory ? filtered : allStudies).map((item) => (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+                    {paginatedBlogs.map((item) => (
                         <CaseCard key={item.id} item={item} variant="default" />
                     ))}
                 </div>
+                {paginatedBlogs.length === 0 && (
+                    <p className="text-center text-white mt-10">
+                        No blogs found.
+                    </p>
+                )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-6 mt-20 text-sm text-white/60">
+
+                        {/* Previous */}
+                        <button
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage((p) => p - 1)}
+                            className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                        >
+                            ← Previous
+                        </button>
+
+                        {/* Page numbers */}
+                        <div className="flex items-center gap-3">
+                            {getPagination(currentPage, totalPages).map((page, index) =>
+                                page === "..." ? (
+                                    <span key={index}>...</span>
+                                ) : (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentPage(page as number)}
+                                        className={`transition ${currentPage === page
+                                            ? "text-white"
+                                            : "hover:text-white"
+                                            }`}
+                                    >
+                                        {page}
+                                    </button>
+                                )
+                            )}
+                        </div>
+
+                        {/* Next */}
+                        <button
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage((p) => p + 1)}
+                            className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                        >
+                            Next →
+                        </button>
+
+                    </div>
+                )}
 
             </div>
         </section>
@@ -183,7 +262,7 @@ function CaseCard({
         >
 
             {/* Image */}
-            <div className={`relative overflow-hidden border border-color ${isFeatured? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
+            <div className={`relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
                 <Image
                     src={item.image}
                     alt={item.title}
@@ -228,4 +307,36 @@ function CaseCard({
             </div>
         </motion.div>
     )
+}
+function getPagination(current: number, total: number) {
+    const delta = 1
+    const range: (number | string)[] = []
+    const rangeWithDots: (number | string)[] = []
+
+    let l
+
+    for (let i = 1; i <= total; i++) {
+        if (
+            i === 1 ||
+            i === total ||
+            (i >= current - delta && i <= current + delta)
+        ) {
+            range.push(i)
+        }
+    }
+
+    for (let i of range) {
+        if (l) {
+            if ((i as number) - l === 2) {
+                rangeWithDots.push(l + 1)
+            } else if ((i as number) - l !== 1) {
+                rangeWithDots.push("...")
+            }
+        }
+
+        rangeWithDots.push(i)
+        l = i as number
+    }
+
+    return rangeWithDots
 }
