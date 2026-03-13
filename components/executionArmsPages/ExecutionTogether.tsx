@@ -53,12 +53,20 @@ function IsometricHoverGrid() {
       };
     }
 
-    const resize = () => {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    const syncSize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const { width: w, height: h } = parent.getBoundingClientRect();
+      if (w > 0 && h > 0 && (canvas.width !== Math.round(w) || canvas.height !== Math.round(h))) {
+        canvas.width  = Math.round(w);
+        canvas.height = Math.round(h);
+      }
     };
-    resize();
-    window.addEventListener('resize', resize);
+
+    // ResizeObserver watches the parent div directly — fires whenever size actually changes
+    const ro = new ResizeObserver(() => syncSize());
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+    syncSize();
 
     const onMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -71,6 +79,12 @@ function IsometricHoverGrid() {
     const alphaMap = new Map<string, number>();
 
     const loop = () => {
+      // If canvas has no size yet, try syncing and skip this frame
+      if (canvas.width === 0 || canvas.height === 0) {
+        syncSize();
+        rafRef.current = requestAnimationFrame(loop);
+        return;
+      }
       const W = canvas.width;
       const H = canvas.height;
       ctx.clearRect(0, 0, W, H);
@@ -105,37 +119,22 @@ function IsometricHoverGrid() {
           ctx.closePath();
 
           // VISIBILITY UPDATE: Increase grid line opacity and visibility
-          // Preserve image_2 style logic, but boost the values to feel like a BG
-          // Light grey base line
-          const baseLineAlpha = 0.2; // Significant visibility boost
-          const hoverBoostAlpha = 0.3; // Lighten further on hover
+          const baseLineAlpha = 0.2;
+          const hoverBoostAlpha = 0.3;
           ctx.strokeStyle = `rgba(180, 180, 180, ${baseLineAlpha + current * hoverBoostAlpha})`;
           ctx.lineWidth   = LINE_WIDTH;
           ctx.stroke();
 
           // VECTOR55.PNG DRAW LOGIC:
-          // Check if this specific cell coordinate matches one of the 3 requested spots.
           if (vectorImage) {
             const shouldDrawVector = vectorImagesConfig.some(
               (config) => config.col === col && config.row === row
             );
 
             if (shouldDrawVector) {
-              // Draw the image *within* the isometric bounding box of the cell.
-              // Cell bounds are:
-              // Left: cx - CELL_W/2, Top: cy - CELL_H/2, Width: CELL_W, Height: CELL_H
-              // We need to translate the context because drawImage needs a normal rect
               ctx.save();
               ctx.translate(cx - CELL_W / 2, cy - CELL_H / 2);
-              
-              // drawImage(image, x, y, width, height)
-              // Width/height will stretch to fit the cell box perfectly.
-              // Note: The image itself might not be isometric, so it will be stretched/skewed
-              // to fill this normal bounding rect. For a truly isometric fit, the vector55.png
-              // itself should be drawn on an isometric canvas or pre-sheared.
-              // This stretches it to the boundaries.
               ctx.drawImage(vectorImage, 0, 0, CELL_W, CELL_H);
-              
               ctx.restore();
             }
           }
@@ -153,7 +152,7 @@ function IsometricHoverGrid() {
     loop();
 
     return () => {
-      window.removeEventListener('resize', resize);
+      ro.disconnect();
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('mouseleave', onLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -198,7 +197,7 @@ function useBreakpoint() {
 const CONFIG = {
   mobile:  { cardW: 90,  cardH: 116, leftStep: 72,  topStep: 8,  gridTop: 108, gridBottom: -40,  liftY: -30, scale: 1.05 },
   tablet:  { cardW: 160, cardH: 206, leftStep: 128, topStep: 12, gridTop: 196, gridBottom: -80,  liftY: -50, scale: 1.05 },
-  desktop: { cardW: 200, cardH: 256, leftStep: 160, topStep: 15, gridTop: 260, gridBottom: -120, liftY: -60, scale: 1.05 },
+  desktop: { cardW: 200, cardH: 256, leftStep: 160, topStep: 15, gridTop: 200, gridBottom: -120, liftY: -60, scale: 1.05 },
 };
 
 // ── Main Component ─────────────────────────────────────────────────────────────
@@ -210,13 +209,13 @@ const ExecutionTogether = () => {
   // Mobile computation (NO CHANGE)
   const mobileCfg = (() => {
     const totalCards = 5;
-    const pagePadding = 40;
+    const pagePadding = 80; // 40px left + 40px right to match footer mx-10
     const available = Math.max(screenW - pagePadding, 200);
     const cardW = Math.floor(available / 4.12);
     const leftStep = Math.floor(cardW * 0.78);
     const cardH = Math.round(cardW * 1.28);
     const gridTop = Math.round(cardH * 0.93);
-    return { cardW, cardH, leftStep, topStep: 8, gridTop, gridBottom: -40, liftY: -28, scale: 1.04 };
+    return { cardW, cardH, leftStep, topStep: 8, gridTop, gridBottom: 0, liftY: -28, scale: 1.04 };
   })();
 
   const cfg = isMobile ? mobileCfg : CONFIG[bp];
@@ -231,17 +230,19 @@ const ExecutionTogether = () => {
 
   const totalCards = executionArms.length;
   const containerW = cfg.cardW + cfg.leftStep * (totalCards - 1);
-  const containerH = cfg.cardH + cfg.topStep * (totalCards - 1) + (isMobile ? 60 : 100);
+  const expandedCardH = (isMobile && activeId) ? cfg.cardH * 1.4 : cfg.cardH;
+  const containerH = expandedCardH + cfg.topStep * (totalCards - 1) + (isMobile ? 20 : 100);
 
   return (
     <div
-      className="min-h-screen bg-black text-white flex flex-col items-center relative overflow-hidden"
+      className="bg-black text-white flex flex-col items-center relative overflow-hidden"
       style={{
         fontFamily: 'sans-serif',
         paddingTop: isMobile ? 36 : 48,
-        paddingBottom: 48,
-        paddingLeft: isMobile ? 20 : 32,
-        paddingRight: isMobile ? 20 : 32,
+        paddingBottom: isMobile ? 16 : 48,
+        // ONLY CHANGE: mobile padding matches footer mx-10 = 40px
+        paddingLeft: isMobile ? 40 : 40,
+        paddingRight: isMobile ? 40 : 40,
       }}
     >
       {/* ── Header (NO CHANGE) ────────────────────────────────────────────────────────── */}
@@ -296,13 +297,11 @@ const ExecutionTogether = () => {
       {/* ── Cards area (Layout preserved, structure preserved) ────────────────────── */}
       <div
         className="relative flex justify-center items-start w-full"
-        style={{ height: containerH + (isMobile ? 40 : 80) }}
+        style={{ height: containerH + (isMobile ? 10 : 80) }}
       >
         <div className="relative" style={{ width: containerW, height: containerH }}>
-          
-          {/* SVG grid removed - now all dynamic lines handled by canvas */}
 
-          {/* Canvas Hover Area - Preserve existing size/position, geometry preserved, visibility & image insertion updated */}
+          {/* Canvas Hover Area */}
           <div
             style={{
               position: 'absolute',
@@ -310,7 +309,6 @@ const ExecutionTogether = () => {
               bottom: cfg.gridBottom,
               left: 0, right: 0,
               zIndex: 1,
-              // Fading mask preserved
               WebkitMaskImage: [
                 'radial-gradient(ellipse at center, black 0%, transparent 80%)',
                 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
@@ -343,7 +341,7 @@ const ExecutionTogether = () => {
                 className="absolute transition-all ease-out"
                 style={{
                   width: cfg.cardW,
-                  height: cfg.cardH,
+                  height: (isMobile && isExpanded) ? cfg.cardH * 1.4 : cfg.cardH,
                   top: topPx,
                   left: leftPx,
                   zIndex: isExpanded ? 100 : zBase,

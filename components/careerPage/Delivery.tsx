@@ -1,7 +1,6 @@
 "use client"
 import React from 'react';
 
-/* ------------------ RADAR CANVAS ------------------ */
 const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -29,10 +28,7 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
     const W = container.clientWidth;
     const H = container.clientHeight;
 
-    if (!W || !H) {
-      animRef.current = requestAnimationFrame(draw);
-      return;
-    }
+    if (!W || !H) { animRef.current = requestAnimationFrame(draw); return; }
 
     const dpr = window.devicePixelRatio || 1;
     if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
@@ -42,53 +38,38 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
 
-    // Desktop: maxR = H/2 (circle fills full section height, touches top+bottom borders)
-    // Mobile: maxR = W/2 - margin (circle fits within horizontal margins)
     const maxR = fillHeight ? H / 2 : W / 2 - 24;
     const cx = fillHeight ? (W / 2 - maxR * 0.08) : W / 2;
     const cy = H / 2;
 
-    /* ---- outer solid ring ---- */
     ctx.beginPath();
     ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
     ctx.lineWidth = 1.8;
     ctx.stroke();
 
-    /* ---- 0.66 ring ---- */
     ctx.beginPath();
     ctx.arc(cx, cy, maxR * 0.66, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
-    /* ---- dotted ring at 0.83 ---- */
     for (let i = 0; i < 80; i++) {
       const theta = (i / 80) * Math.PI * 2;
       ctx.beginPath();
-      ctx.arc(
-        cx + Math.cos(theta) * maxR * 0.83,
-        cy + Math.sin(theta) * maxR * 0.83,
-        maxR * 0.0078, 0, Math.PI * 2
-      );
+      ctx.arc(cx + Math.cos(theta) * maxR * 0.83, cy + Math.sin(theta) * maxR * 0.83, maxR * 0.0078, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(255,255,255,0.9)';
       ctx.fill();
     }
 
-    /* ---- dotted ring at 0.47 ---- */
     for (let i = 0; i < 56; i++) {
       const theta = (i / 56) * Math.PI * 2;
       ctx.beginPath();
-      ctx.arc(
-        cx + Math.cos(theta) * maxR * 0.47,
-        cy + Math.sin(theta) * maxR * 0.47,
-        maxR * 0.0078, 0, Math.PI * 2
-      );
+      ctx.arc(cx + Math.cos(theta) * maxR * 0.47, cy + Math.sin(theta) * maxR * 0.47, maxR * 0.0078, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(255,255,255,0.9)';
       ctx.fill();
     }
 
-    /* ---- inner tiny rings ---- */
     [0.16, 0.25, 0.36, 0.50].forEach((fr, i) => {
       ctx.beginPath();
       ctx.arc(cx, cy, maxR * fr, 0, Math.PI * 2);
@@ -97,13 +78,11 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
       ctx.stroke();
     });
 
-    /* ---- center dot ---- */
     ctx.beginPath();
     ctx.arc(cx, cy, maxR * 0.019, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
     ctx.fill();
 
-    /* ---- half vertical line: center → top ---- */
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(cx, cy - maxR);
@@ -111,7 +90,6 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
     ctx.lineWidth = maxR * 0.003;
     ctx.stroke();
 
-    /* ---- rotating dotted diagonal ---- */
     if (isHoveredRef.current && mouseRef.current) {
       const mx = mouseRef.current.x - cx;
       const my = mouseRef.current.y - cy;
@@ -135,7 +113,6 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
       ctx.fill();
     }
 
-    /* ---- animated blinking targets ---- */
     const elapsed = timestamp / 1000;
     targetsRef.current.forEach((target) => {
       if (elapsed - target.timer >= target.interval) {
@@ -189,15 +166,12 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
   );
 };
 
-/* ------------------ MAIN DELIVERY COMPONENT ------------------ */
 const Delivery = () => {
   return (
     <section className="w-full border-y border-color my-20">
 
       {/* ===================== DESKTOP (lg+) ===================== */}
       <div className="hidden lg:flex flex-row w-full min-h-[90vh]">
-
-        {/* LEFT */}
         <div className="w-1/2 flex flex-col justify-between pl-30 pr-16 py-12">
           <div className="max-w-[360px]">
             <h3 className="text-3xl font-light leading-tight mb-2 tracking-tight">
@@ -217,27 +191,20 @@ const Delivery = () => {
             <span className="text-lg font-light">Pods execute. Governance coordinates.</span>
           </div>
         </div>
-
-        {/* RIGHT — canvas fills full height, circle touches top+bottom borders */}
-        <div className="w-1/2 relative  self-stretch pr-10">
-          <RadarCanvas fillHeight={true} />
+        <div className="w-1/2 relative self-stretch">
+          {/* right-10 = 40px matching footer desktop mx-10 */}
+          <div className="absolute inset-0 right-10">
+            <RadarCanvas fillHeight={true} />
+          </div>
         </div>
-
       </div>
 
-      {/* ===================== MOBILE (< lg) =====================
-          Layout top to bottom:
-          [top border — from section]
-          [content block — px-6 margin]
-          [circle block — px-6 margin, square aspect]
-          [full-width divider line]
-          [pods execute row — px-6 margin]
-          [bottom border — from section]
-      ============================================================ */}
+      {/* ===================== MOBILE (< lg) ===================== */}
+      {/* ONLY CHANGE: px-6 → px-10 and mx-6 → mx-10 to match footer */}
       <div className="lg:hidden flex flex-col w-full">
 
         {/* Content block */}
-        <div className="px-6 pt-10 pb-8">
+        <div className="px-10 pt-10 pb-8">
           <h3 className="text-2xl font-light leading-tight mb-5 tracking-tight">
             Delivery is organised through governed pods under central oversight.
           </h3>
@@ -250,7 +217,7 @@ const Delivery = () => {
         </div>
 
         {/* Circle block — square, with horizontal margin */}
-        <div className="mx-6 relative" style={{ aspectRatio: '1 / 1' }}>
+        <div className="mx-10 relative" style={{ aspectRatio: '1 / 1' }}>
           <RadarCanvas fillHeight={false} />
         </div>
 
@@ -258,7 +225,7 @@ const Delivery = () => {
         <div className="w-full border-t border-white/15 mt-8" />
 
         {/* Pods execute row */}
-        <div className="flex items-center gap-4 px-6 py-6">
+        <div className="flex items-center gap-4 px-10 py-6">
           <div className="border border-white/25 rounded-full w-10 h-10 flex items-center justify-center text-lg shrink-0">
             ↗
           </div>

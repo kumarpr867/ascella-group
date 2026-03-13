@@ -3,121 +3,161 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // ── Isometric Grid ────────────────────────────────────────────────────────────
-function IsometricHoverGrid() {
+function IsometricHoverGrid({
+  cellW = 100,
+  cellH = 60,
+  interactive = true,
+}: {
+  cellW?: number;
+  cellH?: number;
+  interactive?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
   const rafRef    = useRef<number | null>(null);
-  const CELL_W = 100, CELL_H = 60;
 
   const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
-    x: oX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2),
-    y: oY + row * (CELL_H / 2),
+    x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
+    y: oY + row * (cellH / 2),
   });
   const inDiamond = (px: number, py: number, cx: number, cy: number) =>
-    Math.abs(px - cx) / (CELL_W / 2) + Math.abs(py - cy) / (CELL_H / 2) <= 1;
+    Math.abs(px - cx) / (cellW / 2) + Math.abs(py - cy) / (cellH / 2) <= 1;
 
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
+
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
-    resize(); window.addEventListener('resize', resize);
-    const onMove = (e: MouseEvent) => { const r = canvas.getBoundingClientRect(); mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
     const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
-    canvas.addEventListener('mousemove', onMove); canvas.addEventListener('mouseleave', onLeave);
+
+    if (interactive) {
+      canvas.addEventListener('mousemove', onMove);
+      canvas.addEventListener('mouseleave', onLeave);
+    }
+
     const alphaMap = new Map<string, number>();
-    const DOTS_X = 15, DOTS_Y = 15, DOT_R = 0.6;
+
     const loop = () => {
-      const W = canvas.width, H = canvas.height; ctx.clearRect(0, 0, W, H);
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
       const mx = mouseRef.current.x, my = mouseRef.current.y;
-      const cols = Math.ceil(W / CELL_W) + 2, rows = Math.ceil(H / (CELL_H / 2)) + 2;
+      const cols = Math.ceil(W / cellW) + 2;
+      const rows = Math.ceil(H / (cellH / 2)) + 2;
+      const offsetX = -cellW / 2, offsetY = -cellH / 2;
+
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const { x: cx, y: cy } = cellCenter(col, row, -CELL_W / 2, -CELL_H / 2);
+          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
           const key = `${col},${row}`;
-          const prev = alphaMap.get(key) ?? 0;
-          const cur = prev + ((inDiamond(mx, my, cx, cy) ? 1 : 0) - prev) * 0.1;
-          alphaMap.set(key, cur);
-          ctx.save();
-          ctx.beginPath(); ctx.moveTo(cx, cy - CELL_H/2); ctx.lineTo(cx + CELL_W/2, cy);
-          ctx.lineTo(cx, cy + CELL_H/2); ctx.lineTo(cx - CELL_W/2, cy); ctx.closePath(); ctx.clip();
-          for (let dy = 0; dy < DOTS_Y; dy++) for (let dx = 0; dx < DOTS_X; dx++) {
-            const px = cx - CELL_W/2 + (dx+0.5)*(CELL_W/DOTS_X);
-            const py = cy - CELL_H/2 + (dy+0.5)*(CELL_H/DOTS_Y);
-            if (!inDiamond(px, py, cx, cy)) continue;
-            const fade = Math.max(0, 1 - (Math.abs((px-cx)/(CELL_W/2)) + Math.abs((py-cy)/(CELL_H/2))));
-            const alpha = fade*0.18 + cur*fade*0.45; if (alpha < 0.01) continue;
-            ctx.beginPath(); ctx.arc(px, py, DOT_R + cur*0.4, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(234,197,52,${Math.min(1,alpha)})`; ctx.fill();
+
+          const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
+          const target  = hovered ? 1 : 0;
+          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
+          alphaMap.set(key, current);
+
+          ctx.beginPath();
+          ctx.moveTo(cx,             cy - cellH / 2);
+          ctx.lineTo(cx + cellW / 2, cy);
+          ctx.lineTo(cx,             cy + cellH / 2);
+          ctx.lineTo(cx - cellW / 2, cy);
+          ctx.closePath();
+
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+
+          if (current > 0.005) {
+            ctx.fillStyle = `rgba(163,163,163,${current * 0.25})`;
+            ctx.fill();
           }
-          ctx.restore();
         }
       }
+
       rafRef.current = requestAnimationFrame(loop);
     };
     loop();
+
     return () => {
       window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', onMove); canvas.removeEventListener('mouseleave', onLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'auto', cursor:'crosshair' }} />;
-}
-
-// ── Static Isometric Grid (mobile) ───────────────────────────────────────────
-function IsometricStaticGrid() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef    = useRef<number | null>(null);
-  const CELL_W = 80, CELL_H = 48;
-
-  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
-    x: oX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2),
-    y: oY + row * (CELL_H / 2),
-  });
-  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
-    Math.abs(px - cx) / (CELL_W / 2) + Math.abs(py - cy) / (CELL_H / 2) <= 1;
-
-  useEffect(() => {
-    const canvas = canvasRef.current; if (!canvas) return;
-    const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
-    resize(); window.addEventListener('resize', resize);
-    const DOTS_X = 12, DOTS_Y = 12, DOT_R = 0.7;
-    const draw = () => {
-      const W = canvas.width, H = canvas.height; ctx.clearRect(0, 0, W, H);
-      const cols = Math.ceil(W / CELL_W) + 2, rows = Math.ceil(H / (CELL_H / 2)) + 2;
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const { x: cx, y: cy } = cellCenter(col, row, -CELL_W / 2, -CELL_H / 2);
-          ctx.save();
-          ctx.beginPath(); ctx.moveTo(cx, cy - CELL_H/2); ctx.lineTo(cx + CELL_W/2, cy);
-          ctx.lineTo(cx, cy + CELL_H/2); ctx.lineTo(cx - CELL_W/2, cy); ctx.closePath(); ctx.clip();
-          for (let dy = 0; dy < DOTS_Y; dy++) for (let dx = 0; dx < DOTS_X; dx++) {
-            const px = cx - CELL_W/2 + (dx+0.5)*(CELL_W/DOTS_X);
-            const py = cy - CELL_H/2 + (dy+0.5)*(CELL_H/DOTS_Y);
-            if (!inDiamond(px, py, cx, cy)) continue;
-            const fade = Math.max(0, 1 - (Math.abs((px-cx)/(CELL_W/2)) + Math.abs((py-cy)/(CELL_H/2))));
-            const alpha = fade * 0.55;
-            if (alpha < 0.01) continue;
-            ctx.beginPath(); ctx.arc(px, py, DOT_R, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(234,197,52,${Math.min(1,alpha)})`; ctx.fill();
-          }
-          ctx.restore();
-        }
+      if (interactive) {
+        canvas.removeEventListener('mousemove', onMove);
+        canvas.removeEventListener('mouseleave', onLeave);
       }
-    };
-    draw();
-    window.addEventListener('resize', draw);
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('resize', draw);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [cellW, cellH, interactive]);
 
-  return <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position:      'absolute',
+        inset:         0,
+        width:         '100%',
+        height:        '100%',
+        pointerEvents: interactive ? 'auto' : 'none',
+        cursor:        interactive ? 'crosshair' : 'default',
+      }}
+    />
+  );
 }
+
+// ── IsoBox — vector55.png snapped perfectly to a grid cell ───────────────────
+//
+// Uses the EXACT same formula as the canvas loop:
+//   offsetX = -cellW/2,  offsetY = -cellH/2
+//   cx = offsetX + col*cellW + (row%2===0 ? 0 : cellW/2)
+//   cy = offsetY + row*(cellH/2)
+// Image is centred on (cx, cy) and sized cellW × cellH → fits diamond exactly.
+//
+interface IsoBoxProps {
+  src?: string;
+  cellW: number;
+  cellH: number;
+  col: number;
+  row: number;
+  opacity?: number;
+  zIndex?: number;
+}
+const IsoBox: React.FC<IsoBoxProps> = ({
+  src = '/vector 55.png',
+  cellW, cellH, col, row,
+  opacity = 0.9,
+  zIndex  = 10,
+}) => {
+  const offsetX = -cellW / 2;
+  const offsetY = -cellH / 2;
+  const cx = offsetX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2);
+  const cy = offsetY + row * (cellH / 2);
+
+  return (
+    <img
+      src={src}
+      alt=""
+      style={{
+        position:      'absolute',
+        left:          cx,
+        top:           cy,
+        width:         cellW,
+        height:        cellH,
+        transform:     'translate(-50%, -50%)',
+        objectFit:     'fill',
+        opacity,
+        pointerEvents: 'none',
+        mixBlendMode:  'screen',
+        zIndex,
+      }}
+    />
+  );
+};
 
 // ─────────────────────────────────────────────
 // CONTACT SECTION — Desktop
@@ -127,59 +167,75 @@ type ContactSectionProps = {
   email?: { value: string }; contact?: { values: string[] };
   location?: { address: string; postalCode: string }; workHours?: { hours: string };
 };
+
 const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
   <div className="w-full bg-black text-white font-sans overflow-hidden">
-    <div className="relative h-[500px] border-b border-[#3D3D3D] flex items-center overflow-hidden" style={{ borderTop:'none' }}>
-      <div className="absolute inset-0 z-0 opacity-[0.06]" style={{ backgroundImage:`linear-gradient(30deg,#555 1px,transparent 1px),linear-gradient(-30deg,#555 1px,transparent 3px)`, backgroundSize:'64px 110px' }} />
-      <div className="absolute z-10" style={{ top:'5%', bottom:'38%', left:'60px', right:'-50px', WebkitMaskImage:'radial-gradient(ellipse 80% 80% at 45% 55%,black 15%,transparent 85%)', maskImage:'radial-gradient(ellipse 80% 80% at 45% 55%,black 15%,transparent 85%)', pointerEvents:'auto' }}>
-        <IsometricHoverGrid />
-        <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'150px', top:'90px', width:'100px', height:'60px', transform:'translate(-50%,10%)', objectFit:'fill', opacity:1, pointerEvents:'none', mixBlendMode:'screen' }} />
-        <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'350px', top:'90px', width:'100px', height:'60px', transform:'translate(-50%,20%)', objectFit:'fill', opacity:1, pointerEvents:'none', mixBlendMode:'screen' }} />
+
+    <div
+      className="relative border-b border-[#3D3D3D] flex items-end overflow-hidden"
+      style={{ height: '500px' }}
+    >
+      {/* Grid — masked */}
+      <div
+        className="absolute inset-0"
+        style={{
+          WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)',
+          maskImage:       'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)',
+          pointerEvents:   'auto',
+        }}
+      >
+        <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
       </div>
-      <div className="relative z-20 pt-60 pl-15 pointer-events-none">
+
+      {/*
+        Desktop tiles — cellW=100, cellH=60
+        col=1, row=5 → cx = -50 + 100 = 50   (half off left edge ✓)
+        col=4, row=5 → cx = -50 + 400 = 350  (fully visible ~35% from left ✓)
+        row=5 (odd)  → cy = -30 + 5*30 = 120 → ~38% down in 500px container ✓
+      */}
+      <IsoBox cellW={100} cellH={60} col={1} row={5} opacity={0.55} zIndex={10} />
+      <IsoBox cellW={100} cellH={60} col={4} row={5} opacity={0.9}  zIndex={10} />
+
+      {/* Hero text */}
+      <div className="relative z-20 pl-15 pointer-events-none pb-10">
         <h3 className="text-[45px] mb-2 tracking-tighter leading-tight max-w-xl">{title}</h3>
         <p className="text-gray-300 text-lg max-w-sm">{subtitle}</p>
       </div>
-      <div className="absolute inset-0 z-30 pointer-events-none" />
     </div>
 
-    {/* ★ FIX: w-full flex, no justify-center, each box flex-1 */}
+    {/* Info row */}
     <div className="w-full flex bg-black border-b border-[#3D3D3D]">
-
-      {/* Left box: Email + Contact — flex-1 so it stretches full */}
-      <div className="flex-1 border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ height:'271px' }}>
+      <div className="flex-1 border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ height: '271px' }}>
         <div className="flex-1 px-6 flex flex-col justify-center">
-          <span className="text-[9px] uppercase tracking-[0.2em]  text-gray-300 mb-2 block">Email</span>
-          <div className="text-[13px]  truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
+          <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Email</span>
+          <div className="text-[13px] truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
         </div>
-        {/* Full-bleed divider — no px so touches both borders */}
         <div className="w-full border-t border-[#3D3D3D]" />
         <div className="flex-1 px-6 flex flex-col justify-center">
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Contact</span>
-          <div className="text-[13px] font-light space-y-0.5">{(contact?.values??[]).slice(0,2).map((v,i)=><p key={i}>{v}</p>)}</div>
+          <div className="text-[13px] font-light space-y-0.5">
+            {(contact?.values ?? []).slice(0, 2).map((v, i) => <p key={i}>{v}</p>)}
+          </div>
         </div>
       </div>
-
-      {/* Middle box: image — fixed width */}
-      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0" style={{ width:'256px', height:'271px' }}>
-        <img src="/Rectangle 9476.svg" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+      <div
+        className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0"
+        style={{ width: '256px', height: '271px' }}
+      >
+        <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </div>
-
-      {/* Right box: Location + Work Hours — flex-1 so it stretches full */}
-      <div className="flex-1 flex flex-col overflow-hidden" style={{ height:'271px' }}>
+      <div className="flex-1 flex flex-col overflow-hidden" style={{ height: '271px' }}>
         <div className="flex-1 px-6 flex flex-col justify-center">
           <span className="text-[9px] uppercase text-gray-300 tracking-[0.2em] mb-2 block">Location</span>
-          <p className="text-[12px] leading-snug">{location?.address??''}</p>
+          <p className="text-[12px] leading-snug">{location?.address ?? ''}</p>
           <p className="text-[11px] mt-1">{location?.postalCode}</p>
         </div>
-        {/* Full-bleed divider */}
         <div className="w-full border-t border-[#3D3D3D]" />
         <div className="flex-1 px-6 flex flex-col justify-center">
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Work Hours</span>
-          <p className="text-[13px] ">{workHours?.hours}</p>
+          <p className="text-[13px]">{workHours?.hours}</p>
         </div>
       </div>
-
     </div>
   </div>
 );
@@ -192,17 +248,43 @@ type MobileContactSectionProps = {
   email?: { value: string }; contact?: { values: string[] };
   location?: { address: string; postalCode: string }; workHours?: { hours: string };
 };
+
 const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
   <div className="block lg:hidden w-full bg-black text-white">
+
     <div className="w-full border-b border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
-      <div className="absolute inset-0 z-0"><IsometricStaticGrid /></div>
-      <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'50%', top:'50%', width:'110px', height:'66px', transform:'translate(-80%,-60%)', objectFit:'fill', opacity:0.9, pointerEvents:'none', mixBlendMode:'screen', zIndex:2 }} />
-      <img src="/vector 55.png" alt="" style={{ position:'absolute', left:'50%', top:'50%', width:'110px', height:'66px', transform:'translate(10%,-20%)', objectFit:'fill', opacity:0.9, pointerEvents:'none', mixBlendMode:'screen', zIndex:2 }} />
-      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none" style={{ background:'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}>
+
+      {/* Grid */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)',
+          maskImage:       'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)',
+          pointerEvents:   'none',
+        }}
+      >
+        <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
+      </div>
+
+      {/*
+        Mobile tiles — cellW=60, cellH=36
+        col=1, row=5 → cx = -30 + 60 = 30   (half off left edge ✓)
+        col=4, row=5 → cx = -30 + 240 = 210 (fully visible ✓)
+        row=5 (odd)  → cy = -18 + 5*18 = 72 → ~28% down in 260px ✓
+      */}
+      <IsoBox cellW={60} cellH={36} col={1} row={5} opacity={0.5} zIndex={2} />
+      <IsoBox cellW={60} cellH={36} col={4} row={5} opacity={0.9} zIndex={2} />
+
+      {/* Text overlay */}
+      <div
+        className="absolute inset-0 z-10 flex flex-col justify-end p-5 pointer-events-none"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, transparent 100%)' }}
+      >
         <h3 className="text-[22px] font-light leading-snug tracking-tight mb-1">{title}</h3>
         <p className="text-gray-400 text-[13px]">{subtitle}</p>
       </div>
     </div>
+
     <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
       {(email?.value ?? '').split('\n').map((v, i) => (<p key={i} className="text-[13px] font-light">{v}</p>))}
@@ -211,8 +293,8 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
       {(contact?.values ?? []).map((v, i) => (<p key={i} className="text-[13px] font-light">{v}</p>))}
     </div>
-    <div className="w-full border-b border-[#3D3D3D] bg-[#030303] overflow-hidden" style={{ height:'200px' }}>
-      <img src="/Rectangle 9476.svg" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+    <div className="w-full border-b border-[#3D3D3D] bg-[#030303] overflow-hidden" style={{ height: '200px' }}>
+      <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
     </div>
     <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Location</span>
@@ -228,13 +310,13 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
       <p className="text-gray-400 text-xs mb-5">This form captures high-level operating information required to initiate an alignment conversation.</p>
       <div className="border-t border-[#3D3D3D] w-[calc(100%+2.5rem)] -mx-5 mb-6" />
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1"><label className="text-xs text-white">Full Name</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
-        <div className="flex flex-col gap-1"><label className="text-xs text-white">Organisation name</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
-        <div className="flex flex-col gap-1"><label className="text-xs text-white">Role / position</label><input type="text" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
-        <div className="flex flex-col gap-1"><label className="text-xs text-white">Email address</label><input type="email" className="bg-transparent border border-gray-800 p-2 rounded text-sm text-white focus:outline-none focus:border-gray-600" /></div>
-        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Organisation type</label><select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
-        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Primary operating need</label><select className="bg-transparent border border-gray-800 p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
-        <div className="col-span-2 flex flex-col gap-1"><textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-gray-800 p-3 rounded h-20 text-sm text-white focus:outline-none focus:border-gray-600 resize-none placeholder-gray-700" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Full Name</label><input type="text" className="bg-transparent border border-white p-2 rounded text-sm text-white focus:outline-none" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Organisation name</label><input type="text" className="bg-transparent border border-white p-2 rounded text-sm text-white focus:outline-none" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Role / position</label><input type="text" className="bg-transparent border border-white p-2 rounded text-sm text-white focus:outline-none" /></div>
+        <div className="flex flex-col gap-1"><label className="text-xs text-white">Email address</label><input type="email" className="bg-transparent border border-white p-2 rounded text-sm text-white focus:outline-none" /></div>
+        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Organisation type</label><select className="bg-transparent border border-white p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+        <div className="col-span-2 flex flex-col gap-1"><label className="text-xs text-white">Primary operating need</label><select className="bg-transparent border border-white p-2 rounded text-sm text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+        <div className="col-span-2 flex flex-col gap-1"><textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-white p-3 rounded h-20 text-sm text-white focus:outline-none resize-none placeholder-gray-700" /></div>
         <div className="col-span-2 mt-1">
           <button className="relative group w-max px-6 py-2 text-white text-sm">
             <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
@@ -252,19 +334,19 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
 // ─────────────────────────────────────────────
 // DESKTOP ACCORDION ITEM
 // ─────────────────────────────────────────────
-type AccordionItemProps = { title:string; index?:string; description?:string; open?:boolean; onMouseEnter?:()=>void; };
-const AccordionItem: React.FC<AccordionItemProps> = ({ title, index, description, open=false, onMouseEnter }) => (
-  <div onMouseEnter={onMouseEnter} className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${open?'bg-[#0A0C10]':'hover:bg-[#050505]'}`}>
+type AccordionItemProps = { title: string; index?: string; description?: string; open?: boolean; onMouseEnter?: () => void; };
+const AccordionItem: React.FC<AccordionItemProps> = ({ title, index, description, open = false, onMouseEnter }) => (
+  <div onMouseEnter={onMouseEnter} className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${open ? ' ' : 'hover:bg-[#050505]'}`}>
     <div className="flex justify-between items-start">
       <div className="max-w-xl">
-        <h4 className={`text-xl md:text-2xl font-light transition-colors ${open?'text-white':'text-gray-300'}`}>
-          {title}{open&&<span className="text-white ml-2">•</span>}
+        <h4 className={`text-xl md:text-2xl font-light transition-colors ${open ? 'text-white' : 'text-gray-300'}`}>
+          {title}{open && <span className="text-white ml-2">•</span>}
         </h4>
-        <div className={`overflow-hidden transition-all duration-500 ${open?'max-h-40 opacity-100 mt-4':'max-h-0 opacity-0'}`}>
-          {description&&<p className="text-sm text-white leading-relaxed">{description}</p>}
+        <div className={`overflow-hidden transition-all duration-500 ${open ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+          {description && <p className="text-sm text-white leading-relaxed">{description}</p>}
         </div>
       </div>
-      <div className={`text-2xl font-light tracking-tighter transition-colors ${open?'text-white':'text-gray-500'}`}>{index}</div>
+      <div className={`text-2xl font-light tracking-tighter transition-colors ${open ? 'text-white' : 'text-gray-300'}`}>{index}</div>
     </div>
   </div>
 );
@@ -312,19 +394,19 @@ type AccordionData = { id: string; title: string; description: string };
 // ─────────────────────────────────────────────
 // MOBILE ACCORDION ITEM
 // ─────────────────────────────────────────────
-type MobileAccItemProps = { title:string; index?:string; description?:string; open?:boolean; onClick?:()=>void; };
-const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description, open=false, onClick }) => (
-  <div onClick={onClick} className={`border-b border-[#3D3D3D] py-5 px-6 cursor-pointer transition-colors duration-300 ${open?'bg-[#0A0C10]':''}`}>
+type MobileAccItemProps = { title: string; index?: string; description?: string; open?: boolean; onClick?: () => void; };
+const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description, open = false, onClick }) => (
+  <div onClick={onClick} className={`border-b border-[#3D3D3D] py-5 px-6 cursor-pointer transition-colors duration-300 ${open ? 'bg-[#0A0C10]' : ''}`}>
     <div className="flex justify-between items-start gap-3">
       <div className="flex-1">
-        <h4 className={`text-sm font-light leading-snug transition-colors ${open?'text-white':'text-gray-200'}`}>
-          {title}{open&&<span className="ml-2 text-white">•</span>}
+        <h4 className={`text-sm font-light leading-snug transition-colors ${open ? 'text-white' : 'text-gray-200'}`}>
+          {title}{open && <span className="ml-2 text-white">•</span>}
         </h4>
-        <div className={`overflow-hidden transition-all duration-300 ${open?'max-h-40 opacity-100 mt-3':'max-h-0 opacity-0'}`}>
-          {description&&<p className="text-xs text-gray-300 leading-relaxed">{description}</p>}
+        <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
+          {description && <p className="text-xs text-gray-300 leading-relaxed">{description}</p>}
         </div>
       </div>
-      <span className={`text-xs font-light tracking-tighter shrink-0 mt-0.5 transition-colors ${open?'text-white':''}`}>{index}</span>
+      <span className={`text-xs font-light tracking-tighter shrink-0 mt-0.5 transition-colors ${open ? 'text-white' : ''}`}>{index}</span>
     </div>
   </div>
 );
@@ -332,7 +414,7 @@ const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description
 // ─────────────────────────────────────────────
 // MOBILE SECTIONS
 // ─────────────────────────────────────────────
-const mobileSlides = [
+const mobileSlidesData = [
   { icon: <Icon2 />, label: 'Operating structure and decision ownership' },
   { icon: <Icon4 />, label: 'Accountability and escalation models' },
   { icon: <Icon5 />, label: 'Current execution challenges and constraints' },
@@ -349,7 +431,7 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
   const handleTouchEnd   = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) setActiveSlide(p => diff > 0 ? Math.min(p+1, mobileSlides.length-1) : Math.max(p-1, 0));
+    if (Math.abs(diff) > 40) setActiveSlide(p => diff > 0 ? Math.min(p + 1, mobileSlidesData.length - 1) : Math.max(p - 1, 0));
     touchStartX.current = null;
   };
   const toggle = (id: string) => setOpenItem(prev => prev === id ? null : id);
@@ -359,32 +441,41 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
       <div className="pt-8 pb-5 px-6">
         <h3 className="text-2xl font-light">What alignment typically covers</h3>
       </div>
-      <div className="w-full border-t border-[#3D3D3D] overflow-hidden" style={{ height:'240px' }}>
-        <img src="/alignment.png" alt="Alignment" className="w-full h-full object-cover" />
+      <div className="w-full border-t border-[#3D3D3D] overflow-hidden" style={{ height: '240px' }}>
+        <img src="/alignment2.png" alt="Alignment" className="w-full h-full object-cover" />
       </div>
-      <div className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ minHeight:'180px' }}>
+      <div
+        className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5"
+        onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
+        style={{ minHeight: '180px' }}
+      >
         <div className="flex flex-col items-center gap-5 w-full">
-          <div className="flex items-center justify-center" key={`icon-${activeSlide}`}>{mobileSlides[activeSlide].icon}</div>
-          <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8">{mobileSlides[activeSlide].label}</p>
+          <div className="flex items-center justify-center" key={`icon-${activeSlide}`}>{mobileSlidesData[activeSlide].icon}</div>
+          <p key={`label-${activeSlide}`} className="text-[13px] text-white text-center font-light leading-snug px-8">{mobileSlidesData[activeSlide].label}</p>
         </div>
         <div className="flex items-center gap-[7px]">
-          {mobileSlides.map((_, i) => (
-            <button key={i} onClick={() => setActiveSlide(i)} className="rounded-full transition-all duration-300" style={{ width: i===activeSlide?'8px':'6px', height: i===activeSlide?'8px':'6px', background: i===activeSlide?'#ffffff':'#3a3a3a' }} />
+          {mobileSlidesData.map((_, i) => (
+            <button key={i} onClick={() => setActiveSlide(i)} className="rounded-full transition-all duration-300"
+              style={{ width: i === activeSlide ? '8px' : '6px', height: i === activeSlide ? '8px' : '6px', background: i === activeSlide ? '#ffffff' : '#3a3a3a' }} />
           ))}
         </div>
       </div>
-      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
-      <div className="w-full border-t border-[#3D3D3D]" style={{ height:'44px' }} />
+      <div className="w-full border-t border-[#3D3D3D]" style={{ height: '44px' }} />
       <div className="w-full border-t border-[#3D3D3D] px-5 pt-7 pb-7">
         <div className="flex items-center gap-3 mb-4">
-          <svg width="14" height="14" viewBox="0 0 26 26" fill="none"><rect x="10.833" width="4.33333" height="10.8333" fill="white"/><rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/><rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/><rect y="10.8334" width="10.8333" height="4.33333" fill="white"/></svg>
+          <svg width="14" height="14" viewBox="0 0 26 26" fill="none">
+            <rect x="10.833" width="4.33333" height="10.8333" fill="white" />
+            <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white" />
+            <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white" />
+            <rect y="10.8334" width="10.8333" height="4.33333" fill="white" />
+          </svg>
           <span className="text-[10px] uppercase tracking-[0.3em] text-white font-light">WHAT HAPPENS NEXT</span>
         </div>
         <h3 className="text-[1.6rem] font-light leading-snug">Each engagement progresses through a defined alignment pathway.</h3>
       </div>
       <div className="w-full border-t border-[#3D3D3D]">
         {accordionData.map((item) => (
-          <MobileAccItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description} open={openItem===item.id} onClick={() => toggle(item.id)} />
+          <MobileAccItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description} open={openItem === item.id} onClick={() => toggle(item.id)} />
         ))}
         <div className="px-5 py-5 border-t border-[#3D3D3D]">
           <p className="text-xs">No engagement proceeds without operating alignment.</p>
@@ -400,14 +491,13 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
 const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
 
-  const boxBase     = 'w-full md:w-[293px] h-[257px] border-b border-[#3D3D3D] p-8 flex flex-col justify-between items-start';
   const textStyle   = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
   const overlayCard = 'w-full md:w-[289px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
 
   const accordionData: AccordionData[] = [
-    { id:'01', title:'Review and context assessment',  description:'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
-    { id:'02', title:'Alignment conversation',         description:'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
-    { id:'03', title:'Engagement pathway definition',  description:'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
+    { id: '01', title: 'Review and context assessment',  description: 'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
+    { id: '02', title: 'Alignment conversation',         description: 'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
+    { id: '03', title: 'Engagement pathway definition',  description: 'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
   ];
 
   return (
@@ -418,99 +508,60 @@ const ContextsPage = () => {
       ════════════════════════════════════════════════════ */}
       <div className="hidden lg:block mx-10 xl:mx-auto max-w-7xl">
         <div
-          className="grid w-full border border-[#3D3D3D] h-screen overflow-hidden"
+          className="relative w-full border border-[#3D3D3D] flex"
           style={{
-            gridTemplateColumns: '2fr 4fr',
             backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`,
             backgroundSize: '40px 40px',
           }}
         >
-          {/* LEFT COLUMN */}
-          <div
-            className="bg-black border-r border-[#3D3D3D] flex flex-col h-full overflow-y-auto"
-            style={{ scrollbarWidth: 'none' }}
-          >
-            <style>{`.lfc::-webkit-scrollbar{display:none}`}</style>
 
-            <div className="lfc p-6 mt-10 flex flex-col bg-black h-full">
-              <header className="max-w-md">
-                <h5 className="text-xl mb-2 font-light leading-snug">
-                  Provide operating context to <br /> initiate alignment.
-                </h5>
-                <p className="text-gray-300 text-xs mb-1">
-                  This form captures high-level operating information required to initiate an alignment conversation.
-                </p>
-              </header>
-
-              <div className="border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6 my-3" />
-
-              <div className="pt-3 flex-1 flex flex-col">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Full Name</label>
-                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Organisation name</label>
-                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Role / position</label>
-                    <input type="text" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Email address</label>
-                    <input type="email" className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-white focus:outline-none focus:border-gray-600" />
-                  </div>
-                  <div className="col-span-2 flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Organisation type</label>
-                    <select className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none">
-                      <option>Select...</option>
-                    </select>
-                  </div>
-                  <div className="col-span-2 flex flex-col gap-1">
-                    <label className="text-[11px] text-white">Primary operating need</label>
-                    <select className="bg-transparent border border-gray-800 px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none">
-                      <option>Select...</option>
-                    </select>
-                  </div>
-                  <div className="col-span-2 flex flex-col gap-1">
-                    <textarea
-                      placeholder="Describe your current execution or operating challenge..."
-                      className="bg-transparent border border-gray-800 p-2 rounded text-xs text-white focus:outline-none focus:border-white resize-none placeholder-gray-400"
-                      style={{ height:'72px' }}
-                    />
-                  </div>
-                  <div className="col-span-1 mt-4">
-                    <button className="relative group w-max px-6 py-2 text-white text-xs">
-                      <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
-                      <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white" />
-                      <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white" />
-                      <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white" />
-                      Submit
-                    </button>
+          {/* ── LEFT COLUMN — sticky ── */}
+          <div className="bg-black border-r border-[#3D3D3D] flex-shrink-0" style={{ width: '33.333%' }}>
+            <div className="sticky top-0 h-screen flex flex-col" style={{ overflow: 'hidden' }}>
+              <style>{`.lfc::-webkit-scrollbar{display:none}.lfc{scrollbar-width:none}`}</style>
+              <div className="lfc p-6 mt-10 flex flex-col h-full overflow-y-auto">
+                <div>
+                  <header className="max-w-md">
+                    <h5 className="text-xl mb-2 font-light leading-snug">Provide operating context to <br /> initiate alignment.</h5>
+                    <p className="text-gray-300 text-xs mb-1">This form captures high-level operating information required to initiate an alignment conversation.</p>
+                  </header>
+                  <div className="border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6 my-3" />
+                  <div className="pt-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1"><label className="text-[11px] text-white">Full Name</label><input type="text" className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-white focus:outline-none" /></div>
+                      <div className="flex flex-col gap-1"><label className="text-[11px] text-white">Organisation name</label><input type="text" className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-white focus:outline-none" /></div>
+                      <div className="flex flex-col gap-1"><label className="text-[11px] text-white">Role / position</label><input type="text" className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-white focus:outline-none" /></div>
+                      <div className="flex flex-col gap-1"><label className="text-[11px] text-white">Email address</label><input type="email" className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-white focus:outline-none" /></div>
+                      <div className="col-span-2 flex flex-col gap-1"><label className="text-[11px] text-white">Organisation type</label><select className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+                      <div className="col-span-2 flex flex-col gap-1"><label className="text-[11px] text-white">Primary operating need</label><select className="bg-transparent border border-white px-2 py-1.5 rounded text-xs text-gray-400 focus:outline-none appearance-none"><option>Select...</option></select></div>
+                      <div className="col-span-2 flex flex-col gap-1">
+                        <textarea placeholder="Describe your current execution or operating challenge..." className="bg-transparent border border-white p-2 rounded text-xs text-white focus:outline-none resize-none placeholder-gray-400" style={{ height: '72px' }} />
+                      </div>
+                      <div className="col-span-1 mt-4">
+                        <button className="relative group w-max px-6 py-2 text-white text-xs">
+                          <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white" />
+                          <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white" />
+                          <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white" />
+                          <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white" />
+                          Submit
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="mt-15 border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6" />
+                <div className="flex-1" />
+                <div className="border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6" />
+                <div style={{ height: '65px' }} />
               </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div className="flex flex-col bg-black h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+          {/* ── RIGHT COLUMN — scrollable ── */}
+          <div className="flex flex-col bg-black min-h-screen" style={{ flex: 1 }}>
 
             {/* HERO */}
-            <div
-              className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0"
-              style={{ height:'87.8vh' }}
-            >
-              <img
-                src="/engagement1.png"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ opacity: 0.15 }}
-              />
+            <div className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0" style={{ height: '87.8vh' }}>
+              <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
               <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-15">
                 <div className="mb-12 mt-50">
                   <h2 className="text-3xl md:text-5xl leading-tight">
@@ -519,11 +570,11 @@ const ContextsPage = () => {
                   <p className="text-lg md:text-xl mt-2 text-gray-400">Not delivery discussions.</p>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className={overlayCard} style={{ height:'109px' }}>
+                  <div className={overlayCard} style={{ height: '109px' }}>
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
                     <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
                   </div>
-                  <div className={overlayCard} style={{ height:'109px' }}>
+                  <div className={overlayCard} style={{ height: '109px' }}>
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
                     <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
                   </div>
@@ -534,48 +585,26 @@ const ContextsPage = () => {
             {/* Alignment grid */}
             <div className="w-full">
               <div className="px-3 md:px-12 pt-16 pb-16">
-                <h3 className="text-3xl md:text-4xl ">What alignment typically covers</h3>
+                <h3 className="text-3xl md:text-4xl">What alignment typically covers</h3>
               </div>
-              <div
-                className="w-full border-t border-[#3D3D3D]"
-                style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr' }}
-              >
-                <div
-                  className="relative border-r border-b border-[#3D3D3D] overflow-hidden"
-                  style={{ height:'257px', background:'#0a0a0a' }}
-                >
-                  <div
-                    className="absolute inset-0 z-10"
-                    style={{
-                      backgroundImage:'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)',
-                      backgroundSize:'14px 14px',
-                    }}
-                  />
-                  <img
-                    src="/alignment2.png"
-                    alt="Alignment Symbol"
-                    className="absolute inset-0 w-full h-full object-contain z-20"
-                    style={{ padding:'24px' }}
-                  />
+              <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+                <div className="relative border-r border-b border-[#3D3D3D] overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
+                  <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
+                  <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
                 </div>
-
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
                   <div className="flex flex-col gap-6"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
                 </div>
-
-                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
                   <div className="flex flex-col gap-6"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
                 </div>
-
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
                   <div className="flex flex-col gap-6"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
                 </div>
-
-                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                <div className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
                   <div className="flex flex-col gap-6"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
                 </div>
-
-                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height:'257px' }}>
+                <div className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8" style={{ height: '257px' }}>
                   <div className="flex flex-col gap-6"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
                 </div>
               </div>
@@ -586,27 +615,18 @@ const ContextsPage = () => {
               <div className="px-6 md:px-12 py-12">
                 <div className="flex items-center gap-4 text-xs mb-8">
                   <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
-                    <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
-                    <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
-                    <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-                    <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                    <rect x="10.833" width="4.33333" height="10.8333" fill="white" />
+                    <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white" />
+                    <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white" />
+                    <rect y="10.8334" width="10.8333" height="4.33333" fill="white" />
                   </svg>
                   <span className="uppercase tracking-[0.3em]">WHAT HAPPENS NEXT</span>
                 </div>
-                <h3 className="text-3xl md:text-4xl max-w-2xl leading-[1.1]">
-                  Each engagement progresses through a defined alignment pathway.
-                </h3>
+                <h3 className="text-3xl md:text-4xl max-w-2xl leading-[1.1]">Each engagement progresses through a defined alignment pathway.</h3>
               </div>
               <div className="border-t border-[#3D3D3D]">
                 {accordionData.map((item) => (
-                  <AccordionItem
-                    key={item.id}
-                    title={item.title}
-                    index={`[${item.id}]`}
-                    description={item.description}
-                    open={openAccordion === item.id}
-                    onMouseEnter={() => setOpenAccordion(item.id)}
-                  />
+                  <AccordionItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description} open={openAccordion === item.id} onMouseEnter={() => setOpenAccordion(item.id)} />
                 ))}
                 <div className="py-8 px-6 md:px-12">
                   <p className="text-sm">No engagement proceeds without operating alignment.</p>
@@ -619,15 +639,15 @@ const ContextsPage = () => {
               <ContactSection
                 title="Single point of contact for engagement coordination"
                 subtitle="All engagement coordination is managed centrally."
-                email={{ value:'hello@ascella.group' }}
-                contact={{ values:['+91 16045 10860'] }}
-                location={{ address:'3rd Floor, SCO-50/51, Sector 34B, Chandigarh', postalCode:'160022' }}
-                workHours={{ hours:'24/7 availability ' }}
+                email={{ value: 'hello@ascella.group' }}
+                contact={{ values: ['+91 16045 10860'] }}
+                location={{ address: '3rd Floor, SCO-50/51, Sector 34B, Chandigarh', postalCode: '160022' }}
+                workHours={{ hours: '24/7 availability' }}
               />
             </div>
 
-            {/* Bottom decor */}
-            <div className="w-full border-t border-[#3D3D3D] flex" style={{ height: '60px' }}><div className="w-1/6" /></div>
+            <div className="w-full border-t border-[#3D3D3D]" />
+            <div style={{ height: '88px' }} />
           </div>
         </div>
       </div>
@@ -637,21 +657,18 @@ const ContextsPage = () => {
       ════════════════════════════════════════════════════ */}
       <div className="block lg:hidden mx-10 border-x border-[#3D3D3D]">
 
-        {/* Hero */}
         <div className="relative border-b border-[#3D3D3D] overflow-hidden">
-          <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity:0.15 }} />
+          <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
           <div className="relative z-10 px-6 pt-8 pb-6">
-            <h2 className="text-4xl font-normal leading-tight">
-              Engagement begins <br />with <span className="text-gray-400">operating alignment.</span>
-            </h2>
+            <h2 className="text-4xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
             <p className="text-lg mt-3 font-light text-gray-400">Not delivery discussions.</p>
           </div>
           <div className="relative z-10 px-6 pb-8 flex flex-col gap-3">
-            <div className={overlayCard} style={{ minHeight:'109px' }}>
+            <div className={overlayCard} style={{ minHeight: '109px' }}>
               <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Initial alignment focus</span>
               <p className="text-[13px] leading-tight text-white font-light">The first interaction is designed to understand your operating environment, governance maturity, and execution constraints.</p>
             </div>
-            <div className={overlayCard} style={{ minHeight:'109px' }}>
+            <div className={overlayCard} style={{ minHeight: '109px' }}>
               <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Objective</span>
               <p className="text-[13px] leading-tight text-white font-light">The objective is to determine whether a structured operating engagement is appropriate.</p>
             </div>
@@ -663,10 +680,10 @@ const ContextsPage = () => {
         <MobileContactSection
           title="Single point of contact for engagement coordination"
           subtitle="All engagement coordination is managed centrally."
-          email={{ value:'ag@ascella.in\nhello@ascellagroup.com' }}
-          contact={{ values:['+91 94545 10860', '+91 94699 40969'] }}
-          location={{ address:'3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode:'160022' }}
-          workHours={{ hours:'24/7 availability' }}
+          email={{ value: 'ag@ascella.in\nhello@ascellagroup.com' }}
+          contact={{ values: ['+91 94545 10860', '+91 94699 40969'] }}
+          location={{ address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode: '160022' }}
+          workHours={{ hours: '24/7 availability' }}
         />
       </div>
 

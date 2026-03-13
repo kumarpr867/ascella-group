@@ -93,23 +93,24 @@ export default function Role() {
       <div className="w-full h-[1px] bg-white/10 shrink-0 z-30" />
 
       {/* ============ MOBILE (< lg) ============ */}
+      {/* ONLY CHANGE: mx-10 wrapper added — same as footer margin */}
       <div className="flex-1 lg:hidden flex flex-col relative" onClick={handleMobileClick}>
         <AnimatePresence mode="wait">
           <motion.div key={current} variants={fadeIn} initial="initial" animate="animate" exit="exit" className="absolute inset-0 flex flex-col z-10">
-            <div className="p-[18px_20px_0] shrink-0">
+            <div className="mx-10 p-[18px_0px_0] shrink-0">
               <SectionHeader title="Role" />
               <h4 className="text-[15px] leading-[1.55]">
                 <span className="font-bold text-white">{activeData.roleTitle.split(' ').slice(0, 6).join(' ')} </span>
                 <span className="font-normal text-zinc-500">{activeData.roleTitle.split(' ').slice(6).join(' ')}</span>
               </h4>
             </div>
-            <div className="flex-1 flex flex-col items-center justify-center overflow-hidden gap-[14px]">
-              <div className="relative w-[88vw] h-[52vw] max-h-[260px]" style={{ transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})` }}>
-                <Image src={activeData.image.src} alt="" fill className="object-contain grayscale brightness-200" priority />
+            <div className="flex-1 flex flex-col items-center justify-center overflow-visible gap-[14px]">
+              <div style={{ position: 'relative', width: '88vw', height: '52vw', maxHeight: '260px', transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})`, overflow: 'visible' }}>
+                <Image src={activeData.image.src} alt="" fill className="object-contain" style={{ filter: 'grayscale(1) brightness(2)' }} priority />
               </div>
               <DotsRow />
             </div>
-            <div className="p-[0_20px_18px] shrink-0">
+            <div className="mx-10 p-[0_0px_18px] shrink-0">
               <div className="mb-[14px]">
                 <SectionHeader title="When it's deployed" />
                 <p className="text-[12px] leading-[1.65]">{activeData.deployedText}</p>
@@ -144,7 +145,7 @@ export default function Role() {
                   src={activeData.image.src} 
                   alt="" 
                   fill 
-                  className="object-contain grayscale brightness-110 opacity-90" // Yahan opacity aur brightness badha di hai
+                  className="object-contain grayscale brightness-110 opacity-90"
                   priority 
                 />
               </div>

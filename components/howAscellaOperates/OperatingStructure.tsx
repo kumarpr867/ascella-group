@@ -1,252 +1,316 @@
 "use client"
 import Image from 'next/image';
-import { SpiderNetwork } from './Spider';
-import { Canvas } from '@react-three/fiber';
+import React, { useEffect, useRef } from 'react';
 
+// ── Isometric Grid — same as ContextsPage ────────────────────────────────────
+function IsometricHoverGrid({
+  cellW = 100,
+  cellH = 60,
+  interactive = true,
+}: {
+  cellW?: number;
+  cellH?: number;
+  interactive?: boolean;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef    = useRef<number | null>(null);
+
+  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
+    x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
+    y: oY + row * (cellH / 2),
+  });
+  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
+    Math.abs(px - cx) / (cellW / 2) + Math.abs(py - cy) / (cellH / 2) <= 1;
+
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+
+    if (interactive) {
+      canvas.addEventListener('mousemove', onMove);
+      canvas.addEventListener('mouseleave', onLeave);
+    }
+
+    const alphaMap = new Map<string, number>();
+
+    const loop = () => {
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const mx = mouseRef.current.x, my = mouseRef.current.y;
+      const cols    = Math.ceil(W / cellW) + 2;
+      const rows    = Math.ceil(H / (cellH / 2)) + 2;
+      const offsetX = -cellW / 2, offsetY = -cellH / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
+          const key = `${col},${row}`;
+
+          const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
+          const target  = hovered ? 1 : 0;
+          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
+          alphaMap.set(key, current);
+
+          ctx.beginPath();
+          ctx.moveTo(cx,             cy - cellH / 2);
+          ctx.lineTo(cx + cellW / 2, cy);
+          ctx.lineTo(cx,             cy + cellH / 2);
+          ctx.lineTo(cx - cellW / 2, cy);
+          ctx.closePath();
+
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+
+          if (current > 0.005) {
+            ctx.fillStyle = `rgba(163,163,163,${current * 0.25})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (interactive) {
+        canvas.removeEventListener('mousemove', onMove);
+        canvas.removeEventListener('mouseleave', onLeave);
+      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [cellW, cellH, interactive]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position:      'absolute',
+        inset:         0,
+        width:         '100%',
+        height:        '100%',
+        pointerEvents: interactive ? 'auto' : 'none',
+        cursor:        interactive ? 'crosshair' : 'default',
+      }}
+    />
+  );
+}
+
+// ── IsoBox — vector55.png snapped to a grid cell ─────────────────────────────
+interface IsoBoxProps {
+  src?: string;
+  cellW: number;
+  cellH: number;
+  col: number;
+  row: number;
+  opacity?: number;
+}
+const IsoBox: React.FC<IsoBoxProps> = ({
+  src = '/vector 55.png',
+  cellW, cellH, col, row,
+  opacity = 0.9,
+}) => {
+  const offsetX = -cellW / 2;
+  const offsetY = -cellH / 2;
+  const cx = offsetX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2);
+  const cy = offsetY + row * (cellH / 2);
+
+  return (
+    <img
+      src={src}
+      alt=""
+      style={{
+        position:      'absolute',
+        left:          cx,
+        top:           cy,
+        width:         cellW,
+        height:        cellH,
+        transform:     'translate(-50%, -50%)',
+        objectFit:     'fill',
+        opacity,
+        pointerEvents: 'none',
+        mixBlendMode:  'screen',
+        zIndex:        10,
+      }}
+    />
+  );
+};
+
+// ── Data ──────────────────────────────────────────────────────────────────────
 const items = [
-  { label: "Accountability", icon: "/howAscellaOperates/accountability.svg" },
-  { label: "Assemble Pods", icon: "/howAscellaOperates/pods.png" },
-  { label: "Performance", icon: "/howAscellaOperates/performance.png" },
-  { label: "Embed Security", icon: "/howAscellaOperates/security.png" },
+  { label: "Accountability",       icon: "/howAscellaOperates/accountability.svg" },
+  { label: "Assemble Pods",        icon: "/howAscellaOperates/pods.png" },
+  { label: "Performance",          icon: "/howAscellaOperates/performance.png" },
+  { label: "Embed Security",       icon: "/howAscellaOperates/security.png" },
   { label: "Controlled Execution", icon: "/howAscellaOperates/execution.png" },
 ];
 
-export default function OperatingStructure() {
-  const gridItems = [
-    {
-      label: 'Governance',
-      src: '/howAscellaOperates/governace.svg',
-      width: 69,
-      height: 70
-    },
-    {
-      label: 'Accountability',
-      src: '/howAscellaOperates/accountability.svg',
-      width: 80,
-      height: 80
-    },
-    {
-      label: 'Assemble Pods',
-      src: '/howAscellaOperates/pods.png',
-      width: 69,
-      height: 70
-    },
-    {
-      label: 'Performance',
-      src: '/howAscellaOperates/performance.png',
-      width: 88,
-      height: 52
-    },
-    {
-      label: 'Embed Security',
-      src: '/howAscellaOperates/security.png',
-      width: 63,
-      height: 73
-    },
-    {
-      label: 'Controlled Execution',
-      src: '/howAscellaOperates/execution.png',
-      width: 65,
-      height: 45
-    },
-  ];
+const gridItems = [
+  { label: 'Governance',           src: '/howAscellaOperates/governace.svg',      width: 69, height: 70 },
+  { label: 'Accountability',       src: '/howAscellaOperates/accountability.svg',  width: 80, height: 80 },
+  { label: 'Assemble Pods',        src: '/howAscellaOperates/pods.png',            width: 69, height: 70 },
+  { label: 'Performance',          src: '/howAscellaOperates/performance.png',     width: 88, height: 52 },
+  { label: 'Embed Security',       src: '/howAscellaOperates/security.png',        width: 63, height: 73 },
+  { label: 'Controlled Execution', src: '/howAscellaOperates/execution.png',       width: 65, height: 45 },
+];
 
+// ── Component ─────────────────────────────────────────────────────────────────
+export default function OperatingStructure() {
   return (
     <section className="border-y border-color">
-      <div className="hidden md:flex relative mx-auto max-w-7xl px-10 py-10 md:py-24 flex-col md:flex-row border-x-0 lg:border-x border-color gap-8 md:gap-0">
 
-        {/* top */}
-        <div className="relavtive flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
-          <h2 className='text-2xl md:text-5xl'>
-            A unified model built for accountable
-            <span className="text-gray-300"> execution at scale.</span>
-          </h2>
-          <p className="text-[14px] text-left w-1/2">Ownership, governance, and delivery aligned before work begins.</p>
-        </div>
-        <div className="absolute -z-1 right-0 top-0.5">
-          <svg width="830" height="587" viewBox="0 0 830 587" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 393.982 -26)" stroke="url(#paint0_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 328.202 10)" stroke="url(#paint1_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 262.422 46)" stroke="url(#paint2_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 196.642 82)" stroke="url(#paint3_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 130.861 118)" stroke="url(#paint4_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 65.0811 154)" stroke="url(#paint5_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 0.794922 202)" stroke="url(#paint6_linear_790_1251)" strokeOpacity="0.06" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 655.608 -26)" stroke="url(#paint7_linear_790_1251)" strokeOpacity="0.02" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 721.389 10)" stroke="url(#paint8_linear_790_1251)" strokeOpacity="0.04" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 787.169 46)" stroke="url(#paint9_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 852.949 82)" stroke="url(#paint10_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 918.729 118)" stroke="url(#paint11_linear_790_1251)" strokeOpacity="0.12" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 984.51 154)" stroke="url(#paint12_linear_790_1251)" strokeOpacity="0.04" strokeDasharray="2 2" />
-            <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 1048.79 202)" stroke="url(#paint13_linear_790_1251)" strokeOpacity="0.02" strokeDasharray="2 2" />
-            <path d="M461.788 237.498L477.046 246.367L477.05 246.369L524.3 274.421L571.546 247.342L587.806 237.514C577.069 231.433 561.491 222.498 548.48 214.92C541.824 211.043 535.837 207.519 531.514 204.914C529.353 203.612 527.604 202.538 526.394 201.763C525.79 201.376 525.314 201.06 524.986 200.826C524.886 200.754 524.796 200.685 524.719 200.624L461.788 237.498Z" stroke="white" stroke-opacity="0.12" />
-            <path d="M207.788 237.498L223.046 246.367L223.05 246.369L270.3 274.421L317.546 247.342L333.806 237.514C323.069 231.433 307.491 222.498 294.48 214.92C287.824 211.043 281.837 207.519 277.514 204.914C275.353 203.612 273.604 202.538 272.394 201.763C271.79 201.376 271.314 201.06 270.986 200.826C270.886 200.754 270.796 200.685 270.719 200.624L207.788 237.498Z" stroke="url(#paint14_linear_790_1251)" stroke-opacity="0.12" />
-            <defs>
-              <linearGradient id="paint0_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint1_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint2_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint3_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint4_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint5_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint6_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint7_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint8_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint9_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint10_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint11_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint12_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint13_linear_790_1251" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                <stop />
-                <stop offset="0.5" stopColor="white" />
-                <stop offset="1" />
-              </linearGradient>
-              <linearGradient id="paint14_linear_790_1251" x1="334.795" y1="236.5" x2="213.795" y2="240.5" gradientUnits="userSpaceOnUse">
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
+      {/* ══════════════════════════════════════════
+          DESKTOP HERO  (md+)
+          Isometric grid fills the right half,
+          text sits on the left.
+      ══════════════════════════════════════════ */}
+      <div className="hidden md:block relative border-b border-color overflow-hidden">
+        <div className="relative mx-auto max-w-7xl px-10 py-10 md:py-24 border-x-0 lg:border-x border-color">
 
-      {/* flow chart */}
-      <div className="border-t border-color ">
-
-
-        {/* xl screen */}
-        <div className='hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around  border-x-0 xl:border-x  border-color '>
-          <div className="flex flex-col items-center py-8 ">
-            <p className={"text-b3 mb-6"}>Governance</p>
-            <div className={"w-full h-40 flex items-center justify-center"}>
-              <Image
-                src={"/howAscellaOperates/governace.svg"}
-                alt={"governance"}
-                width={80}
-                height={80}
-              />
-              <div className='w-10 bg-gray-400 h-1'></div>
-            </div>
+          {/* Text — left half */}
+          <div className="relative z-10 flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
+            <h2 className="text-2xl md:text-5xl">
+              A unified model built for accountable
+              <span className="text-gray-300"> execution at scale.</span>
+            </h2>
+            <p className="text-[14px] text-left w-1/2">
+              Ownership, governance, and delivery aligned before work begins.
+            </p>
           </div>
-          <div className="grid grid-cols-5 text-center">
-            {items.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  className="flex flex-col items-center py-8 "
-                >
-                  <p className={"text-b3 mb-6"} >{item.label}</p>
 
-                  <div className={` w-48 h-40 flex items-center justify-center border-y border-color
-              ${index == 0 ? "border-l" : ""} ${index == 4 ? "border-r" : ""}`}>
-                    <Image
-                      src={item.icon}
-                      alt={item.label}
-                      width={80}
-                      height={80}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="flex flex-col items-center py-8 ">
-            <p className={"text-b3 mb-6"}>Outcome Stability</p>
-            <div className={"w-full h-40 flex items-center justify-center"}>
-              <div className='w-10 bg-gray-400 h-1'></div>
-              <Image
-                src={"/howAscellaOperates/outcome.png"}
-                alt={"Outcome Stability"}
-                width={80}
-                height={80}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+          {/*
+            Isometric grid — right half overlay
+            Masked so it fades left (into text area) and at top/bottom edges.
 
-      {/* ─────────────────────────────────────────
-          MOBILE VIEW — naya, image ke jaisa
-      ───────────────────────────────────────── */}
-      <div className="block xl:hidden ">
+            cellW=100, cellH=60
+            Container: ~830px wide, ~260px tall (matches old SVG viewport roughly)
 
-        {/* Hero text */}
-        <div
-          className="relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden"
-        >
-          {/* Subtle diagonal lines background */}
+            Tiles placed to match the 2 diamonds visible in the screenshot:
+              Image shows 2 boxes roughly at centre-right of the hero.
+              With offsetX=-50:
+                col=6, row=3 (odd) → cx = -50+600+50 = 600, cy = -30+3*30 = 60
+                col=8, row=3       → cx = -50+800+50 = 800, cy = 60
+              These sit at 600 and 800px from container left — right half ✓
+          */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 z-0"
             style={{
-              backgroundImage: `repeating-linear-gradient(
-                150deg,
-                rgba(255,255,255,0.04) 0px,
-                rgba(255,255,255,0.04) 1px,
-                transparent 1px,
-                transparent 38px
-              )`,
+              WebkitMaskImage: [
+                'linear-gradient(to right, transparent 0%, transparent 35%, black 55%, black 85%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+              ].join(', '),
+              maskImage: [
+                'linear-gradient(to right, transparent 0%, transparent 35%, black 55%, black 85%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+              ].join(', '),
+              WebkitMaskComposite: 'destination-in',
+              maskComposite:       'intersect',
             }}
-          />
-          <h4
-            className="relative font-normal leading-tight"
           >
+            <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
+
+            {/* Left diamond — slightly faded */}
+            <IsoBox cellW={100} cellH={60} col={6} row={3} opacity={0.45} />
+            {/* Right diamond — prominent */}
+            <IsoBox cellW={100} cellH={60} col={8} row={3} opacity={0.75} />
+          </div>
+
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          FLOW CHART — xl screen
+      ══════════════════════════════════════════ */}
+      <div className="border-t border-color">
+        <div className="hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around border-x-0 xl:border-x border-color">
+          <div className="flex flex-col items-center py-8">
+            <p className="text-b3 mb-6">Governance</p>
+            <div className="w-full h-40 flex items-center justify-center">
+              <Image src="/howAscellaOperates/governace.svg" alt="governance" width={80} height={80} />
+              <div className="w-10 bg-gray-400 h-1" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 text-center">
+            {items.map((item, index) => (
+              <div key={index} className="flex flex-col items-center py-8">
+                <p className="text-b3 mb-6">{item.label}</p>
+                <div className={`w-48 h-40 flex items-center justify-center border-y border-color
+                  ${index === 0 ? 'border-l' : ''} ${index === 4 ? 'border-r' : ''}`}>
+                  <Image src={item.icon} alt={item.label} width={80} height={80} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-center py-8">
+            <p className="text-b3 mb-6">Outcome Stability</p>
+            <div className="w-full h-40 flex items-center justify-center">
+              <div className="w-10 bg-gray-400 h-1" />
+              <Image src="/howAscellaOperates/outcome.png" alt="Outcome Stability" width={80} height={80} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          MOBILE VIEW  (< xl)
+      ══════════════════════════════════════════ */}
+      <div className="block xl:hidden">
+
+        {/* Hero text + isometric grid */}
+        <div className="relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden">
+
+          {/*
+            Mobile grid — full container, fades left/right and top/bottom.
+            cellW=60, cellH=36
+            Tiles matching the screenshot diamonds (right side of text):
+              col=5, row=4 (even) → cx = -30+300 = 270, cy = -18+4*18 = 54
+              col=7, row=4        → cx = -30+420 = 390, cy = 54
+          */}
+          <div
+            className="absolute inset-0 z-0"
+            style={{
+              WebkitMaskImage: [
+                'linear-gradient(to right, transparent 0%, transparent 40%, black 60%, black 85%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+              ].join(', '),
+              maskImage: [
+                'linear-gradient(to right, transparent 0%, transparent 40%, black 60%, black 85%, transparent 100%)',
+                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+              ].join(', '),
+              WebkitMaskComposite: 'destination-in',
+              maskComposite:       'intersect',
+            }}
+          >
+            <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
+            <IsoBox cellW={60} cellH={36} col={5} row={4} opacity={0.45} />
+            <IsoBox cellW={60} cellH={36} col={7} row={4} opacity={0.75} />
+          </div>
+
+          {/* Text */}
+          <h4 className="relative z-10 font-normal leading-tight">
             <span className="text-white">A unified model built for accountable </span>
             <span className="text-gray-300">execution at scale.</span>
           </h4>
-          <p
-            className="relative mt-4 text-white text-[12px] leading-3.25"
-          >
+          <p className="relative z-10 mt-4 text-white text-[12px] leading-relaxed">
             Ownership, governance, and <br /> delivery aligned before work begins.
           </p>
         </div>
@@ -260,7 +324,7 @@ export default function OperatingStructure() {
                 className={[
                   'relative flex flex-col items-center justify-center gap-3 py-6',
                   i % 2 === 0 ? 'border-r border-color' : '',
-                  i < 4 ? 'border-b border-color' : '',
+                  i < 4      ? 'border-b border-color' : '',
                 ].join(' ')}
               >
                 <div className="flex items-center justify-center">
@@ -272,7 +336,6 @@ export default function OperatingStructure() {
                     style={{ objectFit: 'contain' }}
                   />
                 </div>
-
                 <span
                   className="text-[#6E6E6E] text-[12px] leading-[13px] text-center px-2"
                   style={{ fontFamily: 'Montserrat, sans-serif' }}
@@ -284,12 +347,12 @@ export default function OperatingStructure() {
           </div>
         </div>
 
-        {/* Outcome Stability — full width centred */}
+        {/* Outcome Stability */}
         <div className="px-10 border-b border-color">
           <div className="flex flex-col items-center justify-center py-6 gap-3 border-x border-color">
             <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
               <Image
-                src="/howAscellaoperates/outcome.png"
+                src="/howAscellaOperates/outcome.png"
                 alt="Outcome Stability"
                 width={73}
                 height={75}

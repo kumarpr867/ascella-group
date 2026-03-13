@@ -1,32 +1,31 @@
 "use client"
 import React, { useEffect, useRef } from 'react';
 
-// ── Isometric Grid with Per-Cell Hover ────────────────────────────────────────
-function IsometricHoverGrid() {
+// ── Isometric Grid — same as ContextsPage ────────────────────────────────────
+function IsometricHoverGrid({
+  cellW = 100,
+  cellH = 60,
+  interactive = true,
+}: {
+  cellW?: number;
+  cellH?: number;
+  interactive?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
   const rafRef    = useRef<number | null>(null);
 
-  const CELL_W = 100;
-  const CELL_H = 60;
+  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
+    x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
+    y: oY + row * (cellH / 2),
+  });
 
-  const cellCenter = (col: number, row: number, offsetX: number, offsetY: number) => {
-    const x = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
-    const y = offsetY + row * (CELL_H / 2);
-    return { x, y };
-  };
-
-  const inDiamond = (px: number, py: number, cx: number, cy: number) => {
-    const dx = Math.abs(px - cx) / (CELL_W / 2);
-    const dy = Math.abs(py - cy) / (CELL_H / 2);
-    return dx + dy <= 1;
-  };
+  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
+    Math.abs(px - cx) / (cellW / 2) + Math.abs(py - cy) / (cellH / 2) <= 1;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
 
     const resize = () => {
       canvas.width  = canvas.offsetWidth;
@@ -40,72 +39,48 @@ function IsometricHoverGrid() {
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
     const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
-    canvas.addEventListener('mousemove', onMove);
-    canvas.addEventListener('mouseleave', onLeave);
+
+    if (interactive) {
+      canvas.addEventListener('mousemove', onMove);
+      canvas.addEventListener('mouseleave', onLeave);
+    }
 
     const alphaMap = new Map<string, number>();
 
     const loop = () => {
-      const W = canvas.width;
-      const H = canvas.height;
+      const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
 
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      const cols = Math.ceil(W / CELL_W) + 2;
-      const rows = Math.ceil(H / (CELL_H / 2)) + 2;
-      const offsetX = -CELL_W / 2;
-      const offsetY = -CELL_H / 2;
-
-      const DOTS_X = 15;
-      const DOTS_Y = 15;
-      const DOT_R  = 0.6;
+      const mx = mouseRef.current.x, my = mouseRef.current.y;
+      const cols   = Math.ceil(W / cellW) + 2;
+      const rows   = Math.ceil(H / (cellH / 2)) + 2;
+      const offsetX = -cellW / 2, offsetY = -cellH / 2;
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
           const key = `${col},${row}`;
 
-          const hovered = inDiamond(mx, my, cx, cy);
+          const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
           const target  = hovered ? 1 : 0;
           const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
           alphaMap.set(key, current);
 
-          ctx.save();
           ctx.beginPath();
-          ctx.moveTo(cx,              cy - CELL_H / 2);
-          ctx.lineTo(cx + CELL_W / 2, cy);
-          ctx.lineTo(cx,              cy + CELL_H / 2);
-          ctx.lineTo(cx - CELL_W / 2, cy);
+          ctx.moveTo(cx,             cy - cellH / 2);
+          ctx.lineTo(cx + cellW / 2, cy);
+          ctx.lineTo(cx,             cy + cellH / 2);
+          ctx.lineTo(cx - cellW / 2, cy);
           ctx.closePath();
-          ctx.clip();
 
-          for (let dy = 0; dy < DOTS_Y; dy++) {
-            for (let dx = 0; dx < DOTS_X; dx++) {
-              const px = cx - CELL_W / 2 + (dx + 0.5) * (CELL_W / DOTS_X);
-              const py = cy - CELL_H / 2 + (dy + 0.5) * (CELL_H / DOTS_Y);
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
 
-              if (!inDiamond(px, py, cx, cy)) continue;
-
-              const fdx = (px - cx) / (CELL_W / 2);
-              const fdy = (py - cy) / (CELL_H / 2);
-              const fade = Math.max(0, 1 - (Math.abs(fdx) + Math.abs(fdy)));
-
-              const baseAlpha  = fade * 0.55;
-              const hoverExtra = current * fade * 0.45;
-              const alpha      = baseAlpha + hoverExtra;
-
-              if (alpha < 0.01) continue;
-
-              ctx.beginPath();
-              ctx.arc(px, py, DOT_R + current * 0.4, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(234,197,52,${Math.min(1, alpha)})`;
-              ctx.fill();
-            }
+          if (current > 0.005) {
+            ctx.fillStyle = `rgba(163,163,163,${current * 0.25})`;
+            ctx.fill();
           }
-
-          ctx.restore();
         }
       }
 
@@ -115,31 +90,73 @@ function IsometricHoverGrid() {
 
     return () => {
       window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', onMove);
-      canvas.removeEventListener('mouseleave', onLeave);
+      if (interactive) {
+        canvas.removeEventListener('mousemove', onMove);
+        canvas.removeEventListener('mouseleave', onLeave);
+      }
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [cellW, cellH, interactive]);
 
   return (
     <canvas
       ref={canvasRef}
       style={{
-        position:     'absolute',
-        inset:        0,
-        width:        '100%',
-        height:       '100%',
-        pointerEvents:'auto',
-        cursor:       'crosshair',
+        position:      'absolute',
+        inset:         0,
+        width:         '100%',
+        height:        '100%',
+        pointerEvents: interactive ? 'auto' : 'none',
+        cursor:        interactive ? 'crosshair' : 'default',
       }}
     />
   );
 }
 
+// ── IsoBox — vector55.png snapped to a grid cell ─────────────────────────────
+interface IsoBoxProps {
+  src?: string;
+  cellW: number;
+  cellH: number;
+  col: number;
+  row: number;
+  opacity?: number;
+}
+const IsoBox: React.FC<IsoBoxProps> = ({
+  src = '/vector 55.png',
+  cellW, cellH, col, row,
+  opacity = 0.9,
+}) => {
+  const offsetX = -cellW / 2;
+  const offsetY = -cellH / 2;
+  const cx = offsetX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2);
+  const cy = offsetY + row * (cellH / 2);
+
+  return (
+    <img
+      src={src}
+      alt=""
+      style={{
+        position:      'absolute',
+        left:          cx,
+        top:           cy,
+        width:         cellW,
+        height:        cellH,
+        transform:     'translate(-50%, -50%)',
+        objectFit:     'fill',
+        opacity,
+        pointerEvents: 'none',
+        mixBlendMode:  'screen',
+        zIndex:        10,
+      }}
+    />
+  );
+};
+
 // ── Main Component ─────────────────────────────────────────────────────────────
 const Alignments = () => {
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col items-center py-10 font-sans overflow-hidden relative">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col items-center py-20 font-sans overflow-hidden relative">
 
       {/* Header Section */}
       <div className="flex flex-col items-center w-full max-w-[720px] text-center px-4 z-10 relative">
@@ -154,7 +171,31 @@ const Alignments = () => {
         </header>
       </div>
 
-      {/* Desktop grid (md and above) */}
+      {/* ── Desktop grid (md and above) ─────────────────────────────────────── */}
+      {/*
+        Container is 720px wide — same as the header text above.
+        cellW=100, cellH=60, offsetX=-50, offsetY=-30
+
+        3 tiles in a row on row=2 (even):
+          col=3 → cx = -50 + 300       = 250  (left tile)
+          col=4 → cx = -50 + 400       = 350  (centre tile)
+          col=5 → cx = -50 + 500       = 450  (right tile)
+          cy    = -30 + 2*(60/2)       = -30 + 60 = 30  … but container height=160
+                  row=2 cy relative to container top ≈ 30px — too high.
+
+        Use row=2 gives cy=30 inside 160px. Let's use row=3 (odd):
+          cy = -30 + 3*30 = 60  → nicely vertically centred in 160px ✓
+          col=3 (odd row) → cx = -50 + 300 + 50 = 300   (left)
+          col=4           → cx = -50 + 400 + 50 = 400   (centre, ~55% of 720)
+          col=5           → cx = -50 + 500 + 50 = 500   (right)
+
+        We want them spread across the full 720px width.
+        Shift: col=2 → 250, col=4 → 400, col=6 → 550  (row=3 odd, +50 offset)
+          col=2: cx = -50 + 200 + 50 = 200
+          col=4: cx = -50 + 400 + 50 = 400
+          col=6: cx = -50 + 600 + 50 = 600
+        These are at 200, 400, 600 inside 720px — evenly spaced ✓
+      */}
       <div
         className="relative my-[-20px] hidden md:block"
         style={{
@@ -172,44 +213,29 @@ const Alignments = () => {
           maskComposite:       'intersect',
         }}
       >
-        <IsometricHoverGrid />
+        <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
 
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position: 'absolute', left: '250px', top: '90px',
-            width: '100px', height: '60px',
-            transform: 'translate(-50%, -50%)',
-            objectFit: 'fill', opacity: 0.55,
-            pointerEvents: 'none', mixBlendMode: 'screen',
-          }}
-        />
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position: 'absolute', left: '350px', top: '90px',
-            width: '100px', height: '60px',
-            transform: 'translate(-50%, -50%)',
-            objectFit: 'fill', opacity: 0.75,
-            pointerEvents: 'none', mixBlendMode: 'screen',
-          }}
-        />
-        <img
-          src="/vector 55.png"
-          alt=""
-          style={{
-            position: 'absolute', left: '450px', top: '90px',
-            width: '100px', height: '60px',
-            transform: 'translate(-50%, -50%)',
-            objectFit: 'fill', opacity: 0.4,
-            pointerEvents: 'none', mixBlendMode: 'screen',
-          }}
-        />
+        {/* left tile — slightly faded */}
+        <IsoBox cellW={100} cellH={60} col={2} row={3} opacity={0.45} />
+        {/* centre tile — most prominent */}
+        <IsoBox cellW={100} cellH={60} col={4} row={3} opacity={0.9} />
+        {/* right tile — slightly faded */}
+        <IsoBox cellW={100} cellH={60} col={6} row={3} opacity={0.45} />
       </div>
 
-      {/* Mobile grid (below md) */}
+      {/* ── Mobile grid (below md) ───────────────────────────────────────────── */}
+      {/*
+        Full screen width, cellW=60, cellH=36
+        offsetX=-30, offsetY=-18
+
+        row=3 (odd): cy = -18 + 3*18 = 36  (out of 140px)
+        row=4 (even): cy = -18 + 4*18 = 54 ✓
+
+        Spread across mobile width ~320–390px:
+          col=2 (even row=4): cx = -30 + 120      = 90
+          col=4              : cx = -30 + 240      = 210
+          col=6              : cx = -30 + 360      = 330
+      */}
       <div
         className="relative my-[-20px] block md:hidden w-full"
         style={{
@@ -226,15 +252,14 @@ const Alignments = () => {
           maskComposite:       'intersect',
         }}
       >
-        <IsometricHoverGrid />
+        <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
 
-        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '100px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.45, pointerEvents: 'none', mixBlendMode: 'screen' }} />
-        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '200px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.75, pointerEvents: 'none', mixBlendMode: 'screen' }} />
-        <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '300px', top: '60px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.45, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+        <IsoBox cellW={60} cellH={36} col={2} row={4} opacity={0.45} />
+        <IsoBox cellW={60} cellH={36} col={4} row={4} opacity={0.9} />
+        <IsoBox cellW={60} cellH={36} col={6} row={4} opacity={0.45} />
       </div>
 
       {/* ── FORM CONTAINER BOX ── */}
-      {/* Mobile: mx-10 (40px) matches footer. Desktop: max-w-[480px] centered */}
       <div
         className="
           w-full
@@ -249,7 +274,6 @@ const Alignments = () => {
         "
         style={{ paddingTop: '24px', paddingBottom: '24px' }}
       >
-
         {/* Top Icon */}
         <div className="mb- flex justify-center">
           <img src="/image-1.png" alt="Icon" className="w-14 h-14 md:w-20 md:h-20 object-contain" />
@@ -266,7 +290,7 @@ const Alignments = () => {
             </p>
           </div>
 
-          <form className="flex flex-col gap-3 text-left mt-1" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-6 text-left mt-1" onSubmit={(e) => e.preventDefault()}>
             <input
               type="text"
               placeholder="Full Name"
@@ -291,7 +315,6 @@ const Alignments = () => {
               className="w-full bg-[#0A0A0A] border border-[#2a2a2a] p-2 rounded-md text-sm outline-none focus:border-white/40 transition-colors text-white placeholder-white/30"
             />
 
-            {/* Centered compact submit button */}
             <div className="mt-5 flex justify-center">
               <button
                 type="submit"

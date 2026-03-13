@@ -9,6 +9,156 @@ import SecurityWaveSVG from "./SecurityWave";
 import TechnologyExecution from "./TechonologyExecution";
 import RevenueEnablement from "./Revenue";
 
+// ── Isometric Grid — same as ContextsPage ────────────────────────────────────
+function IsometricHoverGrid({
+  cellW = 100,
+  cellH = 60,
+  interactive = true,
+}: {
+  cellW?: number;
+  cellH?: number;
+  interactive?: boolean;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef    = useRef<number | null>(null);
+
+  const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
+    x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
+    y: oY + row * (cellH / 2),
+  });
+  const inDiamond = (px: number, py: number, cx: number, cy: number) =>
+    Math.abs(px - cx) / (cellW / 2) + Math.abs(py - cy) / (cellH / 2) <= 1;
+
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d'); if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+
+    if (interactive) {
+      canvas.addEventListener('mousemove', onMove);
+      canvas.addEventListener('mouseleave', onLeave);
+    }
+
+    const alphaMap = new Map<string, number>();
+
+    const loop = () => {
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const mx = mouseRef.current.x, my = mouseRef.current.y;
+      const cols    = Math.ceil(W / cellW) + 2;
+      const rows    = Math.ceil(H / (cellH / 2)) + 2;
+      const offsetX = -cellW / 2, offsetY = -cellH / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
+          const key = `${col},${row}`;
+
+          const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
+          const target  = hovered ? 1 : 0;
+          const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
+          alphaMap.set(key, current);
+
+          ctx.beginPath();
+          ctx.moveTo(cx,             cy - cellH / 2);
+          ctx.lineTo(cx + cellW / 2, cy);
+          ctx.lineTo(cx,             cy + cellH / 2);
+          ctx.lineTo(cx - cellW / 2, cy);
+          ctx.closePath();
+
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+
+          if (current > 0.005) {
+            ctx.fillStyle = `rgba(163,163,163,${current * 0.25})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (interactive) {
+        canvas.removeEventListener('mousemove', onMove);
+        canvas.removeEventListener('mouseleave', onLeave);
+      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [cellW, cellH, interactive]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position:      'absolute',
+        inset:         0,
+        width:         '100%',
+        height:        '100%',
+        pointerEvents: interactive ? 'auto' : 'none',
+        cursor:        interactive ? 'crosshair' : 'default',
+      }}
+    />
+  );
+}
+
+// ── IsoBox — vector55.png snapped to a grid cell ─────────────────────────────
+interface IsoBoxProps {
+  src?: string;
+  cellW: number;
+  cellH: number;
+  col: number;
+  row: number;
+  opacity?: number;
+}
+const IsoBox: React.FC<IsoBoxProps> = ({
+  src = '/vector 55.png',
+  cellW, cellH, col, row,
+  opacity = 0.9,
+}) => {
+  const offsetX = -cellW / 2;
+  const offsetY = -cellH / 2;
+  const cx = offsetX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2);
+  const cy = offsetY + row * (cellH / 2);
+
+  return (
+    <img
+      src={src}
+      alt=""
+      style={{
+        position:      'absolute',
+        left:          cx,
+        top:           cy,
+        width:         cellW,
+        height:        cellH,
+        transform:     'translate(-50%, -50%)',
+        objectFit:     'fill',
+        opacity,
+        pointerEvents: 'none',
+        mixBlendMode:  'screen',
+        zIndex:        10,
+      }}
+    />
+  );
+};
 
 // Image fades up on enter
 const fadeUp: Variants = {
@@ -255,7 +405,7 @@ M372.475 195.38L372.734 194.952L322.339 164.488L322.081 164.916L321.822 165.344L
 M372.475 195.38L372.225 195.813L422.619 224.838L422.869 224.404L423.118 223.971L372.724 194.946L372.475 195.38Z
 M322.081 283.031H321.581V307.162H322.081H322.581V283.031H322.081Z
 M322.081 283.031L322.33 282.598L313.259 277.374L313.01 277.807L312.76 278.24L321.831 283.465L322.081 283.031Z
-M313.01 277.807H313.51V231.951H313.01H312.51V277.807H313.01Z
+M313.01 277.807H313.51V231.951H313.01H312.51V231.951H313.01Z
 M313.01 277.807H312.51V344.364H313.01H313.51V277.807H313.01Z
 M249.513 268.522L249.763 268.955L313.259 232.384L313.01 231.951L312.76 231.518L249.264 268.089L249.513 268.522Z
 M186.017 231.951L185.767 232.384L249.264 268.955L249.513 268.522L249.763 268.089L186.267 231.518L186.017 231.951Z
@@ -348,51 +498,32 @@ function OwnershipSection({
   return (
     <div
       ref={ref}
-      className="relative flex flex-col"
-      style={{ minHeight: "100vh", overflow: "visible" }}
+      className="relative flex flex-col sm:min-h-screen"
+      style={{ overflow: "visible" }}
     >
-      {/* Image — fixed height block, overflow visible so animation doesn't clip */}
       <motion.div
         variants={fadeUp} initial="hidden" whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="flex justify-center items-center lg:pt-16"
-        style={{ height: "calc(100vh - 280px)", overflow: "visible", paddingTop: "2rem", paddingLeft: "2rem", paddingRight: "2rem" }}
+        className="ownership-img-wrap flex justify-center items-center lg:pt-16"
+        style={{ overflow: "visible", paddingLeft: "2rem", paddingRight: "2rem" }}
       >
         {svgComponent ? (
           <div
-            style={{
-              width: "min(420px, 55vw)",
-              height: "min(420px, calc(100vh - 320px))",
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "visible",
-            }}
+            className="ownership-visual"
+            style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "visible" }}
           >
             {svgComponent}
           </div>
         ) : image ? (
-          <ParticleImage
-            src={image}
-            alt={title}
-            useRipple={false}
-            className=""
-            style={{
-              width: "min(420px, 55vw)",
-              height: "min(420px, calc(100vh - 320px))",
-              flexShrink: 0,
-            } as React.CSSProperties}
-          />
+          <ParticleImage src={image} alt={title} useRipple={false} className="ownership-visual" />
         ) : null}
       </motion.div>
 
-      {/* Content — sits below the image in the same viewport */}
       <motion.div
         variants={fadeUpDelayed} initial="hidden" whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="w-full max-w-xl"
-        style={{ padding: "1.5rem 2rem 2.5rem 3.5rem", flexShrink: 0 }}
+        className="w-full max-w-xl ownership-content"
+        style={{ flexShrink: 0 }}
       >
         <h3 className="font-light tracking-tight text-2xl sm:text-3xl lg:text-4xl mb-4 sm:mb-5 lg:mb-6">
           {title}
@@ -400,10 +531,48 @@ function OwnershipSection({
         <p className="text-white/50 leading-relaxed text-sm sm:text-base mb-3 sm:mb-4 lg:mb-5">
           {description}
         </p>
-        {tag && <div className="text-xs sm:text-sm tracking-widest text-white/80">{tag}</div>}
+        {tag && <div className="text-xs sm:text-sm tracking-widest text-white/80">#{tag}</div>}
       </motion.div>
 
-
+      <style>{`
+        @media (max-width: 639px) {
+          .ownership-img-wrap {
+            height: auto !important;
+            min-height: 300px;
+            padding-top: 3rem !important;
+            padding-bottom: 2rem;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            overflow: visible !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+          .ownership-visual {
+            width: 75vw !important;
+            height: 75vw !important;
+            max-height: 300px !important;
+            max-width: 300px !important;
+            overflow: visible !important;
+            margin: 0 auto !important;
+          }
+          .ownership-content {
+            padding: 1rem 1.25rem 2.5rem 1.25rem;
+          }
+        }
+        @media (min-width: 640px) {
+          .ownership-img-wrap {
+            height: calc(100vh - 280px);
+          }
+          .ownership-visual {
+            width: min(420px, 55vw) !important;
+            height: min(420px, calc(100vh - 320px)) !important;
+          }
+          .ownership-content {
+            padding: 1.5rem 2rem 2.5rem 3.5rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -422,31 +591,26 @@ export default function Ownership() {
     {
       title: "Security & Risk Posture",
       description: "Security and risk posture focuses on keeping organisational risk visible and controlled. Security decisions link directly to business priorities and acceptable risk levels. Each control has a clear owner, review cycle, and response plan. This reduces surprises and limits the impact of incidents when issues occur.",
-      tag: "Resilience",
       svgComponent: <SecurityWaveSVG />,
     },
     {
       title: "Technology Execution",
       description: "Technology execution ensures systems work reliably as change increases. Platforms follow clear build, release, and run standards. Ownership stays consistent across development and operations to avoid gaps. This keeps delivery steady and reduces failures during growth.",
-      tag: "Scalability",
       svgComponent: <TechnologyExecution />,
     },
     {
       title: "Workforce Readiness",
       description: "Workforce readiness prepares teams for real operating conditions. Roles and escalation paths stay clear before pressure hits. Training reflects actual scenarios instead of theory. Teams respond faster and make better decisions during incidents.",
-      tag: "Alignment",
       svgComponent: <WorkforceReadinessSVG />,
     },
     {
       title: "Operational Control",
       description: "Operational control brings structure to daily execution. Decisions follow defined paths instead of informal coordination. Signals focus on risk, progress, and dependencies. Work becomes predictable and less reactive over time.",
-      tag:"Governance",
       image: "/Operational1.png",
     },
     {
       title: "Revenue Enablement",
       description: "Revenue enablement connects execution quality to business results. Technical priorities reflect revenue impact and customer trust. Launches follow readiness checks and clear success measures. Growth stays protected as execution becomes disciplined.",
-      tag: "Sustainability",
       svgComponent: <RevenueEnablement />,
     },
   ];
@@ -473,11 +637,10 @@ export default function Ownership() {
 
           {/* Sticky sidebar — 25% */}
           <div className="w-[25%] shrink-0 relative">
-            {/* Grid border that spans full height */}
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
-            {/* Sticky content */}
             <aside className="sticky top-0 h-screen z-10 p-12 flex flex-col">
               <PlusHeading text="OWNERSHIP" />
+
               <ul className="mt-20 space-y-6">
                 {sections.map((item, idx) => (
                   <li key={idx} onClick={() => scrollToSection(idx)}
@@ -486,7 +649,36 @@ export default function Ownership() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto "><PartialOutlineBtn text="Explore Responsibility" /></div>
+
+              {/*
+                ── Isometric grid — fills the gap between nav list and button ──
+                Sits in the flex gap (mt-auto pushes it up from button).
+                3 tiles in one row, all within a single contained frame.
+
+                cellW=100, cellH=60
+                Container: 220px × 132px (fits 2 cells wide + some padding)
+                col=1,row=2 (even): cx=-50+100=50,   cy=-30+60=30  → left tile
+                col=2,row=2:        cx=-50+200=150,   cy=30         → centre tile
+                col=3,row=2:        cx=-50+300=250,   cy=30         → right tile (clips nicely at edge)
+              */}
+              {/* flex-1 fills all remaining space between nav list and button */}
+              <div className="flex-1 flex items-center justify-center">
+                <div
+                  className="relative overflow-hidden"
+                  style={{
+                    width:  '200px',
+                    height: '100px',
+                    WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                    maskImage:       'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                  }}
+                >
+                  <IsometricHoverGrid cellW={80} cellH={48} interactive={true} />
+                  <IsoBox cellW={80} cellH={48} col={1} row={2} opacity={0.55} />
+                  <IsoBox cellW={80} cellH={48} col={2} row={2} opacity={0.9}  />
+                </div>
+              </div>
+
+              <div className="mb-12"><PartialOutlineBtn text="Explore Responsibility" /></div>
             </aside>
           </div>
 
@@ -506,7 +698,6 @@ export default function Ownership() {
 
         {/* ══ TABLET sm–lg ══ */}
         <div className="hidden sm:flex lg:hidden flex-row relative">
-          {/* Sticky sidebar — 30% */}
           <div className="w-[30%] shrink-0 relative">
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
             <aside className="sticky top-0 h-screen z-10 px-6 pt-10 pb-6 flex flex-col">
@@ -519,10 +710,26 @@ export default function Ownership() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto pb-8"><PartialOutlineBtn text="Explore More" /></div>
+
+              <div className="flex-1 flex items-center justify-center">
+                <div
+                  className="relative overflow-hidden"
+                  style={{
+                    width:  '140px',
+                    height: '80px',
+                    WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                    maskImage:       'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                  }}
+                >
+                  <IsometricHoverGrid cellW={60} cellH={36} interactive={true} />
+                  <IsoBox cellW={60} cellH={36} col={1} row={2} opacity={0.55} />
+                  <IsoBox cellW={60} cellH={36} col={2} row={2} opacity={0.9}  />
+                </div>
+              </div>
+
+              <div className="pb-8"><PartialOutlineBtn text="Explore More" /></div>
             </aside>
           </div>
-          {/* Scrollable main — 70% */}
           <main className="w-[70%] shrink-0 relative z-10">
             {sections.map((item, index) => (
               <div key={item.title} data-ownership-section>
@@ -534,23 +741,24 @@ export default function Ownership() {
 
         {/* ══ MOBILE <sm ══ */}
         <div className="sm:hidden">
-          <div className="px-10 pt-8 pb-4 border-b border-white/10">
+          <div className="w-full border-b border-white/10 px-10 pt-8 pb-4">
             <PlusHeading text="OWNERSHIP" />
           </div>
-          <div className="py-2">
-            {sections.map((item, index) => (
-              <div key={item.title} data-ownership-section>
-                <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />
-              </div>
-            ))}
+          <div className="mx-10">
+            <div className="py-2">
+              {sections.map((item, index) => (
+                <div key={item.title} data-ownership-section>
+                  <OwnershipSection {...item} isLast={index === sections.length - 1} index={index} setActiveIndex={setActiveIndex} />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="px-10 pb-10"><PartialOutlineBtn text="Explore More" /></div>
         </div>
 
       </div>
 
-      <div className="relative h-px w-full">
-        <div className="mx-10 h-full bg-white/10" />
+      <div className="relative h-px w-full bg-white/10 sm:bg-transparent">
+        <div className="hidden sm:block mx-10 h-full bg-white/10" />
       </div>
     </section>
   );

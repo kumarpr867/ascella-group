@@ -90,7 +90,8 @@ export default function Focuses() {
           font-size: 10px;
           letter-spacing: 0.3em;
           line-height: 1.8;
-          color: rgba(255,255,255,0.55);
+          color: white;
+    
           max-width: 320px;
           font-weight: 300;
           margin-top: 15px;
@@ -318,9 +319,8 @@ export default function Focuses() {
           <div className="header-inner">
             <div className="header-left">
               <p>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
-                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
-                nascetur ridiculus mus.
+                Early-stage teams often prioritise product velocity and fundraising momentum while postponing formal operating controls and governance clarity.
+
               </p>
             </div>
             <div className="header-right">

@@ -125,83 +125,87 @@ const ExecutionLayer = () => {
 
       {/* MOBILE LAYOUT (< md) */}
       <div className="flex flex-col md:hidden min-h-screen">
-        <div className="relative px-5 pb-10 overflow-hidden" style={{ flexShrink: 0 }}>
-          <div
-            style={{
-              position: 'absolute',
-              top: '48%',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              zIndex: 0,
-              WebkitMaskImage: [
-                'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
-                'linear-gradient(to bottom, transparent 0%, black 12%, black 82%, transparent 100%)',
-              ].join(', '),
-              maskImage: [
-                'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
-                'linear-gradient(to bottom, transparent 0%, black 12%, black 82%, transparent 100%)',
-              ].join(', '),
-              WebkitMaskComposite: 'destination-in',
-              maskComposite: 'intersect',
-              pointerEvents: 'none',
-            }}
-          >
-            <IsometricHoverGrid />
-          </div>
+        <div className="mx-10">
 
-          <div style={{ position: 'relative', zIndex: 10 }}>
-            <div className="mb-5">
-              <span className="relative inline-block border border-white/30 px-4 py-1.5 text-[10px] tracking-[0.25em] uppercase text-white/60 font-medium bg-black/50">
-                <span className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t border-l border-white"></span>
-                <span className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t border-r border-white"></span>
-                <span className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b border-l border-white"></span>
-                <span className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b border-r border-white"></span>
-                Execution Layer
-              </span>
+          <div className="relative px-5 pb-10 overflow-hidden" style={{ flexShrink: 0 }}>
+            <div
+              style={{
+                position: 'absolute',
+                top: '48%',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 0,
+                WebkitMaskImage: [
+                  'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
+                  'linear-gradient(to bottom, transparent 0%, black 12%, black 82%, transparent 100%)',
+                ].join(', '),
+                maskImage: [
+                  'linear-gradient(to right,  transparent 0%, black 8%, black 92%, transparent 100%)',
+                  'linear-gradient(to bottom, transparent 0%, black 12%, black 82%, transparent 100%)',
+                ].join(', '),
+                WebkitMaskComposite: 'destination-in',
+                maskComposite: 'intersect',
+                pointerEvents: 'none',
+              }}
+            >
+              <IsometricHoverGrid />
             </div>
-            <h2 className="text-[2.5rem] font-Montserrat leading-[1.05] mb-5 tracking-tight">
-              Controlled execution units for{' '}
-              <span className="text-neutral-500">complex operating environments</span>
-            </h2>
-            <p className="text-[12px] leading-relaxed text-white">
-              Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
-            </p>
-          </div>
-        </div>
 
-        <div className="flex items-center justify-start px-4 border-b border-white/10 bg-black" style={{ flexShrink: 0 }}>
-          <span className="relative px-4 py-2 text-[9px] tracking-[0.2em] uppercase text-white bg-black border border-white/30 inline-block">
-            <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white/70"></span>
-            <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white/70"></span>
-            <span className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-white/70"></span>
-            <span className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-white/70"></span>
-            ALL EXECUTION ARMS OPERATIONAL
-          </span>
-        </div>
+            <div style={{ position: 'relative', zIndex: 10 }}>
+              <div className="mb-5">
+                <span className="relative inline-block border border-white/30 px-4 py-1.5 text-[10px] tracking-[0.25em] uppercase text-white/60 font-medium bg-black/50">
+                  <span className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t border-l border-white"></span>
+                  <span className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t border-r border-white"></span>
+                  <span className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b border-l border-white"></span>
+                  <span className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b border-r border-white"></span>
+                  Execution Layer
+                </span>
+              </div>
+              <h4 className="text-[1.5rem] font-Montserrat leading-[1.05] mb-5 tracking-tight">
+                Controlled execution units for{' '}
+                <span className="text-neutral-500">complex operating environments</span>
+              </h4>
+              <p className="text-[12px] font-Montserrat leading-relaxed text-white">
+                Execution arms deliver specialised work across security, technology, operations, and growth. Ascella Group retains governance, accountability, and oversight across all execution.
+              </p>
+            </div>
+          </div>
 
-        {/* Static Image Replacement for Mobile */}
-        <div className="relative w-full border-b border-white/10 bg-black" style={{ height: '500px', flexShrink: 0 }}>
-          <img 
-            src={imageSrc} 
-            alt="Execution Layer" 
-            className="w-full h-full object-cover"
-          />
-        </div>
+          <div className="flex items-center justify-start px-4 border-b border-white/10 bg-black" style={{ flexShrink: 0 }}>
+            <span className="relative px-4 py-2 text-[9px] tracking-[0.2em] uppercase text-white bg-black border border-white/30 inline-block">
+              <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white/70"></span>
+              <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white/70"></span>
+              <span className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-white/70"></span>
+              <span className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-white/70"></span>
+              ALL EXECUTION ARMS OPERATIONAL
+            </span>
+          </div>
 
-        <div className="grid grid-cols-3 border-b border-white/10" style={{ flexShrink: 0 }}>
-          <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
-            <span className="text-xl font-light">5</span>
-            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
+          {/* Static Image */}
+          <div className="relative w-full border-b border-white/10 bg-black" style={{ height: '500px', flexShrink: 0 }}>
+            <img
+              src={imageSrc}
+              alt="Execution Layer"
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
-            <span className="text-xl">Single</span>
-            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Governance Authority</span>
+
+          <div className="grid grid-cols-3 border-b border-white/10" style={{ flexShrink: 0 }}>
+            <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
+              <span className="text-xl font-light">5</span>
+              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
+            </div>
+            <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
+              <span className="text-xl">Single</span>
+              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Governance Authority</span>
+            </div>
+            <div className="flex flex-col justify-center px-3 py-5">
+              <span className="text-xl">Continuous</span>
+              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
+            </div>
           </div>
-          <div className="flex flex-col justify-center px-3 py-5">
-            <span className="text-xl">Continuous</span>
-            <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
-          </div>
+
         </div>
         <div className="flex-1"></div>
       </div>
@@ -233,7 +237,6 @@ const ExecutionLayer = () => {
           <div className="border-r border-white/10"></div>
           <div className="relative p-8 lg:p-12 xl:p-24 pt-8 lg:pt-10 flex flex-col justify-start border-r border-white/10 overflow-hidden">
             
-            {/* Vector Overlays Restored */}
             <div className="absolute z-0 pointer-events-none left-0 right-0" style={{ top: '55%', bottom: 0 }}>
               <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <image href="/vector 55.png" x="200" y="60"  width="100" height="60" opacity="30" preserveAspectRatio="xMidYMid meet" />
@@ -283,7 +286,6 @@ const ExecutionLayer = () => {
             </div>
           </div>
 
-          {/* Static Image Replacement for Desktop */}
           <div className="relative h-full w-full border-r border-white/10 overflow-hidden">
             <img
               src={imageSrc}

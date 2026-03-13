@@ -2,9 +2,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// WAVE CANVAS
-// ══════════════════════════════════════════════════════════════════════════════
 const SPACING   = 3;
 const THRESHOLD = 8;
 
@@ -114,156 +111,88 @@ function WaveCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
   return <canvas ref={canvasRef} style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'auto',cursor:'crosshair',zIndex:20}} />;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// STYLES
-// ══════════════════════════════════════════════════════════════════════════════
 const styles = `
-
-  /* ══════════════════════════════════════════
-     SHARED / RESET
-  ══════════════════════════════════════════ */
   .ctrl-section { position:relative; width:100%; background:#000; color:#fff; }
 
-  /* ══════════════════════════════════════════
-     DESKTOP (≥ 641px)
-     - Section height = exactly 100vh (navbar is outside this section, above it)
-     - So: section fills remaining viewport after navbar
-     - Main content frame = 100vh - navbar(80px) - footer(100px)
-     - Footer = bottom 100px of section
-  ══════════════════════════════════════════ */
   @media (min-width:641px) {
     .ctrl-section {
       display:flex;
       flex-direction:column;
-      /* Fill exactly the viewport height minus the navbar */
       height:calc(100vh - 80px);
       overflow:hidden;
     }
-
     .d-gl-top   { position:absolute; top:0; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
     .d-gl-foot  { position:absolute; bottom:100px; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
     .d-gl-left  { position:absolute; top:0; bottom:0; left:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
     .d-gl-right { position:absolute; top:0; bottom:0; right:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
-
     .d-globe-container {
       position:absolute;
-      left:96px;
-      bottom:100px;
-      top:0;
-      right:50%;
-      overflow:hidden;
-      z-index:10;
+      left:96px; bottom:100px; top:0; right:50%;
+      overflow:hidden; z-index:10;
     }
-
     .d-globe-wrapper {
       position:absolute;
-      width:761px;
-      height:677px;
-      bottom:-60px;
-      left:-320px;
+      width:761px; height:677px;
+      bottom:-60px; left:-320px;
       transform:rotate(158.67deg);
     }
-
-    /* Content layer fills the section minus footer */
     .d-content {
-      position:relative;
-      z-index:40;
-      display:flex;
-      flex-direction:column;
-      /* Main area = full section height minus footer 100px */
+      position:relative; z-index:40;
+      display:flex; flex-direction:column;
       height:calc(100vh - 80px - 100px);
-      flex-shrink:0;
-      pointer-events:none;
+      flex-shrink:0; pointer-events:none;
     }
-
     .d-main {
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:flex-end;
+      flex:1; display:flex; flex-direction:column;
+      justify-content:center; align-items:flex-end;
       padding:0 160px;
     }
-
     .d-inner { max-width:900px; padding-right:176px; }
-
     .d-h2 {
       font-size:clamp(32px,3.5vw,48px);
-      font-weight:300;
-      line-height:1.05;
-      letter-spacing:-.02em;
+      font-weight:300; line-height:1.05; letter-spacing:-.02em;
     }
     .d-indent { padding-left:96px; display:block; }
-
     .d-subrow {
-      margin-top:32px;
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:32px;
-      pointer-events:auto;
-      cursor:pointer;
+      margin-top:32px; display:flex;
+      align-items:center; justify-content:flex-end;
+      gap:32px; pointer-events:auto; cursor:pointer;
     }
     .d-subtext {
-      font-size:10px;
-      color:rgba(255,255,255,.5);
-      max-width:300px;
-      line-height:1.6;
-      text-transform:uppercase;
-      letter-spacing:.2em;
+      font-size:10px; color:rgba(255,255,255,.5);
+      max-width:300px; line-height:1.6;
+      text-transform:uppercase; letter-spacing:.2em;
     }
     .d-arrow {
-      flex-shrink:0;
-      width:40px; height:40px;
-      border:1px solid rgba(255,255,255,.2);
-      border-radius:50%;
+      flex-shrink:0; width:40px; height:40px;
+      border:1px solid rgba(255,255,255,.2); border-radius:50%;
       display:flex; align-items:center; justify-content:center;
       transition:background .7s, color .7s;
     }
     .d-subrow:hover .d-arrow { background:#fff; color:#000; }
-
-    /* Footer — exactly 100px, pinned at the bottom of the section */
     .d-footer {
-      height:100px;
-      flex-shrink:0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 128px;
-      pointer-events:auto;
-      position:relative;
-      z-index:50;
+      height:100px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 128px; pointer-events:auto;
+      position:relative; z-index:50;
     }
     .d-engage {
       padding:16px 32px;
       border:1px solid rgba(255,255,255,.15);
-      font-size:10px;
-      letter-spacing:.4em;
-      text-transform:uppercase;
-      background:transparent;
-      color:#fff;
-      cursor:pointer;
-      white-space:nowrap;
+      font-size:10px; letter-spacing:.4em;
+      text-transform:uppercase; background:transparent;
+      color:#fff; cursor:pointer; white-space:nowrap;
       transition:background .3s, color .3s;
     }
     .d-engage:hover { background:#fff; color:#000; }
     .d-ascella {
-      font-size:9px;
-      letter-spacing:.1em;
-      max-width:220px;
-      text-align:left;
-      
-      line-height:1.5;
-      color:rgba(255,255,255,.45);
+      font-size:9px; letter-spacing:.1em;
+      max-width:220px; text-align:left;
+      line-height:1.5; color:rgba(255,255,255,.45);
     }
-
-    /* Hide mobile elements */
     .m-layout { display:none !important; }
   }
 
-  /* ══════════════════════════════════════════
-     TABLET tweaks (641px – 1023px)
-  ══════════════════════════════════════════ */
   @media (min-width:641px) and (max-width:1023px) {
     .d-gl-left  { left:40px; }
     .d-gl-right { right:40px; }
@@ -275,9 +204,6 @@ const styles = `
     .d-footer { padding:0 48px; }
   }
 
-  /* ══════════════════════════════════════════
-     LARGE DESKTOP ≥ 1440px
-  ══════════════════════════════════════════ */
   @media (min-width:1440px) {
     .d-gl-left  { left:120px; }
     .d-gl-right { right:120px; }
@@ -287,93 +213,68 @@ const styles = `
   }
 
   /* ══════════════════════════════════════════
-     MOBILE (≤ 640px)
+     MOBILE — ONLY CHANGE: padding 28px → 40px
+     to match footer mx-10
   ══════════════════════════════════════════ */
   @media (max-width:640px) {
-
     .d-gl-top, .d-gl-foot, .d-gl-left, .d-gl-right,
     .d-globe-container, .d-content, .d-footer { display:none !important; }
 
     .m-layout {
-      display:flex;
-      flex-direction:column;
-      width:100%;
+      display:flex; flex-direction:column; width:100%;
     }
-
     .m-line {
-      width:100%;
-      height:1px;
-      background:rgba(255,255,255,.22);
-      flex-shrink:0;
+      width:100%; height:1px;
+      background:rgba(255,255,255,.22); flex-shrink:0;
     }
 
-    .m-text-block { padding:28px 28px 20px 28px; }
+    /* ONLY CHANGE: 28px → 40px on left/right */
+    .m-text-block { padding:28px 40px 20px 40px; }
 
     .m-h2 {
-      font-size:22px;
-      font-weight:300;
-      line-height:1.15;
-      letter-spacing:-.01em;
-      text-align:left;
-      margin:0;
+      font-size:22px; font-weight:300;
+      line-height:1.15; letter-spacing:-.01em;
+      text-align:left; margin:0;
     }
     .m-h2-center { display:block; text-align:center; }
     .m-dim { color:rgba(255,255,255,.28); }
 
     .m-subrow {
-      margin-top:18px;
-      margin-left:30px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      cursor:pointer;
+      margin-top:18px; margin-left:30px;
+      display:flex; align-items:center;
+      gap:12px; cursor:pointer;
     }
     .m-subtext {
-      font-size:8px;
-      line-height:1.65;
-      text-transform:uppercase;
-      letter-spacing:.18em;
-      flex:1;
-      color:rgba(255,255,255,.65);
+      font-size:8px; line-height:1.65;
+      text-transform:uppercase; letter-spacing:.18em;
+      flex:1; color:rgba(255,255,255,.65);
     }
     .m-arrow {
-      flex-shrink:0;
-      width:32px; height:32px;
-      border:1px solid rgba(255,255,255,.25);
-      border-radius:50%;
+      flex-shrink:0; width:32px; height:32px;
+      border:1px solid rgba(255,255,255,.25); border-radius:50%;
       display:flex; align-items:center; justify-content:center;
     }
 
     .m-engage-zone {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px 0 20px 0;
+      display:flex; align-items:center;
+      justify-content:center; padding:24px 0 20px 0;
     }
     .m-engage-btn {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
+      display:flex; align-items:center;
+      justify-content:center; gap:8px;
       padding:12px 28px;
       border:1px solid rgba(255,255,255,.45);
-      font-size:8px;
-      letter-spacing:.38em;
-      text-transform:uppercase;
-      background:transparent;
-      color:#fff;
-      cursor:pointer;
-      white-space:nowrap;
+      font-size:8px; letter-spacing:.38em;
+      text-transform:uppercase; background:transparent;
+      color:#fff; cursor:pointer; white-space:nowrap;
       transition:background .3s, color .3s;
     }
     .m-engage-btn:hover { background:#fff; color:#000; }
     .m-engage-btn svg { display:block; }
 
     .m-globe-block {
-      width:100%;
-      height:260px;
-      position:relative;
-      overflow:visible;
+      width:100%; height:260px;
+      position:relative; overflow:visible;
     }
     .m-globe-wrapper {
       position:absolute;
@@ -384,22 +285,18 @@ const styles = `
 
     .m-double-line-gap { height:32px; width:100%; flex-shrink:0; }
 
-    .m-ascella { padding:16px 28px 28px 28px; }
+    /* ONLY CHANGE: 28px → 40px on left/right */
+    .m-ascella { padding:16px 40px 28px 40px; }
     .m-ascella p {
-      font-size:10px;
-      letter-spacing:.13em;
-      line-height:1.75;
-    
-      color:rgba(255,255,255,.45);
-      text-align:left;
-      margin:0;
+      font-size:10px; letter-spacing:.13em;
+      line-height:1.75; color:rgba(255,255,255,.45);
+      text-align:left; margin:0;
     }
   }
 
   .dim { color:rgba(255,255,255,.3); }
 `;
 
-// ── Main Component ─────────────────────────────────────────────────────────────
 const Controlled = () => {
   const dGlobeRef = useRef<HTMLDivElement>(null);
   const [dImgEl, setDImgEl] = useState<HTMLImageElement | null>(null);
@@ -418,13 +315,9 @@ const Controlled = () => {
   return (
     <>
       <style>{styles}</style>
-
       <section className="ctrl-section">
 
-        {/* ════════════════════════════════════════
-            DESKTOP LAYOUT
-        ════════════════════════════════════════ */}
-
+        {/* ════════ DESKTOP ════════ */}
         <div className="d-gl-top" />
         <div className="d-gl-foot" />
         <div className="d-gl-left" />
@@ -433,23 +326,13 @@ const Controlled = () => {
         <div className="d-globe-container">
           <div ref={dGlobeRef} className="d-globe-wrapper">
             <img
-              src="/globe2.png"
-              alt=""
-              crossOrigin="anonymous"
-              style={{
-                position:'absolute',
-                width:'100%',
-                height:'100%',
-                display:'block',
-                opacity:0.55,
-                objectFit:'contain'
-              }}
+              src="/globe2.png" alt="" crossOrigin="anonymous"
+              style={{position:'absolute',width:'100%',height:'100%',display:'block',opacity:0.55,objectFit:'contain'}}
             />
             <WaveCanvas imgEl={dImgEl} />
           </div>
         </div>
 
-        {/* Main content */}
         <div className="d-content">
           <div className="d-main">
             <div className="d-inner">
@@ -466,7 +349,6 @@ const Controlled = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <footer className="d-footer">
           <Link href="/engageWithUs">
             <button className="d-engage">Engage With Us <span style={{marginLeft:'8px',opacity:.3}}>:::</span></button>
@@ -474,11 +356,8 @@ const Controlled = () => {
           <p className="d-ascella">The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
         </footer>
 
-        {/* ════════════════════════════════════════
-            MOBILE LAYOUT
-        ════════════════════════════════════════ */}
+        {/* ════════ MOBILE ════════ */}
         <div className="m-layout">
-
           <div className="m-line" />
 
           <div className="m-text-block">
@@ -525,7 +404,6 @@ const Controlled = () => {
           <div className="m-ascella">
             <p>The Ascella Startups Programme embeds governance, accountability, and execution discipline before scale begins.</p>
           </div>
-
         </div>
 
       </section>
