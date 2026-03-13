@@ -1,11 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence, animate, useInView } from "motion/react"
+import { motion, AnimatePresence, animate, useInView } from "framer-motion"
 import { useRef } from "react"
 import OutlineBtn from '../btns/OutlineBtn';
 import Heading from '@/components/headings/Heading';
 import { useRouter } from "next/navigation";
-import { setupDevBundler } from 'next/dist/server/lib/router-utils/setup-dev-bundler';
 
 const cards = [
     {

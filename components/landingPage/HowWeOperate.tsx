@@ -4,6 +4,8 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Heading from "../headings/Heading";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
 
 const variants = {
   enter: (direction: number) => ({
@@ -120,12 +122,12 @@ export default function HowWeOperate() {
     }, 5000);
   };
 
-const stopAutoSlide = () => {
-  if (timerRef.current) {
-    clearInterval(timerRef.current);
-    timerRef.current = null;
-  }
-};
+  const stopAutoSlide = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
 
   useEffect(() => {
     startAutoSlide();
@@ -133,17 +135,12 @@ const stopAutoSlide = () => {
   }, []);
 
   return (
-    <section className="mx-10 lg:mx-auto max-w-7xl  py-12 sm:py-16 lg:py-24">
+    <section className="mx-10 xl:mx-auto max-w-7xl py-12 sm:py-16 lg:py-24">
 
       {/* ══ DESKTOP lg+ ══ */}
       <div className="hidden lg:flex items-center gap-16 xl:gap-24">
 
-        <motion.div
-          initial={{ opacity: 0, }}
-          whileInView={{ opacity: 1, }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex-shrink-0 flex items-center justify-center"
+        <Reveal variants={slideInFromLeft(0.1)} className="flex-shrink-0 flex items-center justify-center"
         >
           <Image
             src="/HowWeOperate.png"
@@ -152,34 +149,45 @@ const stopAutoSlide = () => {
             height={500}
             className="w-[420px] xl:w-[500px]"
           />
-        </motion.div>
+        </Reveal>
 
         <div className="flex flex-col justify-between gap-10 flex-1 min-w-0">
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col gap-4"
-          >
-            <Heading text="How We Operate" />
-            <h3 className="font-light text-[24px] xl:text-[36px] text-white leading-tight">
-              Control is designed in,<br />
-              not enforced later
-            </h3>
-            <p className="text-[12px] font-light max-w-md">
-              Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
-            </p>
-          </motion.div>
+          <Reveal variants={slideInFromRight(0.15)}>
+            <div className="flex flex-col gap-4">
+              <Heading text="How We Operate" />
 
-          <ul className="grid grid-cols-2 gap-5">
+              <h3 className="font-light text-[24px] xl:text-[36px] text-white leading-tight">
+                Control is designed in,<br />
+                not enforced later
+              </h3>
+
+              <p className="text-[12px] font-light max-w-md">
+                Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
+              </p>
+            </div>
+          </Reveal>
+
+          <motion.ul
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.15
+                }
+              }
+            }}
+            className="grid grid-cols-2 gap-5"
+          >
             {points.map((point, index) => (
               <motion.li
-                key={index}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2, ease: "easeOut" }}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 className="flex flex-col gap-2.5 bg-gray-500 p-5 xl:p-6 rounded-2xl"
               >
                 <div className="flex justify-between w-full items-start">
@@ -190,7 +198,7 @@ const stopAutoSlide = () => {
                 <p className="text-gray-300 text-[12px]">{point.description}</p>
               </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         </div>
       </div>
 
@@ -199,12 +207,7 @@ const stopAutoSlide = () => {
       <div className="flex flex-col gap-6 lg:hidden">
 
         {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col gap-3"
+        <Reveal variants={slideInFromBottom(0.02)} className="flex flex-col gap-3"
         >
           <Heading text="How We Operate" />
           <p className="font-light text-3xl text-white leading-tight">
@@ -214,7 +217,7 @@ const stopAutoSlide = () => {
           <p className="text-gray-100 font-light text-sm">
             Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
           </p>
-        </motion.div>
+        </Reveal>
 
         {/* Image */}
         <div className="flex justify-center">
@@ -238,9 +241,9 @@ const stopAutoSlide = () => {
               animate="center"
               exit="exit"
               transition={{
-  x: { type: "spring", stiffness: 220, damping: 30 },
-  opacity: { duration: 0.25 },
-}}
+                x: { type: "spring", stiffness: 220, damping: 30 },
+                opacity: { duration: 0.25 },
+              }}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.25}

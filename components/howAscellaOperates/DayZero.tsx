@@ -1,3 +1,5 @@
+import { slideInFromBottom } from "@/utils/motion";
+import Reveal from "@/utils/Reveal";
 import Heading from "../headings/Heading";
 
 type ProblemItem = {
@@ -61,7 +63,7 @@ const items: ProblemItem[] = [
 export default function DayZero() {
   return (
     <section className="mx-auto max-w-7xl px-10 my-24 flex flex-col gap-28 flex-center">
-      <div className="flex flex-col flex-center gap-12 max-w-3xl text-center">
+      <Reveal variants={slideInFromBottom(0.1)}  className="flex flex-col flex-center gap-12 max-w-3xl text-center">
         <div className="">
           <Heading text="SECURITY FROM DAY ZERO" />
         </div>
@@ -99,10 +101,10 @@ export default function DayZero() {
             <span className="font-extralight text-[12px] md:text-[16px]">Risk Visibility</span>
           </div>
         </div>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 border border-color">
+      </Reveal>
+      <Reveal variants={slideInFromBottom(0.1)}  className="grid grid-cols-1 lg:grid-cols-3 border border-color">
         {items.map((item, index) => (
-          <div
+          <Reveal variants={slideInFromBottom(0.1)} 
             key={item.title}
             className={`p-10 flex flex-col border-color ${index !== 0 ? "lg:border-l border-t lg:border-t-0" : ""}`}
           >
@@ -116,9 +118,9 @@ export default function DayZero() {
             <p className="text-b3 leading-tight md:pr-10 font-extralight">
               {item.description}
             </p>
-          </div>
+          </Reveal>
         ))}
-      </div>
+      </Reveal>
     </section>
   )
 }

@@ -326,7 +326,7 @@ export default function Prog() {
 
             <div className="w-full border-y border-color">
                 <div className="mx-10 xl:mx-auto max-w-7xl border-x border-color">
-                    <Reveal variants={slideInFromBottom(0.2)} className="flex flex-col sm:flex-row items-start sm:items-center gap-96 justify-between p-6 gap-4">
+                    <Reveal variants={slideInFromBottom(0.1 )} className="flex flex-col sm:flex-row items-start sm:items-center gap-96 justify-between p-6 gap-4">
                         <PartialOutlineBtn
                             text="See How It Works"
                             size="sm"

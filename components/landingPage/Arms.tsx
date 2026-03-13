@@ -14,15 +14,15 @@ export default function Arms() {
   const total = content.length;
   const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (!paused) {
-        setIndex((prev) => (prev + 1) % total);
-      }
-    }, 3000);
+useEffect(() => {
+  if (paused) return;
 
-    return () => clearInterval(id);
-  }, [paused, total]);
+  const id = setInterval(() => {
+    setIndex((prev) => (prev + 1) % total);
+  }, 3000);
+
+  return () => clearInterval(id);
+}, [paused, total]);
 
   return (
     <section className="max-w-7xl xl:mx-auto mx-10 flex flex-col items-center justify-center my-24 ">

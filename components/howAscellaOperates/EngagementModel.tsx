@@ -1,16 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import {
-    motion,
-    AnimatePresence,
-    useScroll,
-    useTransform,
-    useReducedMotion,
-} from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 import Image from "next/image";
-import { SECTIONS, EngagementLabel } from "./data";
-import Heading from "../../headings/Heading";
+import { SECTIONS, EngagementLabel } from "../../data/EngagementModelData";
+import Heading from "../headings/Heading";
+import { slideInFromBottom } from "@/utils/motion";
+import Reveal from "@/utils/Reveal";
 
 const MENU_ITEMS: EngagementLabel[] = [
     "Operation",
@@ -27,15 +23,14 @@ export default function Em3() {
 
 
     const sectionRef = useRef<HTMLDivElement>(null);
-    const reduceMotion = useReducedMotion();
 
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start start", "end end"],
     });
 
-const imageY = 0;
-const textY = 0;
+    const imageY = 0;
+    const textY = 0;
 
     useEffect(() => {
         const onScroll = () => setIsPaused(false);
@@ -77,7 +72,7 @@ const textY = 0;
 
     return (
         <section className="mx-auto max-w-7xl px-10 my-24">
-            <header className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
+            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
                 <h1 className="text-[24px] lg:text-[36px] ">
                     Engagement structures are designed for operational alignment, not transactional delivery.
@@ -85,10 +80,10 @@ const textY = 0;
                 <p className="font-extralight text-[14px] md:text-[16px] lg:text-base">
                     Ascella engagements are structured based on organisational maturity, execution complexity, and governance need.
                 </p>
-            </header>
+            </Reveal>
 
             {/* MOBILE AUTO VERSION */}
-            <div className="flex flex-col items-center gap-8 md:hidden">
+            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col items-center gap-8 md:hidden">
 
                 {/* Menu */}
                 <nav className="flex flex-col gap-2 text-lg">
@@ -97,8 +92,8 @@ const textY = 0;
                             key={item}
                             onClick={() => handleClick(item)}
                             className={`text-left transition-colors ${active === item
-                                    ? "text-white"
-                                    : "text-gray-400"
+                                ? "text-white"
+                                : "text-gray-400"
                                 }`}
                         >
                             [{String(index + 1).padStart(2, "0")}] {item}
@@ -133,7 +128,7 @@ const textY = 0;
                         </div>
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </Reveal>
 
             {/* DESKTOP STICKY SCROLL VERSION */}
             <div

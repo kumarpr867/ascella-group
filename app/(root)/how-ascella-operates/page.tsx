@@ -1,7 +1,7 @@
 import Faq from "@/components/Faq";
 import Accountability from "@/components/howAscellaOperates/Accountability";
 import DayZero from "@/components/howAscellaOperates/DayZero";
-import Em3 from "@/components/howAscellaOperates/engagementModel/Em3";
+import EngagementModel from "@/components/howAscellaOperates/EngagementModel";
 import ExecutionPods from "@/components/howAscellaOperates/ExecutionPods";
 import Governace from "@/components/howAscellaOperates/Governace";
 import NotCapabilityProblem from "@/components/howAscellaOperates/NotCapabilityProblem";
@@ -18,7 +18,7 @@ export default function HowAscellaOperate() {
       <Governace />
       <ExecutionPods />
       <DayZero />
-      <Em3 />
+      <EngagementModel />
       <Faq faqs={howAscellaOperatesFaqs} description="Clear answers to practical questions about engagement flow, decision authority, scope boundaries, and operating control" />
       <NotCapabilityProblem />
     </>

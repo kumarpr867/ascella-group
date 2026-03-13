@@ -5,6 +5,8 @@ import Heading from "../headings/Heading";
 import Image from "next/image"
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
 
 const points = [
     {
@@ -137,20 +139,20 @@ export default function Governace() {
     return (
         <section className="flex flex-col my-24 xl:p-25">
             <div className="mx-auto max-w-7xl px-10 flex flex-col gap-6 mb-20">
-                <div className="flex flex-col gap-5 max-w-2xl">
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-5 max-w-2xl">
                     <Heading text="Governance and Oversight" />
                     <h3 className="text-[14px] md:text-[20px] lg:text-[36px]">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
                     </h3>
-                </div>
-                <div className="flex flex-col md:flex-row justify-between gap-6 md:gap-20 lg:gap-48">
+                </Reveal>
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col md:flex-row justify-between gap-6 md:gap-20 lg:gap-48">
                     <p className="font-extralight text-[12px] md:text-[16px]">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
                     </p>
                     <p className="text-[12px] md:text-[16px]">As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
-                </div>
+                </Reveal>
             </div>
 
             <div className="mx-auto max-w-7xl px-10 flex md:flex-row flex-col  flex-center leading-tight gap-15 md:gap-48 border-y border-color py-15">
-                <div className="flex flex-col justify-between gap-32">
+                <Reveal variants={slideInFromLeft(0.1)} className="flex flex-col justify-between gap-32">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="hidden md:flex flex-col gap-5">
                         <div className="flex-center relative md:w-20 md:h-20">
@@ -158,8 +160,8 @@ export default function Governace() {
                         </div>
                         <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
                     </div>
-                </div>
-                <div className="flex flex-col justify-between">
+                </Reveal>
+                <Reveal variants={slideInFromRight(0.1)} className="flex flex-col justify-between">
                     <h3 className="text-[24px] md:text-[36px]">Before execution</h3>
                     <p className="text-gray-200 font-light max-w-lg">
                         Begins, Ascella establishes
@@ -230,14 +232,14 @@ export default function Governace() {
                             ))}
                         </div>
                     </div>  
-                </div>
+                </Reveal>
             </div>
-            <div className="flex flex-col flex-center">
+            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center">
                 <div className=" w-0.5 h-10 bg-gray-400">
                 </div>
                 <OutlineBtn text="Explore With Us"
                     onClick={() => router.push("/execution-arms")} />
-            </div>
+            </Reveal>
 
         </section>
     )
