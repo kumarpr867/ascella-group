@@ -1,5 +1,8 @@
 "use client";
 
+import { slideInFromBottom } from "@/utils/motion";
+import Reveal from "@/utils/Reveal";
+import { div, section } from "motion/react-client";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import { useRouter } from "next/navigation";
 
@@ -14,7 +17,7 @@ export default function ApplicationForm() {
                     {/* LEFT COLUMN */}
                     <aside className="order-2 lg:order-1 lg:border-r border-color">
                         <div className="w-full lg:sticky lg:top-24">
-                            <div className="lg:border-b border-color lg:px-4 pb-4">
+                            <Reveal variants={slideInFromBottom(0.2)} className="lg:border-b border-color lg:px-4 pb-4">
                                 <button
                                     onClick={() => router.push("/JD-Page")}
                                     className="hidden lg:flex mb-2 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
@@ -33,33 +36,43 @@ export default function ApplicationForm() {
                                     Applications are reviewed through Ascella's structured evaluation
                                     and alignment process.
                                 </p>
-                            </div>
+                            </Reveal>
 
                             <form className="space-y-2 mt-4 lg:mt-0 lg:px-4 pt-4">
-                                <div className="grid grid-cols-2 gap-2">
+                                <Reveal variants={slideInFromBottom(0.4)} className="grid grid-cols-2 gap-2">
                                     <Input label="Full Name" />
                                     <Input label="Email" type="email" />
                                     <Input label="Phone Number" />
                                     <Input label="Current Location" />
-                                </div>
+                                </Reveal>
 
+                                <Reveal variants={slideInFromBottom(0.6)}>
                                 <Input label="Current role / professional title" />
+                                </Reveal>
 
+                                <Reveal variants={slideInFromBottom(0.8)}>
                                 <Textarea
                                     label="Operating background"
                                     placeholder="Describe the operating environments you have worked within, including governance, accountability structures, and delivery models."
                                 />
+                                </Reveal>
 
+                                <Reveal variants={slideInFromBottom(1)}>
                                 <Textarea
                                     label="Why are you applying for this role?"
                                     placeholder="Explain how your experience aligns with the responsibilities and operating context of this role."
                                 />
+                                </Reveal>
 
+                                <Reveal variants={slideInFromBottom(1.2)}>
                                 <Input label="CV Link" />
+                                </Reveal>
                                 {/* Submit */}
+                                <Reveal variants={slideInFromBottom(1.4)}>
                                 <div className="pt-2">
                                     <PartialOutlineBtn text="Submit" size="sm" />
                                 </div>
+                                </Reveal>
                             </form>
                         </div>
                     </aside>
@@ -68,6 +81,7 @@ export default function ApplicationForm() {
                     <main className="order-1 lg:order-2 py-16 lg:py-10 lg:pr-16">
                         <div>
                             <div className="max-w-lg">
+                                <Reveal variants={slideInFromBottom(0.2)}>
                                 <button
                                     onClick={() => router.push("/JD-Page")}
                                     className="lg:hidden flex mb-6 items-center gap-2 text-b2 text-gray-200 hover:text-white transition">
@@ -79,8 +93,12 @@ export default function ApplicationForm() {
                                     </svg>
                                     <p className="text-b3">See all jobs</p>
                                 </button>
+                                </Reveal>
+                                <Reveal variants={slideInFromBottom(0.4)}>
                                 <h3 className="mb-10">Security Governance Lead</h3>
+                                </Reveal>
 
+                                <Reveal variants={slideInFromBottom(0.6)}>
                                 <div className="flex flex-col sm:flex-row  flex-wrap justify-between gap-y-2 text-b3 mb-10">
                                     <div>
                                         <span className="text-b3 text-gray-300">Operating entity</span>
@@ -95,20 +113,22 @@ export default function ApplicationForm() {
                                         <div>FULL TIME</div>
                                     </div>
                                 </div>
+                                </Reveal>
                             </div>
+                            <Reveal variants={slideInFromBottom(0.8)}>
                             <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between mb-10">
                                 <h4>Job Description</h4>
                                 <span className="text-b3 text-gray-200">
                                     Posted on <span className="text-white">06 Feb 2026</span>
                                 </span>
                             </div>
-
-                            <div className="mb-10">
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(1)} className="mb-10">
                                 <div className="text-b1 uppercase">ROLE OVERVIEW</div>
                                 <p className="text-b3 text-gray-200">This role operates within Ascella’s governed execution environment and contributes directly to delivery accountability, risk management, and operating control.
                                     The role is designed for professionals experienced in structured operating models and accountability-led execution.</p>
-                            </div>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(1.2)}>
                             <Section title="Scope of Responsibility">
                                 <ul>
                                     <li>Ownership of defined execution outcomes within the assigned delivery domain</li>
@@ -117,7 +137,8 @@ export default function ApplicationForm() {
                                     <li>Coordination with cross-unit delivery teams and internal stakeholders</li>
                                 </ul>
                             </Section>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(1.4)}>
                             <Section title="Accountability Expectations">
                                 <ul>
                                     <li>Clear ownership of assigned delivery outcomes</li>
@@ -126,14 +147,16 @@ export default function ApplicationForm() {
                                     <li>Active involvement in escalation and decision processes</li>
                                 </ul>
                             </Section>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.2)}>
                             <Section title="Operating Context">
                                 This role operates inside Ascella’s controlled delivery structure under
                                 central oversight. Work is coordinated across portfolios and internal
                                 stakeholders, with decision rights and escalation paths defined prior to
                                 delivery initiation.
                             </Section>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.6)}>
                             <Section title="Reporting & Governance Structure">
                                 <ul>
                                     <li>Reports to assigned delivery governance lead</li>
@@ -141,7 +164,8 @@ export default function ApplicationForm() {
                                     <li>Participates in structured review and escalation forums</li>
                                 </ul>
                             </Section>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(0.8)}>
                             <Section title="Experience & Capability Requirements">
                                 <ul>
                                     <li>Experience operating within structured delivery environments</li>
@@ -150,11 +174,13 @@ export default function ApplicationForm() {
                                     <li>Comfort working under defined governance and reporting structures</li>
                                 </ul>
                             </Section>
-
+                            </Reveal>
+                            <Reveal variants={slideInFromBottom(1)}>
                             <Section title="Additional Information">
                                 This role is part of Ascella’s execution arm structure and operates under
                                 the Group’s accountability framework.
                             </Section>
+                                </Reveal>
                         </div>
                     </main>
                 </div>

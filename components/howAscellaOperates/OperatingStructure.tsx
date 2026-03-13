@@ -1,4 +1,7 @@
 "use client"
+import { slideInFromBottom, slideInFromLeft, slideInFromRight } from '@/utils/motion';
+import Reveal from '@/utils/Reveal';
+import { div } from 'motion/react-client';
 import Image from 'next/image';
 import React, { useEffect, useRef } from 'react';
 
@@ -181,19 +184,19 @@ export default function OperatingStructure() {
           Isometric grid fills the right half,
           text sits on the left.
       ══════════════════════════════════════════ */}
-      <div className="hidden md:block relative border-b border-color overflow-hidden">
-        <div className="relative mx-auto max-w-7xl px-10 py-10 md:py-24 border-x-0 lg:border-x border-color">
+      <div className="relative border-b border-color overflow-hidden">
+        <div className="relative mx-10 xl:mx-auto px-5 md:px-10 max-w-7xl py-10 md:py-24 border-x border-color">
 
           {/* Text — left half */}
-          <div className="relative z-10 flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
-            <h2 className="text-2xl md:text-5xl">
+          <Reveal variants={slideInFromLeft(0.2)} className="relative z-10 flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
+            <h2 className="text-[24px] md:text-[48px]">
               A unified model built for accountable
               <span className="text-gray-300"> execution at scale.</span>
             </h2>
-            <p className="text-[14px] text-left w-1/2">
+            <p className="text-[14px] text-left sm:w-1/2">
               Ownership, governance, and delivery aligned before work begins.
             </p>
-          </div>
+          </Reveal>
 
           {/*
             Isometric grid — right half overlay
@@ -240,33 +243,33 @@ export default function OperatingStructure() {
       ══════════════════════════════════════════ */}
       <div className="border-t border-color">
         <div className="hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around border-x-0 xl:border-x border-color">
-          <div className="flex flex-col items-center py-8">
+          <Reveal variants={slideInFromLeft(0.2)} className="flex flex-col items-center py-8">
             <p className="text-b3 mb-6">Governance</p>
             <div className="w-full h-40 flex items-center justify-center">
               <Image src="/howAscellaOperates/governace.svg" alt="governance" width={80} height={80} />
               <div className="w-10 bg-gray-400 h-1" />
             </div>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-5 text-center">
             {items.map((item, index) => (
-              <div key={index} className="flex flex-col items-center py-8">
+              <Reveal key={index} variants={slideInFromBottom(0.2)} className="flex flex-col items-center py-8">
                 <p className="text-b3 mb-6">{item.label}</p>
                 <div className={`w-48 h-40 flex items-center justify-center border-y border-color
                   ${index === 0 ? 'border-l' : ''} ${index === 4 ? 'border-r' : ''}`}>
                   <Image src={item.icon} alt={item.label} width={80} height={80} />
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
 
-          <div className="flex flex-col items-center py-8">
+          <Reveal variants={slideInFromRight(0.4)} className="flex flex-col items-center py-8">
             <p className="text-b3 mb-6">Outcome Stability</p>
             <div className="w-full h-40 flex items-center justify-center">
               <div className="w-10 bg-gray-400 h-1" />
               <Image src="/howAscellaOperates/outcome.png" alt="Outcome Stability" width={80} height={80} />
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
 
@@ -275,52 +278,11 @@ export default function OperatingStructure() {
       ══════════════════════════════════════════ */}
       <div className="block xl:hidden">
 
-        {/* Hero text + isometric grid */}
-        <div className="relative max-w-7xl mx-auto px-10 py-24 border-b border-color overflow-hidden">
-
-          {/*
-            Mobile grid — full container, fades left/right and top/bottom.
-            cellW=60, cellH=36
-            Tiles matching the screenshot diamonds (right side of text):
-              col=5, row=4 (even) → cx = -30+300 = 270, cy = -18+4*18 = 54
-              col=7, row=4        → cx = -30+420 = 390, cy = 54
-          */}
-          <div
-            className="absolute inset-0 z-0"
-            style={{
-              WebkitMaskImage: [
-                'linear-gradient(to right, transparent 0%, transparent 40%, black 60%, black 85%, transparent 100%)',
-                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-              ].join(', '),
-              maskImage: [
-                'linear-gradient(to right, transparent 0%, transparent 40%, black 60%, black 85%, transparent 100%)',
-                'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-              ].join(', '),
-              WebkitMaskComposite: 'destination-in',
-              maskComposite:       'intersect',
-            }}
-          >
-            <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
-            <IsoBox cellW={60} cellH={36} col={5} row={4} opacity={0.45} />
-            <IsoBox cellW={60} cellH={36} col={7} row={4} opacity={0.75} />
-          </div>
-
-          {/* Text */}
-          <h4 className="relative z-10 font-normal leading-tight">
-            <span className="text-white">A unified model built for accountable </span>
-            <span className="text-gray-300">execution at scale.</span>
-          </h4>
-          <p className="relative z-10 mt-4 text-white text-[12px] leading-relaxed">
-            Ownership, governance, and <br /> delivery aligned before work begins.
-          </p>
-        </div>
-
         {/* 2-column icon grid — 3 rows */}
         <div className="px-10 border-b border-color">
           <div className="grid grid-cols-2 border-x border-color">
             {gridItems.map((item, i) => (
-              <div
-                key={item.label}
+              <Reveal variants={slideInFromBottom(0.2)} key={item.label}
                 className={[
                   'relative flex flex-col items-center justify-center gap-3 py-6',
                   i % 2 === 0 ? 'border-r border-color' : '',
@@ -342,7 +304,7 @@ export default function OperatingStructure() {
                 >
                   {item.label}
                 </span>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

@@ -25,7 +25,7 @@ export default function ExecutionPods() {
               <p className="text-gray-300 text-b2 text-left">Pods expand or contract based on scope while maintaining clear ownership, defined decision paths, and consistent oversight across all execution activity.</p>
             </div>
           </Reveal>
-          <Reveal variants={slideInFromBottom(0.1)}  className="flex flex-col justify-between gap-5 p-5 lg:p-10 lg:w-1/2">
+          <Reveal variants={slideInFromBottom(0.4)}  className="flex flex-col justify-between gap-5 p-10 lg:w-1/2">
             <div>
               <Heading text="EXECUTION PODS" />
             </div>
