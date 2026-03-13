@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
@@ -83,6 +83,10 @@ export default function OrganisationTypes() {
   const router = useRouter();
 
   const [activeRow, setActiveRow] = useState<number | null>(null);
+  //by default first row is active
+  useEffect(() => {
+    setActiveRow(0);
+  }, []);
 
   return (
     <section className="mx-auto max-w-7xl px-10">
@@ -119,7 +123,7 @@ export default function OrganisationTypes() {
                 className="relative grid lg:grid-cols-[1fr_170px_0.8fr] xl:grid-cols-[1fr_172px_1fr] gap-y-10 lg:gap-x-20 mx-auto py-10 lg:py-16 border-t  border-color overflow-visible"
 
               >
-                <div className="flex flex-col gap-5">
+                <Reveal variants={slideInFromLeft(0.2 * index)} className="flex flex-col gap-5">
                   <h2 className={`text-2xl transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-40"}`}>
                     {type.title}
                   </h2>
@@ -128,8 +132,8 @@ export default function OrganisationTypes() {
                     <h4 className="text-sm">Engagement Focus</h4>
                     <p className="font-light text-gray-200 text-sm leading-tight pr-14">{type.engagementFocus}</p>
                   </div>
-                </div>
-                <div className="relative">
+                </Reveal>
+                <Reveal variants={slideInFromLeft(0.2 * index)} className="relative">
                   <div
                     className={`absolute left-0 right-0 -top-25 h-52
                           transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]
@@ -140,9 +144,9 @@ export default function OrganisationTypes() {
                   >
                     <Image src={type.img} alt="" fill className="object-cover" />
                   </div>
-                </div>
+                </Reveal>
 
-                <div className="relative w-full  flex flex-col gap-6 lg:gap-10">
+                <Reveal variants={slideInFromLeft(0.2 * index)} className="relative w-full  flex flex-col gap-6 lg:gap-10">
 
                   <div className="flex items-center">
                     {type.icon ? (
@@ -161,7 +165,7 @@ export default function OrganisationTypes() {
                     <h2 className="text-xl">Typical Need</h2>
                     <p className="font-light text-gray-200 text-sm leading-tight lg:pr-14">{type.typicalNeed}</p>
                   </div>
-                </div>
+                </Reveal>
               </div>
             );
           })}
@@ -175,8 +179,7 @@ export default function OrganisationTypes() {
             const isActive = activeRow === index;
 
             return (
-              <div
-                key={type.title}
+              <Reveal variants={slideInFromLeft(0.2 * index)} key={type.title}
                 className="border-t border-color py-6"
               >
                 {/* Header */}
@@ -249,7 +252,7 @@ export default function OrganisationTypes() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Reveal>
             );
           })}
 

@@ -1,11 +1,12 @@
-import React from 'react'
 import Image from 'next/image'
 import PartialOutlineBtn from '@/components/btns/PartialOutlineBtn'
+import { slideInFromBottom } from '@/utils/motion'
+import Reveal from '@/utils/Reveal'
 
 export default function BlogHero() {
   return (
     <section className='border-y border-color'>
-      <div className="relative max-w-7xl xl:mx-auto md:mx-10 md:border-x  border-color h-[40vh] md:h-[50vh] flex items-end justify-center md:text-center ">
+      <Reveal variants={slideInFromBottom(0.1)} className="relative max-w-7xl xl:mx-auto md:mx-10 md:border-x  border-color h-[40vh] md:h-[50vh] flex items-end justify-center md:text-center ">
         <div className="flex flex-col md:items-center justify-center h-full pl-10 md:pl-0 gap-2">
           <h2 className='w-2/3 text-[20px] md:text-[36px] lg:text-[48px]'>Observations From Real Execution</h2>
           <p className='text-[12px] my-4 md:text-[14px] w-sm md:max-w-md'>Short notes on patterns we see across organisations dealing with security, technology, growth, and operational complexity</p>
@@ -27,7 +28,7 @@ export default function BlogHero() {
         </div>
         
         <Image src="/insights/real.svg" alt="Real Results" width={800} height={600} className="absolute top-0 left-0 w-full h-full object-cover -z-1" />
-      </div>
+      </Reveal>
     </section>
   )
 }

@@ -124,7 +124,7 @@ export default function Hero() {
                   hover: { height: 40, opacity: 1 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="border-l border-4 border-color overflow-hidden"
+                className="border-l border-color overflow-hidden"
               />
 
               <motion.p

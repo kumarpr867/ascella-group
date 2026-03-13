@@ -20,6 +20,10 @@ type Props = {
 export default async function BlogPage({ params }: Props) {
   const { slug } = await params
 
+  const caseStudy = caseStudiesWithSlug.find(
+    (item) => item.slug === slug
+  )
+
   const blog = blogsWithSlug.find(
     (item) => item.slug === slug
   )
@@ -30,7 +34,7 @@ export default async function BlogPage({ params }: Props) {
     <div>
     <section className="relative border-y border-color mb-20">
       <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
-        <div className="min-h-screen flex lg:flex-row flex-col">
+        <div className="min-h-screen flex lg:flex-row justify-between flex-col">
 
           {/* MAIN CONTENT */}
           <main className="lg:w-[75%] lg:border-r border-color min-w-0">
@@ -274,16 +278,16 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="relative pt-10 w-full lg:w-[250px]">
+          <aside className="relative pt-10 w-full lg:w-[320px]">
             <div className=" sticky top-10">
 
               {/* blogs */}
               <div>
-                <h3 className="text-lg font-medium md:px-10 capitalize">
+                <h3 className="text-lg font-medium md:px-6 capitalize">
                   Read More Blogs
                 </h3>
 
-                <div className="md:px-10 sm:px-4 py-4">
+                <div className="md:px-6 sm:px-4 py-4">
                   {blogsWithSlug
                     .filter((b) => b.slug !== blog?.slug)
                     .slice(0, 2)
@@ -330,13 +334,13 @@ export default async function BlogPage({ params }: Props) {
 
               {/* case studies */}
               <div>
-                <h3 className="text-lg font-medium md:px-10 capitalize">
+                <h3 className="text-lg font-medium md:px-6 capitalize">
                   Read case studies
                 </h3>
 
-                <div className="md:px-10 sm:px-4 py-4">
+                <div className="md:px-6 sm:px-4 py-4">
                   {caseStudiesWithSlug
-                    .filter((b) => b.slug !== blog?.slug)
+                    .filter((b) => b.slug !== caseStudy?.slug)
                     .slice(0, 2)
                     .map((item) => (
                       <Link

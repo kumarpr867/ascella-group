@@ -4,7 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Heading from "./headings/Heading";
 import ArrowButton from "./btns/Arrow";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
 type FAQ = {
   question: string;
@@ -14,6 +16,31 @@ type FAQ = {
 type Props = {
   faqs: FAQ[];
   description: string;
+};
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.001
+    },
+  },
+};
+
+const item = {
+  hidden: {
+    opacity: 0,
+    scale: 0
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
 };
 
 export default function Faq({ faqs, description }: Props) {
@@ -33,17 +60,20 @@ export default function Faq({ faqs, description }: Props) {
   return (
     <>
       {/* DESKTOP */}
-      <section className="px-10 hidden md:grid mx-auto max-w-7xl py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
+      <motion.section
+        variants={container}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="px-10 hidden md:grid mx-auto max-w-7xl py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]"
+      >
+        <Reveal variants={slideInFromBottom(0.3)}
           className="flex flex-col gap-4 py-6 row-span-2 max-w-md md:max-w-xs"
         >
           <Heading text="FAQs" />
           <h3>Frequently Asked Questions</h3>
           <p className="text-[16px] text-gray-200">{description}</p>
-        </motion.div>
+        </Reveal>
 
         {faqs.map((faq, index) => {
           const isHovered = hoveredIndex === index;
@@ -53,10 +83,7 @@ export default function Faq({ faqs, description }: Props) {
           return (
             <motion.div
               key={index}
-              initial="hidden"
-              whileInView="visible"
-              variants={fadeInUp}
-              transition={{ delay: index * 0.1 }}
+              variants={item}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => toggle(index)}
@@ -104,7 +131,7 @@ export default function Faq({ faqs, description }: Props) {
             </motion.div>
           );
         })}
-      </section>
+      </motion.section>
 
       {/* MOBILE */}
       <section className="px-10 block md:hidden mx-auto max-w-7xl py-16">
@@ -143,7 +170,11 @@ export default function Faq({ faqs, description }: Props) {
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? "auto" : 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 120,
+                      damping: 20
+                    }}  
                     className="grid mt-4"
                   >
                     <div className="overflow-hidden">

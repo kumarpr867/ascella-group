@@ -27,14 +27,31 @@ export default function CustomCursor() {
   if (!mounted) return null;
 
   return createPortal(
-    <motion.div
-      className="fixed top-0 left-0 w-5 h-5 rounded-full bg-white pointer-events-none mix-blend-difference"
-      style={{
-        translateX: smoothX,
-        translateY: smoothY,
-        zIndex: 999999,
-      }}
-    />,
+    <>
+      {/* blur glow */}
+      <motion.div
+        className="fixed top-0 left-0 w-8 h-8 rounded-full bg-white/70 blur-xl pointer-events-none"
+        style={{
+          translateX: smoothX,
+          translateY: smoothY,
+          x: "-50%",
+          y: "-50%",
+          zIndex: 999998,
+        }}
+      />
+
+      {/* core cursor */}
+      <motion.div
+        className="fixed top-0 left-0 w-6 h-6 rounded-full bg-white pointer-events-none mix-blend-difference"
+        style={{
+          translateX: smoothX,
+          translateY: smoothY,
+          x: "-50%",
+          y: "-50%",
+          zIndex: 999999,
+        }}
+      />
+    </>,
     document.body
   );
 }

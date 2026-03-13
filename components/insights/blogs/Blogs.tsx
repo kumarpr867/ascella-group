@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { slugify } from "@/utils/slugify";
 import { blogs } from "@/data/blogs";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
 
 const categories = [
@@ -75,7 +77,7 @@ useEffect(() => {
         <section className="mb-20">
 
             {/* Top Search + Filter */}
-            <div className="flex items-center justify-between border-b border-color mb-10">
+            <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
                 <div className="max-w-7xl xl:mx-auto mx-10  py-4 flex justify-between items-center w-full">
                     {/* search bar */}
                     <div className="relative w-52 md:w-72  ">
@@ -160,9 +162,9 @@ useEffect(() => {
 
                     </div>
                 </div>
-            </div>
+            </Reveal>
 
-            <div className="max-w-7xl xl:mx-auto mx-10">
+            <Reveal variants={slideInFromBottom(0.6)} className="max-w-7xl xl:mx-auto mx-10">
 
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (
@@ -239,7 +241,7 @@ useEffect(() => {
                     </div>
                 )}
 
-            </div>
+            </Reveal>
         </section>
     );
 }
@@ -267,7 +269,7 @@ function CaseCard({
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-cover transition duration-500 "
+                    className="object-cover transition duration-500 group-hover:scale-110"
                 />
             </div>
 

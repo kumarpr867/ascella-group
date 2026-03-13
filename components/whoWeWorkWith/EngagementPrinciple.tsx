@@ -1,10 +1,12 @@
 import Image from "next/image"
 import Heading from "../headings/Heading"
+import Reveal from "@/utils/Reveal"
+import { slideInFromLeft } from "@/utils/motion"
 
 export default function EngagementPrinciple() {
   return (
     <section className="my-20">
-      <div className="mx-10 xl:mx-auto max-w-7xl pb-12 lg:pb-24">
+      <Reveal variants={slideInFromLeft(0.1)} className="mx-10 xl:mx-auto max-w-7xl pb-12 lg:pb-24">
         <Heading text="Engagement Principle" />
 
         <h3 className="mt-6 leading-tight xl:pr-96 text-[16px] md:text-[24px] lg:text-[36px] ">
@@ -12,11 +14,11 @@ export default function EngagementPrinciple() {
           </span>
         </h3>
 
-      </div>
+      </Reveal>
 
       <div className="mx-10 xl:mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-color ">
 
-        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
+        <Reveal variants={slideInFromLeft(0.2)} className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
@@ -33,17 +35,17 @@ export default function EngagementPrinciple() {
           <p className="text-b3 text-gray-200 md:max-w-xs">
             Scope, decision rights, escalation paths, and accountability structures are established before delivery begins to eliminate ambiguity and prevent fragmented execution.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="relative border-b lg:border-r border-color min-h-72 ">
+        <Reveal variants={slideInFromLeft(0.3)} className="relative border-b lg:border-r border-color min-h-72 ">
           <Image
             src="/whoWeWorkWith/one.png"
             alt="Abstract cube"
             fill={true}
           />
-        </div>
+        </Reveal>
 
-        <div className="border-b border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
+        <Reveal variants={slideInFromLeft(0.4)} className="border-b border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
@@ -63,17 +65,17 @@ export default function EngagementPrinciple() {
             Multi-team coordination, regulatory pressure, distributed vendors, or rapid growth create environments where informal execution introduces measurable risk.
 
           </p>
-        </div>
+        </Reveal>
 
-        <div className="relative border-b lg:border-r border-color min-h-72 ">
+        <Reveal variants={slideInFromLeft(0.5)} className="relative border-b lg:border-r border-color min-h-72 ">
           <Image
             src="/whoWeWorkWith/two.png"
             alt="Abstract structure"
             fill={true}
           />
-        </div>
+        </Reveal>
 
-        <div className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
+        <Reveal variants={slideInFromLeft(0.6)} className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
@@ -92,16 +94,16 @@ export default function EngagementPrinciple() {
           <p className="text-b3 text-gray-200 md:max-w-xs">
             Operating frameworks are designed to remain effective as scale increases, ensuring stability, resilience, and performance continuity over time.
           </p>
-        </div>
+        </Reveal>
 
 
-        <div className="relative border-b border-color min-h-72 ">
+        <Reveal variants={slideInFromLeft(0.7)} className="relative border-b border-color min-h-72 ">
           <Image
             src="/whoWeWorkWith/three.png"
             alt="Abstract layers"
             fill={true}
           />
-        </div>
+        </Reveal>
 
       </div>
 

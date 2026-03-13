@@ -5,6 +5,8 @@ import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import { useRouter } from "next/navigation";
+import { slideInFromBottom, slideInFromLeft } from "@/utils/motion";
+import Reveal from "@/utils/Reveal";
 
 const containerVariants: Variants = {
   hidden: {
@@ -139,7 +141,7 @@ export default function JobsSection() {
     <section className="my-2">
       <div className="flex items-center border-b border-color px-10 xl:px-32 py-2 ">
 
-        <div className="hidden lg:flex items-center justify-between w-full">
+        <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:flex items-center justify-between w-full">
           {companies.map((company) => (
             <button
               key={company}
@@ -169,9 +171,9 @@ export default function JobsSection() {
             </svg>
 
           </button>
-        </div>
+        </Reveal>
 
-        <div className="flex lg:hidden items-center justify-between w-full">
+        <Reveal variants={slideInFromBottom(0.4)} className="flex lg:hidden items-center justify-between w-full">
           <button
             onClick={() => {
               setActiveCompany("All roles");
@@ -192,7 +194,7 @@ export default function JobsSection() {
             </svg>
 
           </button>
-        </div>
+        </Reveal>
       </div>
 
       <AnimatePresence>
@@ -202,47 +204,47 @@ export default function JobsSection() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="block  overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6  space-y-6"
+            className="block overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6  space-y-6"
           >
-
-            {/* COMPANY FILTER */}
-            <div>
-              <h3 className="text-sm text-white/60 mb-3">Company</h3>
-              <div className="flex flex-wrap gap-3">
-                {companies.map((company) => (
-                  <button
-                    key={company}
-                    onClick={() => setActiveCompany(company)}
-                    className={`px-4 py-1 rounded-full text-sm transition ${activeCompany === company
-                      ? "bg-white text-black"
-                      : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
-                      }`}
-                  >
-                    {company}
-                  </button>
-                ))}
+            <Reveal variants={slideInFromBottom(0.2)} className=" max-w-7xl xl:mx-auto ">
+              {/* COMPANY FILTER */}
+              <div>
+                <h3 className="text-sm text-white/60 mb-3">Company</h3>
+                <div className="flex flex-wrap gap-3">
+                  {companies.map((company) => (
+                    <button
+                      key={company}
+                      onClick={() => setActiveCompany(company)}
+                      className={`px-4 py-1 rounded-full text-sm transition ${activeCompany === company
+                        ? "bg-white text-black"
+                        : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
+                        }`}
+                    >
+                      {company}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* ROLE FILTER */}
-            <div>
-              <h3 className="text-sm text-white/60 mb-3">Role</h3>
-              <div className="flex flex-wrap gap-3">
-                {roles.map((role) => (
-                  <button
-                    key={role}
-                    onClick={() => setActiveRole(role)}
-                    className={`px-4 py-1 rounded-full text-sm transition ${activeRole === role
-                      ? "bg-white text-black"
-                      : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
-                      }`}
-                  >
-                    {role}
-                  </button>
-                ))}
+              {/* ROLE FILTER */}
+              <div>
+                <h3 className="text-sm text-white/60 mb-3">Role</h3>
+                <div className="flex flex-wrap gap-3">
+                  {roles.map((role) => (
+                    <button
+                      key={role}
+                      onClick={() => setActiveRole(role)}
+                      className={`px-4 py-1 rounded-full text-sm transition ${activeRole === role
+                        ? "bg-white text-black"
+                        : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
+                        }`}
+                    >
+                      {role}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-
+            </Reveal>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,19 +1,21 @@
 import Image from "next/image";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
 export default function GeneralApplication() {
   return (
     <section className="py-20 flex flex-col items-center my-15 md:my-25 border border-color">
-      <div className="flex lg:w-3xl flex-col gap-10 items-center px-10 text-center mb-16">
+      <Reveal variants={slideInFromBottom(0.2)} className="flex lg:w-3xl flex-col gap-10 items-center px-10 text-center mb-16">
         <h3 className="text-[24px] md:text-[36px]">Alignment is the first step toward structured execution readiness.</h3>
         <p className="text-[12px] md:text-[14px] md:px-20 text-gray-100">
           The Startups Programme begins with an alignment conversation focused on
           operating context, accountability expectations, and readiness for
           governed execution.
         </p>
-      </div>
+      </Reveal>
 
-      <div className="max-w-xl border border-color rounded-lg p-5 m-10 md:p-10 flex flex-col gap-10">
+      <Reveal variants={slideInFromBottom(0.6)} className="max-w-xl border border-color rounded-lg p-5 m-10 md:p-10 flex flex-col gap-10">
         <div className="flex flex-col items-center gap-4 text-center">
           <Image src="/jd/circle.png" alt="" width={70} height={70} />
 
@@ -70,7 +72,7 @@ export default function GeneralApplication() {
         <div className="">
           <PartialOutlineBtn text="Email Us" />
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

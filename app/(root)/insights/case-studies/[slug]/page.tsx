@@ -3,7 +3,6 @@ import { blogsWithSlug } from "@/data/blogs"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import ReadingProgress from "@/components/ReadingProgress"
 
 export async function generateStaticParams() {
   return [
@@ -33,10 +32,9 @@ export default async function BlogPage({ params }: Props) {
 
   return (
     <>
-    <ReadingProgress />
     <section className="relative border-y border-color mb-20">
       <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
-        <div className="min-h-screen flex lg:flex-row flex-col">
+        <div className="min-h-screen flex lg:flex-row justify-between flex-col">
 
           {/* MAIN CONTENT */}
           <main className="lg:w-[75%] lg:border-r border-color min-w-0">
@@ -281,17 +279,17 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="relative pt-10 w-full lg:w-[250px]">
+          <aside className="relative pt-10 w-full lg:w-[320px]">
             <div className=" sticky top-10">
 
               <div>
-                <h3 className="text-lg font-medium md:px-10">
+                <h3 className="text-lg font-medium md:px-6">
                   Read more case studies
                 </h3>
 
-                <div className="md:px-10 sm:px-4 py-4">
+                <div className="md:px-6 sm:px-4 py-4">
                   {caseStudiesWithSlug
-                    .filter((b) => b.slug !== blog?.slug)
+                    .filter((b) => b.slug !== caseStudy?.slug)
                     .slice(0, 2)
                     .map((item) => (
                       <Link
@@ -334,11 +332,11 @@ export default async function BlogPage({ params }: Props) {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium md:px-10">
+                <h3 className="text-lg font-medium md:px-6">
                   Read Blogs
                 </h3>
 
-                <div className="md:px-10 sm:px-4 py-4">
+                <div className="md:px-6 sm:px-4 py-4">
                   {blogsWithSlug
                     .filter((b) => b.slug !== blog?.slug)
                     .slice(0, 2)

@@ -25,9 +25,10 @@ const footerSections: FooterSection[] = [
         title: "Pages",
         items: [
             { label: "Operating Model ", href: "/how-ascella-operates" },
-            { label: "Execution Arms", href: "/execution-arms" },
             { label: "Organisations", href: "/who-we-work-with" },
+            { label: "Execution Arms", href: "/execution-arms" },
             { label: "Startups", href: "/startups" },
+            { label: "Insights", href: "/insights/blogs" },
             { label: "Careers", href: "/careers" },
         ],
         bordered: true,
@@ -35,9 +36,10 @@ const footerSections: FooterSection[] = [
     {
         title: "Contact",
         items: [
-            { label: "hq@ascellagroup.com", href: "mailto:hq@ascellagroup.com" },
+            { label: "hello@ascella.group", href: "mailto:hello@ascella.group" },
             { label: "Ascella.in", href: "https://ascella.in" },
-            { label: "Connect", href: "/engageWithUs" },
+            { label: "+91 16045 10860", href: "tel:+911604510860" },
+            // { label: "Connect", href: "/engageWithUs" },
         ],
         bordered: true,
     },
@@ -63,10 +65,10 @@ const footerSections: FooterSection[] = [
 const Footer = () => {
     return (
         <footer className="mb-2 lg:mb-10 w-full">
-            <div className="border-b md:border-b-0 border-t border-color">
+            <div className="border-b lg:border-b-0 border-t border-color">
 
                 {/* md join us */}
-                <div className="md:hidden border-b border-color">
+                <div className="lg:hidden border-b border-color">
                     <div className="flex  flex-col mx-10 py-4 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Join Us
@@ -90,22 +92,22 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="md:mx-10 xl:mx-auto max-w-7xl flex flex-col sm:flex-row ">
-                    <div className="w-full grid grid-cols-1 md:grid-cols-4 ">
+                <div className="lg:mx-10 xl:mx-auto max-w-7xl flex flex-col sm:flex-row ">
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-4 ">
                         {footerSections.map((section, i) => (
                             <Reveal key={i} variants={slideInFromBottom(i * 0.12)}
-                                className={`py-4 lg:py-7 px-5 lg:p-10 border-x  border-color mx-10 md:mx-0 border-b md:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
+                                className={`py-4 px-5 lg:py-7 lg:px-2 xl:p-8 border-x  border-color mx-10 lg:mx-0 border-b lg:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
                             >
                                 <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
                                     {section.title}
                                 </p>
 
-                                <ul className="space-y-2 text-b3 md:text-b2 text-gray-100">
+                                <ul className={`text-b3 md:text-b2 text-gray-100 ${section.title === "Pages" ? "grid grid-cols-2 gap-x-2 gap-y-2" : "space-y-2"}`}>
                                     {section.items.map((item, idx) => (
                                         <li key={idx}>
                                             <Link
                                                 href={item.href}
-                                                className="group inline-flex items-center gap-3 hover:text-white transition-colors duration-200"
+                                                className="group inline-flex items-center gap-0.5 w-full hover:text-white transition-colors duration-200"
                                                 {...(item.href.startsWith("http") || item.href.startsWith("mailto")
                                                     ? { target: "_blank", rel: "noopener noreferrer" }
                                                     : {})}
@@ -122,7 +124,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <Reveal variants={slideInFromBottom(0.1)} className="block md:hidden mx-10 border-x border-color">
+            <Reveal variants={slideInFromBottom(0.1)} className="block lg:hidden mx-10 border-x border-color">
                 <div className="flex flex-col px-5 py-4">
                     <h4 className="text[36px] md:text-[64px] leading-tight mb-1">
                         Control. Structure. Execution.
@@ -135,7 +137,7 @@ const Footer = () => {
                 </div>
             </Reveal>
             <Reveal variants={slideInFromBottom(0.1)} className="border-t border-color">
-                <div className="block md:hidden mx-10 border-x border-color">
+                <div className="block lg:hidden mx-10 border-x border-color">
                     <div className="flex items-center justify-between px-5 py-4">
                         <Image src={"/logo2.png"} alt={""} width={30} height={30} />
                         <p className="text-[12px] text-gray-100">
@@ -145,7 +147,7 @@ const Footer = () => {
                 </div>
             </Reveal>
 
-            <Reveal variants={slideInFromBottom(0.1)} className="hidden md:block mx-10 xl:mx-auto max-w-7xl border-x border-color">
+            <Reveal variants={slideInFromBottom(0.1)} className="hidden lg:block mx-10 xl:mx-auto max-w-7xl border-x border-color">
                 <div className="px-5 py-4 md:p-10 flex flex-col lg:flex-row justify-between gap-8 md:gap-6">
                     <div>
                         <div className="flex flex-col mb-10 md:mb-20">

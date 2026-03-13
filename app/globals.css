@@ -39,6 +39,7 @@
   body {
     @apply bg-black text-white antialiased;
     font-family: var(--font-montserrat), sans-serif;
+    cursor: none;
   }
 
   body {

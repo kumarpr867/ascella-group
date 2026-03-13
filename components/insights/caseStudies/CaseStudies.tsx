@@ -6,16 +6,10 @@ import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { slugify } from "@/utils/slugify";
 import { caseStudies } from "@/data/case-studies";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
-interface CaseStudy {
-    id: number;
-    title: string;
-    description: string;
-    image: string;
-    date: string;
-    category: string;
-    featured?: boolean;
-}
+
 const categories = [
     "All",
     "Cybersecurity",
@@ -89,7 +83,7 @@ export default function CaseStudies() {
         <section className="mb-20">
 
             {/* Top Search + Filter */}
-            <div className="flex items-center justify-between border-b border-color mb-10">
+            <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
                 <div className="max-w-7xl xl:mx-auto mx-10  py-4 flex justify-between items-center w-full">
                     {/* search bar */}
                     <div className="relative w-52 md:w-72  ">
@@ -180,9 +174,9 @@ export default function CaseStudies() {
 
                     </div>
                 </div>
-            </div>
+            </Reveal>
 
-            <div className="max-w-7xl xl:mx-auto mx-10">
+            <Reveal variants={slideInFromBottom(0.6)} className="max-w-7xl xl:mx-auto mx-10">
 
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (
@@ -212,7 +206,7 @@ export default function CaseStudies() {
                         No case studies found.
                     </p>
                 )}
-            </div>
+            </Reveal>
             {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-6 mt-20 text-sm text-white/60">
 
@@ -261,7 +255,7 @@ function CaseCard({
     item,
     variant = "default",
 }: {
-    item: CaseStudy
+    item: (typeof caseStudies)[number]
     variant?: "default" | "featured"
 }) {
 
@@ -275,12 +269,12 @@ function CaseCard({
         >
 
             {/* Image */}
-            <div className={`relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
+            <div className={`group relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
                 <Image
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-cover transition duration-500 "
+                    className="object-cover transition duration-500 group-hover:scale-110"
                 />
             </div>
 
