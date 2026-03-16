@@ -242,7 +242,7 @@ const Navbar = () => {
         transition={{ duration: 0.3 }}
         className="bg-black fixed top-0 left-0 w-full z-50"
       >
-        <div className="mx-auto max-w-7xl px-10 sm:px-6 h-15 sm:h-15">
+        <div className="mx-10 lg:mx-20 xl:mx-24 h-15">
           <div className="flex justify-between items-center h-full">
 
             {/* Logo */}

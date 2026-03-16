@@ -13,7 +13,7 @@ export default function WhoWeWorkWith() {
   return (
     <>
       <section className="hidden lg:block border-y border-color">
-        <div className="mx-10 xl:mx-auto max-w-7xl ">
+        <div className="mx-10 lg:mx-20 xl:mx-24">
           <div className="grid grid-cols-1 md:grid-cols-2 border-x border-color">
             <div className="grid grid-cols-1 lg:grid-cols-2 md:border-r border-color">
 

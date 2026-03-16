@@ -209,8 +209,8 @@ const items: ProblemItem[] = [
 export default function ExecutionProblem() {
     return (
         <section className="my-24 border-b border-color">
-            <div className="border-b border-color lg:px-15" >
-                <div className="hidden md:flex mx-10 xl:mx-auto px-10 max-w-7xl flex-col md:flex-row md:justify-between gap-12 pb-12">
+            <div className="border-b border-color " >
+                <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 flex-col md:flex-row md:justify-between gap-12 pb-12">
 
                     <Reveal variants={slideInFromLeft(0.1)}>
                         <p className="max-w-md text-b3 leading-relaxed">
@@ -231,7 +231,7 @@ export default function ExecutionProblem() {
                     </Reveal>
 
                 </div>
-                <div className="md:hidden flex mx-auto max-w-7xl flex-col md:justify-between gap-12 pb-12 px-10">
+                <div className="md:hidden flex mx-10 lg:mx-20 xl:mx-24  flex-col md:justify-between gap-12 pb-12 px-10">
                     <motion.h4 variants={fadeUp} style={{ willChange: "transform" }}>
                         <span className="text-white">The Execution Problem </span>
                         <span className="text-gray-200">Modern Organisations Face</span>
@@ -244,13 +244,13 @@ export default function ExecutionProblem() {
 
             <div className="border-b border-color">
                 <Reveal variants={slideInFromBottom(0.1)}>
-                    <div className="mx-auto max-w-7xl px-10 flex items-center py-8">
+                    <div className="mx-10 lg:mx-20 xl:mx-24 px-10 flex items-center py-8">
                         <Heading text="Execution Policy" />
-                    </div>
+                    </div> 
                 </Reveal>
             </div>
 
-            <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3">
+            <div className="mx-10 lg:mx-20 xl:mx-24 grid grid-cols-1 md:grid-cols-3">
                 {items.map((item, index) => (
                     <Reveal
                         key={item.title}

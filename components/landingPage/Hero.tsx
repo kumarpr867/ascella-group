@@ -105,7 +105,7 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 top-[10vh] z-5 "
         >
-          <div className="hidden md:flex mx-auto max-w-7xl px-10 gap-10 justify-between">
+          <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 gap-10 justify-between">
 
             <motion.div
               variants={fadeUp}
@@ -133,7 +133,7 @@ export default function Hero() {
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 pr-32 text-gray-100 leading-snug"
+                className="text-b3 text-justify pr-32 text-gray-100 leading-snug"
               >
                 Defined responsibilities across teams ensure accountability at every
                 stage, reducing confusion and accelerating decision-making.
@@ -166,7 +166,7 @@ export default function Hero() {
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 text-gray-100 leading-snug"
+                className="text-b3 text-justify text-gray-100 leading-snug"
               >
                 Integrated oversight across strategy, technology, and operations
                 provides a single source of truth and stronger organizational alignment.
@@ -184,7 +184,7 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 md:bottom-[22vh] z-5 pointer-events-none  "
         >
-          <div className="mx-auto max-w-7xl px-10 flex flex-col md:flex-row justify-between gap-5">
+          <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col md:flex-row justify-between gap-5">
 
             <motion.h2 variants={fadeUp} className="text-gray-100 text-[36px] xl:text-[48px]">
               A Unified <br />
@@ -192,7 +192,7 @@ export default function Hero() {
             </motion.h2>
 
             <motion.div variants={fadeUp} className="flex flex-col justify-end gap-4 max-w-md z-5">
-              <p className="text-b3 leading-tight">
+              <p className="text-b3 text-justify leading-tight">
                 Complex organisations slow down when execution scatters across teams
                 and vendors. Control weakens as decisions lose a clear owner and
                 accountability spreads thin. Ascella Group brings structure to
@@ -224,7 +224,7 @@ export default function Hero() {
             variants={container}
             initial="hidden"
             animate="visible"
-            className="mx-auto max-w-7xl px-4 sm:px-10 pt-4 flex items-center justify-center lg:justify-between md:justify-around"
+            className="mx-10 lg:mx-20 xl:mx-24 pt-4 flex items-center justify-center lg:justify-between md:justify-around"
           >
             <motion.div variants={fadeUp} className="hidden xl:block">
               <PlusText text="Security and risk managed with clear ownership" size="b2" />

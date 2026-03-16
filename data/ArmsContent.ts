@@ -11,8 +11,8 @@ export const content = [
   {
     id: "labs",
     number: "02",
-    title: "Ascella Softwarelabs",
-    description: "Ascella Softwarelabs builds and stabilises technology used in real operating conditions. Platforms, integrations, and internal systems ship with run readiness in mind. Delivery follows clear decision gates and ownership across build and run. Systems remain usable and predictable as scale increases.",
+    title: "Ascella Software Labs",
+    description: "Ascella Software Labs builds and stabilises technology used in real operating conditions. Platforms, integrations, and internal systems ship with run readiness in mind. Delivery follows clear decision gates and ownership across build and run. Systems remain usable and predictable as scale increases.",
     subDescription: "Cloud architecture, devops automation, and full-stack development.",
     outcome: "Increased speed-to-market and technical stability.",
     image: "/images/labs2.png"

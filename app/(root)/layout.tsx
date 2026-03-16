@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.variable}>
         <CustomCursor />  
-        {/* <Loader /> */}
+        <Loader />
         <Navbar />
         <main className="pt-16 sm:pt-20">
           {children}

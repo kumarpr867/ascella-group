@@ -2,9 +2,11 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import { content } from "./data/content";
+import { content } from "../../data/ArmsContent";
 import Heading from "../headings/Heading";
 import { useRouter } from "next/navigation";
+import Reveal from "@/utils/Reveal";
+import { slideInFromBottom } from "@/utils/motion";
 
 export default function Arms() {
 
@@ -28,22 +30,22 @@ useEffect(() => {
     <section className="max-w-7xl xl:mx-auto mx-10 flex flex-col items-center justify-center my-24 ">
 
       {/* Upper Header */}
-      <div className="text-center max-w-3xl mb-10 md:mb-16">
+      <Reveal variants={slideInFromBottom(0.2)} className="text-center max-w-4xl mb-10 md:mb-16">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Heading text="Execution Arms" />
         </div>
-        <h2 className="text-xl md:text-2xl lg:text-4xl text-white leading-tight font-light tracking-tight">
+        <h2 className="text-xl md:text-[24px] lg:text-[36px] text-white leading-tight font-light tracking-tight">
           We take full responsibility for critical outcomes that organisations
           cannot afford to fragment
         </h2>
-      </div>
+      </Reveal>
 
       {/* Main Container */}
-      <div className="w-full mx:10 xl:mx-auto max-w-6xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
+      <Reveal variants={slideInFromBottom(0.4)} className="w-full mx:10 xl:mx-auto max-w-7xl lg:max-w-6xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
         {/* Mobile Layout: Stacked */}
         {/* Desktop Layout: Flex Row */}
-        <div className="flex flex-col lg:flex-row min-h-auto h-[550px]">
+        <div className="flex flex-col lg:flex-row min-h-auto lg:h-[550px]">
 
           {/* Navigation Sidebar */}
           <aside className="w-full md:w-[320px] px-6 py-8 md:p-8 flex flex-col gap-6 md:gap-0 md:justify-between">
@@ -58,7 +60,7 @@ useEffect(() => {
                   <button
                     key={item.id}
                     onClick={() => setIndex(i)}
-                    className={`text-left text-[13px] md:text-[15px] transition-all duration-300 ${i === index
+                    className={`text-left text-[12px] md:text-[14px] transition-all duration-300 ${i === index
                       ? "text-black font-semibold md:translate-x-2"
                       : "text-gray-400 hover:text-gray-900"
                       }`}
@@ -153,7 +155,7 @@ useEffect(() => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.1 }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as any }}
-                    className="py-10 h-[300px] md:h-[400px] lg:h-[600px] flex items-center justify-center"
+                    className="py-10 h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center"
                   >
                     <img
                       src={content[index].image}
@@ -168,7 +170,7 @@ useEffect(() => {
           </div>
 
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

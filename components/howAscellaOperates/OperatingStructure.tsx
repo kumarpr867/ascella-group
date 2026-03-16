@@ -185,7 +185,7 @@ export default function OperatingStructure() {
           text sits on the left.
       ══════════════════════════════════════════ */}
       <div className="relative border-b border-color overflow-hidden">
-        <div className="relative mx-10 xl:mx-auto px-5 md:px-10 max-w-7xl py-10 md:py-24 border-x border-color">
+        <div className="relative mx-10 lg:mx-20 xl:mx-24  px-5 md:px-10 py-10 md:py-24 border-x border-color">
 
           {/* Text — left half */}
           <Reveal variants={slideInFromLeft(0.2)} className="relative z-10 flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
@@ -242,7 +242,7 @@ export default function OperatingStructure() {
           FLOW CHART — xl screen
       ══════════════════════════════════════════ */}
       <div className="border-t border-color">
-        <div className="hidden mx-auto max-w-7xl px-10 py-10 xl:flex items-center justify-around border-x-0 xl:border-x border-color">
+        <div className="hidden mx-10 lg:mx-20 xl:mx-24 px-10 py-10 xl:flex items-center justify-around border-x-0 xl:border-x border-color">
           <Reveal variants={slideInFromLeft(0.2)} className="flex flex-col items-center py-8">
             <p className="text-b3 mb-6">Governance</p>
             <div className="w-full h-40 flex items-center justify-center">

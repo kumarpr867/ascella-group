@@ -10,7 +10,7 @@ const Loader = () => {
     // Set a timer to hide the loader after animation completes
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // 3 seconds total (1.5s delay + 1.5s animation)
+    }, 2000); // 3 seconds total (1.5s delay + 1.5s animation)
 
     return () => clearTimeout(timer);
   }, []);
