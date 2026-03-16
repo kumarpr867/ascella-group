@@ -135,7 +135,7 @@ export default function HowWeOperate() {
   }, []);
 
   return (
-    <section className="mx-10 xl:mx-auto max-w-7xl py-12 sm:py-16 lg:py-24">
+    <section className="mx-10 lg:mx-20 xl:mx-24 py-12 sm:py-16 lg:py-24">
 
       {/* ══ DESKTOP lg+ ══ */}
       <div className="hidden lg:flex items-center gap-16 xl:gap-24">

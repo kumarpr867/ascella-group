@@ -280,7 +280,7 @@ export default function Prog() {
     return (
         <section>
             <div className="border-y border-color">
-                <div className="mx-10 xl:mx-auto max-w-7xl flex px-4 lg:px-10 py-4 border-x border-color">
+                <div className="mx-10 lg:mx-20 xl:mx-24 flex px-4 lg:px-10 py-4 border-x border-color">
                     <Reveal variants={slideInFromBottom(0.1)}>
                         <h3 className="text-[24px] md:text-[36px] text-gray-300 leading-tight tracking-tighter">
                             <span className="text-white">The programme focuses on </span>
@@ -290,9 +290,9 @@ export default function Prog() {
                 </div>
             </div>
 
-            <div className="mx-10 xl:mx-auto max-w-7xl  border-x border-color">
+            <div className="mx-10 lg:mx-20 xl:mx-24 border-x border-color">
                 <div className="flex flex-col lg:flex-row">
-                    <div className="grid grid-cols-1 grid-rows-4 border-b lg:border-b-0 lg:border-r border-color">
+                    <div className="grid grid-cols-1 border-b lg:border-b-0 lg:border-r border-color">
                         {[
                             {
                                 title: "Central Decision Engine",
@@ -325,13 +325,13 @@ export default function Prog() {
             </div>
 
             <div className="w-full border-y border-color">
-                <div className="mx-10 xl:mx-auto max-w-7xl border-x border-color">
-                    <Reveal variants={slideInFromBottom(0.1 )} className="flex flex-col sm:flex-row items-start sm:items-center gap-96 justify-between p-6 gap-4">
+                <div className="mx-10 lg:mx-20 xl:mx-24 flex px-4 lg:px-10 py-6 border-x border-color">
+                    <Reveal variants={slideInFromBottom(0.1 )} className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <PartialOutlineBtn
                             text="See How It Works"
                             size="sm"
                             onClick={() => router.push("/how-ascella-operates")} />
-                        <p className="max-w-xs text-left leading-relaxed text-b3 ">
+                        <p className="max-w-md text-left leading-relaxed text-b3 ">
                             Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>
                     </Reveal>

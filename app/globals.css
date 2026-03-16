@@ -39,7 +39,7 @@
   body {
     @apply bg-black text-white antialiased;
     font-family: var(--font-montserrat), sans-serif;
-    cursor: none;
+    /* cursor: none; */
   }
 
   body {
@@ -126,25 +126,16 @@ a {
   .text-b1 {
     font-size: 16px;
     font-weight: var(--font-weight-regular);
-    text-align: justify;
   }
 
   .text-b2 {
     font-size: 14px;
     font-weight: var(--font-weight-regular);
-    text-align: justify;
   }
 
   .text-b3 {
     font-size: 12px;
     font-weight: var(--font-weight-regular);
-    text-align: justify;
-  }
-
-  .text-b4 {
-    font-size: 8px;
-    font-weight: var(--font-weight-regular);
-    text-align: justify;
   }
 
   .grid-bg {
