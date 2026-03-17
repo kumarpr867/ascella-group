@@ -32,10 +32,14 @@
     box-sizing: border-box;
   }
 
-  html {
-    @apply scroll-smooth;
-  }
 
+  html,
+  body {
+    height: 100%;
+  }
+html {
+  scroll-behavior: auto;
+}
   body {
     @apply bg-black text-white antialiased;
     font-family: var(--font-montserrat), sans-serif;

@@ -6,7 +6,7 @@ import { slideInFromLeft } from "@/utils/motion"
 export default function EngagementPrinciple() {
   return (
     <section className="my-20">
-      <Reveal variants={slideInFromLeft(0.1)} className="mx-10 xl:mx-auto max-w-7xl pb-12 lg:pb-24">
+      <Reveal variants={slideInFromLeft(0.1)} className="mx-10 xl:mx-24 pb-12 lg:pb-24">
         <Heading text="Engagement Principle" />
 
         <h3 className="mt-6 leading-tight xl:pr-96 text-[16px] md:text-[24px] lg:text-[36px] ">
@@ -16,7 +16,7 @@ export default function EngagementPrinciple() {
 
       </Reveal>
 
-      <div className="mx-10 xl:mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-color ">
+      <div className="mx-10 xl:mx-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-color ">
 
         <Reveal variants={slideInFromLeft(0.2)} className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">

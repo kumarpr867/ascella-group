@@ -33,7 +33,7 @@ export default async function BlogPage({ params }: Props) {
   return (
     <>
     <section className="relative border-y border-color mb-20">
-      <div className="max-w-7xl mx-auto lg:border-x border-color px-10 lg:px-0">
+      <div className=" mx-10 lg:mx-20 xl:mx-24 lg:border-x border-color px-10 lg:px-0">
         <div className="min-h-screen flex lg:flex-row justify-between flex-col">
 
           {/* MAIN CONTENT */}
@@ -279,7 +279,7 @@ export default async function BlogPage({ params }: Props) {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="relative pt-10 w-full lg:w-[320px]">
+          <aside className="relative pt-10 w-full lg:w-[320px] xl:w-[360px]">
             <div className=" sticky top-10">
 
               <div>
