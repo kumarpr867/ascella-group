@@ -89,7 +89,7 @@ export default function OrganisationTypes() {
   }, []);
 
   return (
-    <section className="mx-auto max-w-7xl px-10">
+    <section className="mx-10 xl:mx-24">
       <div className="lg:my-32 ">
         <div className="mb-20 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-10 lg:items-center">
           <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:block ">
@@ -100,7 +100,7 @@ export default function OrganisationTypes() {
           <Reveal variants={slideInFromRight(0.2)}>
             <Heading text="ORGANISATION TYPES" />
             <p className="text-[20px] md:text-[24px] lg:text-[36px] max-w-2xl leading-6 sm:leading-9 mt-10">
-              Ascella partners with organisations where execution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
+              Ascella partners with organisations where exec  ution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
             </p>
           </Reveal>
           <Reveal variants={slideInFromLeft(0.2)} className="lg:hidden block ">
@@ -142,7 +142,14 @@ export default function OrganisationTypes() {
                         : "opacity-0 scale-[0.92] [clip-path:inset(50%)]"
                       }`}
                   >
-                    <Image src={type.img} alt="" fill className="object-cover" />
+                    <Image
+                      src={type.img}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      priority={index === 0}
+                      loading="eager"
+                    />
                   </div>
                 </Reveal>
 

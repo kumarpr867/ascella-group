@@ -78,7 +78,7 @@ useEffect(() => {
 
             {/* Top Search + Filter */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
-                <div className="max-w-7xl xl:mx-auto mx-10  py-4 flex justify-between items-center w-full">
+                <div className=" mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-between items-center w-full">
                     {/* search bar */}
                     <div className="relative w-52 md:w-72  ">
                         <input
@@ -164,7 +164,7 @@ useEffect(() => {
                 </div>
             </Reveal>
 
-            <Reveal variants={slideInFromBottom(0.6)} className="max-w-7xl xl:mx-auto mx-10">
+            <Reveal variants={slideInFromBottom(0.6)} className="mx-10 lg:mx-20 xl:mx-24">
 
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (

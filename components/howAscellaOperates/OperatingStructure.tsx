@@ -1,7 +1,6 @@
 "use client"
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from '@/utils/motion';
 import Reveal from '@/utils/Reveal';
-import { div } from 'motion/react-client';
 import Image from 'next/image';
 import React, { useEffect, useRef } from 'react';
 

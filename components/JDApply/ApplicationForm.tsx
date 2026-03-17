@@ -10,12 +10,12 @@ export default function ApplicationForm() {
     const router = useRouter();
 
     return (
-        <section className="relative border-y border-color pb-10 mb-20">
-            <div className="max-w-7xl mx-auto md:border-x border-color px-10 lg:px-0">
+        <section className="relative border-y border-color mb-20">
+            <div className=" mx-10 lg:mx-20 xl:mx-24 md:border-x border-color px-10 lg:px-0">
                 <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[420px_1fr] lg:gap-16">
 
                     {/* LEFT COLUMN */}
-                    <aside className="order-2 lg:order-1 lg:border-r border-color">
+                    <aside className="order-2 pb-10 lg:order-1 lg:border-r border-color">
                         <div className="w-full lg:sticky lg:top-24">
                             <Reveal variants={slideInFromBottom(0.2)} className="lg:border-b border-color lg:px-4 pb-4">
                                 <button

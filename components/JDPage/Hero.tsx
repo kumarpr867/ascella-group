@@ -115,7 +115,7 @@ function IsometricHoverGrid() {
 export default function Hero() {
     return (
         <section className="border-y border-color">
-            <div className="relative flex flex-col gap-10 max-w-7xl mx-10 xl:mx-auto sm:px-10 py-20 md:border-x border-color overflow-hidden">
+            <div className="relative flex flex-col gap-10  mx-10 lg:mx-20 xl:mx-24 sm:px-10 py-20 md:border-x border-color overflow-hidden">
 
                 {/* ── Isometric grid — right side only, replaces old SVG ── */}
                 <div

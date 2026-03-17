@@ -206,10 +206,10 @@ export default function JobsSection() {
             transition={{ duration: 0.3 }}
             className="block overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6  space-y-6"
           >
-            <Reveal variants={slideInFromBottom(0.2)} className=" max-w-7xl xl:mx-auto ">
+            <Reveal variants={slideInFromBottom(0.2)} className=" mx-10 lg:mx-20 xl:mx-24">
               {/* COMPANY FILTER */}
               <div>
-                <h3 className="text-sm text-white/60 mb-3">Company</h3>
+                <h3 className="text-sm text-gray-100 mb-3">Company</h3>
                 <div className="flex flex-wrap gap-3">
                   {companies.map((company) => (
                     <button
@@ -228,7 +228,7 @@ export default function JobsSection() {
 
               {/* ROLE FILTER */}
               <div>
-                <h3 className="text-sm text-white/60 mb-3">Role</h3>
+                <h3 className="text-sm text-gray-100 mb-3">Role</h3>
                 <div className="flex flex-wrap gap-3">
                   {roles.map((role) => (
                     <button
@@ -250,7 +250,7 @@ export default function JobsSection() {
       </AnimatePresence>
 
 
-      <div className="space-y-20 mx-10 lg:mx-auto max-w-7xl my-10">
+      <div className="space-y-20  mx-10 lg:mx-20 xl:mx-24 my-10">
         <AnimatePresence mode="wait">
           {visibleJobs.length === 0 ? (
             <motion.div
@@ -264,7 +264,7 @@ export default function JobsSection() {
               <h3 className="text-xl text-white mb-4">
                 No positions available
               </h3>
-              <p className="text-white/60 mb-6">
+              <p className="text-gray-100 mb-6">
                 There are currently no jobs matching your selected filters.
               </p>
 

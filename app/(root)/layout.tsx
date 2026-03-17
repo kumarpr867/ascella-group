@@ -5,6 +5,7 @@ import Loader from "@/components/Loader/Loader";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Montserrat } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -20,12 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <CustomCursor />  
+        <CustomCursor />
         <Loader />
         <Navbar />
-        <main className="pt-16 sm:pt-20">
-          {children}
-        </main>
+        <SmoothScroll>
+            <main className="pt-16 sm:pt-20">
+              {children}
+            </main>
+        </SmoothScroll>
         <Footer />
         <ScrollToTop />
       </body>
