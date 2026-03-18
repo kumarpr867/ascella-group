@@ -22,7 +22,7 @@ export default function AnimatedSVG() {
     const mouseY = useMotionValue(0);
     return (
         <svg
-        viewBox="0 0 600 500"                       // ← keep your actual numbers
+        viewBox="0 0 500 500"                       // ← keep your actual numbers
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         width="100%"                                // ← was: width="600" (fixed px)

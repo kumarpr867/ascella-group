@@ -65,9 +65,18 @@ const PageLoadingBar = () => {
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       prevPathname.current = pathname;
-      completeLoading();
+
+      // If we have started a loading sequence, complete it after a short delay
+      if (loading) {
+        if (completeTimeout.current) clearTimeout(completeTimeout.current);
+        completeTimeout.current = setTimeout(() => {
+          completeLoading();
+        }, 80);
+      } else {
+        completeLoading();
+      }
     }
-  }, [pathname]);
+  }, [pathname, loading]);
 
   // Intercept all <a> clicks to trigger loading start
   useEffect(() => {

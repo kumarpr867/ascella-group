@@ -146,9 +146,15 @@ const SvgGraphic = ({ sizeClass = "w-[300px]" }) => (
     `}</style>
   </div>
 );
-
 const Icon1 = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="75" height="70" viewBox="0 0 75 70" fill="none">
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="72" 
+    height="72" 
+    viewBox="0 0 75 70" 
+    fill="none" 
+    preserveAspectRatio="xMidYMid meet"
+  >
     <path d="M51 4L75 16.58V41L51 28.42V4Z" fill="white" fillOpacity="0.16" />
     <path d="M26 0L66 20.74V61L26 40.26V0Z" fill="white" fillOpacity="0.71" />
     <path d="M16 3L56 23.74V64L16 43.26V3Z" fill="white" fillOpacity="0.71" />
@@ -158,7 +164,14 @@ const Icon1 = () => (
 );
 
 const Icon2 = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="76" height="95" viewBox="0 0 76 95" fill="none">
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="72" 
+    height="72" 
+    viewBox="0 0 76 95" 
+    fill="none" 
+    preserveAspectRatio="xMidYMid meet"
+  >
     <path d="M38 95L76 73.5L38 52L0 73.5L38 95Z" fill="white" fillOpacity="0.47" />
     <path d="M38 0L0 21.3333V56L38 34.6667V0Z" fill="#D9D9D9" fillOpacity="0.57" />
     <path d="M38.4414 28L18 39.5862L38.4414 51.1724L58.8828 39.5862L38.4414 28Z" fill="white" />
@@ -205,7 +218,7 @@ const Introduction = () => {
             <Reveal variants={slideInFromBottom(0.2)}>
               <p className=" max-w-lg leading-relaxed text-gray-300">
                 They enable organisations to access security, technology, operations, and growth
-                capabilities in deployable formats — while maintaining a single governing authority over execution.
+                capabilities in deployable formats while maintaining a single governing authority over execution.
               </p>
             </Reveal>
           </section>
@@ -214,7 +227,7 @@ const Introduction = () => {
             <Reveal variants={slideInFromBottom(0.1)}>
               <div className="opacity-80"><Icon1 /></div>
               <h3 className="text-2xl lg:text-3xl">Why Execution Arms Exist</h3>
-              <div className="text-gray-400 text-sm max-w-lg space-y-3">
+              <div className="text-gray-300 text-sm max-w-lg space-y-3">
                 <p>Modern organisations require specialised expertise across security, technology, operations, and growth.</p>
                 <p>Execution arms provide this expertise in structured, deployable units without creating independent silos or vendor dependency.</p>
               </div>
@@ -224,9 +237,9 @@ const Introduction = () => {
 
           <section className="space-y-4">
             <Reveal variants={slideInFromBottom(0.1)}>
-              <div className="w-10 h-10 flex items-center justify-center"><Icon2 /></div>
+              <div className=" flex  "><Icon2 /></div>
               <h3 className="text-2xl lg:text-3xl">Why They Are Not Independent</h3>
-              <p className="text-gray-400  max-w-lg">
+              <p className="text-gray-300  max-w-lg">
                 Execution arms do not operate autonomously. They function inside Ascella Group's governance framework, accountability structure, and oversight mechanisms.
               </p>
               <div className="pt-2">

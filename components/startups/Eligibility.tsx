@@ -436,7 +436,7 @@ export default function Eligibility() {
                       transition: "color 0.3s ease, transform 0.3s ease",
                     }}
                   >
-                    →
+                    
                   </span>
                 </div>
               ))}

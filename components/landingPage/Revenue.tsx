@@ -11,9 +11,9 @@ const CY = 211;
 const AnimatedSvg: React.FC = () => {
   return (
     <svg
-      width="422"
-      height="340"
-      viewBox="0 0 472 422"
+      width="500"
+      height="500"
+      viewBox="0 0 500 500"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >

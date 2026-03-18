@@ -1,332 +1,413 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState } from "react"
 import Reveal from "@/utils/Reveal"
 import { slideInFromBottom } from "@/utils/motion"
 
-// ── Config (Slow & Smooth Tuning) ─────────────────────────────────────────────
-const SPACING = 5;
-const THRESHOLD = 10;
-const HOVER_RADIUS = 100;
-const EXPLODE_FORCE = 4;
-const EXPLODE_DECAY = 0.94;
-const RETURN_LERP = 0.02;
-const CONNECT_DIST = 32;
+// ── Google Sheets Web App URL ─────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMj27RQ5tvoPHk4L_xN7pJ4XMxXOqKT7lYAXWvu7zaZI0561P3KE35PXAThEk-MaTL/exec';
 
-interface Particle {
-    ox: number; oy: number;
-    cx: number; cy: number;
-    x: number; y: number;
-    vx: number; vy: number;
-    size: number;
-    phase: number;
+// ── Types ─────────────────────────────────────────────────────────────────────
+type FormSubmission = {
+  id: string;
+  submittedAt: string;
+  fullName: string;
+  orgName: string;
+  role: string;
+  email: string;
+  orgSize: string;
+  primaryNeeds: string[];
+  challenge: string;
+};
+
+// ── Google Sheets sync ────────────────────────────────────────────────────────
+async function syncToGoogleSheets(entry: FormSubmission): Promise<void> {
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    });
+    console.log('[Ascella] Synced to Google Sheets:', entry.id);
+  } catch (err) {
+    console.error('[Ascella] Google Sheets sync failed:', err);
+  }
 }
 
-// ── ParticleCanvas ────────────────────────────────────────────────────────────
-function ParticleCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const mouseRef = useRef({ x: -9999, y: -9999 });
-    const particlesRef = useRef<Particle[]>([]);
-    const rafRef = useRef<number | null>(null);
-    const [mode, setMode] = useState<"image" | "circle">("image");
+// ── Validation helpers ────────────────────────────────────────────────────────
+const validate = {
+  fullName: (v: string) => !v.trim() ? 'Full name is required' : v.trim().length < 2 ? 'Enter a valid name' : !/^[a-zA-Z\s'.\-]+$/.test(v.trim()) ? 'Name should only contain letters' : '',
+  orgName:  (v: string) => !v.trim() ? 'Organisation name is required' : '',
+  role:     (v: string) => !v.trim() ? 'Please select a role or position' : '',
+  email:    (v: string) => !v.trim() ? 'Email address is required' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address' : '',
+  orgSize:  (v: string) => !v ? 'Please select an organisation size' : '',
+  needs:    (v: string[]) => v.length === 0 ? 'Select at least one operating need' : '',
+};
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setMode((prev) => (prev === "image" ? "circle" : "image"));
-        }, 3000);
-        return () => clearInterval(timer);
-    }, []);
+// ── Org Size Selector ─────────────────────────────────────────────────────────
+const ORG_SIZES = ['0–20', '21–50', '51–100', '101–500', '500+'];
 
-    const buildParticles = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas || !imgEl) return;
+const OrgSizeSelector: React.FC<{ value: string; onChange: (v: string) => void; error?: boolean }> = ({
+  value, onChange, error = false,
+}) => (
+  <div className="flex flex-wrap gap-1.5">
+    {ORG_SIZES.map((size) => {
+      const sel = value === size;
+      return (
+        <button key={size} type="button" onClick={() => onChange(size)}
+          className={`px-2 py-1 text-[10px] transition-all duration-200 rounded border tracking-wide
+            ${sel ? 'border-white bg-white text-black'
+              : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-white hover:text-white'
+              : 'border-[#3D3D3D] bg-transparent text-gray-300 hover:border-white hover:text-white'}`}>
+          {size}
+        </button>
+      );
+    })}
+  </div>
+);
 
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+// ── Primary Need Checkboxes ───────────────────────────────────────────────────
+const PRIMARY_NEEDS = ['Cyber Security', 'Custom Technology', 'Staffing & Manpower', 'Sales & Marketing'];
 
-        const W = canvas.width;
-        const H = canvas.height;
-        const centerX = W / 2;
-        const centerY = H / 2;
-        const circleRadius = Math.min(W, H) / 3.4;
+const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]) => void; error?: boolean }> = ({
+  values, onChange, error = false,
+}) => {
+  const toggle = (need: string) =>
+    onChange(values.includes(need) ? values.filter((v) => v !== need) : [...values, need]);
+  return (
+    <div className="flex flex-row flex-wrap gap-x-4 gap-y-2">
+      {PRIMARY_NEEDS.map((need) => {
+        const checked = values.includes(need);
+        return (
+          <label key={need} className="flex items-center gap-1.5 cursor-pointer group" onClick={() => toggle(need)}>
+              <span className={`flex-shrink-0 w-3 h-3 rounded-sm border transition-all duration-150
+              ${checked ? 'border-white bg-white'
+                : error ? 'border-red-500 bg-transparent group-hover:border-white'
+                : 'border-[#3D3D3D] bg-transparent group-hover:border-gray-300'}`}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              {checked && (
+                <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                  <path d="M1 3L3 5L7 1" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </span>
+            <span className="text-xs text-gray-300 group-hover:text-white transition-colors whitespace-nowrap">
+              {need}
+            </span>
+          </label>
+        );
+      })}
+    </div>
+  );
+};
 
-        const off = document.createElement("canvas");
-        off.width = W;
-        off.height = H;
-        const offCtx = off.getContext("2d")!;
+// ── Role Searchable Dropdown ──────────────────────────────────────────────────
+const ALL_ROLES = [
+  'Chief Technology Officer (CTO)', 'Chief Information Officer (CIO)', 'Chief Digital Officer (CDO)',
+  'Chief Information Security Officer (CISO)', 'VP of Engineering', 'VP of Product',
+  'Director of Technology', 'Director of IT', 'Head of Cybersecurity', 'Head of Cloud Infrastructure',
+  'Head of Data Engineering', 'Head of Software Development', 'Software Engineering Manager',
+  'Solutions Architect', 'Enterprise Architect', 'DevOps Lead', 'IT Manager', 'Systems Administrator',
+  'Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Financial Officer (CFO)',
+  'Chief Revenue Officer (CRO)', 'Chief Marketing Officer (CMO)', 'Chief People Officer (CPO)',
+  'Chief Strategy Officer (CSO)', 'Managing Director', 'General Manager', 'VP of Operations',
+  'VP of Sales', 'VP of Business Development', 'VP of Marketing', 'VP of Finance',
+  'Director of Operations', 'Director of Sales', 'Director of Business Development',
+  'Director of Finance', 'Director of Marketing', 'Director of Human Resources',
+  'Head of Strategy', 'Head of Partnerships', 'Head of Growth', 'Head of Customer Success',
+  'Operations Manager', 'Business Development Manager', 'Sales Manager', 'Account Manager',
+  'Project Manager', 'Program Manager', 'Product Manager', 'Marketing Manager',
+  'Principal Consultant', 'Senior Consultant', 'Management Consultant', 'Strategy Consultant',
+  'Technology Consultant', 'Business Analyst', 'Data Analyst', 'Financial Analyst',
+  'Founder', 'Co-Founder', 'Owner', 'Partner', 'Managing Partner',
+];
 
-        try {
-            // ✅ FIX: Image ko center mein scale karke draw karo
-            const scale = Math.min(W / imgEl.naturalWidth, H / imgEl.naturalHeight);
-            const iw = imgEl.naturalWidth * scale;
-            const ih = imgEl.naturalHeight * scale;
-            const ix = (W - iw) / 2;
-            const iy = (H - ih) / 2;
-            offCtx.drawImage(imgEl, ix, iy, iw, ih);
+const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; error?: boolean }> = ({
+  value, onChange, error = false,
+}) => {
+  const [query, setQuery] = useState(value);
+  const [open, setOpen]   = useState(false);
+  const ref               = useRef<HTMLDivElement>(null);
 
-            const { data } = offCtx.getImageData(0, 0, W, H);
-            const pts: Particle[] = [];
+  useEffect(() => { if (!value) setQuery(''); }, [value]);
 
-            for (let y = 0; y < H; y += SPACING) {
-                for (let x = 0; x < W; x += SPACING) {
-                    const i = (y * W + x) * 4;
-                    const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                    if (brightness > THRESHOLD) {
-                        const angle = Math.random() * Math.PI * 2;
-                        const r = circleRadius + (Math.random() * 10 - 5);
+  const filtered = query.length < 1
+    ? ALL_ROLES
+    : ALL_ROLES.filter(r => r.toLowerCase().includes(query.toLowerCase()));
 
-                        pts.push({
-                            ox: x, oy: y,
-                            cx: centerX + Math.cos(angle) * r,
-                            cy: centerY + Math.sin(angle) * r,
-                            x: Math.random() * W,
-                            y: Math.random() * H,
-                            vx: 0, vy: 0,
-                            size: 0.7,
-                            phase: Math.random() * Math.PI * 2
-                        });
-                    }
-                }
-            }
-            particlesRef.current = pts;
-        } catch {
-            particlesRef.current = [];
-        }
-    }, [imgEl]);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+        if (!ALL_ROLES.includes(query)) setQuery(value);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [query, value]);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d")!;
-        let time = 0;
+  const select = (role: string) => { onChange(role); setQuery(role); setOpen(false); };
 
-        const loop = () => {
-            time += 0.02;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const mx = mouseRef.current.x;
-            const my = mouseRef.current.y;
-            const pts = particlesRef.current;
-
-            for (let i = 0; i < pts.length; i++) {
-                const p = pts[i];
-                const tx = mode === "image" ? p.ox : p.cx;
-                const ty = mode === "image" ? p.oy : p.cy;
-
-                // Subtle floating movement
-                const floatX = Math.sin(time + p.phase) * 0.8;
-                const floatY = Math.cos(time + p.phase) * 0.8;
-
-                // Smooth mouse interaction
-                const dx = p.x - mx;
-                const dy = p.y - my;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < HOVER_RADIUS) {
-                    const force = (HOVER_RADIUS - dist) / HOVER_RADIUS;
-                    p.vx += (dx / dist) * EXPLODE_FORCE * force * 0.15;
-                    p.vy += (dy / dist) * EXPLODE_FORCE * force * 0.15;
-                }
-
-                p.vx *= EXPLODE_DECAY;
-                p.vy *= EXPLODE_DECAY;
-
-                p.x += (tx + floatX - p.x) * RETURN_LERP + p.vx;
-                p.y += (ty + floatY - p.y) * RETURN_LERP + p.vy;
-
-                // Net Connections (Spider-web style)
-                for (let j = i + 1; j < pts.length; j++) {
-                    const p2 = pts[j];
-                    const ldx = p.x - p2.x;
-                    const ldy = p.y - p2.y;
-                    const ldistSq = ldx * ldx + ldy * ldy;
-
-                    if (ldistSq < CONNECT_DIST * CONNECT_DIST) {
-                        const opacity = (1 - Math.sqrt(ldistSq) / CONNECT_DIST) * 0.35;
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-                        ctx.lineWidth = 0.4;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                }
-
-                // Draw Particle
-                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            rafRef.current = requestAnimationFrame(loop);
-        };
-
-        const onMove = (e: MouseEvent) => {
-            const rect = canvas.getBoundingClientRect();
-            mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-        };
-        const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
-
-        canvas.addEventListener("mousemove", onMove);
-        canvas.addEventListener("mouseleave", onLeave);
-        const ro = new ResizeObserver(buildParticles);
-        ro.observe(canvas);
-        if (imgEl?.complete) buildParticles();
-
-        rafRef.current = requestAnimationFrame(loop);
-        return () => {
-            canvas.removeEventListener("mousemove", onMove);
-            canvas.removeEventListener("mouseleave", onLeave);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            ro.disconnect();
-        };
-    }, [buildParticles, imgEl, mode]);
-
-    return (
-        // ✅ FIX: background transparent — black nahi aayega
-        <canvas
-            ref={canvasRef}
-            style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                pointerEvents: "auto",
-                zIndex: 10,
-                cursor: "crosshair",
-                background: "transparent",
-            }}
-        />
-    );
-}
-
-// ── ParticleImage ─────────────────────────────────────────────────────────────
-function ParticleImage({ src, alt, className }: { src: string; alt: string; className?: string }) {
-    const wrapRef = useRef<HTMLDivElement>(null);
-    const [imgEl, setImgEl] = useState<HTMLImageElement | null>(null);
-
-    useEffect(() => {
-        const wrap = wrapRef.current;
-        if (!wrap) return;
-        const el = wrap.querySelector("img") as HTMLImageElement | null;
-        if (el) {
-            // ✅ FIX: Image load hone ka wait karo phir set karo
-            if (el.complete) {
-                setImgEl(el);
-            } else {
-                el.onload = () => setImgEl(el);
-            }
-        }
-    }, []);
-
-    return (
-        <div ref={wrapRef} className={className} style={{ position: "relative" }}>
-            <Image
-                src={src}
-                fill
-                alt={alt}
-                crossOrigin="anonymous"
-                style={{ objectFit: "contain", opacity: 0 }}
-            />
-            <ParticleCanvas imgEl={imgEl} />
+  return (
+    <div ref={ref} className="relative">
+      <input
+        type="text"
+        placeholder="Search role or position..."
+        value={query}
+        onFocus={() => setOpen(true)}
+        onChange={e => { setQuery(e.target.value); onChange(''); setOpen(true); }}
+        autoComplete="off"
+        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm
+          ${error && !value ? 'border border-red-500' : 'border-transparent'}`}
+      />
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" style={{ fontSize: '10px' }}>▾</span>
+      {open && filtered.length > 0 && (
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-[#1a1a1a] border border-[#3D3D3D] overflow-y-auto" style={{ maxHeight: '160px' }}>
+          {filtered.map(role => (
+            <div key={role} onMouseDown={() => select(role)}
+              className={`px-4 py-2 text-[12px] cursor-pointer transition-colors
+                ${role === value ? 'bg-white text-black' : 'text-gray-300 hover:bg-[#2a2a2a] hover:text-white'}`}>
+              {role}
+            </div>
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
+};
+
+// ── Dotted 3D Globe Canvas ────────────────────────────────────────────────────
+function GlobeCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")!
+    let animId: number
+    let t = 0
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1
+      const rect = canvas.getBoundingClientRect()
+      canvas.width = rect.width * dpr
+      canvas.height = rect.height * dpr
+      ctx.scale(dpr, dpr)
+    }
+    resize()
+    window.addEventListener("resize", resize)
+
+    const project = (lat: number, lon: number, rotY: number, cx: number, cy: number, R: number) => {
+      const phi = (90 - lat) * (Math.PI / 180)
+      const theta = (lon + rotY) * (Math.PI / 180)
+      const x3 = R * Math.sin(phi) * Math.cos(theta)
+      const y3 = R * Math.cos(phi)
+      const z3 = R * Math.sin(phi) * Math.sin(theta)
+      return { x: cx + x3, y: cy - y3, z: z3 }
+    }
+
+    const draw = () => {
+      const rect = canvas.getBoundingClientRect()
+      const W = rect.width
+      const H = rect.height
+      ctx.clearRect(0, 0, W, H)
+
+      t += 0.0008
+      const rotY = -(t * (180 / Math.PI) * 0.45)
+      const cx = W / 2
+      const cy = H / 2
+      const R = Math.min(W, H) * 0.44
+
+      for (let lat = -80; lat <= 80; lat += 6) {
+        const count = Math.max(4, Math.round(Math.cos((lat * Math.PI) / 180) * 58))
+        for (let i = 0; i < count; i++) {
+          const lon = -180 + (360 / count) * i
+          const p = project(lat, lon, rotY, cx, cy, R)
+          if (p.z < 0) continue
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, 1, 0, Math.PI * 2)
+          ctx.fillStyle = "rgba(255,255,255,0.5)"
+          ctx.fill()
+        }
+      }
+
+      animId = requestAnimationFrame(draw)
+    }
+
+    animId = requestAnimationFrame(draw)
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener("resize", resize)
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ width: "100%", height: "100%", display: "block", background: "transparent" }}
+    />
+  )
 }
 
 // ── Engagement ────────────────────────────────────────────────────────────────
 export default function Engagement() {
-    return (
-        <section className="flex flex-col">
+  const [fullName,  setFullName]  = useState('');
+  const [orgName,   setOrgName]   = useState('');
+  const [role,      setRole]      = useState('');
+  const [email,     setEmail]     = useState('');
+  const [orgSize,   setOrgSize]   = useState('');
+  const [needs,     setNeeds]     = useState<string[]>([]);
+  const [challenge, setChallenge] = useState('');
+  const [errors,    setErrors]    = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [loading,   setLoading]   = useState(false);
 
-            <div className="border-y border-color">
-                <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
+  const err = (k: string) => submitted && errors[k]
+    ? <p className="text-[10px] text-red-400 mt-0.5">{errors[k]}</p> : null;
+
+  const handleSubmit = async () => {
+    setSubmitted(true);
+    const errs = {
+      fullName: validate.fullName(fullName), orgName: validate.orgName(orgName),
+      role:     validate.role(role),         email:   validate.email(email),
+      orgSize:  validate.orgSize(orgSize),   needs:   validate.needs(needs),
+    };
+    setErrors(errs);
+    if (Object.values(errs).some(Boolean)) return;
+
+    setLoading(true);
+    const entry: FormSubmission = {
+      fullName, orgName, role, email, orgSize,
+      primaryNeeds: needs, challenge,
+      id: Date.now().toString(),
+      submittedAt: new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+    };
+
+    await syncToGoogleSheets(entry);
+    console.log('[Ascella] Form Submitted:', entry);
+    setLoading(false);
+
+    // Reset
+    setFullName(''); setOrgName(''); setRole(''); setEmail('');
+    setOrgSize(''); setNeeds([]); setChallenge('');
+    setSubmitted(false); setErrors({});
+  };
+
+  const lbl = "block text-b2 mb-0.5";
+  const inp = `w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm`;
+
+  return (
+    <section className="flex flex-col">
+
+      <div className="border-y border-color">
+        <div className="mx-10 lg:mx-20 xl:mx-24 py-15 border-x border-color"></div>
+      </div>
+
+      <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-10 border-x border-color">
+        <Reveal variants={slideInFromBottom(0.1)} className="flex justify-center md:justify-between mb-10ff">
+          <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-center md:text-left">
+            <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
+          </h1>
+          <div className="hidden md:flex flex-col font-light">
+            <Link href={"/"}>hello@ascella.group</Link>
+            <p>+91 16045 10860</p>
+          </div>
+        </Reveal>
+
+        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
+          <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
+
+            {/* Dotted 3D Globe */}
+            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px]">
+              <GlobeCanvas />
             </div>
 
-            <div className="xl:mx-auto mx-10 full max-w-7xl flex flex-col py-10 px-4 sm:px-6 md:px-10 border-x border-color">
-                <Reveal variants={slideInFromBottom(0.1)} className="flex justify-center md:justify-between mb-10ff">
-                    <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-center md:text-left">
-                        <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
-                    </h1>
-                    <div className="hidden md:flex flex-col font-light">
-                        <Link href={"/"}>hello@ascella.group</Link>
-                        <p>+91 16045 10860</p>
-                    </div>
-                </Reveal>
-                <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
-                    <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
+            <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
+              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
+                <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
+                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
+                <Link href={"/"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
+              </div>
+              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
+                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
+                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
+                <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
+              </div>
+            </Reveal>
+          </div>
 
-                        {/* ✅ FIX: ParticleSphere import aur use dono hataaye — sirf ParticleImage rahega */}
-                        <ParticleImage
-                            src="/engagementCircle.svg"
-                            alt="Engagement Circle"
-                            className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px]"
-                        />
+          {/* ── Form (Context fields, same structure as Engagement) ── */}
+          <div className="w-full md:max-w-md space-y-2 md:space-y-">
 
-                        <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
-                            <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                                <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
-                                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
-                                <Link href={"/"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
-                            </div>
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Full Name</label>
+              <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
+                placeholder="Enter your name" autoComplete="name"
+                className={`${inp} ${submitted && errors.fullName ? 'border border-red-500' : ''}`} />
+              {err('fullName')}
+            </Reveal>
 
-                            <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
-                                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
-                                <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
-                            </div>
-                        </Reveal>
-                    </div>
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Organisation</label>
+              <input type="text" value={orgName} onChange={e => setOrgName(e.target.value)}
+                placeholder="Organisation name" autoComplete="organization"
+                className={`${inp} ${submitted && errors.orgName ? 'border border-red-500' : ''}`} />
+              {err('orgName')}
+            </Reveal>
 
-                    <form className="w-full md:max-w-md space-y-2 md:space-y-4">
-                        <Reveal variants={slideInFromBottom(0.1)}>
-                            <label className="block text-b2">Full Name</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </Reveal>
-                        <Reveal variants={slideInFromBottom(0.1)}>
-                            <label className="block text-b2">Organisation</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </Reveal>
-                        <Reveal variants={slideInFromBottom(0.1)}>
-                            <label className="block text-b2">Role / Position</label>
-                            <input type="text" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </Reveal>
-                        <Reveal variants={slideInFromBottom(0.1)}>
-                            <label className="block text-b2">Email Address</label>
-                            <input type="email" className="w-full bg-gray-500 px-4 py-3 focus:outline-none focus:border-white transition" />
-                        </Reveal>
-                        <Reveal variants={slideInFromBottom(0.1)} className="relative">
-                            <label className="block text-b2">
-                                Organisation Type
-                            </label>
-                            <select
-                                defaultValue=""
-                                className="w-full bg-gray-500 text-white px-4 py-3 pr-10 border border-transparent focus:outline-none hover:bg-gray-600 transition cursor-pointer"
-                            >
-                                <option value="" disabled>Select Organisation</option>
-                                <option value="ascella-group">Ascella Group</option>
-                                <option value="ascella-infosec">Ascella Infosec</option>
-                                <option value="ascella-staffing">Ascella Staffing</option>
-                                <option value="ascella-engage">Ascella Engage</option>
-                                <option value="ascella-forge">Ascella Forge</option>
-                            </select>
-                        </Reveal>
-                        <Reveal variants={slideInFromBottom(0.1)}>
-                            <label className="block text-b2">
-                                Describe your current operating or execution challenge
-                            </label>
-                            <textarea rows={3} className="w-full bg-gray-500 px-4 py-2 resize-none focus:outline-none focus:border-white transition" />
-                        </Reveal>
-                        <button type="submit" className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black transition">
-                            Consult Now
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Role / Position</label>
+              <RoleDropdown value={role} onChange={setRole} error={submitted && !!errors.role} />
+              {err('role')}
+            </Reveal>
 
-            <div className="border-t border-color">
-                <div className="xl:mx-auto mx-10 max-w-7xl py-15 border-x border-color"></div>
-            </div>
-        </section>
-    )
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Email Address</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="you@company.com" autoComplete="email"
+                className={`${inp} ${submitted && errors.email ? 'border border-red-500' : ''}`} />
+              {err('email')}
+            </Reveal>
+
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Organisation Size</label>
+              <OrgSizeSelector value={orgSize} onChange={setOrgSize} error={submitted && !!errors.orgSize} />
+              {err('orgSize')}
+            </Reveal>
+
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>Primary Operating Need</label>
+              <PrimaryNeedCheckboxes values={needs} onChange={setNeeds} error={submitted && !!errors.needs} />
+              {err('needs')}
+            </Reveal>
+
+            <Reveal variants={slideInFromBottom(0.1)}>
+              <label className={lbl}>
+                Describe your current operating or execution challenge
+              </label>
+              <textarea rows={2} value={challenge} onChange={e => setChallenge(e.target.value)}
+                placeholder="Describe your current execution or operating challenge..."
+                className="w-full bg-gray-500 px-3 py-1.5 resize-none focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm" />
+            </Reveal>
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black transition disabled:opacity-50"
+            >
+              {loading ? 'Submitting...' : 'Consult Now'}
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-color">
+        <div className="mx-10 lg:mx-20 xl:mx-24 py-15 border-x border-color"></div>
+      </div>
+    </section>
+  )
 }

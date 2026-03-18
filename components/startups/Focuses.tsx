@@ -108,9 +108,9 @@ export default function Focuses() {
           align-items: start;
         }
         .header-left p {
-          font-size: 10px;
-          letter-spacing: 0.3em;
-          line-height: 1.8;
+          font-size: 14px;
+          letter-spacing: 0.1em;
+          line-height: 1.4;
           color: white;
     
           max-width: 320px;

@@ -30,17 +30,17 @@ const SLIDES = [
     image: { src: "/images/staffing1.png", rotate: -5.28, scale: .8 }
   },
   {
-    roleTitle: "Market-facing execution arm responsible for structured external engagement and growth operations.",
-    deployedText: "When organisations require disciplined market engagement and growth execution without compromising internal operational control.",
+    roleTitle: "External execution arm coordinating structured market interaction and disciplined growth operations.",
+    deployedText: "When organisations require controlled market activity and coordinated growth efforts without disrupting internal execution stability.",
     mainTitle: "Ascella Engage",
-    mainDesc: "Demand execution systems, brand positioning structures, sales enablement frameworks, and revenue operations alignment.",
+    mainDesc: "Market communication systems positioning clarity frameworks sales coordination models and revenue workflow alignment.",
     image: { src: "/images/engage1.png", rotate: -30, scale: 0.6 }
   },
   {
-    roleTitle: "Internal enablement and operations execution arm responsible for strengthening organisational infrastructure.",
-    deployedText: "When organisations require internal operational readiness, process maturity, and infrastructure that supports sustained execution at scale.",
+    roleTitle: "Revenue execution arm coordinating structured sales activity and disciplined pipeline development operations.",
+    deployedText: "When organisations require consistent sales execution and pipeline development without disrupting internal operational focus.",
     mainTitle: "Ascella Forge",
-    mainDesc: "Internal workflows, operational frameworks, revenue infrastructure, and cross-team coordination systems that keep execution stable as scale increases.",
+    mainDesc: "Sales execution systems pipeline development frameworks deal progression structures and revenue workflow alignment.",
     image: { src: "/images/forge1.png", rotate: -15, scale: 1.2 }
   }
 ];

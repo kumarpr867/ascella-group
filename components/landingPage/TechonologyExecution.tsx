@@ -5,7 +5,7 @@ export default function TechnologyExecution() {
     <motion.div
       animate={{ rotate: 360 }}
       transition={{ duration: 1 }}><svg
-        viewBox="0 0 414 423"                       // ← keep your actual numbers
+        viewBox="0 0 500 500"                       // ← keep your actual numbers
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         width="100%"                                // ← was: width="414"

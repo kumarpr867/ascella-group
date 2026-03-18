@@ -39,8 +39,9 @@ const RadarCanvas: React.FC<{ fillHeight?: boolean }> = ({ fillHeight = false })
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
 
-    const maxR = fillHeight ? H / 2 : W / 2 - 24;
-    const cx = fillHeight ? (W / 2 - maxR * 0.08) : W / 2;
+    // Desktop (fillHeight): cap maxR to 38% of H so circle is smaller
+    const maxR = fillHeight ? Math.min(H / 2, W / 2 - 24) * 0.98 : W / 2 - 24;
+    const cx = fillHeight ? W / 2 : W / 2;
     const cy = H / 2;
 
     ctx.beginPath();
@@ -219,13 +220,13 @@ const Delivery = () => {
         </motion.div>
 
         <motion.div 
-          className="w-1/2 relative self-stretch"
+          className="w-1/2 relative self-stretch py-16"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={revealRight}
         >
-          <div className="absolute inset-0 right-10">
+          <div className="absolute inset-0 inset-y-8 right-8">
             <RadarCanvas fillHeight={true} />
           </div>
         </motion.div>

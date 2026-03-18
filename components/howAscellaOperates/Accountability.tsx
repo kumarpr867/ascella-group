@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Heading from "../headings/Heading";
 import { slideInFromBottom } from "@/utils/motion";
@@ -36,7 +36,6 @@ const SECTIONS: Section[] = [
           decision rights, outcome ownership, and structured oversight embedded
           before execution begins.
         </p>
-
         <p className="text-b2 lg:text-b1 mt-6">
           Accountability shifts from assumed responsibility → to designed authority.
         </p>
@@ -58,7 +57,6 @@ const SECTIONS: Section[] = [
             priorities conflict or delivery pressure rises.
           </p>
         </div>
-
         <div className="flex flex-col sm:flex-row justify-between sm:items-center my-6">
           <h4 className="text-[16px] lg:text-[24px] font-light">In the Ascella model: </h4><p className="text-[16px] font">[ Risk is controlled ]</p>
         </div>
@@ -67,7 +65,6 @@ const SECTIONS: Section[] = [
           defined reporting lines, formal approval gates, and documented
           escalation pathways that maintain clarity under scale.
         </p>
-
         <p className="text-b2 lg:text-b1 mt-6">
           Shared influence → Singular ownership → Structured escalation.
         </p>
@@ -97,7 +94,6 @@ const SECTIONS: Section[] = [
           reduces operational friction, and ensures risk is surfaced early within
           controlled governance boundaries.
         </p>
-
         <p className="text-b2 lg:text-b1 mt-6">
           Ambiguity reduces → Alignment increases → Risk is contained.
         </p>
@@ -118,7 +114,6 @@ const SECTIONS: Section[] = [
             accountable authority for outcomes, creating blurred ownership, slow
             decisions, and unmanaged operational exposure as complexity increases.
           </p>
-
           <p className="text-b2 lg:text-b1 mb-4">
             Execution spreads across multiple contributors → Accountability
             fragments → Risk compounds over time.
@@ -133,7 +128,6 @@ const SECTIONS: Section[] = [
           explicit, and performance oversight remains continuous as execution
           scales.
         </p>
-
         <p className="text-b2 lg:text-b1 mt-6">
           Execution is distributed → Accountability remains singular → Risk stays controlled.
         </p>
@@ -142,6 +136,190 @@ const SECTIONS: Section[] = [
   },
 ];
 
+// ── Isometric Grid constants ──────────────────────────────────────────────────
+const CELL_W = 100;
+const CELL_H = 60;
+
+// Cells where vector55.png is placed — will scale with canvas size
+const IMAGE_CELLS = [
+  { col: 3, row: 3 },
+  { col: 5, row: 5 },
+];
+
+// ── Isometric Hover Grid ──────────────────────────────────────────────────────
+function IsometricHoverGrid() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef    = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+
+    const onMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
+    canvas.addEventListener("mousemove", onMove);
+    canvas.addEventListener("mouseleave", onLeave);
+
+    const alphaMap = new Map<string, number>();
+
+    const loop = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+
+      const cols    = Math.ceil(W / CELL_W) + 2;
+      const rows    = Math.ceil(H / (CELL_H / 2)) + 2;
+      const offsetX = -CELL_W / 2;
+      const offsetY = -CELL_H / 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const cx  = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+          const cy  = offsetY + row * (CELL_H / 2);
+          const key = `${col},${row}`;
+
+          const hovered =
+            Math.abs(mx - cx) / (CELL_W / 2) +
+            Math.abs(my - cy) / (CELL_H / 2) <= 1;
+
+          // Only hovered cell = 1, everything else decays to 0
+          const target  = hovered ? 1 : 0;
+          const prev    = alphaMap.get(key) ?? 0;
+          const speed   = target > prev ? 0.18 : 0.07;
+          const current = prev + (target - prev) * speed;
+          alphaMap.set(key, current);
+
+          ctx.beginPath();
+          ctx.moveTo(cx,              cy - CELL_H / 2);
+          ctx.lineTo(cx + CELL_W / 2, cy);
+          ctx.lineTo(cx,              cy + CELL_H / 2);
+          ctx.lineTo(cx - CELL_W / 2, cy);
+          ctx.closePath();
+
+          // Base stroke for all cells
+          ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+
+          // Glow fill ONLY on hovered cell — radial gradient for smooth glow
+          if (current > 0.005) {
+            const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, CELL_W / 1.8);
+            grad.addColorStop(0,   `rgba(255,255,255,${current * 0.45})`);
+            grad.addColorStop(0.5, `rgba(200,200,255,${current * 0.2})`);
+            grad.addColorStop(1,   `rgba(255,255,255,0)`);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Bright border on hovered cell only
+            ctx.strokeStyle = `rgba(255,255,255,${current * 0.75})`;
+            ctx.lineWidth   = 1.2;
+            ctx.stroke();
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      ro.disconnect();
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("mouseleave", onLeave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Canvas — pointer-events:auto so hover works directly */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position:      "absolute",
+          inset:         0,
+          width:         "100%",
+          height:        "100%",
+          display:       "block",
+          pointerEvents: "auto",
+          cursor:        "crosshair",
+        }}
+      />
+
+      {/* vector55.png snapped to exact isometric cells, diamond-clipped */}
+      <svg
+        style={{
+          position:      "absolute",
+          inset:         0,
+          width:         "100%",
+          height:        "100%",
+          pointerEvents: "none",
+          overflow:      "visible",
+        }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          {IMAGE_CELLS.map(({ col, row }, i) => {
+            const offsetX = -CELL_W / 2;
+            const offsetY = -CELL_H / 2;
+            const cx = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+            const cy = offsetY + row * (CELL_H / 2);
+            return (
+              <clipPath key={i} id={`acct-clip-${i}`} clipPathUnits="userSpaceOnUse">
+                <polygon
+                  points={`
+                    ${cx},${cy - CELL_H / 2}
+                    ${cx + CELL_W / 2},${cy}
+                    ${cx},${cy + CELL_H / 2}
+                    ${cx - CELL_W / 2},${cy}
+                  `}
+                />
+              </clipPath>
+            );
+          })}
+        </defs>
+        {IMAGE_CELLS.map(({ col, row }, i) => {
+          const offsetX = -CELL_W / 2;
+          const offsetY = -CELL_H / 2;
+          const cx = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+          const cy = offsetY + row * (CELL_H / 2);
+          return (
+            <image
+              key={i}
+              href="/vector 55.png"
+              x={cx - CELL_W / 2}
+              y={cy - CELL_H / 2}
+              width={CELL_W}
+              height={CELL_H}
+              opacity="0.85"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath={`url(#acct-clip-${i})`}
+            />
+          );
+        })}
+      </svg>
+    </>
+  );
+}
+
+// ── Accordion Item ────────────────────────────────────────────────────────────
 function AccordionItem({
   item,
   active,
@@ -161,22 +339,16 @@ function AccordionItem({
   const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleHover = () => {
-    hoverTimer.current = setTimeout(() => {
-      onToggle(item.id);
-    }, 200); // adjust delay here
+    hoverTimer.current = setTimeout(() => { onToggle(item.id); }, 200);
+  };
+  const cancelHover = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
   };
 
-  const cancelHover = () => {
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current);
-    }
-  };
   return (
     <motion.div
       layout
-      transition={{
-        layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-      }}
+      transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
       className={`${isLast ? "" : "border-b border-color"}`}
     >
       <motion.button
@@ -192,10 +364,7 @@ function AccordionItem({
               ? "text-[16px] lg:text-[24px]"
               : "text-[12px] lg:text-[20px] tracking-wide"
           }
-          animate={{
-            x: isActive ? 6 : 0,
-            opacity: isActive ? 1 : 0.75,
-          }}
+          animate={{ x: isActive ? 6 : 0, opacity: isActive ? 1 : 0.75 }}
           transition={{ duration: 0.3 }}
         >
           {item.title}
@@ -203,11 +372,11 @@ function AccordionItem({
         {showContent && (
           <div
             className={`
-      relative flex items-center justify-center h-3 w-3
-      transition-transform duration-300 ease-out
-      ${isActive ? "rotate-45" : ""}
-      group-hover:scale-125
-    `}
+              relative flex items-center justify-center h-3 w-3
+              transition-transform duration-300 ease-out
+              ${isActive ? "rotate-45" : ""}
+              group-hover:scale-125
+            `}
           >
             <span className="absolute w-full h-px bg-current" />
             <span className="absolute h-full w-px bg-current" />
@@ -221,34 +390,17 @@ function AccordionItem({
             <motion.div
               key="content"
               layout
-              initial={{
-                height: 0,
-                opacity: 0,
-                y: -10,
-                filter: "blur(6px)"
-              }}
-              animate={{
-                height: "auto",
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)"
-              }}
-              exit={{
-                height: 0,
-                opacity: 0,
-                y: -6,
-                filter: "blur(4px)"
-              }}
+              initial={{ height: 0, opacity: 0, y: -10, filter: "blur(6px)" }}
+              animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ height: 0, opacity: 0, y: -6, filter: "blur(4px)" }}
               transition={{
-                height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                height:  { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
                 opacity: { duration: 0.25 },
-                y: { duration: 0.35 },
+                y:       { duration: 0.35 },
               }}
               className="overflow-hidden bg-gray-500"
             >
-              <div className="p-5">
-                {item.content}
-              </div>
+              <div className="p-5">{item.content}</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -257,8 +409,7 @@ function AccordionItem({
   );
 }
 
-
-
+// ── Main Component ────────────────────────────────────────────────────────────
 export default function Accountability() {
   const [active, setActive] = useState<string>("overview");
 
@@ -273,116 +424,86 @@ export default function Accountability() {
           <Heading text="Accountability Principle" />
         </Reveal>
       </div>
+
+      {/* ── Desktop layout ── */}
       <div className="hidden xl:block mx-auto max-w-7xl px-4 sm:px-6">
         <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_240px_1.2fr] min-h-[520px]">
-          <div className="absolute top-0 left-0">
-            <svg width="874" height="613" viewBox="0 0 874 613" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 218.187 0)" stroke="url(#paint0_linear_1715_794)" stroke-opacity="0.06" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 152.406 36)" stroke="url(#paint1_linear_1715_794)" stroke-opacity="0.06" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 86.6257 72)" stroke="url(#paint2_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 20.8453 108)" stroke="url(#paint3_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 -44.9351 144)" stroke="url(#paint4_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 -110.715 180)" stroke="url(#paint5_linear_1715_794)" stroke-opacity="0.06" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(0.862615 0.505861 0.795028 -0.606572 -175.001 228)" stroke="url(#paint6_linear_1715_794)" stroke-opacity="0.06" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 479.813 0)" stroke="url(#paint7_linear_1715_794)" stroke-opacity="0.02" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 545.594 36)" stroke="url(#paint8_linear_1715_794)" stroke-opacity="0.04" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 611.374 72)" stroke="url(#paint9_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 677.154 108)" stroke="url(#paint10_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 742.934 144)" stroke="url(#paint11_linear_1715_794)" stroke-opacity="0.12" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 808.715 180)" stroke="url(#paint12_linear_1715_794)" stroke-opacity="0.04" stroke-dasharray="2 2" />
-              <line y1="-0.5" x2="759.102" y2="-0.5" transform="matrix(-0.862615 0.505861 -0.795028 -0.606572 873 228)" stroke="url(#paint13_linear_1715_794)" stroke-opacity="0.02" stroke-dasharray="2 2" />
-              <path d="M285.995 263.498L301.253 272.367L301.257 272.369L348.507 300.421L395.753 273.342L412.013 263.514C401.276 257.433 385.698 248.498 372.688 240.92C366.031 237.043 360.044 233.519 355.721 230.914C353.56 229.612 351.811 228.538 350.601 227.763C349.997 227.376 349.521 227.06 349.193 226.826C349.093 226.754 349.004 226.685 348.926 226.624L285.995 263.498Z" stroke="white" stroke-opacity="0.12" />
-              <path d="M31.9951 263.498L47.2529 272.367L47.2568 272.369L94.5068 300.421L141.753 273.342L158.013 263.514C147.276 257.433 131.698 248.498 118.688 240.92C112.031 237.043 106.044 233.519 101.721 230.914C99.5596 229.612 97.8106 228.538 96.6006 227.763C95.9967 227.376 95.5206 227.06 95.1934 226.826C95.0926 226.754 95.0035 226.685 94.9258 226.624L31.9951 263.498Z" stroke="url(#paint14_linear_1715_794)" stroke-opacity="0.12" />
-              <defs>
-                <linearGradient id="paint0_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint1_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint2_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint3_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint4_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint5_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint6_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint7_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint8_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint9_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint10_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint11_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint12_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint13_linear_1715_794" x1="759.102" y1="0.5" x2="0" y2="0.5" gradientUnits="userSpaceOnUse">
-                  <stop />
-                  <stop offset="0.5" stop-color="white" />
-                  <stop offset="1" />
-                </linearGradient>
-                <linearGradient id="paint14_linear_1715_794" x1="159.002" y1="262.5" x2="38.0019" y2="266.5" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="white" />
-                  <stop offset="1" stop-color="white" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
 
+          {/*
+            ── Isometric grid background (replaces old SVG decorative lines) ──
+            Absolutely positioned behind all content in the left/middle columns.
+            Constrained to a sensible width so it doesn't bleed into the right
+            accordion panel. Fades at all edges.
+            pointer-events chain:
+              outer wrapper → none  (content clicks pass through)
+              inner size div → none
+              canvas inside  → auto (receives hover directly)
+              SVG overlay    → none (doesn't block canvas)
+          */}
+          {/*
+            Grid only in the middle — same size/position as the 2 diamond
+            shapes visible in the UI. Absolutely centered vertically in the
+            grid row, fixed height ~300px, width matches middle column area.
+          */}
+          <div
+            aria-hidden="true"
+            style={{
+              position:      "absolute",
+              top:           "50%",
+              left:          "30%",           // roughly where middle col starts
+              transform:     "translate(-50%, -50%)",
+              width:         "420px",         // tight around the diamond shapes
+              height:        "300px",
+              pointerEvents: "none",
+              zIndex:        0,
+            }}
+          >
+            {/* Overflow container — gives canvas its pixel size */}
+            <div
+              style={{
+                position:      "relative",
+                width:         "100%",
+                height:        "100%",
+                overflow:      "hidden",
+                pointerEvents: "none",
+              }}
+            >
+              {/* Mask wrapper — separate from overflow so getBoundingClientRect is stable */}
+              <div
+                style={{
+                  position:            "absolute",
+                  inset:               0,
+                  pointerEvents:       "none",
+                  WebkitMaskImage: [
+                    "linear-gradient(to right,  transparent 0%, black 15%, black 85%, transparent 100%)",
+                    "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+                  ].join(", "),
+                  maskImage: [
+                    "linear-gradient(to right,  transparent 0%, black 15%, black 85%, transparent 100%)",
+                    "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+                  ].join(", "),
+                  WebkitMaskComposite: "destination-in",
+                  maskComposite:       "intersect",
+                }}
+              >
+                <IsometricHoverGrid />
+              </div>
+            </div>
           </div>
-          <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col justify-between sticky">
-            <div></div>
+
+          {/* Left col — text content */}
+          <Reveal variants={slideInFromBottom(0.1)} className="relative z-10 flex flex-col justify-between sticky">
+            <div />
             <div className="pb-10">
-              <h3>The Single <br /> Accountability Principle </h3>
-              <p className="text-b2 text-gray-200  mb-4">
+              <h3>The Single <br /> Accountability Principle</h3>
+              <p className="text-b2 text-gray-200 mb-4">
                 A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
               </p>
             </div>
           </Reveal>
 
-          <Reveal variants={slideInFromBottom(0.1)} className="space-y-4">
+          {/* Middle col — section titles */}
+          <Reveal variants={slideInFromBottom(0.1)} className="relative z-10 space-y-4">
             {SECTIONS.map((item) => (
               <AccordionItem
                 key={item.id}
@@ -395,7 +516,8 @@ export default function Accountability() {
             ))}
           </Reveal>
 
-          <div className="relative border-x border-color h-full min-h-[500px]">
+          {/* Right col — accordion content */}
+          <div className="relative z-10 border-x border-color h-full min-h-[500px]">
             <Reveal variants={slideInFromBottom(0.1)} className="relative h-full">
               {SECTIONS.map((item, index) => (
                 <AccordionItem
@@ -407,28 +529,91 @@ export default function Accountability() {
                 />
               ))}
             </Reveal>
-
           </div>
+
         </div>
       </div>
 
-      {/* Mobile accordion */}
+      {/* ── Mobile / tablet layout ── */}
       <div className="xl:hidden mb-20 px-10 space-y-4">
-        <div className="pb-4">
-          <h4>The Single <br /> Accountability Principle </h4>
-          <p className="text-b2 leading-tight mt-4 ">
-            A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
-          </p>
+
+        {/*
+          Mobile isometric grid — sits behind the mobile content.
+          Height is fixed to roughly the card area height.
+          Fades at all edges. Same hover behaviour on touch devices.
+        */}
+        {/*
+          Mobile isometric grid — fixed height, centered horizontally,
+          sits only in the area between heading and accordion (like desktop).
+        */}
+        <div className="relative">
+          {/* Grid — fixed size, centered, not full page */}
+          <div
+            aria-hidden="true"
+            style={{
+              position:      "absolute",
+              top:           "50%",
+              left:          "50%",
+              transform:     "translate(-50%, -50%)",
+              width:         "320px",
+              height:        "220px",
+              pointerEvents: "none",
+              zIndex:        0,
+            }}
+          >
+            <div
+              style={{
+                position:      "relative",
+                width:         "100%",
+                height:        "100%",
+                overflow:      "hidden",
+                pointerEvents: "none",
+              }}
+            >
+              <div
+                style={{
+                  position:            "absolute",
+                  inset:               0,
+                  pointerEvents:       "none",
+                  WebkitMaskImage: [
+                    "linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)",
+                    "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                  ].join(", "),
+                  maskImage: [
+                    "linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)",
+                    "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                  ].join(", "),
+                  WebkitMaskComposite: "destination-in",
+                  maskComposite:       "intersect",
+                }}
+              >
+                <IsometricHoverGrid />
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile text content */}
+          <div className="relative z-10 pb-4">
+            <h4>The Single <br /> Accountability Principle</h4>
+            <p className="text-b2 leading-tight mt-4">
+              A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.
+            </p>
+          </div>
+
+          {/* Mobile accordion */}
+          <div className="relative z-10">
+            {SECTIONS.map((item) => (
+              <AccordionItem
+                key={item.id}
+                item={item}
+                active={active}
+                onToggle={toggle}
+                titleClass="text-b1"
+              />
+            ))}
+          </div>
         </div>
-        {SECTIONS.map((item) => (
-          <AccordionItem
-            key={item.id}
-            item={item}
-            active={active}
-            onToggle={toggle}
-            titleClass="text-b1"
-          />
-        ))}
+
       </div>
     </section>
   );

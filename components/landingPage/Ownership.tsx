@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useInView, type Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
@@ -366,7 +367,7 @@ function WorkforceReadinessSVG({ className }: { className?: string }) {
           88%, 100%   { opacity: 0; }
         }
       `}</style>
-      <svg viewBox="0 0 632 370" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width:"100%", height:"100%" }}>
+      <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width:"100%", height:"100%" }}>
         <path fill="white" d="
 M195.088 138.247L194.839 137.813L146.46 165.677L146.71 166.111L146.959 166.544L195.338 138.68L195.088 138.247Z
 M146.71 166.111H146.21V243.819H146.71H147.21V166.111H146.71Z
@@ -622,11 +623,11 @@ export default function Ownership() {
   return (
     <section className="relative">
       <div className="sticky top-0 z-50 h-px w-full mt-30 border-t border-color bg-black">
-        <div className="mx-8 h-full" />
+        <div className="mx-10 lg:mx-20 xl:mx-24 h-full" />
       </div>
 
-      {/* ── Outer wrapper: mx-10 xl:mx-auto max-w-7xl — matches Prog exactly ── */}
-      <div className="mx-10 xl:mx-auto max-w-7xl relative">
+      {/* ── Outer wrapper: same gutter as Footer ── */}
+      <div className="mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-10 xl:px-24 relative">
 
         {/* ══ DESKTOP lg+ ══ */}
         <div className="hidden lg:flex lg:flex-row relative border-x border-color">
@@ -662,7 +663,11 @@ export default function Ownership() {
                 </div>
               </div>
 
-              <div className="mb-12"><PartialOutlineBtn text="Explore Responsibility" /></div>
+              <div className="mb-12">
+                <Link href="/execution-arms">
+                  <PartialOutlineBtn text="Explore Execution Arms" />
+                </Link>
+              </div>
             </aside>
           </div>
 
@@ -707,7 +712,11 @@ export default function Ownership() {
                 </div>
               </div>
 
-              <div className="pb-8"><PartialOutlineBtn text="Explore More" /></div>
+              <div className="pb-8">
+                <Link href="/execution-arms">
+                  <PartialOutlineBtn text="Explore Execution Arms" />
+                </Link>
+              </div>
             </aside>
           </div>
           <main className="flex-1 relative z-10">
