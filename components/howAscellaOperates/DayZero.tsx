@@ -62,8 +62,8 @@ const items: ProblemItem[] = [
 
 export default function DayZero() {
   return (
-    <section className="mx-auto max-w-7xl px-10 my-24 flex flex-col gap-28 flex-center">
-      <Reveal variants={slideInFromBottom(0.1)}  className="flex flex-col flex-center gap-12 max-w-3xl text-center">
+    <section className="lg:mx-20 xl:mx-24 my-24 flex flex-col gap-28 flex-center">
+      <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center gap-8  -3xl text-center">
         <div className="">
           <Heading text="SECURITY FROM DAY ZERO" />
         </div>

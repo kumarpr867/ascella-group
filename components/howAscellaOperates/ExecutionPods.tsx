@@ -9,7 +9,7 @@ import { slideInFromBottom } from "@/utils/motion"
 
 export default function ExecutionPods() {
   return (
-    <section className="mx-auto my-24 max-w-7xl lg:px-5">
+    <section className="my-24 lg:mx-20 xl:mx-24  lg:px-5">
       <div className="relative z-30 overflow-hidden">
 
         <PrecisionGrid />

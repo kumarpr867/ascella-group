@@ -71,7 +71,7 @@ export default function Em3() {
     }, [active, isPaused]);
 
     return (
-        <section className="mx-auto max-w-7xl px-10 my-24">
+        <section className="mx-10 lg:mx-20 xl:mx-24 my-24">
             <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
                 <h1 className="text-[24px] lg:text-[36px] ">
@@ -141,10 +141,14 @@ export default function Em3() {
                         <motion.div
                             key={section.label}
                             style={{ y: textY }}
-                            initial={{ opacity: 0, y: 16 }}
+                            initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -16 }}
-                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as any }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{
+                                duration: 0.6,
+                                ease: [0.25, 0.8, 0.25, 1],
+                                delay: 0.05
+                            }}
                             className="max-w-sm flex flex-col gap-5"
                         >
                             <h2 className="text-xl">{section.title}</h2>
@@ -161,7 +165,11 @@ export default function Em3() {
                             initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.96 }}
-                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as any }}
+                            transition={{
+                                duration: 0.6,
+                                ease: [0.25, 0.8, 0.25, 1],
+                                delay: 0.1
+                            }}
                             className="flex flex-col items-center gap-5"
                         >
                             <div className="w-full flex gap-2">

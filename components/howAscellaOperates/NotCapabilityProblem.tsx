@@ -9,11 +9,11 @@ import Reveal from "@/utils/Reveal";
 export default function NotCapabilityProblem() {
     const router = useRouter();
     return (
-        <section className="mx-auto max-w-7xl px-10 my-30">
-            <Reveal variants={slideInFromBottom(0.1)}  className="overflow-hidden">
+        <section className="lg:mx-20 xl:mx-24 mx-10 my-30">
+            <Reveal variants={slideInFromBottom(0.1)} className="overflow-hidden">
                 <div className="relative bg-gray-500">
                     <PrecisionGrid />
-                    <Reveal variants={slideInFromBottom(0.3)}  className="px-6 sm:px-10 lg:px-20 py-15 ">
+                    <Reveal variants={slideInFromBottom(0.3)} className="px-6 sm:px-10 lg:px-20 py-15 ">
                         <p className="text-[24px] xl:text-[36px] leading-7 lg:leading-12"> Execution rarely fails from lack of talent but from fragmented ownership<span className="text-gray-300"> and unclear control. Organisations rise or fall on how authority, accountability, and decision flow are structured as scale increases.</span></p>
                     </Reveal>
                 </div>

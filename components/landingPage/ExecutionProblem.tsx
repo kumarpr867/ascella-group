@@ -231,7 +231,7 @@ export default function ExecutionProblem() {
                     </Reveal>
 
                 </div>
-                <div className="md:hidden flex mx-10 lg:mx-20 xl:mx-24  flex-col md:justify-between gap-12 pb-12 px-10">
+                <div className="md:hidden flex mx-10 lg:mx-20 xl:mx-24  flex-col md:justify-between gap-12 pb-12">
                     <motion.h4 variants={fadeUp} style={{ willChange: "transform" }}>
                         <span className="text-white">The Execution Problem </span>
                         <span className="text-gray-200">Modern Organisations Face</span>
@@ -244,7 +244,7 @@ export default function ExecutionProblem() {
 
             <div className="border-b border-color">
                 <Reveal variants={slideInFromBottom(0.1)}>
-                    <div className="mx-10 lg:mx-20 xl:mx-24 px-10 flex items-center py-8">
+                    <div className="mx-10 lg:mx-20 xl:mx-24 md:px-10 flex items-center py-8">
                         <Heading text="Execution Policy" />
                     </div> 
                 </Reveal>
@@ -258,7 +258,7 @@ export default function ExecutionProblem() {
                     >
                         <div
                             className={`py-16 min-h-105 flex flex-col border-color 
-        ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""} px-10`}
+        ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""} md:px-10`}
                         >
                             <div className="pb-10 border-b border-color h-[200px]">
                                 {item.icon}

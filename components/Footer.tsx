@@ -93,7 +93,7 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col sm:flex-row ">
+                <div className="lg:mx-20 xl:mx-24 flex flex-col sm:flex-row ">
                     <div className="w-full grid grid-cols-1 lg:grid-cols-4 ">
                         {footerSections.map((section, i) => (
                             <Reveal key={i} variants={slideInFromBottom(i * 0.12)}
