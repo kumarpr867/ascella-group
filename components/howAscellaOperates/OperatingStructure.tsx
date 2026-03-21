@@ -342,7 +342,7 @@ export default function OperatingStructure() {
           FLOW CHART — xl screen
       ══════════════════════════════════════════ */}
       <div className="border-t border-color">
-        <div className="hidden mx-10 lg:mx-20 xl:mx-24 px-10 py-10 xl:flex items-center justify-around border-x-0 xl:border-x border-color">
+        <div className="hidden mx-10 lg:mx-20 xl:mx-24 px-10 py-10 xl:flex items-center border-x-0 xl:border-x border-color">
 
           {/* ── Governance — segment 0 ── */}
           <Reveal variants={slideInFromLeft(0.2)} className="flex flex-col items-center py-8">
@@ -464,7 +464,7 @@ export default function OperatingStructure() {
       ══════════════════════════════════════════ */}
       <div className="block xl:hidden">
 
-        <div className="px-10 border-b border-color">
+        <div className="px-10 md:px-20 border-b border-color">
           {/* Inject the glow sweep keyframes once */}
           <style>{`
             @keyframes glowSweep {
@@ -542,7 +542,7 @@ export default function OperatingStructure() {
           </div>
         </div>
 
-        <div className="px-10 border-b border-color">
+        <div className="px-10 md:px-20 border-b border-color">
           <div className="flex flex-col items-center justify-center py-6 gap-3 border-x border-color">
             <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
               <Image

@@ -9,7 +9,7 @@ import Reveal from "@/utils/Reveal";
 export default function NotCapabilityProblem() {
     const router = useRouter();
     return (
-        <section className="lg:mx-20 xl:mx-24 mx-10 my-30">
+        <section className="lg:mx-20 xl:mx-24 mx-10 mb-24">
             <Reveal variants={slideInFromBottom(0.1)} className="overflow-hidden">
                 <div className="relative bg-gray-500">
                     <PrecisionGrid />
