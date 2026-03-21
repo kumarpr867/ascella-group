@@ -51,7 +51,6 @@ export default function Faq({ faqs, description }: Props) {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  // Refined Scroll-trigger animation settings
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { ease: [0.16, 1, 0.3, 1] as any, duration: 0.8 } },
@@ -78,7 +77,7 @@ export default function Faq({ faqs, description }: Props) {
         {faqs.map((faq, index) => {
           const isHovered = hoveredIndex === index;
           const isOpen = activeIndex === index;
-          const isExpanded = isHovered || isOpen;
+          const isExpanded = isHovered || isOpen; // Click aur Hover dono handle ho rahe hain
 
           return (
             <motion.div
@@ -97,8 +96,14 @@ export default function Faq({ faqs, description }: Props) {
                 className={`absolute bottom-0 pointer-events-none transition-opacity duration-500 ${isExpanded ? "opacity-10" : "opacity-15"} ${index % 2 !== 0 ? "left-1 -scale-x-100" : "right-1"}`}
               />
 
+              {/* Responsive Icon: Hover aur Click dono pe rotate hoga */}
+              <div 
+                className={`absolute top-8 right-8 z-20 transition-transform duration-500 ease-[0.16, 1, 0.3, 1] ${isExpanded ? "rotate-0" : "rotate-90"}`}
+              >
+                <ArrowButton />
+              </div>
+
               <div className="relative z-10 h-full p-4 md:p-6 lg:mr-10">
-                {/* Question Bottom */}
                 <motion.h6
                   initial={{ opacity: 1 }}
                   animate={{ opacity: isExpanded ? 0 : 1 }}
@@ -108,7 +113,6 @@ export default function Faq({ faqs, description }: Props) {
                   {faq.question}
                 </motion.h6>
 
-                {/* Question Top */}
                 <motion.h6
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: isExpanded ? 1 : 0, y: isExpanded ? 0 : -10 }}
@@ -118,7 +122,6 @@ export default function Faq({ faqs, description }: Props) {
                   {faq.question}
                 </motion.h6>
 
-                {/* Answer */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: isExpanded ? 1 : 0, y: isExpanded ? 0 : 20 }}
@@ -161,7 +164,7 @@ export default function Faq({ faqs, description }: Props) {
                     <h6 className="pr-6">{faq.question}</h6>
 
                     <div
-                      className={`transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
+                      className={`transition-transform duration-300 ${isOpen ? "rotate-0" : "rotate-90"}`}
                     >
                       <ArrowButton />
                     </div>

@@ -103,7 +103,7 @@ export default function Hero() {
           variants={container}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 top-[10vh] z-5 "
+          className="absolute inset-x-0 top-[10px] z-5 "
         >
           <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 gap-10 justify-between">
 
@@ -118,22 +118,24 @@ export default function Hero() {
                 Clear Ownership
               </p>
 
+              {/* FIX 2: Reduced height from 40 → 24 for tighter heading-to-subheading gap */}
               <motion.div
                 variants={{
                   rest: { height: 0, opacity: 0 },
-                  hover: { height: 40, opacity: 1 }
+                  hover: { height: 24, opacity: 1 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
                 className="border-l border-color overflow-hidden"
               />
 
+              {/* FIX 1: Changed text-gray-100 → text-white opacity-90 for WCAG AA contrast compliance */}
               <motion.p
                 variants={{
                   rest: { opacity: 0, y: -6 },
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 text-justify pr-32 text-gray-100 leading-snug"
+                className="text-b3 text-justify pr-32 text-white opacity-90 leading-snug"
               >
                 Defined responsibilities across teams ensure accountability at every
                 stage, reducing confusion and accelerating decision-making.
@@ -151,22 +153,25 @@ export default function Hero() {
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Unified Control
               </p>
+
+              {/* FIX 2: Reduced height from 40 → 24 for tighter heading-to-subheading gap */}
               <motion.div
                 variants={{
                   rest: { height: 0, opacity: 0 },
-                  hover: { height: 40, opacity: 1 }
+                  hover: { height: 24, opacity: 1 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
                 className="border-l border-color overflow-hidden"
               />
 
+              {/* FIX 1: Changed text-gray-100 → text-white opacity-90 for WCAG AA contrast compliance */}
               <motion.p
                 variants={{
                   rest: { opacity: 0, y: -6 },
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 text-justify text-gray-100 leading-snug"
+                className="text-b3 text-justify text-white opacity-90 leading-snug"
               >
                 Integrated oversight across strategy, technology, and operations
                 provides a single source of truth and stronger organizational alignment.
@@ -200,8 +205,29 @@ export default function Hero() {
                 one operating layer.
               </p>
 
-              <div className="hidden md:flex justify-end  pointer-events-auto">
-                <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+              {/* FIX 3: CTA highlight wrapper — subtle glow ring + animated pulse border */}
+              <div className="hidden md:flex justify-end pointer-events-auto">
+                <div className="relative group">
+                  {/* Animated glow pulse ring */}
+                  <motion.span
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-sm"
+                    animate={{
+                      boxShadow: [
+                        "0 0 0px 0px rgba(255,255,255,0.0)",
+                        "0 0 10px 3px rgba(255,255,255,0.18)",
+                        "0 0 0px 0px rgba(255,255,255,0.0)",
+                      ],
+                    }}
+                    transition={{
+                      duration: 2.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 2.5,
+                    }}
+                  />
+                  <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+                </div>
               </div>
             </motion.div>
 
@@ -275,9 +301,28 @@ export default function Hero() {
           </div>
         </motion.div>
 
+        {/* FIX 3 (mobile): CTA highlight wrapper — same glow pulse treatment */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="flex w-full justify-center">
-
-          <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+          <div className="relative">
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-0 rounded-sm"
+              animate={{
+                boxShadow: [
+                  "0 0 0px 0px rgba(255,255,255,0.0)",
+                  "0 0 10px 3px rgba(255,255,255,0.18)",
+                  "0 0 0px 0px rgba(255,255,255,0.0)",
+                ],
+              }}
+              transition={{
+                duration: 2.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 2.5,
+              }}
+            />
+            <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+          </div>
         </motion.div>
 
         <motion.div variants={fadeUp} initial="hidden" animate="visible" className="border-t border-color p-5 my-6 flex justify-center">

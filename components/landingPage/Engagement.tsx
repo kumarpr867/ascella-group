@@ -59,8 +59,8 @@ const OrgSizeSelector: React.FC<{ value: string; onChange: (v: string) => void; 
         <button key={size} type="button" onClick={() => onChange(size)}
           className={`px-2 py-1 text-[10px] transition-all duration-200 rounded border tracking-wide
             ${sel ? 'border-white bg-white text-black'
-              : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-white hover:text-white'
-              : 'border-[#3D3D3D] bg-transparent text-gray-300 hover:border-white hover:text-white'}`}>
+              : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-white hover:text-white hover:bg-white/10'
+              : 'border-[#3D3D3D] bg-transparent text-gray-300 hover:border-white hover:text-white hover:bg-white/10'}`}>
           {size}
         </button>
       );
@@ -84,8 +84,8 @@ const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]
           <label key={need} className="flex items-center gap-1.5 cursor-pointer group" onClick={() => toggle(need)}>
               <span className={`flex-shrink-0 w-3 h-3 rounded-sm border transition-all duration-150
               ${checked ? 'border-white bg-white'
-                : error ? 'border-red-500 bg-transparent group-hover:border-white'
-                : 'border-[#3D3D3D] bg-transparent group-hover:border-gray-300'}`}
+                : error ? 'border-red-500 bg-transparent group-hover:border-white group-hover:bg-white/10'
+                : 'border-[#3D3D3D] bg-transparent group-hover:border-gray-300 group-hover:bg-white/10'}`}
               style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
               {checked && (
                 <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
@@ -159,7 +159,7 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; err
         onFocus={() => setOpen(true)}
         onChange={e => { setQuery(e.target.value); onChange(''); setOpen(true); }}
         autoComplete="off"
-        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm
+        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm
           ${error && !value ? 'border border-red-500' : 'border-transparent'}`}
       />
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" style={{ fontSize: '10px' }}>▾</span>
@@ -296,7 +296,7 @@ export default function Engagement() {
   };
 
   const lbl = "block text-b2 mb-0.5";
-  const inp = `w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm`;
+  const inp = `w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm`;
 
   return (
     <section className="flex flex-col">
@@ -306,39 +306,57 @@ export default function Engagement() {
       </div>
 
       <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-10 border-x border-color">
-        <Reveal variants={slideInFromBottom(0.1)} className="flex justify-center md:justify-between mb-10ff">
-          <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-center md:text-left">
+
+        {/*
+          ── TOP ROW: Heading (left) + Contact (right) ──
+          md+  → flex-row: heading left, contact right (pinned to form column width)
+          mobile → only heading shown (contact appears inline in info cards below)
+        */}
+        <Reveal variants={slideInFromBottom(0.1)} className="flex items-start justify-between mb-8 md:mb-10">
+          {/* Heading — always left-aligned, sits above the left (globe) column */}
+          <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-left leading-tight">
             <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
           </h1>
-          <div className="hidden md:flex flex-col font-light">
-            <Link href={"/"}>hello@ascella.group</Link>
+          {/* Contact — right-aligned, hidden on mobile, visible md+ above the form */}
+          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4">
+            <Link href={"mailto:hello@ascella.group"}>hello@ascella.group</Link>
             <p>+91 16045 10860</p>
           </div>
         </Reveal>
 
-        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-10 md:gap-20">
+        {/*
+          ── MAIN TWO-COLUMN ROW ──
+          mobile  → stacked (flex-col), items centered
+          md+     → side-by-side (flex-row), items start (top-aligned)
+        */}
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-20">
+
+          {/* ── Left column: Globe + Info cards ── */}
           <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
 
-            {/* Dotted 3D Globe */}
+            {/* Globe */}
             <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px]">
               <GlobeCanvas />
             </div>
 
-            <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 gap-8 xm:gap-20 md:gap-4 w-full">
+            {/* Info cards */}
+            <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 md:px-0 gap-8 xm:gap-20 md:gap-4 w-full">
               <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
                 <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
                 <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
-                <Link href={"/"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
+                {/* Mobile-only: contact shown here */}
+                <Link href={"mailto:hello@ascella.group"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
               </div>
               <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
                 <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
                 <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
+                {/* Mobile-only: phone shown here */}
                 <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
               </div>
             </Reveal>
           </div>
 
-          {/* ── Form (Context fields, same structure as Engagement) ── */}
+          {/* ── Right column: Form ── */}
           <div className="w-full md:max-w-md space-y-2 md:space-y-">
 
             <Reveal variants={slideInFromBottom(0.1)}>
@@ -389,14 +407,14 @@ export default function Engagement() {
               </label>
               <textarea rows={2} value={challenge} onChange={e => setChallenge(e.target.value)}
                 placeholder="Describe your current execution or operating challenge..."
-                className="w-full bg-gray-500 px-3 py-1.5 resize-none focus:outline-none focus:border-white transition text-white placeholder-gray-400 text-sm" />
+                className="w-full bg-gray-500 px-3 py-1.5 resize-none focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm" />
             </Reveal>
 
             <button
               type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black transition disabled:opacity-50"
+              className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
             >
               {loading ? 'Submitting...' : 'Consult Now'}
             </button>

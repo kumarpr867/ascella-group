@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import PartialOutlineBtn from "../btns/PartialOutlineBtn"
 import { useRouter } from "next/navigation";
-import { slideInFromBottom, slideInFromLeft } from "@/utils/motion";
+import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 
 // SVG center
@@ -20,11 +20,9 @@ function InteractiveSVG() {
     const midAngleRef = useRef(0)
     const innerAngleRef = useRef(0)
 
-    // Dot current position (lerped)
     const dotXRef = useRef(CX + DOT_R * Math.cos(DOT_ORIG_ANGLE))
     const dotYRef = useRef(CY + DOT_R * Math.sin(DOT_ORIG_ANGLE))
 
-    // Dot target position
     const dotTargetXRef = useRef(dotXRef.current)
     const dotTargetYRef = useRef(dotYRef.current)
 
@@ -58,7 +56,6 @@ function InteractiveSVG() {
 
         const loop = () => {
             const h = hoverRef.current
-
             outerAngleRef.current += OUTER_SPEED
 
             let midTarget = 0
@@ -77,7 +74,6 @@ function InteractiveSVG() {
             midAngleRef.current += midVelRef.current
             innerAngleRef.current += innerVelRef.current
 
-            // Smoothly lerp dot toward target
             dotXRef.current += (dotTargetXRef.current - dotXRef.current) * DOT_LERP
             dotYRef.current += (dotTargetYRef.current - dotYRef.current) * DOT_LERP
 
@@ -111,7 +107,6 @@ function InteractiveSVG() {
         const R_MID_IN = 141
         const R_MID_OUT = 185
 
-        // Check if cursor is on the dot
         const ddx = svgP.x - dotXRef.current
         const ddy = svgP.y - dotYRef.current
         const dotD = Math.sqrt(ddx * ddx + ddy * ddy)
@@ -126,14 +121,12 @@ function InteractiveSVG() {
         hoverRef.current.mid = dist >= R_MID_IN && dist <= R_MID_OUT
 
         if (dist < R_INNER && !isOnDot) {
-            // Move dot to exact cursor position, clamped inside circle boundary
             const angle = Math.atan2(dy, dx)
             const clampedDist = Math.min(dist, R_INNER - 13)
             dotTargetXRef.current = CX + clampedDist * Math.cos(angle)
             dotTargetYRef.current = CY + clampedDist * Math.sin(angle)
         }
 
-        // If cursor hovers the dot → push it away
         if (isOnDot) {
             const angle = Math.atan2(dy, dx)
             const offset = Math.PI * (0.85 + Math.random() * 0.3)
@@ -178,13 +171,11 @@ function InteractiveSVG() {
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
         >
-            {/* ── STATIC: 4 faint background circles ── */}
             <circle cx="308.958" cy="188.472" r="188.222" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
             <circle cx="308.958" cy="441.49" r="188.222" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
             <circle cx="431.163" cy="314.98" r="188.222" transform="rotate(90 431.163 314.98)" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
             <circle cx="188.472" cy="314.98" r="188.222" transform="rotate(90 188.472 314.98)" stroke="white" strokeOpacity="0.1" strokeWidth="0.5" />
 
-            {/* ── OUTER GROUP ── */}
             <g transform={`rotate(${outerAngle} ${CX} ${CY})`}>
                 <path d="M308.07 67.144C444.624 67.1443 555.324 178.104 555.324 314.981C555.324 451.858 444.624 562.818 308.07 562.818C171.516 562.818 60.815 451.858 60.8149 314.981C60.8149 178.104 171.516 67.144 308.07 67.144Z" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
                 <path d="M308.07 92.7678C430.472 92.7681 529.7 192.256 529.7 314.981C529.7 437.706 430.472 537.193 308.07 537.194C185.667 537.194 86.439 437.706 86.439 314.981C86.439 192.255 185.667 92.7678 308.07 92.7678Z" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
@@ -210,7 +201,6 @@ function InteractiveSVG() {
                 <line x1="480.996" y1="354.324" x2="524.582" y2="364.475" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
             </g>
 
-            {/* ── MID GROUP ── */}
             <g transform={`rotate(${midAngle} ${CX} ${CY})`}>
                 <path d="M308.07 138.192C406.03 138.192 485.441 217.344 485.441 314.981C485.441 412.618 406.03 491.771 308.07 491.771C210.11 491.77 130.699 412.618 130.699 314.981C130.699 217.344 210.11 138.192 308.07 138.192Z" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
                 <line x1="311.786" y1="92.9503" x2="308.344" y2="282.283" stroke="white" strokeOpacity="0.2" strokeWidth="0.5" strokeDasharray="6 6" />
@@ -223,13 +213,11 @@ function InteractiveSVG() {
                 <line x1="86.189" y1="314.73" x2="278.369" y2="314.73" stroke="white" strokeOpacity="0.2" strokeWidth="0.5" strokeDasharray="6 6" />
             </g>
 
-            {/* ── INNER GROUP ── */}
             <g transform={`rotate(${innerAngle} ${CX} ${CY})`}>
                 <circle cx="309.816" cy="314.981" r="140.932" fill="url(#paint0_radial_125_2049)" fillOpacity="0.4" />
                 <circle cx="309.816" cy="314.981" r="140.682" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
             </g>
 
-            {/* ── REAL DOT — hidden when cursor is inside inner circle ── */}
             {!isInsideInner && (
                 <circle
                     cx={dotPos.x}
@@ -240,7 +228,6 @@ function InteractiveSVG() {
                 />
             )}
 
-            {/* ── CUSTOM CURSOR DOT — shown only inside inner circle ── */}
             {isInsideInner && (
                 <>
                     <circle
@@ -277,6 +264,27 @@ function InteractiveSVG() {
 
 export default function Prog() {
     const router = useRouter();
+    // 1. State for hover tracking
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+    const items = [
+        {
+            title: "Central Decision Engine",
+            subtitle: "A single decision authority receives inputs, sets priorities, and signs off on trade offs.",
+            body: "Roles and responsibilities map to outcomes, not tasks. Escalation follows a clear path so issues reach the right level fast. This reduces overlap and speeds delivery.",
+        },
+        {
+            title: "Named Accountability",
+            subtitle: "Every critical control has an accountable person and a documented remit.",
+            body: "Work packages include named owners, acceptance criteria, and delivery milestones. Status becomes factual, not noisy, because responsibility is visible. That visibility shortens feedback loops and limits scope creep.",
+        },
+        {
+            title: "Control Gates",
+            subtitle: "Release and change gates require explicit approvals tied to risk and impact.",
+            body: "Each gate has standard evidence, owners, and timelines. Decisions either progress work or resolve blockers before impact widens. The result is steadier operations and fewer emergency escalations.",
+        },
+    ];
+
     return (
         <section>
             <div className="border-y border-color">
@@ -290,31 +298,31 @@ export default function Prog() {
                 </div>
             </div>
 
-            <div className="mx-10 lg:mx-20 xl:mx-24 border-x border-color">
+            <div className="mx-10 lg:mx-20 xl:mx-24 border-x border-color overflow-hidden">
                 <div className="flex flex-col lg:flex-row">
-                    <div className="grid grid-cols-1 border-b lg:border-b-0 lg:border-r border-color">
-                        {[
-                            {
-                                title: "Central Decision Engine",
-                                subtitle: "A single decision authority receives inputs, sets priorities, and signs off on trade offs.",
-                                body: "Roles and responsibilities map to outcomes, not tasks. Escalation follows a clear path so issues reach the right level fast. This reduces overlap and speeds delivery.",
-                            },
-                            {
-                                title: "Named Accountability",
-                                subtitle: "Every critical control has an accountable person and a documented remit.",
-                                body: "Work packages include named owners, acceptance criteria, and delivery milestones. Status becomes factual, not noisy, because responsibility is visible. That visibility shortens feedback loops and limits scope creep.",
-                            },
-                            {
-                                title: "Control Gates",
-                                subtitle: "Release and change gates require explicit approvals tied to risk and impact.",
-                                body: "Each gate has standard evidence, owners, and timelines. Decisions either progress work or resolve blockers before impact widens. The result is steadier operations and fewer emergency escalations.",
-                            },
-                        ].map((item, i) => (
-                                <Reveal key={i} variants={slideInFromBottom(i * 0.15)} className="border-b flex flex-col justify-between border-color p-6 lg:p-10 last:border-0">
-                                    <h5 className="text-[16px] md:text-[20px]">{item.title}</h5>
-                                    <p className="text-b2 md:pr-40">{item.subtitle}</p>
-                                    <p className="text-b3 text-gray-200">{item.body}</p>
+                    <div className="grid grid-cols-1 border-b lg:border-b-0 lg:border-r border-color lg:w-1/2">
+                        {items.map((item, i) => (
+                            <div 
+                                key={i}
+                                onMouseEnter={() => setHoveredIndex(i)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                                className={`
+                                    relative transition-all duration-500 ease-out border-b border-color p-6 lg:p-10 last:border-0
+                                    ${hoveredIndex === i ? 'bg-white/10 scale-[1.02] z-10 shadow-[0_0_30px_rgba(255,255,255,0.1)]' : 'bg-transparent'}
+                                `}
+                            >
+                                <Reveal variants={slideInFromBottom(i * 0.15)} className="flex flex-col justify-between h-full">
+                                    <h5 className={`text-[16px] md:text-[20px] transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-100'}`}>
+                                        {item.title}
+                                    </h5>
+                                    <p className={`text-b2 md:pr-40 transition-colors duration-300 mt-2 ${hoveredIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                                        {item.subtitle}
+                                    </p>
+                                    <p className={`text-b3 transition-colors duration-300 mt-4 ${hoveredIndex === i ? 'text-gray-100 font-light' : 'text-gray-400'}`}>
+                                        {item.body}
+                                    </p>
                                 </Reveal>
+                            </div>
                         ))}
                     </div>
 
@@ -326,7 +334,7 @@ export default function Prog() {
 
             <div className="w-full border-y border-color">
                 <div className="mx-10 lg:mx-20 xl:mx-24 flex px-4 lg:px-10 py-6 border-x border-color">
-                    <Reveal variants={slideInFromBottom(0.1 )} className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <Reveal variants={slideInFromBottom(0.1)} className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <PartialOutlineBtn
                             text="See How It Works"
                             size="sm"

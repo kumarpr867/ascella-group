@@ -22,14 +22,15 @@ export default function AnimatedSVG() {
     const mouseY = useMotionValue(0);
     return (
         <svg
-        viewBox="0 0 500 500"                       // ← keep your actual numbers
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        width="100%"                                // ← was: width="600" (fixed px)
-        height="100%"                               // ← was: height="500" (fixed px)
-        preserveAspectRatio="xMidYMid meet"         // ← ADD THIS
-        style={{ width: "100%", height: "100%" }}   // ← ADD THIS
-      >
+            // Extended viewBox: add 50px top padding so animated y offset (-35) never clips
+            viewBox="-10 -50 510 480"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid meet"
+            style={{ width: "100%", height: "100%", overflow: "visible" }}
+        >
             {paths.map((d, i) => {
                 const isTopLayer = i === 0;
                 const isSecondLayer = i === 1;

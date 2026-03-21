@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useInView } from "motion/react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { content } from "../../data/ArmsContent";
 import Heading from "../headings/Heading";
 import { useRouter } from "next/navigation";
@@ -14,40 +14,69 @@ export default function Arms() {
 
   const [index, setIndex] = useState(0);
   const total = content.length;
-  const [paused, setPaused] = useState(false);
+  const [direction, setDirection] = useState(1);
+  const lastClickTime = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { amount: 0.3 });
 
-useEffect(() => {
-  if (paused) return;
+  // Reset to first slide when section comes back into view
+  useEffect(() => {
+    if (isInView) {
+      setIndex(0);
+      setDirection(1);
+    }
+  }, [isInView]);
 
-  const id = setInterval(() => {
-    setIndex((prev) => (prev + 1) % total);
-  }, 3000);
+  // Click only — no auto-play
+  const goTo = useCallback((next: number) => {
+    const now = Date.now();
+    if (now - lastClickTime.current < 600) return;
+    lastClickTime.current = now;
+    const clamped = Math.max(0, Math.min(total - 1, next));
+    setDirection(clamped >= index ? 1 : -1);
+    setIndex(clamped);
+  }, [index, total]);
 
-  return () => clearInterval(id);
-}, [paused, total]);
+  // Horizontal slide variants
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as any },
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? '-100%' : '100%',
+      opacity: 0,
+      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as any },
+    }),
+  };
 
   return (
-    <section className="max-w-7xl xl:mx-auto mx-10 flex flex-col items-center justify-center my-24 ">
+    <section ref={sectionRef} className="mx-10 lg:mx-20 xl:mx-24 flex flex-col items-center justify-center my-8 md:my-12">
 
-      {/* Upper Header */}
-      <Reveal variants={slideInFromBottom(0.2)} className="text-center max-w-4xl mb-10 md:mb-16">
+      {/* Upper Header — original unchanged */}
+      <Reveal variants={slideInFromBottom(0.2)} className="text-center max-w-4xl mb-10 md:mb-6">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Heading text="Execution Arms" />
         </div>
-        <h2 className="text-xl md:text-[24px] lg:text-[36px] text-white leading-tight font-light tracking-tight">
+        <h2 className="text-xl md:text-[24px] lg:text-[36px] text-white leading-tight  tracking-tight">
           We take full responsibility for critical outcomes that organisations
           cannot afford to fragment
         </h2>
       </Reveal>
 
-      {/* Main Container */}
-      <Reveal variants={slideInFromBottom(0.4)} className="w-full mx:10 xl:mx-auto max-w-7xl lg:max-w-6xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
+      {/* Main Container — footer-matched margins, full width within section */}
+      <Reveal variants={slideInFromBottom(0.4)} className="w-full bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
         {/* Mobile Layout: Stacked */}
         {/* Desktop Layout: Flex Row */}
         <div className="flex flex-col lg:flex-row min-h-auto lg:h-[550px]">
 
-          {/* Navigation Sidebar */}
+          {/* Navigation Sidebar — original unchanged */}
           <aside className="w-full md:w-[320px] px-6 py-8 md:p-8 flex flex-col gap-6 md:gap-0 md:justify-between">
             <div>
               {/* "Execution Arms" heading — hidden on mobile */}
@@ -59,7 +88,7 @@ useEffect(() => {
                 {content.map((item, i) => (
                   <button
                     key={item.id}
-                    onClick={() => setIndex(i)}
+                    onClick={() => goTo(i)}
                     className={`text-left text-[12px] md:text-[14px] transition-all duration-300 ${i === index
                       ? "text-black font-semibold md:translate-x-2"
                       : "text-gray-400 hover:text-gray-900"
@@ -81,9 +110,7 @@ useEffect(() => {
 
               {/* Button */}
               <button
-                onClick={() => {
-                  router.push("/execution-arms")
-                }}
+                onClick={() => router.push("/execution-arms")}
                 className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
                 See How Works Delivers
                 <span className="opacity-80 transition-all">
@@ -101,70 +128,65 @@ useEffect(() => {
             </div>
           </aside>
 
-          {/* Content Area */}
+          {/* Content Area — original structure, AnimatePresence wraps full slide */}
           <div className="flex-1 bg-white flex p-1">
-            <div
-              className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col md:flex-row"
-              onMouseDown={() => setPaused(true)}
-              onMouseUp={() => setPaused(false)}
-              onMouseLeave={() => setPaused(false)}
-              onTouchStart={() => setPaused(true)}
-              onTouchEnd={() => setPaused(false)}
-            >
+            <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col md:flex-row">
 
-              {/* Left Side: Text Content */}
-              <div className="w-full md:w-1/2 relative z-10 p-6 md:p-16 flex flex-col justify-between gap-6 md:gap-0">
-                <div className="text-2xl md:text-3xl font-light">
-                  <span className="text-white">0{index + 1}</span>
-                  <span className="text-white/20">/0{total}</span>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    transition={{ duration: 0.4 }}
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={index}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="flex flex-col md:flex-row w-full h-full md:absolute md:inset-0"
+                >
+                  {/* Left Side: Text Content — click = prev */}
+                  <div
+                    className="w-full md:w-1/2 relative z-10 p-6 md:p-16 flex flex-col justify-between gap-6 md:gap-0"
+                    style={{ cursor: 'w-resize' }}
+                    onClick={() => goTo(index - 1)}
                   >
-                    <h3 className="text-[24px] md:text-[36px] font-normal text-white mb-4 md:mb-6 tracking-tight">
-                      {content[index].title}
-                    </h3>
-                    <div className="space-y-3 md:space-y-4 max-w-sm">
-                      <p className="text-white/40 text-b3 leading-relaxed">
-                        {content[index].description}
-                      </p>
-                      <p className="text-b3">
-                        <span className="text-white/80 font-medium">Outcome: </span>
-                        <span className="text-white/80">
-                          {content[index].outcome}
-                        </span>
-                      </p>
+                    <div className="text-2xl md:text-3xl font-light">
+                      <span className="text-white">0{index + 1}</span>
+                      <span className="text-white/20">/0{total}</span>
                     </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
 
-              {/* Right Side: Image */}
-              {/* On mobile: show below text. On desktop: show side by side */}
-              <div className="flex-1 w-full flex bg-black items-center justify-center">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.1 }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as any }}
-                    className="py-10 h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center"
+                    <div>
+                      <h3 className="text-[24px] md:text-[36px] font-normal text-white mb-4 md:mb-6 tracking-tight">
+                        {content[index].title}
+                      </h3>
+                      <div className="space-y-3 md:space-y-4 max-w-sm">
+                        <p className="text-white/40 text-b3 leading-relaxed">
+                          {content[index].description}
+                        </p>
+                        <p className="text-b3">
+                          <span className="text-white/80 font-medium">Outcome: </span>
+                          <span className="text-white/80">
+                            {content[index].outcome}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Side: Image — click = next */}
+                  <div
+                    className="flex-1 w-full flex bg-black items-center justify-center relative"
+                    style={{ cursor: 'e-resize', userSelect: 'none' }}
+                    onClick={() => goTo(index + 1)}
                   >
-                    <img
-                      src={content[index].image}
-                      alt={content[index].title}
-                      className="w-full h-full object-contain select-none"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+                    <div className="py-10 h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center">
+                      <img
+                        src={content[index].image}
+                        alt={content[index].title}
+                        className="w-full h-full object-contain select-none"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
 
             </div>
           </div>
