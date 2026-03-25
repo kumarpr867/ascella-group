@@ -169,13 +169,13 @@ export default function Governace() {
                     {/* Desktop Grid */}
                     <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
                         {points.map((point, index) => (
-                            <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl">
+                            <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl cursor-default transition-all duration-300 hover:scale-[1.03] group">
                                 <div className="flex justify-between w-full">
                                     <div className="mb-4">{point.svg}</div>
-                                    <span className="text-xl font-thin mb-2">{point.count}</span>
+                                    <span className="text-xl font-thin mb-2 transition-colors duration-300 group-hover:text-white">{point.count}</span>
                                 </div>
-                                <h5 className="leading-tight mb-2">{point.heading}</h5>
-                                <p className="text-gray-300 text-b3 max-w-xs leading-tight">{point.description}</p>
+                                <h5 className="leading-tight mb-2 transition-colors duration-300 group-hover:text-white">{point.heading}</h5>
+                                <p className="text-gray-300 text-b3 max-w-xs leading-tight transition-colors duration-300 group-hover:text-white">{point.description}</p>
                             </div>
                         ))}
                     </div>
@@ -213,7 +213,7 @@ export default function Governace() {
                                 </div>
 
                                 <h5>{points[page].heading}</h5>
-                                <p className="text-gray-300 text-sm">{points[page].description}</p>
+                                <p className="text-gray-200 text-[12px]">{points[page].description}</p>
                             </motion.div>
                         </AnimatePresence>
 

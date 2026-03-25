@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import { useRouter } from "next/navigation";
-import { slideInFromBottom, slideInFromLeft } from "@/utils/motion";
+import { slideInFromBottom, slideInFromLeft, slideInFromTop } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 
 const containerVariants: Variants = {
@@ -108,8 +108,10 @@ const roles = [
 
 export default function JobsSection() {
   const router = useRouter();
+  const statuses = ["All", "Active", "Inactive"];
+
   const [activeCompany, setActiveCompany] = useState("All roles");
-  const [activeRole, setActiveRole] = useState("All roles");
+  const [activeStatus, setActiveStatus] = useState("All");
   const [showFilter, setShowFilter] = useState(false);
 
   const normalize = (value: string) =>
@@ -120,12 +122,14 @@ export default function JobsSection() {
       activeCompany === "All roles" ||
       normalize(job.company) === normalize(activeCompany);
 
-    const roleMatch =
-      activeRole === "All roles" ||
-      normalize(job.title) === normalize(activeRole);
+    const statusMatch =
+      activeStatus === "All" ||
+      (activeStatus === "Active" && job.status === "Open position") ||
+      (activeStatus === "Inactive" && job.status === "Expired position");
 
-    return companyMatch && roleMatch;
+    return companyMatch && statusMatch;
   });
+
   const groupedJobs = visibleJobs.reduce<Record<string, Job[]>>(
     (acc, job) => {
       if (!acc[job.company]) {
@@ -139,235 +143,237 @@ export default function JobsSection() {
 
   return (
     <section className="my-2">
-      <div className="flex items-center border-b border-color px-10 xl:px-32 py-2 ">
+      <motion.div layout>
+        <div className="flex items-center border-b border-color py-2 ">
 
-        <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:flex items-center justify-between w-full">
-          {companies.map((company) => (
+          <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:flex items-center justify-between w-full mx-20">
+            {companies.map((company) => (
+              <button
+                key={company}
+                onClick={() => setActiveCompany(company)}
+                className={`relative whitespace-nowrap text-sm sm:text-base pb-2 transition ${activeCompany === company
+                  ? "text-white"
+                  : "text-white/50 hover:text-white"
+                  }`}
+              >
+                {company}
+
+                {activeCompany === company && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute left-0 -bottom-2 h-0.5 w-full bg-white"
+                  />
+                )}
+              </button>
+            ))}
             <button
-              key={company}
-              onClick={() => setActiveCompany(company)}
-              className={`relative whitespace-nowrap text-sm sm:text-base pb-2 transition ${activeCompany === company
-                ? "text-white"
-                : "text-white/50 hover:text-white"
-                }`}
+              onClick={() => setShowFilter(!showFilter)}
+              className="flex items-center gap-2 text-gray-100 hover:text-white text-sm pb-2"
             >
-              {company}
+              Filter
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.7087 9.99999H7.41283M3.77866 9.99999H2.29199M3.77866 9.99999C3.77866 9.51818 3.97006 9.0561 4.31075 8.71541C4.65144 8.37472 5.11352 8.18332 5.59533 8.18332C6.07714 8.18332 6.53921 8.37472 6.8799 8.71541C7.22059 9.0561 7.41199 9.51818 7.41199 9.99999C7.41199 10.4818 7.22059 10.9439 6.8799 11.2846C6.53921 11.6253 6.07714 11.8167 5.59533 11.8167C5.11352 11.8167 4.65144 11.6253 4.31075 11.2846C3.97006 10.9439 3.77866 10.4818 3.77866 9.99999ZM17.7087 15.5058H12.9187M12.9187 15.5058C12.9187 15.9877 12.7268 16.4503 12.386 16.7911C12.0453 17.1319 11.5831 17.3233 11.1012 17.3233C10.6193 17.3233 10.1573 17.1311 9.81658 16.7904C9.47589 16.4497 9.28449 15.9876 9.28449 15.5058M12.9187 15.5058C12.9187 15.0239 12.7268 14.5621 12.386 14.2214C12.0453 13.8806 11.5831 13.6892 11.1012 13.6892C10.6193 13.6892 10.1573 13.8806 9.81658 14.2212C9.47589 14.5619 9.28449 15.024 9.28449 15.5058M9.28449 15.5058H2.29199M17.7087 4.49416H15.1212M11.487 4.49416H2.29199M11.487 4.49416C11.487 4.01235 11.6784 3.55027 12.0191 3.20958C12.3598 2.86889 12.8218 2.67749 13.3037 2.67749C13.5422 2.67749 13.7785 2.72448 13.9989 2.81578C14.2193 2.90707 14.4195 3.04089 14.5882 3.20958C14.7569 3.37827 14.8907 3.57854 14.982 3.79895C15.0733 4.01936 15.1203 4.25559 15.1203 4.49416C15.1203 4.73272 15.0733 4.96896 14.982 5.18937C14.8907 5.40977 14.7569 5.61004 14.5882 5.77873C14.4195 5.94743 14.2193 6.08124 13.9989 6.17254C13.7785 6.26383 13.5422 6.31082 13.3037 6.31082C12.8218 6.31082 12.3598 6.11943 12.0191 5.77873C11.6784 5.43804 11.487 4.97597 11.487 4.49416Z" stroke="white" stroke-width="0.7" stroke-miterlimit="10" stroke-linecap="round" />
+              </svg>
 
-              {activeCompany === company && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute left-0 -bottom-2 h-0.5 w-full bg-white"
-                />
-              )}
             </button>
-          ))}
-          <button
-            onClick={() => setShowFilter(!showFilter)}
-            className="flex items-center gap-2 text-gray-100 hover:text-white text-sm pb-2"
-          >
-            Filter
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.7087 9.99999H7.41283M3.77866 9.99999H2.29199M3.77866 9.99999C3.77866 9.51818 3.97006 9.0561 4.31075 8.71541C4.65144 8.37472 5.11352 8.18332 5.59533 8.18332C6.07714 8.18332 6.53921 8.37472 6.8799 8.71541C7.22059 9.0561 7.41199 9.51818 7.41199 9.99999C7.41199 10.4818 7.22059 10.9439 6.8799 11.2846C6.53921 11.6253 6.07714 11.8167 5.59533 11.8167C5.11352 11.8167 4.65144 11.6253 4.31075 11.2846C3.97006 10.9439 3.77866 10.4818 3.77866 9.99999ZM17.7087 15.5058H12.9187M12.9187 15.5058C12.9187 15.9877 12.7268 16.4503 12.386 16.7911C12.0453 17.1319 11.5831 17.3233 11.1012 17.3233C10.6193 17.3233 10.1573 17.1311 9.81658 16.7904C9.47589 16.4497 9.28449 15.9876 9.28449 15.5058M12.9187 15.5058C12.9187 15.0239 12.7268 14.5621 12.386 14.2214C12.0453 13.8806 11.5831 13.6892 11.1012 13.6892C10.6193 13.6892 10.1573 13.8806 9.81658 14.2212C9.47589 14.5619 9.28449 15.024 9.28449 15.5058M9.28449 15.5058H2.29199M17.7087 4.49416H15.1212M11.487 4.49416H2.29199M11.487 4.49416C11.487 4.01235 11.6784 3.55027 12.0191 3.20958C12.3598 2.86889 12.8218 2.67749 13.3037 2.67749C13.5422 2.67749 13.7785 2.72448 13.9989 2.81578C14.2193 2.90707 14.4195 3.04089 14.5882 3.20958C14.7569 3.37827 14.8907 3.57854 14.982 3.79895C15.0733 4.01936 15.1203 4.25559 15.1203 4.49416C15.1203 4.73272 15.0733 4.96896 14.982 5.18937C14.8907 5.40977 14.7569 5.61004 14.5882 5.77873C14.4195 5.94743 14.2193 6.08124 13.9989 6.17254C13.7785 6.26383 13.5422 6.31082 13.3037 6.31082C12.8218 6.31082 12.3598 6.11943 12.0191 5.77873C11.6784 5.43804 11.487 4.97597 11.487 4.49416Z" stroke="white" stroke-width="0.7" stroke-miterlimit="10" stroke-linecap="round" />
-            </svg>
+          </Reveal>
 
-          </button>
-        </Reveal>
+          <Reveal variants={slideInFromBottom(0.4)} className="flex lg:hidden items-center justify-between w-full mx-10">
+            <button
+              onClick={() => {
+                setActiveCompany("All roles");
+                setShowFilter(false);
+              }}
+              className="text-white text-b1"
+            >
+              All roles
+            </button>
+            {/* Filter button */}
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className="flex items-center gap-2 text-white/70 hover:text-white text-sm"
+            >
+              Filter
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.7087 9.99999H7.41283M3.77866 9.99999H2.29199M3.77866 9.99999C3.77866 9.51818 3.97006 9.0561 4.31075 8.71541C4.65144 8.37472 5.11352 8.18332 5.59533 8.18332C6.07714 8.18332 6.53921 8.37472 6.8799 8.71541C7.22059 9.0561 7.41199 9.51818 7.41199 9.99999C7.41199 10.4818 7.22059 10.9439 6.8799 11.2846C6.53921 11.6253 6.07714 11.8167 5.59533 11.8167C5.11352 11.8167 4.65144 11.6253 4.31075 11.2846C3.97006 10.9439 3.77866 10.4818 3.77866 9.99999ZM17.7087 15.5058H12.9187M12.9187 15.5058C12.9187 15.9877 12.7268 16.4503 12.386 16.7911C12.0453 17.1319 11.5831 17.3233 11.1012 17.3233C10.6193 17.3233 10.1573 17.1311 9.81658 16.7904C9.47589 16.4497 9.28449 15.9876 9.28449 15.5058M12.9187 15.5058C12.9187 15.0239 12.7268 14.5621 12.386 14.2214C12.0453 13.8806 11.5831 13.6892 11.1012 13.6892C10.6193 13.6892 10.1573 13.8806 9.81658 14.2212C9.47589 14.5619 9.28449 15.024 9.28449 15.5058M9.28449 15.5058H2.29199M17.7087 4.49416H15.1212M11.487 4.49416H2.29199M11.487 4.49416C11.487 4.01235 11.6784 3.55027 12.0191 3.20958C12.3598 2.86889 12.8218 2.67749 13.3037 2.67749C13.5422 2.67749 13.7785 2.72448 13.9989 2.81578C14.2193 2.90707 14.4195 3.04089 14.5882 3.20958C14.7569 3.37827 14.8907 3.57854 14.982 3.79895C15.0733 4.01936 15.1203 4.25559 15.1203 4.49416C15.1203 4.73272 15.0733 4.96896 14.982 5.18937C14.8907 5.40977 14.7569 5.61004 14.5882 5.77873C14.4195 5.94743 14.2193 6.08124 13.9989 6.17254C13.7785 6.26383 13.5422 6.31082 13.3037 6.31082C12.8218 6.31082 12.3598 6.11943 12.0191 5.77873C11.6784 5.43804 11.487 4.97597 11.487 4.49416Z" stroke="white" stroke-width="0.7" stroke-miterlimit="10" stroke-linecap="round" />
+              </svg>
 
-        <Reveal variants={slideInFromBottom(0.4)} className="flex lg:hidden items-center justify-between w-full">
-          <button
-            onClick={() => {
-              setActiveCompany("All roles");
-              setShowFilter(false);
-            }}
-            className="text-white text-b1"
-          >
-            All roles
-          </button>
-          {/* Filter button */}
-          <button
-            onClick={() => setShowFilter(!showFilter)}
-            className="flex items-center gap-2 text-white/70 hover:text-white text-sm"
-          >
-            Filter
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.7087 9.99999H7.41283M3.77866 9.99999H2.29199M3.77866 9.99999C3.77866 9.51818 3.97006 9.0561 4.31075 8.71541C4.65144 8.37472 5.11352 8.18332 5.59533 8.18332C6.07714 8.18332 6.53921 8.37472 6.8799 8.71541C7.22059 9.0561 7.41199 9.51818 7.41199 9.99999C7.41199 10.4818 7.22059 10.9439 6.8799 11.2846C6.53921 11.6253 6.07714 11.8167 5.59533 11.8167C5.11352 11.8167 4.65144 11.6253 4.31075 11.2846C3.97006 10.9439 3.77866 10.4818 3.77866 9.99999ZM17.7087 15.5058H12.9187M12.9187 15.5058C12.9187 15.9877 12.7268 16.4503 12.386 16.7911C12.0453 17.1319 11.5831 17.3233 11.1012 17.3233C10.6193 17.3233 10.1573 17.1311 9.81658 16.7904C9.47589 16.4497 9.28449 15.9876 9.28449 15.5058M12.9187 15.5058C12.9187 15.0239 12.7268 14.5621 12.386 14.2214C12.0453 13.8806 11.5831 13.6892 11.1012 13.6892C10.6193 13.6892 10.1573 13.8806 9.81658 14.2212C9.47589 14.5619 9.28449 15.024 9.28449 15.5058M9.28449 15.5058H2.29199M17.7087 4.49416H15.1212M11.487 4.49416H2.29199M11.487 4.49416C11.487 4.01235 11.6784 3.55027 12.0191 3.20958C12.3598 2.86889 12.8218 2.67749 13.3037 2.67749C13.5422 2.67749 13.7785 2.72448 13.9989 2.81578C14.2193 2.90707 14.4195 3.04089 14.5882 3.20958C14.7569 3.37827 14.8907 3.57854 14.982 3.79895C15.0733 4.01936 15.1203 4.25559 15.1203 4.49416C15.1203 4.73272 15.0733 4.96896 14.982 5.18937C14.8907 5.40977 14.7569 5.61004 14.5882 5.77873C14.4195 5.94743 14.2193 6.08124 13.9989 6.17254C13.7785 6.26383 13.5422 6.31082 13.3037 6.31082C12.8218 6.31082 12.3598 6.11943 12.0191 5.77873C11.6784 5.43804 11.487 4.97597 11.487 4.49416Z" stroke="white" stroke-width="0.7" stroke-miterlimit="10" stroke-linecap="round" />
-            </svg>
+            </button>
+          </Reveal>
+        </div>
 
-          </button>
-        </Reveal>
-      </div>
-
-      <AnimatePresence>
-        {showFilter && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="block overflow-hidden border-b border-color px-4 sm:px-6 lg:px-10 py-6  space-y-6"
-          >
-            <Reveal variants={slideInFromBottom(0.2)} className=" mx-10 lg:mx-20 xl:mx-24">
-              {/* COMPANY FILTER */}
-              <div>
-                <h3 className="text-sm text-gray-100 mb-3">Company</h3>
-                <div className="flex flex-wrap gap-3">
-                  {companies.map((company) => (
-                    <button
-                      key={company}
-                      onClick={() => setActiveCompany(company)}
-                      className={`px-4 py-1 rounded-full text-sm transition ${activeCompany === company
-                        ? "bg-white text-black"
-                        : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
-                        }`}
-                    >
-                      {company}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* ROLE FILTER */}
-              <div>
-                <h3 className="text-sm text-gray-100 mb-3">Role</h3>
-                <div className="flex flex-wrap gap-3">
-                  {roles.map((role) => (
-                    <button
-                      key={role}
-                      onClick={() => setActiveRole(role)}
-                      className={`px-4 py-1 rounded-full text-sm transition ${activeRole === role
-                        ? "bg-white text-black"
-                        : "bg-zinc-800 text-white/70 hover:bg-zinc-700"
-                        }`}
-                    >
-                      {role}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
-      <div className="space-y-20  mx-10 lg:mx-20 xl:mx-24 my-10">
-        <AnimatePresence mode="wait">
-          {visibleJobs.length === 0 ? (
+        <AnimatePresence mode="popLayout">
+          {showFilter && (
             <motion.div
-              key="empty"
-              initial={{ opacity: 0, y: 10 }}
+              layout
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="text-center py-20"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="overflow-hidden border-b border-color py-4 space-y-10"
             >
-              <h3 className="text-xl text-white mb-4">
-                No positions available
-              </h3>
-              <p className="text-gray-100 mb-6">
-                There are currently no jobs matching your selected filters.
-              </p>
-
-              <button
-                onClick={() => {
-                  setActiveCompany("All roles");
-                  setActiveRole("All roles");
-                }}
-                className="px-4 py-2 border border-gray-300 rounded-2xl text-white hover:bg-white hover:text-black transition"
-              >
-                Clear Filters
-              </button>
+              <div className="mx-10 lg:mx-20">
+                {/* COMPANY FILTER */}
+                <div className="block lg:hidden mb-4">
+                  <h3 className="text-[16px] text-gray-100 mb-2">Branches</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {companies.map((company) => (
+                      <button
+                        key={company}
+                        onClick={() => setActiveCompany(company)}
+                        className={`px-4 py-1 rounded-xl text-[12px] transition ${activeCompany === company
+                          ? "bg-white text-black"
+                          : "bg-gray-500 text-white/70 hover:bg-gray-400"
+                          }`}
+                      >
+                        {company}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* status filter */}
+                <div>
+                  <h3 className="text-[16px] text-gray-100 mb-2">Status</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {statuses.map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => setActiveStatus(status)}
+                        className={`px-4 py-1 rounded-xl text-[12px] transition ${activeStatus === status
+                          ? "bg-white text-black"
+                          : "bg-gray-500 text-white/70 hover:bg-gray-400"
+                          }`}
+                      >
+                        {status}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </motion.div>
-          ) : (
+          )}
+        </AnimatePresence>
 
-            Object.entries(groupedJobs).map(([company, jobs]) => (
+
+        <div className="space-y-20  mx-10 lg:mx-20 xl:mx-24 my-10">
+          <AnimatePresence mode="wait">
+            {visibleJobs.length === 0 ? (
               <motion.div
-                key={company}
-                layout
-                variants={containerVariants}
-                initial="hidden"
-                animate="show"
-                exit="hidden"
-                className="space-y-6"
+                key="empty"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="text-center py-20"
               >
-                <h5 className="md:ml-5 text[2] mb-8">{company}</h5>
+                <h3 className="text-xl text-white mb-4">
+                  No positions available
+                </h3>
+                <p className="text-gray-100 mb-6">
+                  There are currently no jobs matching your selected filters.
+                </p>
 
-                <div className="grid gap-12 xl:gap-16 md:grid-cols-2 lg:grid-cols-3 md:px-5">
-                  {jobs.map((job) => (
-                    <motion.div
-                      key={job.id}
-                      variants={cardVariants}
-                      whileHover="hover"
-                      className="border border-color rounded-sm p-5 md:border-none md:p-0"
-                    >
-                      <div className="hidden md:block relative h-40 mb-4 ">
-                        <Image
-                          src={job.image}
-                          alt={job.title}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 33vw"
-                          className={`border border-color object-cover pointer-events-none ${job.status === "Open position" ? "opacity-50" : "opacity-20"}`}
-                        />
+                <button
+                  onClick={() => {
+                    setActiveCompany("All roles");
+                    setActiveStatus("All roles");
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-2xl text-white hover:bg-white hover:text-black transition"
+                >
+                  Clear Filters
+                </button>
+              </motion.div>
+            ) : (
 
-                        {job.status === "Expired position" && (
-                          <div className="absolute inset-0 flex items-center justify-center z-10">
+              Object.entries(groupedJobs).map(([company, jobs]) => (
+                <motion.div
+                  key={company}
+                  layout
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                  exit="hidden"
+                  className="space-y-6"
+                >
+                  <h5 className="md:ml-5 text[2] mb-8">{company}</h5>
+
+                  <div className="grid gap-12 xl:gap-16 md:grid-cols-2 lg:grid-cols-3 md:px-5">
+                    {jobs.map((job) => (
+                      <motion.div
+                        key={job.id}
+                        variants={cardVariants}
+                        whileHover="hover"
+                        className="border border-color rounded-sm p-5 md:border-none md:p-0"
+                      >
+                        <div className="hidden md:block relative h-40 mb-4 ">
+                          <Image
+                            src={job.image}
+                            alt={job.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className={`border border-color object-cover pointer-events-none ${job.status === "Open position" ? "opacity-50" : "opacity-20"}`}
+                          />
+
+                          {job.status === "Expired position" && (
+                            <div className="absolute inset-0 flex items-center justify-center z-10">
+                              <PartialOutlineBtn
+                                text="Expired"
+                                bgColor="transparent"
+                                borderColor="white"
+                                hoverBgColor="transparent"
+                                hoverTextColor="white"
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col md:flex-row md:items-center justify-between my-5">
+                          <h3 className={`text-[20px] md:text-[16px] ${job.status === "Open position" ? "text-white" : "text-gray-200"}`}>{job.title}</h3>
+                          <p className="text-b1">{job.company}</p>
+                        </div>
+
+                        <p className="text-b3 text-gray-200 mb-5 leading-tight">{job.description}</p>
+
+                        <div className="flex justify-between md:justify-start items-center gap-3 mb-6">
+                          <span
+                            className={`text-b3 px-4 py-1 rounded-2xl ${job.status === "Open position"
+                              ? "bg-white text-black font-bold"
+                              : "bg-gray-500"
+                              }`}
+                          >
+                            {job.status}
+                          </span>
+                          <span className="text-b3 bg-gray-500 px-4 py-1 rounded-2xl">
+                            {job.experience}
+                          </span>
+                        </div>
+
+                        {job.status === "Open position" ? (
+                          <PartialOutlineBtn
+                            text="Apply Now"
+                            onClick={() => {
+                              router.push(`/JD-Apply`);
+                            }}
+                          />
+                        ) : (
+                          <div className="block md:hidden">
                             <PartialOutlineBtn
                               text="Expired"
-                              bgColor="transparent"
-                              borderColor="white"
-                              hoverBgColor="transparent"
-                              hoverTextColor="white"
+                              hoverBgColor="black"
+                              hoverTextColor="black"
                             />
                           </div>
                         )}
-                      </div>
 
-                      <div className="flex flex-col md:flex-row md:items-center justify-between my-5">
-                        <h3 className={`text-[20px] md:text-[16px] ${job.status === "Open position" ? "text-white" : "text-gray-200"}`}>{job.title}</h3>
-                        <p className="text-b1">{job.company}</p>
-                      </div>
-
-                      <p className="text-b3 text-gray-200 mb-5 leading-tight">{job.description}</p>
-
-                      <div className="flex justify-between md:justify-start items-center gap-3 mb-6">
-                        <span
-                          className={`text-b3 px-4 py-1 rounded-2xl ${job.status === "Open position"
-                            ? "bg-white text-black font-bold"
-                            : "bg-gray-500"
-                            }`}
-                        >
-                          {job.status}
-                        </span>
-                        <span className="text-b3 bg-gray-500 px-4 py-1 rounded-2xl">
-                          {job.experience}
-                        </span>
-                      </div>
-
-                      {job.status === "Open position" ? (
-                        <PartialOutlineBtn
-                          text="Apply Now"
-                          onClick={() => {
-                            router.push(`/JD-Apply`);
-                          }}
-                        />
-                      ) : (
-                        <div className="block md:hidden">
-                          <PartialOutlineBtn
-                            text="Expired"
-                            hoverBgColor="black"
-                            hoverTextColor="black"
-                          />
-                        </div>
-                      )}
-
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))
-          )}
-        </AnimatePresence>
-      </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </section>
   );
 }

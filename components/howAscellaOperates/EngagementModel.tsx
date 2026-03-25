@@ -71,7 +71,7 @@ export default function Em3() {
     }, [active, isPaused]);
 
     return (
-        <section className="mx-10 lg:mx-20 xl:mx-24 my-24">
+        <section className="mx-10 lg:mx-20 xl:mx-24">
             <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
                 <h1 className="text-[24px] lg:text-[36px] ">
