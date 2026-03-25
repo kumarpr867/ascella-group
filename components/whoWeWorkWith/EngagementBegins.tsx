@@ -6,7 +6,7 @@ import Reveal from "@/utils/Reveal";
 
 export default function EngagementBegins() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center mx-auto max-w-7xl px-10 xl:px-0 my-30">
+    <section className="relative min-h-screen flex flex-col items-center justify-center mx-auto max-w-7xl px-10 xl:px-0 my-20">
       <HeaderSection />
       <ArchitectureDiagram />
       <ExploreNowBtn />

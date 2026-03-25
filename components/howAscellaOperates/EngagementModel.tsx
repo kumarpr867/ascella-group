@@ -72,13 +72,13 @@ export default function Em3() {
 
     return (
         <section className="mx-10 lg:mx-20 xl:mx-24">
-            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 lg:w-1/2 mb-16 lg:mb-20">
+            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 items-center lg:items-start lg:w-[75%] mb-16 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
-                <h1 className="text-[24px] lg:text-[36px] ">
-                    Engagement structures are designed for operational alignment, not transactional delivery.
+                <h1 className="text-[24px] lg:text-[36px] text-center lg:text-left">
+                    Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.
                 </h1>
-                <p className="font-extralight text-[14px] md:text-[16px] lg:text-base">
-                    Ascella engagements are structured based on organisational maturity, execution complexity, and governance need.
+                <p className="font-extralight text-[14px] md:text-[16px] lg:text-base text-center lg:text-left">
+                    Ascella engagements are structured around operating alignment, where ownership, governance, and measurement are defined before delivery begins so execution remains controlled and accountable instead of transactional and fragmented.
                 </p>
             </Reveal>
 
@@ -178,7 +178,7 @@ export default function Em3() {
                                 </h1>
                             </div>
 
-                            <div className="relative w-full h-[500px]">
+                            <div className="relative w-full h-[400px]">
                                 <Image
                                     src={section.image}
                                     alt={section.title}

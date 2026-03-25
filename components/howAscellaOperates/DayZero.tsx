@@ -62,14 +62,14 @@ const items: ProblemItem[] = [
 
 export default function DayZero() {
   return (
-    <section className="lg:mx-20 xl:mx-24 my-24 flex flex-col gap-28 flex-center">
-      <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center gap-8  -3xl text-center">
+    <section className="lg:mx-20 xl:mx-24 my-24 flex flex-col gap-10 flex-center">
+      <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center gap-6 text-center">
         <div className="">
           <Heading text="SECURITY FROM DAY ZERO" />
         </div>
         <h3 className="text-[20px] lg:text-[36px] font-light px-5">Security operates as a core design principle embedded into governance, delivery, and oversight from the start.</h3>
         <p className="font-light leading-tight px-16 ">Protection is structured into decision paths, system design, and operational workflows before execution begins so risk does not accumulate silently as scale increases.</p>
-        <div className="flex gap-5 border-b border-color pb-10">
+        <div className="flex gap-5 border-b border-color pb-8">
           <div className="flex flex-col gap-3 flex-center">
             <div className="bg-white w-15 h-15 rounded-sm p-4">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -102,20 +102,23 @@ export default function DayZero() {
           </div>
         </div>
       </Reveal>
-      <Reveal variants={slideInFromBottom(0.1)}  className="grid grid-cols-1 lg:grid-cols-3 border border-color">
+      <Reveal
+        variants={slideInFromBottom(0.1)}
+        className="flex flex-col gap-6 lg:gap-0 lg:grid lg:grid-cols-3 "
+      >
         {items.map((item, index) => (
-          <Reveal variants={slideInFromBottom(0.1)} 
+          <Reveal
+            variants={slideInFromBottom(0.1)}
             key={item.title}
-            className={`p-10 flex flex-col border-color ${index !== 0 ? "lg:border-l border-t lg:border-t-0" : ""}`}
-          >
-            <div className="pb-5 md:pb-10">
-              {item.icon}
-            </div>
+            className={`p-10 mx-10 lg:mx-0 flex flex-col justify-center items-center text-center border border-color rounded-xl lg:rounded-none ${index !== 0 ? "lg:border-l" : ""}`}>
 
-            <h5 className="mb-6 mt-6 ">
+            <div className="pb-5 h-42">{item.icon}</div>
+
+            <h5 className="mb-4 mt-2">
               {item.title}
             </h5>
-            <p className="text-b3 leading-tight md:pr-10 font-extralight">
+
+            <p className="text-b2 leading-tight font-extralight">
               {item.description}
             </p>
           </Reveal>

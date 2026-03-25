@@ -106,7 +106,7 @@ const SECTIONS: Section[] = [
     content: (
       <>
         <div className="border-b border-color">
-          <div className="flex justify-between mb-5 items-center my-6">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 my-6">
             <h4 className="text-[16px] lg:text-[24px] font-light">In conventional models:</h4> <p className="text-[16px] font">[ Risk increases ]</p>
           </div>
           <p className="text-b2 text-gray-200 mb-4">
@@ -221,14 +221,14 @@ function IsometricHoverGrid() {
           // Glow fill ONLY on hovered cell — radial gradient for smooth glow
           if (current > 0.005) {
             const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, CELL_W / 1.8);
-            grad.addColorStop(0,   `rgba(255,255,255,${current * 0.45})`);
-            grad.addColorStop(0.5, `rgba(200,200,255,${current * 0.2})`);
-            grad.addColorStop(1,   `rgba(255,255,255,0)`);
+            grad.addColorStop(0,   `rgba(255,255,255,${current * 0.2})`);
+            grad.addColorStop(0.5, `rgba(200,200,255,${current * 0.03})`);
+            grad.addColorStop(1,   `rgba(160, 160, 160, 0)`);
             ctx.fillStyle = grad;
             ctx.fill();
 
             // Bright border on hovered cell only
-            ctx.strokeStyle = `rgba(255,255,255,${current * 0.75})`;
+            ctx.strokeStyle = `rgba(255,255,255,${current * 0.3})`;
             ctx.lineWidth   = 1.2;
             ctx.stroke();
           }
@@ -419,43 +419,26 @@ export default function Accountability() {
 
   return (
     <section className="border-b border-color min-h-[720px] lg:min-h-[640px]">
-      <div className="py-10 xl:py-10 xl:border-b border-color">
-        <Reveal variants={slideInFromBottom(0.1)} className="mx-auto max-w-7xl px-10 xl:px-0">
+      <div className="py-10 xl:py-10 md:border-b border-color">
+        <Reveal variants={slideInFromBottom(0.1)} className="flex justify-center md:justify-start lg:mx-20 xl:mx-24 px-10 xl:px-0">
           <Heading text="Accountability Principle" />
         </Reveal>
       </div>
 
       {/* ── Desktop layout ── */}
-      <div className="hidden xl:block mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_240px_1.2fr] min-h-[520px]">
-
-          {/*
-            ── Isometric grid background (replaces old SVG decorative lines) ──
-            Absolutely positioned behind all content in the left/middle columns.
-            Constrained to a sensible width so it doesn't bleed into the right
-            accordion panel. Fades at all edges.
-            pointer-events chain:
-              outer wrapper → none  (content clicks pass through)
-              inner size div → none
-              canvas inside  → auto (receives hover directly)
-              SVG overlay    → none (doesn't block canvas)
-          */}
-          {/*
-            Grid only in the middle — same size/position as the 2 diamond
-            shapes visible in the UI. Absolutely centered vertically in the
-            grid row, fixed height ~300px, width matches middle column area.
-          */}
+      <div className="hidden lg:block mx-10 lg:mx-20 xl:mx-24 px-4 sm:px-6">
+        <div className="relative grid grid-cols-1 md:grid-cols-[1fr_1.2fr] min-h-[520px]">
           <div
             aria-hidden="true"
             style={{
               position:      "absolute",
               top:           "50%",
-              left:          "30%",           // roughly where middle col starts
+              left:          "20%",           // roughly where middle col starts
               transform:     "translate(-50%, -50%)",
               width:         "420px",         // tight around the diamond shapes
               height:        "300px",
               pointerEvents: "none",
-              zIndex:        0,
+              zIndex:        11,
             }}
           >
             {/* Overflow container — gives canvas its pixel size */}
@@ -503,7 +486,7 @@ export default function Accountability() {
           </Reveal>
 
           {/* Middle col — section titles */}
-          <Reveal variants={slideInFromBottom(0.1)} className="relative z-10 space-y-4">
+          {/* <Reveal variants={slideInFromBottom(0.1)} className="relative z-10 space-y-4">
             {SECTIONS.map((item) => (
               <AccordionItem
                 key={item.id}
@@ -514,7 +497,7 @@ export default function Accountability() {
                 titleClass={active === item.id ? "text-white" : "text-gray-200"}
               />
             ))}
-          </Reveal>
+          </Reveal> */}
 
           {/* Right col — accordion content */}
           <div className="relative z-10 border-x border-color h-full min-h-[500px]">
@@ -535,65 +518,10 @@ export default function Accountability() {
       </div>
 
       {/* ── Mobile / tablet layout ── */}
-      <div className="xl:hidden mb-20 px-10 space-y-4">
-
-        {/*
-          Mobile isometric grid — sits behind the mobile content.
-          Height is fixed to roughly the card area height.
-          Fades at all edges. Same hover behaviour on touch devices.
-        */}
-        {/*
-          Mobile isometric grid — fixed height, centered horizontally,
-          sits only in the area between heading and accordion (like desktop).
-        */}
+      <div className="lg:hidden mb-20  space-y-4">
         <div className="relative">
-          {/* Grid — fixed size, centered, not full page */}
-          <div
-            aria-hidden="true"
-            style={{
-              position:      "absolute",
-              top:           "50%",
-              left:          "50%",
-              transform:     "translate(-50%, -50%)",
-              width:         "320px",
-              height:        "220px",
-              pointerEvents: "none",
-              zIndex:        0,
-            }}
-          >
-            <div
-              style={{
-                position:      "relative",
-                width:         "100%",
-                height:        "100%",
-                overflow:      "hidden",
-                pointerEvents: "none",
-              }}
-            >
-              <div
-                style={{
-                  position:            "absolute",
-                  inset:               0,
-                  pointerEvents:       "none",
-                  WebkitMaskImage: [
-                    "linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)",
-                    "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                  ].join(", "),
-                  maskImage: [
-                    "linear-gradient(to right,  transparent 0%, black 10%, black 90%, transparent 100%)",
-                    "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                  ].join(", "),
-                  WebkitMaskComposite: "destination-in",
-                  maskComposite:       "intersect",
-                }}
-              >
-                <IsometricHoverGrid />
-              </div>
-            </div>
-          </div>
-
           {/* Mobile text content */}
-          <div className="relative z-10 pb-4">
+          <div className="relative z-10 p-6 text-center">
             <h4>The Single <br /> Accountability Principle</h4>
             <p className="text-b2 leading-tight mt-4">
               A structural governance approach that assigns one clearly defined accountable authority to every execution domain, ensuring decisions, outcomes, and risk ownership remain unambiguous as scale increases.

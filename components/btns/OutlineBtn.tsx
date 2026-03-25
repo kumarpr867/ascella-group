@@ -9,7 +9,7 @@ interface Props {
 export default function OutlineBtn({
   text = "Button",
   size = "md",
-  color = "var(--color-gray-200)", 
+  color = "var(--color-white)", 
   className = "",
   onClick,
 }: Props) {
@@ -33,12 +33,14 @@ export default function OutlineBtn({
         color: 'var(--color-black)',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = 'var(--color-black)';
-        e.currentTarget.style.color = 'white';
+        const root = getComputedStyle(document.documentElement);
+        e.currentTarget.style.backgroundColor = root.getPropertyValue('--color-white') || 'var(--color-white)';
+        e.currentTarget.style.color = root.getPropertyValue('--color-black') || 'var(--color-black)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = 'white';
-        e.currentTarget.style.color = 'var(--color-black)';
+        e.currentTarget.style.backgroundColor = 'transparent';
+        const root = getComputedStyle(document.documentElement);
+        e.currentTarget.style.color = root.getPropertyValue('--color-white') || 'var(--color-white)';
       }}
     >
       {text}
