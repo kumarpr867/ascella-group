@@ -1,6 +1,7 @@
 "use client"
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from '@/utils/motion';
 import Reveal from '@/utils/Reveal';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -15,8 +16,8 @@ function IsometricHoverGrid({
   interactive?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
-  const rafRef    = useRef<number | null>(null);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef = useRef<number | null>(null);
 
   const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
     x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
@@ -30,7 +31,7 @@ function IsometricHoverGrid({
     const ctx = canvas.getContext('2d'); if (!ctx) return;
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth;
+      canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
     resize();
@@ -54,8 +55,8 @@ function IsometricHoverGrid({
       ctx.clearRect(0, 0, W, H);
 
       const mx = mouseRef.current.x, my = mouseRef.current.y;
-      const cols    = Math.ceil(W / cellW) + 2;
-      const rows    = Math.ceil(H / (cellH / 2)) + 2;
+      const cols = Math.ceil(W / cellW) + 2;
+      const rows = Math.ceil(H / (cellH / 2)) + 2;
       const offsetX = -cellW / 2, offsetY = -cellH / 2;
 
       for (let row = 0; row < rows; row++) {
@@ -64,19 +65,19 @@ function IsometricHoverGrid({
           const key = `${col},${row}`;
 
           const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
-          const target  = hovered ? 1 : 0;
+          const target = hovered ? 1 : 0;
           const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
           alphaMap.set(key, current);
 
           ctx.beginPath();
-          ctx.moveTo(cx,             cy - cellH / 2);
+          ctx.moveTo(cx, cy - cellH / 2);
           ctx.lineTo(cx + cellW / 2, cy);
-          ctx.lineTo(cx,             cy + cellH / 2);
+          ctx.lineTo(cx, cy + cellH / 2);
           ctx.lineTo(cx - cellW / 2, cy);
           ctx.closePath();
 
           ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
-          ctx.lineWidth   = 0.5;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
 
           if (current > 0.005) {
@@ -104,12 +105,12 @@ function IsometricHoverGrid({
     <canvas
       ref={canvasRef}
       style={{
-        position:      'absolute',
-        inset:         0,
-        width:         '100%',
-        height:        '100%',
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
         pointerEvents: interactive ? 'auto' : 'none',
-        cursor:        interactive ? 'crosshair' : 'default',
+        cursor: interactive ? 'crosshair' : 'default',
       }}
     />
   );
@@ -139,17 +140,17 @@ const IsoBox: React.FC<IsoBoxProps> = ({
       src={src}
       alt=""
       style={{
-        position:      'absolute',
-        left:          cx,
-        top:           cy,
-        width:         cellW,
-        height:        cellH,
-        transform:     'translate(-50%, -50%)',
-        objectFit:     'fill',
+        position: 'absolute',
+        left: cx,
+        top: cy,
+        width: cellW,
+        height: cellH,
+        transform: 'translate(-50%, -50%)',
+        objectFit: 'fill',
         opacity,
         pointerEvents: 'none',
-        mixBlendMode:  'screen',
-        zIndex:        10,
+        mixBlendMode: 'screen',
+        zIndex: 10,
       }}
     />
   );
@@ -157,20 +158,20 @@ const IsoBox: React.FC<IsoBoxProps> = ({
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const items = [
-  { label: "Accountability",       icon: "/howAscellaOperates/accountability.svg" },
-  { label: "Assemble Pods",        icon: "/howAscellaOperates/pods.png" },
-  { label: "Performance",          icon: "/howAscellaOperates/performance.png" },
-  { label: "Embed Security",       icon: "/howAscellaOperates/security.png" },
+  { label: "Accountability", icon: "/howAscellaOperates/accountability.svg" },
+  { label: "Assemble Pods", icon: "/howAscellaOperates/pods.png" },
+  { label: "Performance", icon: "/howAscellaOperates/performance.png" },
+  { label: "Embed Security", icon: "/howAscellaOperates/security.png" },
   { label: "Controlled Execution", icon: "/howAscellaOperates/execution.png" },
 ];
 
 const gridItems = [
-  { label: 'Governance',           src: '/howAscellaOperates/governace.svg',      width: 69, height: 70 },
-  { label: 'Accountability',       src: '/howAscellaOperates/accountability.svg',  width: 80, height: 80 },
-  { label: 'Assemble Pods',        src: '/howAscellaOperates/pods.png',            width: 69, height: 70 },
-  { label: 'Performance',          src: '/howAscellaOperates/performance.png',     width: 88, height: 52 },
-  { label: 'Embed Security',       src: '/howAscellaOperates/security.png',        width: 63, height: 73 },
-  { label: 'Controlled Execution', src: '/howAscellaOperates/execution.png',       width: 65, height: 45 },
+  { label: 'Governance', src: '/howAscellaOperates/governace.svg', width: 69, height: 70 },
+  { label: 'Accountability', src: '/howAscellaOperates/accountability.svg', width: 80, height: 80 },
+  { label: 'Assemble Pods', src: '/howAscellaOperates/pods.png', width: 69, height: 70 },
+  { label: 'Performance', src: '/howAscellaOperates/performance.png', width: 88, height: 52 },
+  { label: 'Embed Security', src: '/howAscellaOperates/security.png', width: 63, height: 73 },
+  { label: 'Controlled Execution', src: '/howAscellaOperates/execution.png', width: 65, height: 45 },
 ];
 
 // ── Glow Segment Map ──────────────────────────────────────────────────────────
@@ -188,7 +189,7 @@ const gridItems = [
 
 // Beam animation duration and spread
 const BEAM_DURATION_MS = 2200; // total time for beam to sweep Governance → Globe
-const BEAM_SPREAD      = 5.5;  // higher = narrower beam (affects fewer elements at once)
+const BEAM_SPREAD = 5.5;  // higher = narrower beam (affects fewer elements at once)
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function OperatingStructure() {
@@ -198,7 +199,7 @@ export default function OperatingStructure() {
   // Brightness of any element = how close the beam currently is to that position.
   //
   const [beamPos, setBeamPos] = useState(-1);
-  const beamRAFRef    = useRef<number | null>(null);
+  const beamRAFRef = useRef<number | null>(null);
   const beamActiveRef = useRef(false);
 
   const startBeam = useCallback(() => {
@@ -264,7 +265,7 @@ export default function OperatingStructure() {
 
   // ── Box wrapper — pointer-events none so only image area is hoverable ──
   const boxWrapperStyle: React.CSSProperties = {
-    position:      'relative',
+    position: 'relative',
     pointerEvents: 'none',
   };
 
@@ -272,13 +273,13 @@ export default function OperatingStructure() {
   const hBorderStyle = (seg: number): React.CSSProperties => {
     const g = glowAt(seg);
     return {
-      position:      'absolute',
-      left:          0,
-      right:         0,
-      height:        '1px',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      height: '1px',
       pointerEvents: 'none',
       background: g > 0.01 ? `rgba(255,255,255,${g * 0.95})` : 'transparent',
-      boxShadow:  g > 0.01
+      boxShadow: g > 0.01
         ? `0 0 ${g * 8}px ${g * 3}px rgba(255,255,255,${g * 0.8}), 0 0 ${g * 22}px ${g * 8}px rgba(255,255,255,${g * 0.35})`
         : 'none',
     };
@@ -288,7 +289,7 @@ export default function OperatingStructure() {
   const imgWrapperStyle = (seg: number): React.CSSProperties => {
     const g = glowAt(seg);
     return {
-      cursor:        'pointer',
+      cursor: 'pointer',
       pointerEvents: 'auto',
       filter: g > 0.01
         ? `brightness(${1 + g * 9}) drop-shadow(0 0 ${g * 10}px rgba(255,255,255,${g})) drop-shadow(0 0 ${g * 24}px rgba(255,255,255,${g * 0.7}))`
@@ -296,21 +297,24 @@ export default function OperatingStructure() {
     };
   };
 
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   return (
+
     <section className="border-y border-color">
 
       {/* ══════════════════════════════════════════
           DESKTOP HERO  (md+)
       ══════════════════════════════════════════ */}
       <div className="relative border-b border-color overflow-hidden">
-        <div className="relative mx-10 lg:mx-20 xl:mx-24 px-5 md:px-10 py-10 md:py-24 border-x border-color">
+        <div className="relative mx-10 lg:mx-20 xl:mx-24 px-5 md:px-10 py-10 lg:py-24 xl:border-x border-color">
 
-          <Reveal variants={slideInFromLeft(0.2)} className="relative z-10 flex flex-col gap-5 w-full lg:w-2/3 xl:w-1/2">
+          <Reveal variants={slideInFromLeft(0.2)} className="relative z-10 flex flex-col items-center xl:items-start gap-5 w-full xl:w-1/2 text-center xl:text-left">
             <h2 className="text-[24px] md:text-[48px]">
               A unified model built for accountable
               <span className="text-gray-300"> execution at scale.</span>
             </h2>
-            <p className="text-[14px] text-left sm:w-1/2">
+            <p className="text-[14px] xl:text-left sm:w-1/2">
               Ownership, governance, and delivery aligned before work begins.
             </p>
           </Reveal>
@@ -327,7 +331,7 @@ export default function OperatingStructure() {
                 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
               ].join(', '),
               WebkitMaskComposite: 'destination-in',
-              maskComposite:       'intersect',
+              maskComposite: 'intersect',
             }}
           >
             <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
@@ -342,7 +346,7 @@ export default function OperatingStructure() {
           FLOW CHART — xl screen
       ══════════════════════════════════════════ */}
       <div className="border-t border-color">
-        <div className="hidden mx-10 lg:mx-20 xl:mx-24 px-10 py-10 xl:flex items-center border-x-0 xl:border-x border-color">
+        <div className="hidden xl:flex mx-10 lg:mx-20 xl:mx-24 px-4 xl:px-10 py-10 items-center justify-center border-x-0 xl:border-x border-color">
 
           {/* ── Governance — segment 0 ── */}
           <Reveal variants={slideInFromLeft(0.2)} className="flex flex-col items-center py-8">
@@ -356,7 +360,7 @@ export default function OperatingStructure() {
                 <Image src="/howAscellaOperates/governace.svg" alt="governance" width={80} height={80} />
               </div>
               {/* Left connector line — segment 1 */}
-              <div className="w-10 h-px" style={lineStyle(1)} />
+              <div className="w-4 xl:w-5 h-px overflow-hidden" style={lineStyle(1)} />
             </div>
           </Reveal>
 
@@ -369,49 +373,49 @@ export default function OperatingStructure() {
 
             {/* ── Unified top glow line ── */}
             <div style={{
-              position:         'absolute',
-              top:              75,         // aligns with box top border
-              left:             0,
-              right:            0,
-              height:           '1px',
-              pointerEvents:    'none',
-              zIndex:           20,
+              position: 'absolute',
+              top: 75,         // aligns with box top border
+              left: 0,
+              right: 0,
+              height: '1px',
+              pointerEvents: 'none',
+              zIndex: 20,
               // Narrow bright spot; position tracks beamPos mapped to box area (segs 2-6)
-              background:       'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
-              backgroundSize:   '40% 100%',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
+              backgroundSize: '40% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: (() => {
                 // beamPos 0.25 (seg2) → 0%, beamPos 0.75 (seg6) → 100%
                 const p = Math.max(0, Math.min(1, (beamPos - 0.25) / 0.5)) * 100;
                 return `${p}% 0`;
               })(),
-              opacity:          beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
-              transition:       'opacity 0.15s ease',
-              boxShadow:        '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
+              opacity: beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
+              transition: 'opacity 0.15s ease',
+              boxShadow: '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
             }} />
 
             {/* ── Unified bottom glow line ── */}
             <div style={{
-              position:         'absolute',
-              bottom:           31,         // aligns with box bottom border
-              left:             0,
-              right:            0,
-              height:           '1px',
-              pointerEvents:    'none',
-              zIndex:           20,
-              background:       'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
-              backgroundSize:   '40% 100%',
+              position: 'absolute',
+              bottom: 31,         // aligns with box bottom border
+              left: 0,
+              right: 0,
+              height: '1px',
+              pointerEvents: 'none',
+              zIndex: 20,
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
+              backgroundSize: '40% 100%',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: (() => {
                 const p = Math.max(0, Math.min(1, (beamPos - 0.25) / 0.5)) * 100;
                 return `${p}% 0`;
               })(),
-              opacity:          beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
-              transition:       'opacity 0.15s ease',
-              boxShadow:        '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
+              opacity: beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
+              transition: 'opacity 0.15s ease',
+              boxShadow: '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
             }} />
 
-            <div className="grid grid-cols-5 text-center">
+            <div className="grid grid-cols-5 text-center bg-black z-10">
               {items.map((item, index) => {
                 const seg = index + 2; // 2, 3, 4, 5, 6
                 return (
@@ -463,106 +467,93 @@ export default function OperatingStructure() {
           MOBILE VIEW  (< xl) — UNTOUCHED
       ══════════════════════════════════════════ */}
       <div className="block xl:hidden">
-
-        <div className="px-10 md:px-20 border-b border-color">
-          {/* Inject the glow sweep keyframes once */}
-          <style>{`
-            @keyframes glowSweep {
-              0%   { background-position: -100% 0; }
-              100% { background-position: 200% 0; }
-            }
-          `}</style>
-
-          {/* Relative wrapper so we can overlay the glow lines */}
-          <div className="relative">
-            {/* Top glow line */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '1px',
-                background:
-                  'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 80%, transparent 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'glowSweep 3s ease-in-out infinite',
-                boxShadow: '0 0 8px 3px rgba(255,255,255,0.25)',
-                pointerEvents: 'none',
-                zIndex: 10,
-              }}
-            />
-
-            {/* Bottom glow line */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '1px',
-                background:
-                  'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 80%, transparent 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'glowSweep 3s ease-in-out infinite',
-                animationDelay: '1.5s',
-                boxShadow: '0 0 8px 3px rgba(255,255,255,0.25)',
-                pointerEvents: 'none',
-                zIndex: 10,
-              }}
-            />
-
-            <div className="grid grid-cols-2 border-x border-color">
-              {gridItems.map((item, i) => (
-                <Reveal variants={slideInFromBottom(0.2)} key={item.label}
-                  className={[
-                    'relative flex flex-col items-center justify-center gap-3 py-6',
-                    i % 2 === 0 ? 'border-r border-color' : '',
-                    i < 4      ? 'border-b border-color' : '',
-                  ].join(' ')}
-                >
-                  <div className="flex items-center justify-center">
-                    <Image
-                      src={item.src}
-                      alt={item.label}
-                      width={item.width}
-                      height={item.height}
-                      style={{ objectFit: 'contain' }}
-                    />
-                  </div>
-                  <span
-                    className="text-[#6E6E6E] text-[12px] leading-[13px] text-center px-2"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    {item.label}
-                  </span>
-                </Reveal>
-              ))}
-            </div>
-          </div>
+        {/* ── Governance (static) ── */}
+        <div className="flex flex-col items-center justify-center py-8 border-b border-color">
+          <Image
+            src="/howAscellaOperates/governace.svg"
+            alt="Governance"
+            width={70}
+            height={70}
+            className="rotate-90"
+          />
+          <span className="text-white text-[12px] mt-3">
+            Governance
+          </span>
         </div>
 
-        <div className="px-10 md:px-20 border-b border-color">
-          <div className="flex flex-col items-center justify-center py-6 gap-3 border-x border-color">
-            <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
-              <Image
-                src="/howAscellaOperates/outcome.png"
-                alt="Outcome Stability"
-                width={73}
-                height={75}
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
-            <span
-              className="text-white text-[12px] leading-[13px]"
-              style={{ fontFamily: 'Montserrat, sans-serif' }}
-            >
-              Outcome Stability
-            </span>
-          </div>
-        </div>
+        {/* ── Accordion Items ── */}
+        {items.map((item, index) => {
+  const isOpen = activeIndex === index;
 
+  return (
+    <div
+      key={item.label}
+      className="border-b border-gray-500"
+      onMouseEnter={() => setActiveIndex(index)}   // desktop
+      onMouseLeave={() => setActiveIndex(null)}    // desktop
+    >
+
+      {/* Header */}
+      <div
+        onClick={() => setActiveIndex(isOpen ? null : index)} // mobile
+        className="flex w-full justify-center items-center py-5 cursor-pointer hover:bg-gray-500/10 transition"
+      >
+        <span className="text-gray-200 text-[12px]">
+          {item.label}
+        </span>
       </div>
-    </section>
+
+      {/* Content (SMOOTH) */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              transition={{ duration: 0.25 }}
+              className="flex justify-center py-4"
+            >
+              <Image
+                src={item.icon}
+                alt={item.label}
+                width={70}
+                height={70}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+})}
+
+      <div className="flex flex-col items-center justify-center py-6 gap-3">
+        <div className="flex items-center justify-center" style={{ minHeight: 80 }}>
+          <Image
+            src="/howAscellaOperates/outcome.png"
+            alt="Outcome Stability"
+            width={73}
+            height={75}
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+        <span
+          className="text-white text-[12px] leading-[13px]"
+          style={{ fontFamily: 'Montserrat, sans-serif' }}
+        >
+          Outcome Stability
+        </span>
+      </div>
+    </div>
+    </section >
   );
 }

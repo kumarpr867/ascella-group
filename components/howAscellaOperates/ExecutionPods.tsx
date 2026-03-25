@@ -9,34 +9,34 @@ import { slideInFromBottom } from "@/utils/motion"
 
 export default function ExecutionPods() {
   return (
-    <section className="my-24 lg:mx-20 xl:mx-24  lg:px-5">
+    <section className="my-24 xl:mx-24">
       <div className="relative z-30 overflow-hidden">
 
         <PrecisionGrid />
         <Image src="/howAscellaOperates/blur.png"
           alt={""} className="object-contain absolute inset-0 opacity-50 " fill />
-        <div className="bg-gray-500 flex">
-          <Reveal variants={slideInFromBottom(0.1)}  className="hidden lg:flex flex-col max-w-3xl gap-10 items-center">
-            <div className="w-[400px] h-[500px] ">
+        <div className="bg-gray-500 flex justify-between">
+          <Reveal variants={slideInFromBottom(0.1)}  className="hidden lg:flex flex-col justify-center max-w-lg xl:max-w-3xl gap-10 items-center">
+            <div className="hidden md:block lg:w-[300px] xl:w-[400px] h-[450px] xl:h-[450px] ">
               <ParticleGlobeScene />
             </div>
-            <div className="flex flex-col items-start pr-64 lg:pl-20 pb-20">
+            <div className="flex flex-col items-start xl:pr-64 lg:pl-20 pb-10">
               <h5>Operational Effect</h5>
               <p className="text-gray-300 text-b2 text-left">Pods expand or contract based on scope while maintaining clear ownership, defined decision paths, and consistent oversight across all execution activity.</p>
             </div>
           </Reveal>
-          <Reveal variants={slideInFromBottom(0.4)}  className="flex flex-col justify-between gap-5 p-10 lg:w-1/2">
+          <Reveal variants={slideInFromBottom(0.4)}  className="flex flex-col items-center lg:items-start justify-between gap-6 p-10">
             <div>
               <Heading text="EXECUTION PODS" />
             </div>
-            <div className="text-[24px] lg:text-[30px] font-normal leading-6 md:leading-8">Execution pods enable <span className="text-neutral-500 ">scalable delivery while preserving central control and accountability.<br /></span></div>
-            <p className="font-extralight text-b2">Specialised pods are assembled per engagement and operate within Ascella’s governance framework, ensuring flexibility in capability deployment without creating independent silos or fragmented authority.</p>
+            <div className="text-[24px] lg:text-[30px] text-center lg:text-left leading-6 md:leading-8">Execution pods enable <span className="text-gray-200 ">scalable delivery while preserving central control and accountability.</span></div>
+            <p className="font-extralight text-b2 text-center lg:text-left">Specialised pods are assembled per engagement and operate within Ascella’s governance framework, ensuring flexibility in capability deployment without creating independent silos or fragmented authority.</p>
 
             {/* image for smaller screen */}
-            <div className="lg:hidden flex items-center justify-center z-1 w-full h-[400px]">
+            {/* <div className="lg:hidden flex items-center justify-center z-1 w-full h-[400px]">
               <ParticleGlobeScene />
-            </div>
-            <div className="p-5 md:p-10 z-10 bg-white/70 text-gray-500 rounded-xl flex flex-col gap-5">
+            </div> */}
+            <div className="p-5 md:p-10 z-10 w-full bg-white/70 text-gray-500 rounded-xl flex flex-col gap-5">
               <div className="flex gap-2 md:gap-5 items-center">
                 <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="14" y="21" width="7" height="7" className="fill-gray-400" />

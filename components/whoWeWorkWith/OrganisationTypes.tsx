@@ -91,20 +91,20 @@ export default function OrganisationTypes() {
   return (
     <section className="mx-10 xl:mx-24">
       <div className="lg:my-32 ">
-        <div className="mb-20 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-10 lg:items-center">
-          <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:block ">
+        <div className="mb-20 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-6 lg:gap-10 items-center md:items-start lg:items-center text-center md:text-left ">
+          {/* <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:block ">
             <p className="text-[16px] max-w-xs leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
             </p>
-          </Reveal>
+          </Reveal> */}
           <Reveal variants={slideInFromRight(0.2)}>
             <Heading text="ORGANISATION TYPES" />
-            <p className="text-[20px] md:text-[24px] lg:text-[36px] max-w-2xl leading-6 sm:leading-9 mt-10">
+            <p className="text-[20px] md:text-[24px] lg:text-[36px] md:max-w-4xl leading-6 lg:leading-10 mt-6">
               Ascella partners with organisations where exec  ution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
             </p>
           </Reveal>
-          <Reveal variants={slideInFromLeft(0.2)} className="lg:hidden block ">
-            <p className="text-[12px] max-w-xs leading-snug">
+          <Reveal variants={slideInFromLeft(0.2)}>
+            <p className="text-[12px] md:max-w-xs leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
             </p>
           </Reveal>
@@ -181,7 +181,7 @@ export default function OrganisationTypes() {
         </div>
 
         {/* mobile and tab*/}
-        <div className="flex flex-col lg:hidden">
+        <div className="flex flex-col items-center lg:hidden">
           {ORGANISATION_TYPES.map((type, index) => {
             const isActive = activeRow === index;
 
@@ -264,7 +264,7 @@ export default function OrganisationTypes() {
           })}
 
           <div className="border-t border-color" />
-          <div className="border-b  py-5 border-color justify-center flex">
+          <div className="py-5 justify-center flex">
             <PartialOutlineBtn
               onClick={() => {
                 router.push("/startups");

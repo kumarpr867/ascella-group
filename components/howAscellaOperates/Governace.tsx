@@ -138,44 +138,57 @@ export default function Governace() {
     }, []);
     return (
         <section className="flex flex-col my-24">
-            <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col gap-6 mb-20">
-                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-5 max-w-2xl">
+            {/* <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col gap-6 mb-20">
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col items-center md:items-start gap-5 max-w-2xl">
                     <Heading text="Governance and Oversight" />
-                    <h3 className="text-[14px] md:text-[20px] lg:text-[36px]">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
+                    <h3 className="text-[14px] md:text-[20px] lg:text-[36px] text-center md:text-left">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
                     </h3>
                 </Reveal>
-                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col md:flex-row justify-between gap-6 md:gap-20 lg:gap-48">
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col md:flex-row text-center md:text-left justify-between gap-6 md:gap-20 lg:gap-48">
                     <p className="font-extralight text-[12px] md:text-[16px]">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
                     </p>
                     <p className="text-[12px] md:text-[16px]">As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
                 </Reveal>
+            </div> */}
+
+            <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col gap-6 md:mb-20">
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col items-center md:items-start gap-5 max-w-5xl">
+                    <Heading text="Governance and Oversight" />
+                    <h3 className="text-[14px] md:text-[20px] lg:text-[36px] text-center md:text-left">Governance operates as the control layer that keeps execution aligned, accountable, <span className="text-gray-300">and auditable as organisations grow in size and structural complexity.</span>
+                    </h3>
+                </Reveal>
+                <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col text-center md:text-left justify-between gap-2 max-w-6xl">
+                    <p className="text-[12px] md:text-[20px]">As organisations expand across multiple teams and external partners, governance prevents ownership from diffusing, ensures risks surface early through defined review cycles, and keeps execution stable instead of reactive as operational pressure increases.</p>
+                    <p className="font-extralight text-[12px] md:text-[14px]">Ascella Group defines decision rights, approval hierarchies, escalation paths, and oversight mechanisms before execution begins so every initiative runs within clear authority, measurable checkpoints, and structured accountability rather than informal coordination.
+                    </p>
+                </Reveal>
             </div>
 
-            <div className="mx-10 lg:mx-20 xl:mx-24 flex md:flex-row flex-col  flex-center leading-tight gap-15 md:gap-48 border-y border-color py-15">
-                <Reveal variants={slideInFromLeft(0.1)} className="flex flex-col justify-between gap-32">
+            <div className="mx-10 lg:mx-20 xl:mx-24 flex md:flex-row flex-col flex-center leading-tight gap-15 lg:gap-40 md:border-y border-color py-15">
+                <Reveal variants={slideInFromLeft(0.1)} className="hidden md:flex flex-col">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
-                    <div className="hidden md:flex flex-col gap-5">
-                        <div className="flex-center relative md:w-20 md:h-20">
+                    <div className="hidden md:flex items-center gap-5">
+                        <div className="flex-center relative md:w-16 md:h-16">
                             <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" fill />
                         </div>
-                        <h5 className="text-gray-300" >Governance is designed in, not <br />  enforced later.</h5>
+                        <h5 className="text-gray-200" >Governance is designed in, not <br /> enforced later.</h5>
                     </div>
                 </Reveal>
-                <Reveal variants={slideInFromRight(0.1)} className="flex flex-col justify-between">
+                <Reveal variants={slideInFromRight(0.1)} className="flex flex-col justify-between items-center md:items-start">
                     <h3 className="text-[24px] md:text-[36px]">Before execution</h3>
                     <p className="text-gray-200 font-light max-w-lg">
                         Begins, Ascella establishes
                     </p>
                     {/* Desktop Grid */}
-                    <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                    <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 mt-4 lg:mt-12">
                         {points.map((point, index) => (
-                            <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-6 rounded-2xl cursor-default transition-all duration-300 hover:scale-[1.03] group">
+                            <div key={index} className="flex flex-col gap-2.5 bg-gray-500 p-4 lg:p-6 rounded-2xl cursor-default transition-all duration-300 hover:scale-[1.03] group">
                                 <div className="flex justify-between w-full">
                                     <div className="mb-4">{point.svg}</div>
                                     <span className="text-xl font-thin mb-2 transition-colors duration-300 group-hover:text-white">{point.count}</span>
                                 </div>
                                 <h5 className="leading-tight mb-2 transition-colors duration-300 group-hover:text-white">{point.heading}</h5>
-                                <p className="text-gray-300 text-b3 max-w-xs leading-tight transition-colors duration-300 group-hover:text-white">{point.description}</p>
+                                <p className="text-gray-300 text-b3 max-w-sm lg:max-w-xs leading-tight transition-colors duration-300 group-hover:text-white">{point.description}</p>
                             </div>
                         ))}
                     </div>
@@ -207,7 +220,7 @@ export default function Governace() {
                                 }}
                                 className="flex flex-col gap-3 bg-gray-500 p-6 rounded-2xl"
                             >
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-center md:items-start">
                                     {points[page].svg}
                                     <span className="text-lg font-thin">{points[page].count}</span>
                                 </div>
@@ -231,12 +244,13 @@ export default function Governace() {
                                 />
                             ))}
                         </div>
-                    </div>  
+                    </div>
                 </Reveal>
             </div>
             <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center">
-                <div className=" w-0.5 h-10 bg-gray-400">
+                <div className="w-full h-0.5 border-t border-gray-400 md:w-0.5 md:h-10 md:border-t-0 md:border-l md:border-gray-400">
                 </div>
+                <p className="md:hidden my-6 text-center text-b2 text-gray-300 px-10" >Governance is designed in, not enforced later.</p>
                 <OutlineBtn text="Explore With Us"
                     onClick={() => router.push("/execution-arms")} />
             </Reveal>

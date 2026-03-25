@@ -67,21 +67,20 @@ export default function WhoWeWorkWith() {
       </section>
 
 
-      <section className="my-10 flex flex-col lg:hidden">
+      <section className="flex flex-col items-center lg:hidden">
 
-        <Reveal variants={(slideInFromBottom(0.1))} className="px-10 ">
-          <h3>
-            Who We <br /> <span className="text-gray-200"> Work With</span>
-          </h3>
-          <p className="mt-6 text-b2 font-light md:pr-20">
+        <Reveal variants={(slideInFromBottom(0.1))} className="px-10 flex flex-col items-center justify-center">
+          <h3>Who We</h3>
+          <h3 className="text-gray-200"> Work With</h3>
+          <p className="mt-6 text-b2 font-light text-center max-w-xl">
             Ascella partners with organisations where execution quality, governance discipline, and accountable ownership are business-critical rather than optional.
           </p>
         </Reveal>
 
-        <Reveal variants={slideInFromBottom(0.2)} className="flex items-center justify-center p-5">
+        <Reveal variants={slideInFromBottom(0.2)} className="flex items-center justify-center">
           <EnterpriseStartupSystem />
         </Reveal>
-        <Reveal variants={slideInFromBottom(0.3)} className="text-b3 px-10">We partners with organisations where operational control, risk management, and execution quality are business-critical. </Reveal>
+        <Reveal variants={slideInFromBottom(0.3)} className="text-b3 px-10 text-center"> Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.</Reveal>
         <Reveal variants={slideInFromBottom(0.4)} className="border border-color p-3 m-10 flex items-center justify-center gap-4 bg-gray-500">
           <button onClick={() => router.push("/engageWithUs")} className="flex flex-center border border-white4 p-3 rounded-4xl hover:scale-110 transition">
             <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
