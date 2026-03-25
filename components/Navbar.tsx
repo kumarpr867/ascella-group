@@ -174,20 +174,71 @@ const Navbar = () => {
               <Image src="/logo.png" alt="Ascella Logo" width={90} height={32} priority className="w-20 sm:w-24 h-auto" />
             </Link>
 
+            {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center font-medium relative">
               {navLinks.map((link, index) => {
                 const isActive = pathname === link.href || link.children?.some((child) => pathname === child.href);
                 const isOpen = openDesktopDropdown === link.label;
                 return (
-                  <div key={link.label} className="relative flex items-center text-white" ref={isOpen ? desktopRef : null}>
+                  <div
+                    key={link.label}
+                    className="relative flex items-center text-white"
+                    ref={isOpen ? desktopRef : null}
+                  >
                     <button
                       onClick={() => link.children ? setOpenDesktopDropdown(isOpen ? null : link.label) : null}
                       className={`px-2 text-b2 flex items-center gap-1 transition-colors ${isActive ? "text-white" : "text-gray-200 hover:text-white"}`}
+                      aria-haspopup={link.children ? "menu" : undefined}
+                      aria-expanded={link.children ? isOpen : undefined}
                     >
                       {link.href ? <Link href={link.href}>{link.label}</Link> : <span>{link.label}</span>}
-                      {link.children && <svg className={`w-3 h-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6H5z" /></svg>}
+                      {link.children && (
+                        <svg
+                          className={`w-3 h-3 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M5 7l5 6 5-6H5z" />
+                        </svg>
+                      )}
                     </button>
-                    {index !== navLinks.length - 1 && <div className="w-px mx-3 h-5 rotate-30 bg-gray-200" />}
+
+                    {/* Blur Glass Animated Dropdown */}
+                    <AnimatePresence>
+                      {link.children && isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="absolute left-0 top-full mt-3 w-max overflow-hidden z-50"
+                        >
+                          <div className="bg-white/5 backdrop-blur-xl border border-color rounded-xl shadow-2xl">
+                            {link.children.map((child) => {
+                              const childActive = pathname === child.href;
+                              return (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={() => setOpenDesktopDropdown(null)}
+                                  className={`block px-5 py-3 text-sm transition-colors ${
+                                    childActive
+                                      ? "text-white bg-white/10"
+                                      : "text-gray-300 hover:text-white hover:bg-white/10"
+                                  }`}
+                                >
+                                  {child.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {index !== navLinks.length - 1 && (
+                      <div className="w-px mx-3 h-5 rotate-30 bg-gray-200" />
+                    )}
                   </div>
                 );
               })}
@@ -196,13 +247,20 @@ const Navbar = () => {
             <Link href="/engageWithUs" className="hidden lg:flex group items-center gap-3 font-medium text-white ml-6">
               <span>Connect</span>
               <span className="w-5 h-5 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 14 14" className="rounded-sm bg-white p-1 transition-transform ease-in-out duration-300 group-hover:scale-[1.4] text-black"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                <svg width="20" height="20" viewBox="0 0 14 14" className="rounded-sm bg-white p-1 transition-transform ease-in-out duration-300 group-hover:scale-[1.4] text-black">
+                  <path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </span>
             </Link>
 
             <button className="lg:hidden flex items-center px-2 py-1 text-white" onClick={() => setMenuOpen(true)}>
               <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="10.25" y1="0" x2="10.25" y2="7" stroke="white" strokeWidth="0.5" /><line x1="10.25" y1="13" x2="10.25" y2="20" stroke="white" strokeWidth="0.5" /><line x1="13" y1="9.75" x2="20" y2="9.75" stroke="white" strokeWidth="0.5" /><line y1="9.75" x2="7" y2="9.75" stroke="white" strokeWidth="0.5" /></svg>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <line x1="10.25" y1="0" x2="10.25" y2="7" stroke="white" strokeWidth="0.5" />
+                  <line x1="10.25" y1="13" x2="10.25" y2="20" stroke="white" strokeWidth="0.5" />
+                  <line x1="13" y1="9.75" x2="20" y2="9.75" stroke="white" strokeWidth="0.5" />
+                  <line y1="9.75" x2="7" y2="9.75" stroke="white" strokeWidth="0.5" />
+                </svg>
                 <span className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-gray-300" />
                 <span className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-gray-300" />
                 <span className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-gray-300" />
@@ -215,17 +273,22 @@ const Navbar = () => {
 
       <div onClick={() => setMenuOpen(false)} className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
 
-      {/* Drawer Panel - Right side logic */}
+      {/* Drawer Panel - Right side */}
       <div className={`fixed top-0 right-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
-        
-        {/* Top bar: Close icon aligned Right, Logo on Left */}
+
+        {/* Top bar */}
         <div className="flex items-center justify-between px-7 pt-7 pb-6">
           <Link href="/" onClick={() => setMenuOpen(false)}>
             <Image src="/logo.png" alt="Ascella Logo" width={90} height={32} className="w-20 h-auto" />
           </Link>
           <button onClick={() => setMenuOpen(false)} className="w-9 h-9 flex items-center justify-center">
             <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
-              <svg viewBox="0 0 29 29" fill="true"><path d="M7.24773 7.35784L14.5001 14.61" stroke="white" strokeWidth="0.8" /><line x1="13.6422" y1="13.7521" x2="21.6422" y2="21.7521" stroke="white" strokeWidth="0.8" /><path d="M13.2887 15.61L21.7523 7.14657" stroke="white" strokeWidth="0.8" /><line x1="7.14659" y1="21.7521" x2="15.1466" y2="13.7521" stroke="white" strokeWidth="0.8" /></svg>
+              <svg viewBox="0 0 29 29" fill="true">
+                <path d="M7.24773 7.35784L14.5001 14.61" stroke="white" strokeWidth="0.8" />
+                <line x1="13.6422" y1="13.7521" x2="21.6422" y2="21.7521" stroke="white" strokeWidth="0.8" />
+                <path d="M13.2887 15.61L21.7523 7.14657" stroke="white" strokeWidth="0.8" />
+                <line x1="7.14659" y1="21.7521" x2="15.1466" y2="13.7521" stroke="white" strokeWidth="0.8" />
+              </svg>
               <span className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-gray-300" />
               <span className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-gray-300" />
               <span className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-gray-300" />
@@ -253,19 +316,36 @@ const Navbar = () => {
                 {link.href && !link.children ? (
                   <Link href={link.href} onClick={() => setMenuOpen(false)} className="flex items-center justify-between py-4 text-left">
                     <span className={`text-[16px] font-light tracking-tight ${isActive ? "text-white" : "text-gray-200"}`}>{link.label}</span>
-                    <svg width="12" height="12" viewBox="0 0 15 16" fill="none"><path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="0.5" /></svg>
+                    <svg width="12" height="12" viewBox="0 0 15 16" fill="none">
+                      <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="0.5" />
+                    </svg>
                   </Link>
                 ) : (
                   <div className="py-4">
                     <button onClick={() => setOpenMobileDropdown(isOpen ? null : link.label)} className="w-full flex items-center justify-between text-left">
                       <span className={`text-[16px] font-light tracking-tight ${isActive ? "text-white" : "text-gray-200"}`}>{link.label}</span>
-                      <svg className={`w-4 h-4 text-white transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6H5z" /></svg>
+                      <svg className={`w-4 h-4 text-white transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M5 7l5 6 5-6H5z" />
+                      </svg>
                     </button>
                     <AnimatePresence>
                       {link.children && isOpen && (
-                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
                           {link.children.map((child) => (
-                            <Link key={child.href} href={child.href} onClick={() => { setMenuOpen(false); setOpenMobileDropdown(null); }} className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href ? "text-white bg-white/10" : "text-gray-400 hover:text-white"}`}>{child.label}</Link>
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => { setMenuOpen(false); setOpenMobileDropdown(null); }}
+                              className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href ? "text-white bg-white/10" : "text-gray-400 hover:text-white"}`}
+                            >
+                              {child.label}
+                            </Link>
                           ))}
                         </motion.div>
                       )}

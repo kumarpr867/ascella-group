@@ -208,14 +208,17 @@ const styles = `
       position:relative; z-index:50;
     }
     .d-engage {
+      display:inline-flex; align-items:center; gap:8px;
       padding:16px 32px;
       border:1px solid rgba(255,255,255,.15);
       font-size:10px; letter-spacing:.4em;
-      text-transform:uppercase; background:transparent;
-      color:#fff; cursor:pointer; white-space:nowrap;
+      text-transform:uppercase; background:#fff;
+      color:#000; cursor:pointer; white-space:nowrap;
       transition:background .3s, color .3s;
     }
-    .d-engage:hover { background:#fff; color:#000; }
+    .d-engage:hover { background:#000; color:#fff; }
+    .d-engage svg { fill:currentColor; transition:fill .3s; }
+    .d-engage:hover svg { fill:#fff; }
     .d-ascella {
       font-size:9px; letter-spacing:.1em;
       max-width:220px; text-align:left;
@@ -284,17 +287,21 @@ const styles = `
       justify-content:center; padding:24px 0 20px 0;
     }
     .m-engage-btn {
-      display:flex; align-items:center;
-      justify-content:center; gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       padding:12px 28px;
-      border:1px solid rgba(255,255,255,.45);
+      border:1px solid rgba(0,0,0,.15);
       font-size:8px; letter-spacing:.38em;
-      text-transform:uppercase; background:transparent;
-      color:#fff; cursor:pointer; white-space:nowrap;
-      transition:background .3s, color .3s;
+      text-transform:uppercase;
+      background:#ffffff;
+      color:#000000;
+      opacity:1;
+      cursor:pointer; white-space:nowrap;
+      transition:background .3s, color .3s, border-color .3s;
+      box-shadow:0 0 0 1px rgba(0,0,0,.06);
     }
-    .m-engage-btn:hover { background:#fff; color:#000; }
-    .m-engage-btn svg { display:block; }
+    .m-engage-btn:hover { background:#000000; color:#ffffff; border-color:rgba(255,255,255,.6); }
+    .m-engage-btn svg { fill:currentColor; transition:fill .3s; }
+    .m-engage-btn:hover svg { fill:#ffffff; }
 
     .m-globe-block {
       width:100%; height:260px;
@@ -385,7 +392,17 @@ const Controlled = () => {
             variants={footerItemVariants}
           >
             <Link href="/engageWithUs">
-              <button className="d-engage">Engage With Us <span style={{marginLeft:'8px',opacity:.3}}>:::</span></button>
+              <button className="d-engage">Engage With Us 
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginLeft:'8px'}}>
+                  <rect width="2" height="2" fill="currentColor"/>
+                  <rect y="6" width="2" height="2" fill="currentColor"/>
+                  <rect x="6" y="6" width="2" height="2" fill="currentColor"/>
+                  <rect x="6" width="2" height="2" fill="currentColor"/>
+                  <rect x="12" y="6" width="2" height="2" fill="currentColor"/>
+                  <rect x="6" y="12" width="2" height="2" fill="currentColor"/>
+                  <rect x="12" y="12" width="2" height="2" fill="currentColor"/>
+                </svg>
+              </button>
             </Link>
           </motion.div>
           

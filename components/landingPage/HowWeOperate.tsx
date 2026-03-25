@@ -99,6 +99,7 @@ const points = [
 export default function HowWeOperate() {
   const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const isPausedRef = useRef(false);
 
   const paginate = (dir: number) => {
     setPage(([prev]) => [(prev + dir + points.length) % points.length, dir]);
@@ -106,11 +107,25 @@ export default function HowWeOperate() {
 
   const startAutoSlide = () => {
     stopAutoSlide();
-    timerRef.current = setInterval(() => paginate(1), 5000);
+    timerRef.current = setInterval(() => {
+      if (!isPausedRef.current) paginate(1);
+    }, 5000);
   };
 
   const stopAutoSlide = () => {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  };
+
+  // Pause on touch/click, resume when touch ends
+  const handleTouchStart = () => {
+    isPausedRef.current = true;
+  };
+
+  const handleTouchEnd = () => {
+    // Small delay before resuming so user can finish reading
+    setTimeout(() => {
+      isPausedRef.current = false;
+    }, 3000);
   };
 
   useEffect(() => {
@@ -177,10 +192,24 @@ export default function HowWeOperate() {
         <div className="relative overflow-hidden">
           <AnimatePresence mode="wait" initial={false} custom={direction}>
             <motion.div
-              key={page} custom={direction} variants={variants} initial="enter" animate="center" exit="exit"
+              key={page}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
               transition={{ x: { type: "spring", stiffness: 220, damping: 30 }, opacity: { duration: 0.25 } }}
-              drag="x" dragConstraints={{ left: 0, right: 0 }}
-              className="w-full bg-gray-500 p-6 rounded-2xl flex flex-col gap-3 transition-all duration-300 hover:scale-[1.02] group"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragStart={handleTouchStart}
+              onDragEnd={(e, info) => {
+                handleTouchEnd();
+                if (info.offset.x < -50) paginate(1);
+                else if (info.offset.x > 50) paginate(-1);
+              }}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="w-full bg-gray-500 p-6 rounded-2xl flex flex-col gap-3 transition-all duration-300 hover:scale-[1.02] group cursor-grab active:cursor-grabbing"
             >
               <div className="flex justify-between items-start">
                 {points[page].svg}
@@ -194,7 +223,15 @@ export default function HowWeOperate() {
 
         <div className="flex justify-center gap-2 mt-4">
           {points.map((_, i) => (
-            <button key={i} className={`h-2 rounded-full transition-all duration-300 ${i === page ? "w-6 bg-white" : "w-2 bg-gray-500"}`} />
+            <button
+              key={i}
+              onClick={() => {
+                handleTouchStart();
+                setPage([i, i > page ? 1 : -1]);
+                handleTouchEnd();
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${i === page ? "w-6 bg-white" : "w-2 bg-gray-500"}`}
+            />
           ))}
         </div>
       </div>

@@ -8,19 +8,15 @@ const GovernanceModel = () => {
   const colWidth = "w-[20.83%]";
   const rowHeight = "h-[300px]";
 
-  // Base Class for Circle
   const circleBaseClass = "absolute rounded-[611px] w-[41.66vw] h-[600px] border border-gray-400/40";
 
   return (
     <>
       <style>{`
-        /* ── MOBILE RESPONSIVE (max-width: 768px) ── */
         @media (max-width: 768px) {
           .gov-wrapper {
             overflow-x: hidden;
           }
-
-          /* TOP BANNER */
           .gov-top-banner {
             padding-top: 48px !important;
             padding-bottom: 48px !important;
@@ -33,25 +29,18 @@ const GovernanceModel = () => {
             font-size: 11px !important;
             max-width: 220px !important;
           }
-
-          /* HIDE desktop grid layout rows */
           .gov-row-1,
           .gov-row-2 {
             display: none !important;
           }
-
-          /* MOBILE LAYOUT */
           .gov-mobile {
             display: flex !important;
           }
-
-          /* LAST BORDER LINE */
           .gov-bottom-border {
             display: block !important;
           }
         }
 
-        /* Hide mobile layout on desktop */
         .gov-mobile {
           display: none;
         }
@@ -68,7 +57,6 @@ const GovernanceModel = () => {
 
       <div className="gov-wrapper bg-black text-white min-h-screen w-full font-sans overflow-hidden relative">
 
-        {/* ── TOP SECTION ── */}
         <Reveal variants={slideInFromBottom(0.1)} className="w-full">
           <div className="gov-top-banner w-full flex justify-center pt-24 pb-32">
             <div className="flex items-center space-x-6">
@@ -82,7 +70,6 @@ const GovernanceModel = () => {
           </div>
         </Reveal>
 
-        {/* ── HEADING OVERLAY (desktop only) ── */}
         <div className="absolute z-30 flex flex-col items-center text-center pointer-events-none w-[30%] hidden md:flex"
              style={{ top: '600px', left: '29.16%', transform: 'translate(-50%, -50%)' }}>
           <Reveal variants={slideInFromBottom(0.2)}>
@@ -95,11 +82,6 @@ const GovernanceModel = () => {
           </Reveal>
         </div>
 
-        {/* ══════════════════════════════════════
-            DESKTOP ROWS (hidden on mobile)
-        ══════════════════════════════════════ */}
-
-        {/* Row 1 */}
         <div className={`gov-row-1 w-full border-t border-gray-400 flex ${rowHeight} relative z-10`}>
           <div className={`${sideWidth} border-r border-gray-400`}></div>
           <div className={`${colWidth} border-r border-gray-400 relative overflow-hidden`}>
@@ -124,7 +106,6 @@ const GovernanceModel = () => {
           <div className={`${sideWidth}`}></div>
         </div>
 
-        {/* Row 2 */}
         <div className={`gov-row-2 w-full border-t border-gray-400 flex ${rowHeight} relative z-10`}>
           <div className={`${sideWidth} border-r border-gray-400`}></div>
           <div className={`${colWidth} border-r border-gray-400 relative overflow-hidden`}>
@@ -156,12 +137,8 @@ const GovernanceModel = () => {
 
         <div className="w-full border-t border-gray-400 hidden md:block"></div>
 
-        {/* ══════════════════════════════════════
-            MOBILE LAYOUT
-        ══════════════════════════════════════ */}
         <div className="gov-mobile flex-col w-full relative">
 
-          {/* Vertical guide lines */}
           <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
             <div className="absolute top-0 bottom-0 border-l border-gray-400" style={{ left: '12%' }}></div>
             <div className="absolute top-0 bottom-0 border-r border-gray-400" style={{ right: '12%' }}></div>
@@ -169,7 +146,6 @@ const GovernanceModel = () => {
 
           <div className="w-full border-t border-gray-400 relative z-10"></div>
 
-          {/* ── CIRCLE SECTION ── */}
           <div className="relative z-10 w-full overflow-hidden" style={{ height: '76vw' }}>
             <Reveal variants={slideInFromBottom(0.1)} className="w-full h-full">
               <div
@@ -184,7 +160,6 @@ const GovernanceModel = () => {
                 }}
               ></div>
 
-              {/* HORIZONTAL divider */}
               <div
                 className="absolute z-10"
                 style={{
@@ -196,7 +171,6 @@ const GovernanceModel = () => {
                 }}
               ></div>
 
-              {/* VERTICAL divider */}
               <div
                 className="absolute z-10"
                 style={{
@@ -208,7 +182,6 @@ const GovernanceModel = () => {
                 }}
               ></div>
 
-              {/* Mobile Heading Overlay */}
               <div
                 className="absolute z-20 flex flex-col items-center text-center w-full"
                 style={{ top: '30%', transform: 'translateY(-50%)' }}
@@ -234,7 +207,6 @@ const GovernanceModel = () => {
             <div className="border-t border-gray-400 w-full"></div>
           </div>
 
-          {/* ── Operating Framework ── */}
           <Reveal variants={slideInFromBottom(0.2)}>
             <div
               className="relative z-10 py-8"
@@ -254,7 +226,6 @@ const GovernanceModel = () => {
             <div className="border-t border-gray-400 w-full"></div>
           </div>
 
-          {/* ── Progressive Introduction ── */}
           <Reveal variants={slideInFromBottom(0.3)}>
             <div
               className="relative z-10 py-8"
@@ -274,15 +245,20 @@ const GovernanceModel = () => {
             <div className="border-t border-gray-400 w-full"></div>
           </div>
 
-          {/* ── Execution Remains ── */}
           <Reveal variants={slideInFromBottom(0.4)}>
-            <div
-              className="relative z-10 py-8"
-              style={{ paddingLeft: 'calc(12% + 16px)', paddingRight: 'calc(12% + 16px)' }}
-            >
-              <p className="text-gray-300 text-xs leading-relaxed">
-                Execution remains adaptable to evolving startup environments. Accountability, ownership, and oversight remain clearly defined at every stage.
-              </p>
+            <div className="relative z-10 w-full" style={{ paddingLeft: '12%', paddingRight: '12%' }}>
+              <div
+                className="py-8"
+                style={{ 
+                  paddingLeft: '16px', 
+                  paddingRight: '16px',
+                  backgroundColor: 'white' 
+                }}
+              >
+                <p className="text-black text-xs leading-relaxed">
+                  Execution remains adaptable to evolving startup environments. Accountability, ownership, and oversight remain clearly defined at every stage.
+                </p>
+              </div>
             </div>
           </Reveal>
 

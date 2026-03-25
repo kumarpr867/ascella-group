@@ -19,7 +19,6 @@ export default function Arms() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { amount: 0.3 });
 
-  // Reset to first slide when section comes back into view
   useEffect(() => {
     if (isInView) {
       setIndex(0);
@@ -27,7 +26,6 @@ export default function Arms() {
     }
   }, [isInView]);
 
-  // Click only — no auto-play
   const goTo = useCallback((next: number) => {
     const now = Date.now();
     if (now - lastClickTime.current < 600) return;
@@ -37,7 +35,6 @@ export default function Arms() {
     setIndex(clamped);
   }, [index, total]);
 
-  // Horizontal slide variants
   const slideVariants = {
     enter: (dir: number) => ({
       x: dir > 0 ? '100%' : '-100%',
@@ -58,33 +55,36 @@ export default function Arms() {
   return (
     <section ref={sectionRef} className="mx-10 lg:mx-20 xl:mx-24 flex flex-col items-center justify-center my-8 md:my-12">
 
-      {/* Upper Header — original unchanged */}
       <Reveal variants={slideInFromBottom(0.2)} className="text-center max-w-4xl mb-10 md:mb-6">
         <div className="flex items-center justify-center gap-2 mb-4">
           <Heading text="Execution Arms" />
         </div>
-        <h2 className="text-xl md:text-[24px] lg:text-[36px] text-white leading-tight  tracking-tight">
+        <h2 className="text-xl md:text-[24px] lg:text-[36px] text-white leading-tight tracking-tight">
           We take full responsibility for critical outcomes that organisations
           cannot afford to fragment
         </h2>
       </Reveal>
 
-      {/* Main Container — footer-matched margins, full width within section */}
       <Reveal variants={slideInFromBottom(0.4)} className="w-full bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
-        {/* Mobile Layout: Stacked */}
-        {/* Desktop Layout: Flex Row */}
         <div className="flex flex-col lg:flex-row min-h-auto lg:h-[550px]">
 
-          {/* Navigation Sidebar — original unchanged */}
-          <aside className="w-full md:w-[320px] px-6 py-8 md:p-8 flex flex-col gap-6 md:gap-0 md:justify-between">
+          {/* Navigation Sidebar */}
+          <aside className="w-full md:w-[320px] px-6  md:p-8 flex flex-col  md:gap-0 md:justify-between">
             <div>
-              {/* "Execution Arms" heading — hidden on mobile */}
+              {/* Desktop: "Execution Arms" heading */}
               <h5 className="hidden lg:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
                 Execution Arms
               </h5>
-              {/* Always vertical nav */}
-              <nav className="flex flex-col gap-4 md:gap-6">
+
+              {/* Mobile only: Dynamic counter in white sidebar */}
+              <div className="lg:hidden text-[28px] font-light mb-6">
+                <span className="text-black">0{index + 1}</span>
+                <span className="text-black/20">/0{total}</span>
+              </div>
+
+              {/* Nav */}
+              <nav className=" hidden lg:flex flex-col gap-4 md:gap-6">
                 {content.map((item, i) => (
                   <button
                     key={item.id}
@@ -100,15 +100,13 @@ export default function Arms() {
               </nav>
             </div>
 
-            {/* Bottom section — hidden on mobile */}
+            {/* Bottom section — desktop only */}
             <div className="hidden lg:flex flex-col gap-6 mt-auto">
-              {/* Governance Text */}
               <p className="text-[12px] leading-relaxed text-gray-400 max-w-[240px]">
                 All execution arms operate under{" "}
                 <span className="text-black font-medium">Ascella Group governance</span>.
               </p>
 
-              {/* Button */}
               <button
                 onClick={() => router.push("/execution-arms")}
                 className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
@@ -128,7 +126,7 @@ export default function Arms() {
             </div>
           </aside>
 
-          {/* Content Area — original structure, AnimatePresence wraps full slide */}
+          {/* Content Area */}
           <div className="flex-1 bg-white flex p-1">
             <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col md:flex-row">
 
@@ -142,18 +140,20 @@ export default function Arms() {
                   exit="exit"
                   className="flex flex-col md:flex-row w-full h-full md:absolute md:inset-0"
                 >
-                  {/* Left Side: Text Content — click = prev */}
+                  {/* Left Side: Text Content */}
                   <div
                     className="w-full md:w-1/2 relative z-10 p-6 md:p-16 flex flex-col justify-between gap-6 md:gap-0"
                     style={{ cursor: 'w-resize' }}
                     onClick={() => goTo(index - 1)}
                   >
-                    <div className="text-2xl md:text-3xl font-light">
+                    {/* Counter: always visible on desktop, hidden on mobile (shown in white sidebar) */}
+                    <div className="hidden md:block text-2xl md:text-3xl font-light">
                       <span className="text-white">0{index + 1}</span>
                       <span className="text-white/20">/0{total}</span>
                     </div>
 
                     <div>
+                      {/* Title: always visible */}
                       <h3 className="text-[24px] md:text-[36px] font-normal text-white mb-4 md:mb-6 tracking-tight">
                         {content[index].title}
                       </h3>
@@ -171,18 +171,54 @@ export default function Arms() {
                     </div>
                   </div>
 
-                  {/* Right Side: Image — click = next */}
+                  {/* Right Side: Image */}
                   <div
                     className="flex-1 w-full flex bg-black items-center justify-center relative"
-                    style={{ cursor: 'e-resize', userSelect: 'none' }}
-                    onClick={() => goTo(index + 1)}
+                    style={{ userSelect: 'none' }}
                   >
+                    {/* Left half click → go back (mobile) */}
+                    <div
+                      className="absolute inset-y-0 left-0 w-1/2 z-10 md:hidden"
+                      style={{ cursor: 'w-resize' }}
+                      onClick={() => goTo(index - 1)}
+                    />
+                    {/* Right half click → go forward (mobile) */}
+                    <div
+                      className="absolute inset-y-0 right-0 w-1/2 z-10 md:hidden"
+                      style={{ cursor: 'e-resize' }}
+                      onClick={() => goTo(index + 1)}
+                    />
+                    {/* Desktop: full area click → go forward */}
+                    <div
+                      className="absolute inset-0 hidden md:block"
+                      style={{ cursor: 'e-resize' }}
+                      onClick={() => goTo(index + 1)}
+                    />
+
                     <div className="py-10 h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center">
                       <img
                         src={content[index].image}
                         alt={content[index].title}
                         className="w-full h-full object-contain select-none"
                       />
+                    </div>
+
+                    {/* Mobile only: dots navigation */}
+                    <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 z-20 md:hidden">
+                      {content.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goTo(i);
+                          }}
+                          className={`rounded-full transition-all duration-300 ${
+                            i === index
+                              ? "bg-white w-4 h-2"
+                              : "bg-white/40 w-2 h-2"
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
                 </motion.div>

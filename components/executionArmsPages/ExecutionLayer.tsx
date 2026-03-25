@@ -178,15 +178,7 @@ const ExecutionLayer = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-start px-4 border-b border-white/10 bg-black" style={{ flexShrink: 0 }}>
-            <span className="relative px-4 py-2 text-[9px] tracking-[0.2em] uppercase text-white bg-black border border-white/30 inline-block">
-              <span className="absolute -top-[1px] -left-[1px] w-1.5 h-1.5 border-t border-l border-white/70"></span>
-              <span className="absolute -top-[1px] -right-[1px] w-1.5 h-1.5 border-t border-r border-white/70"></span>
-              <span className="absolute -bottom-[1px] -left-[1px] w-1.5 h-1.5 border-b border-l border-white/70"></span>
-              <span className="absolute -bottom-[1px] -right-[1px] w-1.5 h-1.5 border-b border-r border-white/70"></span>
-              ALL EXECUTION ARMS OPERATIONAL
-            </span>
-          </div>
+          
 
           {/* Static Image */}
           <div className="relative w-full border-b border-white/10 bg-black" style={{ height: '500px', flexShrink: 0 }}>
@@ -218,13 +210,17 @@ const ExecutionLayer = () => {
 
       {/* DESKTOP LAYOUT (>= md) */}
       <div className="hidden md:block">
-        <div className="absolute inset-0 z-0 grid grid-cols-[80px_1.5fr_0.8fr_80px] lg:grid-cols-[100px_1.5fr_0.8fr_100px] grid-rows-[80px_1fr_100px_80px]">
+        {/* 
+          Prog wale margins: mx-10 = 40px, lg:mx-20 = 80px, xl:mx-24 = 96px
+          Grid columns: [margin] [main-content] [image] [margin]
+        */}
+        <div className="absolute inset-0 z-0 grid grid-cols-[40px_1.5fr_0.8fr_40px] lg:grid-cols-[80px_1.5fr_0.8fr_80px] xl:grid-cols-[96px_1.5fr_0.8fr_96px] grid-rows-[80px_1fr_100px_80px]">
           {Array.from({ length: 16 }).map((_, i) => (
             <div key={i} className="border-[0.5px] border-white/10"></div>
           ))}
         </div>
 
-        <div className="relative z-10 grid grid-cols-[80px_1.5fr_0.8fr_80px] lg:grid-cols-[100px_1.5fr_0.8fr_100px] grid-rows-[80px_1fr_100px_80px] min-h-screen">
+        <div className="relative z-10 grid grid-cols-[40px_1.5fr_0.8fr_40px] lg:grid-cols-[80px_1.5fr_0.8fr_80px] xl:grid-cols-[96px_1.5fr_0.8fr_96px] grid-rows-[80px_1fr_100px_80px] min-h-screen">
           <div className="border-b border-white/10"></div>
           <div className="border-b border-white/10"></div>
           <div className="relative border-b border-white/10 flex items-end">
@@ -329,7 +325,7 @@ const ExecutionLayer = () => {
             </div>
             <div className="flex flex-col justify-center px-2 lg:px-2">
               <span className="text-gray-300 xl:text-xl">Continuous</span>
-              <span className="text-[7px] lg:text-[8px] uppercase mt-1 leading-tight">Oversight & Accountability</span>
+              <span className="text-[7px] lg:text-[9px] uppercase mt-1 leading-tight">Oversight & Accountability</span>
             </div>
           </div>
           <div className="border-t border-white/10"></div>

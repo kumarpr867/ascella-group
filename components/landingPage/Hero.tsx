@@ -122,7 +122,7 @@ export default function Hero() {
               <motion.div
                 variants={{
                   rest: { height: 0, opacity: 0 },
-                  hover: { height: 24, opacity: 1 }
+                  hover: { height: 16, opacity: 1 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
                 className="border-l border-color overflow-hidden"
@@ -158,7 +158,7 @@ export default function Hero() {
               <motion.div
                 variants={{
                   rest: { height: 0, opacity: 0 },
-                  hover: { height: 24, opacity: 1 }
+                  hover: { height: 16, opacity: 1 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
                 className="border-l border-color overflow-hidden"
@@ -187,7 +187,7 @@ export default function Hero() {
           variants={container}
           initial="hidden"
           animate="visible"
-          className="absolute inset-x-0 md:bottom-[22vh] z-5 pointer-events-none  "
+          className="absolute inset-x-0 md:bottom-[22vh] z-5"
         >
           <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col md:flex-row justify-between gap-5">
 
@@ -196,8 +196,8 @@ export default function Hero() {
               <span className="text-white">Operating Group</span>
             </motion.h2>
 
-            <motion.div variants={fadeUp} className="flex flex-col justify-end gap-4 max-w-md z-5">
-              <p className="text-b3 text-justify leading-tight">
+           <motion.div variants={fadeUp} className="flex flex-col justify-end gap-4 max-w-[460px] z-5">
+  <p className="text-b3 text-justify leading-tight line-clamp-4">
                 Complex organisations slow down when execution scatters across teams
                 and vendors. Control weakens as decisions lose a clear owner and
                 accountability spreads thin. Ascella Group brings structure to
@@ -211,7 +211,7 @@ export default function Hero() {
                   {/* Animated glow pulse ring */}
                   <motion.span
                     aria-hidden="true"
-                    className="absolute inset-0 rounded-sm"
+                    className="absolute inset-0 rounded-sm pointer-events-none"
                     animate={{
                       boxShadow: [
                         "0 0 0px 0px rgba(255,255,255,0.0)",
@@ -306,7 +306,7 @@ export default function Hero() {
           <div className="relative">
             <motion.span
               aria-hidden="true"
-              className="absolute inset-0 rounded-sm"
+              className="absolute inset-0 rounded-sm pointer-events-none"
               animate={{
                 boxShadow: [
                   "0 0 0px 0px rgba(255,255,255,0.0)",

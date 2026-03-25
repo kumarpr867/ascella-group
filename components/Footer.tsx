@@ -10,9 +10,7 @@ const ArrowIcon = () => (
         <line x1="0.707092" y1="0.5" x2="8.70709" y2="0.500001" stroke="white" />
         <line x1="8.20709" y1="9" x2="8.20709" y2="1" stroke="white" />
     </svg>
-
 )
-
 
 type FooterSection = {
     title: string
@@ -39,7 +37,6 @@ const footerSections: FooterSection[] = [
             { label: "hello@ascella.group", href: "mailto:hello@ascella.group" },
             { label: "Ascella.in", href: "https://ascella.group" },
             { label: "+91 16045 10860", href: "tel:+911604510860" },
-            // { label: "Connect", href: "/engageWithUs" },
         ],
         bordered: true,
     },
@@ -68,9 +65,9 @@ const Footer = () => {
         <footer className="mb-2 lg:mb-10 w-full">
             <div className="border-b lg:border-b-0 border-t border-color">
 
-                {/* md join us */}
+                {/* Mobile Join Us */}
                 <div className="lg:hidden border-b border-color">
-                    <div className="flex  flex-col mx-10 py-4 px-5 border-x border-color">
+                    <div className="flex flex-col mx-10 py-4 px-5 border-x border-color">
                         <label className="text-base md:text-lg tracking-widest uppercase mb-2">
                             Let's get started
                         </label>
@@ -82,45 +79,112 @@ const Footer = () => {
                             />
                             <PartialOutlineBtn
                                 size="sm"
-                                text="Subscribe"
-                                textColor="text-black"
-                                bgColor="bg-white"
-                                borderColor="border-black"
-                                hoverBgColor="hover:bg-black"
-                                hoverTextColor="hover:text-white"
+                                text="Join Us"
+                                textColor="text-white"
+                                bgColor="bg-black"
+                                borderColor="border-white"
+                                hoverBgColor="hover:bg-white"
+                                hoverTextColor="hover:text-black"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="lg:mx-20 xl:mx-24 flex flex-col sm:flex-row ">
-                    <div className="w-full grid grid-cols-1 lg:grid-cols-4 ">
-                        {footerSections.map((section, i) => (
-                            <Reveal key={i} variants={slideInFromBottom(i * 0.12)}
-                                className={`py-4 px-5 lg:py-7 lg:px-2 xl:p-8 border-x  border-color mx-10 lg:mx-0 border-b lg:border-b-0 ${section.bordered ? "sm:border-r border-color " : "border-b-0"}`}
-                            >
-                                <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
-                                    {section.title}
-                                </p>
+                <div className="lg:mx-20 xl:mx-24 flex flex-col sm:flex-row">
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-4">
 
-                                <ul className={`text-b3 md:text-b2 text-gray-100 ${section.title === "Pages" ? "grid grid-cols-2 gap-x-2 gap-y-2" : "space-y-2"}`}>
-                                    {section.items.map((item, idx) => (
-                                        <li key={idx}>
-                                            <Link
-                                                href={item.href}
-                                                className="group inline-flex items-center gap-0.5 w-full hover:text-white transition-colors duration-200"
-                                                {...(item.href.startsWith("http") || item.href.startsWith("mailto")
-                                                    ? { target: "_blank", rel: "noopener noreferrer" }
-                                                    : {})}
-                                            >
-                                                {item.label}
-                                                {section.title === "Pages" && <ArrowIcon />}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Reveal>
-                        ))}
+                        {/* Pages */}
+                        {footerSections.filter(s => s.title === "Pages").map((section) => {
+                            const originalIndex = footerSections.findIndex(s => s.title === section.title)
+                            return (
+                                <Reveal key={section.title} variants={slideInFromBottom(originalIndex * 0.12)}
+                                    className="py-4 px-5 lg:py-7 lg:px-2 xl:p-8 border-x border-color mx-10 lg:mx-0 border-b lg:border-b-0 sm:border-r border-color"
+                                >
+                                    <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
+                                        {section.title}
+                                    </p>
+                                    {/* Pages: 2 col grid, right col right-aligned on mobile */}
+                                    <ul className="text-b3 md:text-b2 text-gray-100 grid grid-cols-2 gap-x-2 gap-y-2">
+                                        {section.items.map((item, idx) => (
+                                            <li key={idx} className={idx % 2 === 1 ? "flex justify-end lg:justify-start" : ""}>
+                                                <Link
+                                                    href={item.href}
+                                                    className="group inline-flex items-center gap-2.5 hover:text-white transition-colors duration-200"
+                                                    {...(item.href.startsWith("http") || item.href.startsWith("mailto")
+                                                        ? { target: "_blank", rel: "noopener noreferrer" }
+                                                        : {})}
+                                                >
+                                                    {item.label}
+                                                    <ArrowIcon />
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Reveal>
+                            )
+                        })}
+
+                        {/* Contact + Follow Us: side by side on mobile, no border between them */}
+                        <div className="lg:contents mx-10 lg:mx-0 border-x border-color border-b lg:border-b-0 flex flex-row">
+                            {footerSections.filter(s => s.title === "Contact" || s.title === "Follow Us").map((section, i) => {
+                                const originalIndex = footerSections.findIndex(s => s.title === section.title)
+                                const isFollowUs = section.title === "Follow Us"
+                                return (
+                                    <Reveal key={section.title} variants={slideInFromBottom(originalIndex * 0.12)}
+                                        className={`flex-1 py-4 px-5 lg:py-7 lg:px-2 xl:p-8 lg:border-x lg:mx-0 lg:border-b-0 border-color sm:border-r border-color`}
+                                    >
+                                        <p className={`text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase ${isFollowUs ? "text-right lg:text-left" : ""}`}>
+                                            {section.title}
+                                        </p>
+                                        <ul className={`text-b3 md:text-b2 text-gray-100 space-y-2 ${isFollowUs ? "flex flex-col items-end lg:items-start" : ""}`}>
+                                            {section.items.map((item, idx) => (
+                                                <li key={idx}>
+                                                    <Link
+                                                        href={item.href}
+                                                        className="group inline-flex items-center gap-2.5 hover:text-white transition-colors duration-200"
+                                                        {...(item.href.startsWith("http") || item.href.startsWith("mailto")
+                                                            ? { target: "_blank", rel: "noopener noreferrer" }
+                                                            : {})}
+                                                    >
+                                                        {item.label}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </Reveal>
+                                )
+                            })}
+                        </div>
+
+                        {/* Privacy */}
+                        {footerSections.filter(s => s.title === "Privacy").map((section) => {
+                            const originalIndex = footerSections.findIndex(s => s.title === section.title)
+                            return (
+                                <Reveal key={section.title} variants={slideInFromBottom(originalIndex * 0.12)}
+                                    className="py-4 px-5 lg:py-7 lg:px-2 xl:p-8 border-x border-color mx-10 lg:mx-0 border-b-0"
+                                >
+                                    <p className="text-base md:text-md lg:text-xl mb-3 md:mb-4 uppercase">
+                                        {section.title}
+                                    </p>
+                                    <ul className="text-b3 md:text-b2 text-gray-100 space-y-2">
+                                        {section.items.map((item, idx) => (
+                                            <li key={idx}>
+                                                <Link
+                                                    href={item.href}
+                                                    className="group inline-flex items-center gap-2.5 w-full hover:text-white transition-colors duration-200"
+                                                    {...(item.href.startsWith("http") || item.href.startsWith("mailto")
+                                                        ? { target: "_blank", rel: "noopener noreferrer" }
+                                                        : {})}
+                                                >
+                                                    {item.label}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Reveal>
+                            )
+                        })}
+
                     </div>
                 </div>
             </div>
@@ -142,7 +206,7 @@ const Footer = () => {
                     <div className="flex items-center justify-between px-5 py-4">
                         <Image src={"/logo2.png"} alt={""} width={30} height={30} />
                         <p className="text-[12px] text-gray-100">
-                            Copyright  @ {year}  Ascella Group
+                            Copyright @ {year} Ascella Group
                         </p>
                     </div>
                 </div>
@@ -159,47 +223,47 @@ const Footer = () => {
                                 A unified operating group delivering security, technology, workforce, operations, and revenue under a single governance framework.
                             </p>
                         </div>
-                        <div className="hidden md:flex flex-col max-w-md w-full">
-                            <label className="text-base md:text-lg tracking-widest uppercase mb-2">
-                                Let's get started
-                            </label>
-                            <div className="flex flex-col sm:flex-row border border-white rounded overflow-hidden">
-                                <input
-                                    type="email"
-                                    placeholder="Email"
-                                    className="flex-1 bg-white text-black px-4 py-2 text-xs md:text-sm outline-none placeholder:text-gray-400"
-                                />
-                                <PartialOutlineBtn
-                                    text="Subscribe"
-                                    textColor="text-black"
-                                    bgColor="bg-white"
-                                    borderColor="border-black"
-                                    hoverBgColor="hover:bg-black"
-                                    hoverTextColor="hover:text-white"
-                                />
-                            </div>
-                        </div>
                     </div>
 
-
                     <div className="hidden md:flex flex-col items-start lg:items-end justify-between w-full max-w-xs mt-8 lg:mt-0">
-                        <Link href="/" className="flex items-center gap-2">
-                            <Image
-                                src="/logo.png"
-                                alt="Ascella Logo"
-                                width={90}
-                                height={32}
-                                priority
-                                className="w-20 sm:w-24 h-auto"
-                            />
-                        </Link>
-                        <p className="text-b3 text-gray-300 mt-2 lg:mt-4">
+                        <div className="flex flex-col items-start lg:items-end gap-4">
+                            <Link href="/" className="flex items-center gap-2">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Ascella Logo"
+                                    width={90}
+                                    height={32}
+                                    priority
+                                    className="w-20 sm:w-24 h-auto"
+                                />
+                            </Link>
+                            <div className="flex flex-col w-full max-w-md">
+                                <label className="text-base md:text-lg tracking-widest uppercase mb-2">
+                                    Let's get started
+                                </label>
+                                <div className="flex flex-col sm:flex-row border border-white rounded overflow-hidden">
+                                    <input
+                                        type="email"
+                                        placeholder="Email"
+                                        className="flex-1 bg-white text-black px-4 py-2 text-xs md:text-sm outline-none placeholder:text-gray-400"
+                                    />
+                                    <PartialOutlineBtn
+                                        text="Subscribe"
+                                        textColor="text-black"
+                                        bgColor="bg-white"
+                                        borderColor="border-black"
+                                        hoverBgColor="hover:bg-black"
+                                        hoverTextColor="hover:text-white"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-b3 text-gray-300 mt-4">
                             Copyright @ {year} Ascella Group
                         </p>
                     </div>
                 </div>
             </Reveal>
-
 
             <div className="w-full border-t border-color"></div>
         </footer>

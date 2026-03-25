@@ -304,13 +304,13 @@ export default function Eligibility() {
   return (
     <section className="w-full bg-black text-white flex flex-col lg:flex-row items-start lg:items-center
       px-10 md:px-12 lg:px-24
-      py-6 md:py-12
+      py-4 md:py-12
     ">
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start lg:items-center">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start lg:items-center justify-items-center">
 
         {/* ── Left: SVG Graphic (Slide from Left) ── */}
         <motion.div 
-          className="flex flex-col gap-2 lg:gap-8"
+          className="hidden lg:flex flex-col gap-2 lg:gap-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
@@ -335,7 +335,7 @@ export default function Eligibility() {
         >
 
           {/* Label */}
-          <motion.div variants={itemFadeUp} className="flex items-center gap-1 text-xs tracking-[0.2em]">
+          <motion.div variants={itemFadeUp} className="flex items-center gap-1 text-xs tracking-[0.2em] mx-auto lg:ml-0 justify-center">
             <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
               <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
@@ -354,15 +354,14 @@ export default function Eligibility() {
           </motion.h3>
 
           {/* Card */}
-          <motion.div
+         <motion.div
             variants={itemFadeUp}
             className="backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-2xl"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "white",
+              border: "1px solid rgba(0,0,0,0.08)",
             }}
           >
-            {/* Card header */}
             <div className="flex gap-4 mb-5 md:mb-8">
               <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
@@ -376,14 +375,13 @@ export default function Eligibility() {
                 <rect y="7" width="7" height="7" fill="#3D3D3D"/>
                 <rect x="7" width="7" height="7" fill="#3D3D3D"/>
               </svg>
-              <h5 className="text-xs md:text-base leading-relaxed">
+              <h5 className="text-xs md:text-base text-black leading-relaxed">
                 To qualify for the Ascella for Startups program,{" "}
                 <br className="hidden md:block" />
                 your startup should meet the following:
               </h5>
             </div>
 
-            {/* Criteria list */}
             <div className="space-y-0">
               {criteria.map((item, index) => (
                 <div
@@ -394,7 +392,7 @@ export default function Eligibility() {
                     index !== criteria.length - 1 ? "border-b" : ""
                   }`}
                   style={{
-                    borderColor: "rgba(255,255,255,0.08)",
+                    borderColor: "rgba(0,0,0,0.08)",
                     paddingLeft: hoveredRow === index ? "10px" : "0px",
                     cursor: "default",
                     transition: "padding-left 0.35s cubic-bezier(0.16,1,0.3,1)",
@@ -403,7 +401,7 @@ export default function Eligibility() {
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: "linear-gradient(90deg, rgba(255,255,255,0.05) 0%, transparent 80%)",
+                      background: "linear-gradient(90deg, rgba(0,0,0,0.05) 0%, transparent 80%)",
                       transform: hoveredRow === index ? "translateX(0)" : "translateX(-100%)",
                       transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
                     }}
@@ -413,7 +411,8 @@ export default function Eligibility() {
                     style={{
                       width: "36px",
                       flexShrink: 0,
-                      color: hoveredRow === index ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.3)",
+                      color: hoveredRow === index ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.3)",
+                      // background, padding, borderRadius property removed from here 
                       transition: "color 0.3s ease",
                     }}
                   >
@@ -422,7 +421,7 @@ export default function Eligibility() {
                   <span
                     className="text-sm md:text-lg relative"
                     style={{
-                      color: hoveredRow === index ? "rgba(255,255,255,255)" : "rgba(255,255,255,0.75)",
+                      color: hoveredRow === index ? "black" : "rgba(0,0,0,0.75)",
                       transition: "color 0.3s ease",
                     }}
                   >
@@ -431,7 +430,7 @@ export default function Eligibility() {
                   <span
                     className="ml-auto relative font-mono text-xs"
                     style={{
-                      color: hoveredRow === index ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0)",
+                      color: hoveredRow === index ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0)",
                       transform: hoveredRow === index ? "translateX(0)" : "translateX(-8px)",
                       transition: "color 0.3s ease, transform 0.3s ease",
                     }}

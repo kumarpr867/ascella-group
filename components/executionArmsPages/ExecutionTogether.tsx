@@ -192,6 +192,159 @@ const CONFIG = {
   desktop: { cardW: 200, cardH: 256, leftStep: 160, topStep: 15, gridTop: 200, gridBottom: -120, liftY: -60, scale: 1.05 },
 };
 
+// ── Mobile Single Card Carousel ──────────────────────────────────────────────
+function MobileCardCarousel({ executionArms }: { executionArms: { id: string; name: string; desc: string; iconPath: string }[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const goLeft = () => setActiveIndex(prev => Math.max(prev - 1, 0));
+  const goRight = () => setActiveIndex(prev => Math.min(prev + 1, executionArms.length - 1));
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = () => {
+    if (touchStartX.current !== null && touchEndX.current !== null) {
+      const diff = touchStartX.current - touchEndX.current;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) goRight();
+        else goLeft();
+      }
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
+  const arm = executionArms[activeIndex];
+  const CARD_SIZE = 210;
+
+  return (
+    <div className="flex flex-col items-center w-full" style={{ paddingLeft: 24, paddingRight: 24 }}>
+      {/* Card */}
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          width: CARD_SIZE,
+          height: CARD_SIZE,
+          position: 'relative',
+          flexShrink: 0,
+        }}
+      >
+        {/* Left half tap zone — go back */}
+        <div
+          onClick={goLeft}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '50%',
+            height: '100%',
+            zIndex: 20,
+            cursor: activeIndex > 0 ? 'pointer' : 'default',
+          }}
+        />
+        {/* Right half tap zone — go forward */}
+        <div
+          onClick={goRight}
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: '50%',
+            height: '100%',
+            zIndex: 20,
+            cursor: activeIndex < executionArms.length - 1 ? 'pointer' : 'default',
+          }}
+        />
+
+        {/* Card background — off-white */}
+        <div
+          className="absolute inset-0 rounded-md"
+          style={{
+            background: '#D1D1D1',
+            boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+          }}
+        />
+
+        {/* Card content */}
+        <div className="relative z-10 w-full h-full flex flex-col" style={{ padding: 16 }}>
+          {/* Top row: number left, icon right */}
+          <div className="flex justify-between items-start w-full">
+            <span
+              className="font-mono"
+              style={{ fontSize: 11, letterSpacing: '0.15em', color: '#555' }}
+            >
+              {arm.id}
+            </span>
+            <div
+              style={{
+                backgroundColor: '#1a1a1a',
+                maskImage: `url(${arm.iconPath})`,
+                WebkitMaskImage: `url(${arm.iconPath})`,
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                WebkitMaskPosition: 'center',
+                maskSize: 'contain',
+                WebkitMaskSize: 'contain',
+                width: 32,
+                height: 32,
+                flexShrink: 0,
+              }}
+            />
+          </div>
+
+          {/* Center: description */}
+          <div className="flex-1 flex items-center justify-start" style={{ marginTop: 12 }}>
+            <p
+              style={{ fontSize: 12, maxWidth: 160, color: '#1a1a1a', lineHeight: 1.4 }}
+            >
+              {arm.desc}
+            </p>
+          </div>
+
+          {/* Bottom right: card name */}
+          <div className="flex justify-end items-end w-full">
+            <span
+              style={{ fontSize: 16, fontWeight: 700, color: '#0d0d0d', letterSpacing: '-0.01em' }}
+            >
+              {arm.name}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Dots */}
+      <div className="flex items-center justify-center gap-[6px]" style={{ marginTop: 20 }}>
+        {executionArms.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveIndex(i)}
+            style={{
+              width: i === activeIndex ? 18 : 6,
+              height: 6,
+              borderRadius: 3,
+              backgroundColor: i === activeIndex ? '#ffffff' : '#3a3a3a',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              opacity: i === activeIndex ? 1 : 0.4,
+            }}
+          />
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
 // ── Main Component ─────────────────────────────────────────────────────────────
 const ExecutionTogether = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -200,7 +353,7 @@ const ExecutionTogether = () => {
 
   const mobileCfg = (() => {
     const totalCards = 5;
-    const pagePadding = 80; // 40px left + 40px right to match footer mx-10
+    const pagePadding = 80;
     const available = Math.max(screenW - pagePadding, 200);
     const cardW = Math.floor(available / 4.12);
     const leftStep = Math.floor(cardW * 0.78);
@@ -224,28 +377,137 @@ const ExecutionTogether = () => {
   const expandedCardH = (isMobile && activeId) ? cfg.cardH * 1.4 : cfg.cardH;
   const containerH = expandedCardH + cfg.topStep * (totalCards - 1) + (isMobile ? 20 : 100);
 
+  // ── MOBILE LAYOUT ─────────────────────────────────────────────────────────
+  if (isMobile) {
+    return (
+      <div
+        className="bg-black text-white flex flex-col items-center relative overflow-hidden w-full"
+        style={{ fontFamily: 'sans-serif', paddingTop: 36, paddingBottom: 24 }}
+      >
+        {/* Header */}
+        <div className="flex flex-col items-center text-center w-full" style={{ paddingLeft: 24, paddingRight: 24, marginBottom: 24 }}>
+          <Reveal variants={slideInFromBottom(0.1)}>
+            <div
+              className="flex items-center justify-center gap-2 text-white uppercase"
+              style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: 20 }}
+            >
+              <Plus size={14} strokeWidth={1.5} />
+              How Execution Arms Work Together
+            </div>
+          </Reveal>
+
+          <Reveal variants={slideInFromBottom(0.2)}>
+            <h3
+              className="font-light tracking-tight text-center"
+              style={{ fontSize: 20, lineHeight: 1.1, marginBottom: 16 }}
+            >
+              Ascella Group sits above execution.{' '}
+              Execution arms deliver specialised work within{' '}
+              <span className="text-gray-400">Ascella's operating structure.</span>
+            </h3>
+          </Reveal>
+
+          <Reveal variants={slideInFromBottom(0.3)}>
+            <p
+              className="text-white leading-relaxed text-center"
+              style={{ fontSize: 12, maxWidth: 300 }}
+            >
+              Governance, accountability, and performance oversight remain central ensuring coordinated execution without fragmented ownership.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Ascella badge */}
+        <Reveal variants={slideInFromBottom(0.4)}>
+          <div
+            className="text-white uppercase z-50"
+            style={{
+              padding: '7px 20px',
+              fontSize: 11,
+              letterSpacing: '0.4em',
+              marginBottom: 28,
+              border: '1px solid rgba(156,163,175,0.6)',
+              borderRadius: 4,
+              background: '#111',
+            }}
+          >
+            Ascella
+          </div>
+        </Reveal>
+
+        {/* Single Card Carousel */}
+        <Reveal variants={slideInFromBottom(0.5)}>
+          <MobileCardCarousel executionArms={executionArms} />
+        </Reveal>
+
+        {/* Footer governance text */}
+        <Reveal variants={slideInFromBottom(0.6)}>
+          <div className="flex flex-col items-center text-center" style={{ marginTop: 28, marginBottom: 20, paddingLeft: 24, paddingRight: 24 }}>
+            <h5
+              className="text-gray-300 leading-relaxed text-center"
+              style={{ fontSize: 12, letterSpacing: '0.03em' }}
+            >
+              Governance is designed in,<br />not enforced later.
+            </h5>
+          </div>
+        </Reveal>
+
+        {/* Ascella Group card — centered */}
+        <Reveal variants={slideInFromBottom(0.7)}>
+          <div
+            className="bg-[#D1D1D1] text-black rounded-sm flex items-center shadow-2xl"
+            style={{ gap: 14, padding: '14px 16px', marginBottom: 28 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none" style={{ flexShrink: 0 }}>
+              <rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="28" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="0" y="14" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="7" y="0" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
+              <rect x="21" y="0" width="7" height="7" fill="#3D3D3D"/>
+            </svg>
+            <div>
+              <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: 15 }}>
+                Ascella Group
+              </h4>
+              <p className="text-gray-800" style={{ fontSize: 12, maxWidth: 160, lineHeight: 1.4 }}>
+                Coordinated execution<br />without loss of control.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="absolute bottom-0 left-0 w-full bg-gray-400/60 z-10" style={{ height: 1 }} />
+      </div>
+    );
+  }
+
+  // ── DESKTOP / TABLET LAYOUT (CODE PRESERVED) ──────────────────────────────
   return (
     <div
       className="bg-black text-white flex flex-col items-center relative overflow-hidden"
       style={{
         fontFamily: 'sans-serif',
-        paddingTop: isMobile ? 36 : 48,
-        paddingBottom: isMobile ? 16 : 48,
-        paddingLeft: isMobile ? 40 : 40,
-        paddingRight: isMobile ? 40 : 40,
+        paddingTop: 48,
+        paddingBottom: 48,
+        paddingLeft: 40,
+        paddingRight: 40,
       }}
     >
       {/* ── Header (REVEAL ADDED) ────────────────────────────────────────────────────────── */}
       <div
         className="text-center z-50"
-        style={{ maxWidth: isMobile ? '100%' : 900, marginBottom: isMobile ? 24 : 48 }}
+        style={{ maxWidth: 900, marginBottom: 48 }}
       >
         <Reveal variants={slideInFromBottom(0.1)}>
           <div
             className="flex items-center justify-center gap-2 text-white uppercase"
-            style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: isMobile ? 20 : 32 }}
+            style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: 32 }}
           >
-            <Plus size={isMobile ? 14 : 18} strokeWidth={1.5} />
+            <Plus size={18} strokeWidth={1.5} />
             How Execution Arms Work Together
           </div>
         </Reveal>
@@ -254,15 +516,15 @@ const ExecutionTogether = () => {
           <h3
             className="font-light tracking-tight"
             style={{
-              fontSize: isMobile ? 20 : bp === 'tablet' ? 28 : 36,
+              fontSize: bp === 'tablet' ? 28 : 36,
               lineHeight: 1.1,
-              marginBottom: isMobile ? 16 : 24,
+              marginBottom: 24,
             }}
           >
             Ascella Group sits above execution.{' '}
-            {!isMobile && <br />}
+            <br />
             Execution arms deliver specialised work{' '}
-            {!isMobile && <br />}
+            <br />
             within <span className="text-gray-400">Ascella's operating structure.</span>
           </h3>
         </Reveal>
@@ -270,7 +532,7 @@ const ExecutionTogether = () => {
         <Reveal variants={slideInFromBottom(0.3)}>
           <p
             className="text-white leading-relaxed mx-auto"
-            style={{ fontSize: isMobile ? 12 : 14, maxWidth: isMobile ? 300 : 420 }}
+            style={{ fontSize: 14, maxWidth: 420 }}
           >
             Governance, accountability, and performance oversight remain central ensuring coordinated execution without fragmented ownership.
           </p>
@@ -282,10 +544,10 @@ const ExecutionTogether = () => {
         <div
           className="bg-[#111] rounded border border-gray-400 text-white uppercase z-50"
           style={{
-            padding: isMobile ? '7px 20px' : '10px 32px',
+            padding: '10px 32px',
             fontSize: 11,
             letterSpacing: '0.4em',
-            marginBottom: isMobile ? 24 : 40,
+            marginBottom: 40,
           }}
         >
           Ascella
@@ -295,7 +557,7 @@ const ExecutionTogether = () => {
       {/* ── Cards area (ALL CODE PRESERVED) ────────────────────── */}
       <div
         className="relative flex justify-center items-start w-full"
-        style={{ height: containerH + (isMobile ? 10 : 80) }}
+        style={{ height: containerH + 80 }}
       >
         <div className="relative" style={{ width: containerW, height: containerH }}>
 
@@ -333,19 +595,18 @@ const ExecutionTogether = () => {
             return (
               <div
                 key={arm.id}
-                onMouseEnter={() => !isMobile && setActiveId(arm.id)}
-                onMouseLeave={() => !isMobile && setActiveId(null)}
-                onClick={() => isMobile && setActiveId(prev => prev === arm.id ? null : arm.id)}
+                onMouseEnter={() => setActiveId(arm.id)}
+                onMouseLeave={() => setActiveId(null)}
                 className="absolute transition-all ease-out"
                 style={{
                   width: cfg.cardW,
-                  height: (isMobile && isExpanded) ? cfg.cardH * 1.4 : cfg.cardH,
+                  height: cfg.cardH,
                   top: topPx,
                   left: leftPx,
                   zIndex: isExpanded ? 100 : zBase,
                   transform: isExpanded ? `translateY(${cfg.liftY}px) scale(${cfg.scale})` : 'none',
                   transitionDuration: '500ms',
-                  cursor: isMobile ? 'pointer' : 'default',
+                  cursor: 'default',
                 }}
               >
                 <div className="relative w-full h-full">
@@ -373,17 +634,17 @@ const ExecutionTogether = () => {
 
                   <div
                     className={`relative z-10 w-full h-full flex flex-col transition-colors duration-500 ${isExpanded ? 'text-black' : 'text-white'}`}
-                    style={{ padding: isMobile ? '12px' : '24px' }}
+                    style={{ padding: '24px' }}
                   >
                     <span
                       className="font-mono transition-all duration-500"
                       style={{
-                        fontSize: isMobile ? 9 : 12,
+                        fontSize: 12,
                         letterSpacing: '0.15em',
                         color: isExpanded ? '#6b7280' : '#374151',
                         position: isExpanded ? 'static' : 'absolute',
-                        top: isMobile ? 20 : 40,
-                        left: isMobile ? 16 : 32,
+                        top: 40,
+                        left: 32,
                         transform: isExpanded ? 'none' : 'skewY(-15deg)',
                       }}
                     >
@@ -402,8 +663,8 @@ const ExecutionTogether = () => {
                         WebkitMaskPosition: 'center',
                         maskSize: 'contain',
                         WebkitMaskSize: 'contain',
-                        width: isExpanded ? (isMobile ? 24 : 40) : (isMobile ? 36 : 56),
-                        height: isExpanded ? (isMobile ? 24 : 40) : (isMobile ? 36 : 56),
+                        width: isExpanded ? 40 : 56,
+                        height: isExpanded ? 40 : 56,
                         flexShrink: 0,
                         ...(isExpanded
                           ? { marginLeft: 'auto' }
@@ -417,13 +678,13 @@ const ExecutionTogether = () => {
                         <Reveal variants={slideInFromBottom(0.1)}>
                           <p
                             className="leading-snug font-medium text-gray-800"
-                            style={{ fontSize: isMobile ? 10 : 13, marginBottom: isMobile ? 12 : 32 }}
+                            style={{ fontSize: 13, marginBottom: 32 }}
                           >
                             {arm.desc}
                           </p>
                           <h4
                             className="font-semibold text-right tracking-tight"
-                            style={{ fontSize: isMobile ? 13 : 20 }}
+                            style={{ fontSize: 20 }}
                           >
                             {arm.name}
                           </h4>
@@ -434,11 +695,11 @@ const ExecutionTogether = () => {
                         className="uppercase text-gray-500 text-right leading-tight"
                         style={{
                           position: 'absolute',
-                          bottom: isMobile ? 20 : 56,
-                          right: isMobile ? 10 : 32,
-                          fontSize: isMobile ? 8 : 11,
+                          bottom: 56,
+                          right: 32,
+                          fontSize: 11,
                           letterSpacing: '0.2em',
-                          maxWidth: isMobile ? 60 : 100,
+                          maxWidth: 100,
                           transform: 'skewY(-15deg)',
                         }}
                       >
@@ -459,17 +720,18 @@ const ExecutionTogether = () => {
         style={{
           maxWidth: 1280,
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
+          flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: isMobile ? 'flex-end' : 'flex-end',
+          alignItems: 'flex-end',
           paddingTop: 16,
           paddingBottom: 16,
+          marginTop: -20,
         }}
       >
         <Reveal variants={slideInFromBottom(0.5)}>
           <h5
             className="text-gray-300 leading-relaxed"
-            style={{ fontSize: 12, letterSpacing: '0.03em', maxWidth: 200, alignSelf: isMobile ? 'flex-start' : 'auto' }}
+            style={{ fontSize: 12, letterSpacing: '0.03em', maxWidth: 200 }}
           >
             Governance is designed <br />in, not enforced later.
           </h5>
@@ -478,13 +740,7 @@ const ExecutionTogether = () => {
         <Reveal variants={slideInFromBottom(0.6)}>
           <div
             className="bg-[#D1D1D1] text-black rounded-sm flex items-center shadow-2xl"
-            style={{
-              gap: isMobile ? 14 : 14,
-              padding: isMobile ? '14px 16px' : '20px 24px',
-              width: isMobile ? 'auto' : 'auto',
-              maxWidth: isMobile ? '80%' : 400,
-              alignSelf: isMobile ? 'flex-end' : 'auto',
-            }}
+            style={{ gap: 14, padding: '20px 24px', maxWidth: 400 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 35 28" fill="none" style={{ flexShrink: 0 }}>
               <rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
@@ -498,10 +754,10 @@ const ExecutionTogether = () => {
               <rect x="21" y="0" width="7" height="7" fill="#3D3D3D"/>
             </svg>
             <div>
-              <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: isMobile ? 15 : 18 }}>
+              <h4 className="font-bold leading-tight tracking-tight" style={{ fontSize: 18 }}>
                 Ascella Group
               </h4>
-              <p className="text-gray-800 text-[12px]" style={{ fontSize: isMobile ? 12 : 14 }}>
+              <p className="text-gray-800 text-[12px]" style={{ fontSize: 14 }}>
                 Coordinated execution without loss of control.
               </p>
             </div>

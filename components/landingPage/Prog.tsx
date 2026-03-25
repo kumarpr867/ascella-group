@@ -264,7 +264,6 @@ function InteractiveSVG() {
 
 export default function Prog() {
     const router = useRouter();
-    // 1. State for hover tracking
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     const items = [
@@ -287,7 +286,10 @@ export default function Prog() {
 
     return (
         <section>
-            <div className="border-y border-color">
+            {/* ══════════════════════════════════════════
+                DESKTOP HEADER (lg+) — with top border-y
+            ══════════════════════════════════════════ */}
+            <div className="hidden lg:block border-y border-color">
                 <div className="mx-10 lg:mx-20 xl:mx-24 flex px-4 lg:px-10 py-4 border-x border-color">
                     <Reveal variants={slideInFromBottom(0.1)}>
                         <h3 className="text-[24px] md:text-[36px] text-gray-300 leading-tight tracking-tighter">
@@ -298,11 +300,15 @@ export default function Prog() {
                 </div>
             </div>
 
-            <div className="mx-10 lg:mx-20 xl:mx-24 border-x border-color overflow-hidden">
-                <div className="flex flex-col lg:flex-row">
-                    <div className="grid grid-cols-1 border-b lg:border-b-0 lg:border-r border-color lg:w-1/2">
+            {/* ══════════════════════════════════════════
+                DESKTOP LAYOUT (lg+): left text grid + right SVG
+            ══════════════════════════════════════════ */}
+            <div className="hidden lg:block mx-10 lg:mx-20 xl:mx-24 border-x border-color overflow-hidden">
+                <div className="flex flex-row">
+                    {/* Left: text items grid */}
+                    <div className="grid grid-cols-1 border-r border-color lg:w-1/2">
                         {items.map((item, i) => (
-                            <div 
+                            <div
                                 key={i}
                                 onMouseEnter={() => setHoveredIndex(i)}
                                 onMouseLeave={() => setHoveredIndex(null)}
@@ -326,20 +332,108 @@ export default function Prog() {
                         ))}
                     </div>
 
+                    {/* Right: SVG */}
                     <Reveal variants={slideInFromBottom(0.1)} className="flex lg:w-2/3 items-center justify-center">
                         <InteractiveSVG />
                     </Reveal>
                 </div>
             </div>
 
-            <div className="w-full border-y border-color">
+            {/* ══════════════════════════════════════════
+                MOBILE LAYOUT (below lg)
+                - No top border above header
+                - No vertical border lines (no border-x)
+                - Gray background on whole section
+                - Dividers stay within mx-10 margin (not edge-to-edge)
+                - Higher text opacity for readability
+            ══════════════════════════════════════════ */}
+            <div className="lg:hidden bg-gray-500">
+
+                {/* Mobile Header — no top border, no left/right border */}
+                <div className="mx-10 px-4 py-5">
+                    <Reveal variants={slideInFromBottom(0.1)}>
+                        <h3 className="text-[22px] text-gray-300 leading-tight tracking-tighter">
+                            <span className="text-white">The programme focuses on </span>
+                            embedding operating discipline before scale introduces complexity.
+                        </h3>
+                    </Reveal>
+                </div>
+
+                {/* Divider — inside mx-10, not edge-to-edge */}
+                <div className="mx-10 border-t border-color" />
+
+                {/* Item 1: Central Decision Engine */}
+                <div className="mx-10 px-4 py-5">
+                    <Reveal variants={slideInFromBottom(0.1)}>
+                        <h5 className="text-[16px]  text-white">{items[0].title}</h5>
+                        <p className="text-[12px] text-white  mt-2 leading-relaxed">{items[0].subtitle}</p>
+                        <p className="text-[12px] text-gray-200 mt-3 leading-relaxed">{items[0].body}</p>
+                    </Reveal>
+                </div>
+
+                {/* Divider */}
+                <div className="mx-10 border-t border-color" />
+
+                {/* Item 2: Named Accountability */}
+                <div className="mx-10 px-4 py-5">
+                    <Reveal variants={slideInFromBottom(0.15)}>
+                        <h5 className="text-[16px]  text-white">{items[1].title}</h5>
+                        <p className="text-[12px] text-white mt-2 leading-relaxed">{items[1].subtitle}</p>
+                        <p className="text-[12px] text-gray-200 mt-3 leading-relaxed">{items[1].body}</p>
+                    </Reveal>
+                </div>
+
+                {/* Divider */}
+                <div className="mx-10 border-t border-color" />
+
+                {/* Item 3: Control Gates — title + subtitle only */}
+                <div className="mx-10 px-4 py-5">
+                    <Reveal variants={slideInFromBottom(0.2)}>
+                        <h5 className="text-[16px]  text-white">{items[2].title}</h5>
+                        <p className="text-[12px] text-white mt-2 leading-relaxed">{items[2].subtitle}</p>
+                    </Reveal>
+                </div>
+
+                {/* Divider */}
+                <div className="mx-10 border-t border-color" />
+
+                {/* Complexity footer text — centered */}
+                <div className="mx-10 px-4 py-5">
+                    <Reveal variants={slideInFromBottom(0.25)}>
+                        <p className="text-[12px] text-white/60 text-center leading-relaxed">
+                            Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
+                        </p>
+                    </Reveal>
+
+                    <div className="mx-10 px-4 py-5 flex justify-center">
+                    <Reveal variants={slideInFromBottom(0.3)}>
+                        <PartialOutlineBtn
+                            text="See How It Works"
+                            size="sm"
+                            onClick={() => router.push("/how-ascella-operates")}
+                        />
+                    </Reveal>
+                </div>
+                </div>
+
+             
+
+                {/* See How It Works — centered */}
+                
+            </div>
+
+            {/* ══════════════════════════════════════════
+                DESKTOP FOOTER BAR (lg+)
+            ══════════════════════════════════════════ */}
+            <div className="hidden lg:block w-full border-y border-color">
                 <div className="mx-10 lg:mx-20 xl:mx-24 flex px-4 lg:px-10 py-6 border-x border-color">
                     <Reveal variants={slideInFromBottom(0.1)} className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <PartialOutlineBtn
                             text="See How It Works"
                             size="sm"
-                            onClick={() => router.push("/how-ascella-operates")} />
-                        <p className="max-w-md text-left leading-relaxed text-b3 ">
+                            onClick={() => router.push("/how-ascella-operates")}
+                        />
+                        <p className="max-w-md text-left leading-relaxed text-b3">
                             Complexity grows faster than controls when scale outruns governance. Clear gates keep delivery steady as scope expands.
                         </p>
                     </Reveal>

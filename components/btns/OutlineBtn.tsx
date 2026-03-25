@@ -28,18 +28,17 @@ export default function OutlineBtn({
         ${sizes[size]} ${className}
       `}
       style={{
-        borderColor: color,
-        color: color,
+        borderColor: 'var(--color-gray-200)',
+        backgroundColor: 'white',
+        color: 'var(--color-black)',
       }}
       onMouseEnter={(e) => {
-        const root = getComputedStyle(document.documentElement);
-        e.currentTarget.style.backgroundColor = root.getPropertyValue('--color-gray-200') || 'var(--color-gray-200)';
-        e.currentTarget.style.color = root.getPropertyValue('--color-black') || 'var(--color-black)';
+        e.currentTarget.style.backgroundColor = 'var(--color-black)';
+        e.currentTarget.style.color = 'white';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = 'transparent';
-        const root = getComputedStyle(document.documentElement);
-        e.currentTarget.style.color = root.getPropertyValue('--color-gray-200') || 'var(--color-gray-200)';
+        e.currentTarget.style.backgroundColor = 'white';
+        e.currentTarget.style.color = 'var(--color-black)';
       }}
     >
       {text}

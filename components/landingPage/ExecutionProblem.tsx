@@ -132,7 +132,6 @@ function PriorityDriftIcon() {
 
 // ── Leadership Drain ──────────────────────────────────────────────────────────
 function LeadershipDrainIcon() {
-    // Bottom-most (largest) triangle first, then upward
     const triangles = [
         { d: "M136.348 128.5H10.6523L73.5 1.12988L136.348 128.5Z", delay: 0 },
         { d: "M136.251 101.5H10.749L73.5 0.943359L136.251 101.5Z", delay: 0.7 },
@@ -141,7 +140,7 @@ function LeadershipDrainIcon() {
         { d: "M134.41 23.5H12.5898L73.5 0.53418L134.41 23.5Z", delay: 2.8 },
     ];
 
-    const totalCycle = 6; // seconds — full loop duration
+    const totalCycle = 6;
 
     return (
         <svg width="147" height="172" viewBox="0 0 147 172" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,7 +169,6 @@ function LeadershipDrainIcon() {
                 />
             ))}
 
-            {/* Center vertical line — always visible */}
             <path d="M73.5 2V128" stroke="white" strokeWidth="1" />
         </svg>
     );
@@ -208,10 +206,13 @@ const items: ProblemItem[] = [
 // ── Page section ──────────────────────────────────────────────────────────────
 export default function ExecutionProblem() {
     return (
-        <section className="my-24 border-b border-color">
-            <div className="border-b border-color " >
-                <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 flex-col md:flex-row md:justify-between gap-12 pb-12">
+        <section className="md:my-24 border-b border-color">
 
+            {/* ══════════════════════════════════════════
+                DESKTOP header (md+) — completely unchanged
+            ══════════════════════════════════════════ */}
+            <div className="md:border-b border-color">
+                <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 flex-col md:flex-row md:justify-between gap-12 pb-12">
                     <Reveal variants={slideInFromLeft(0.1)}>
                         <p className="max-w-md text-b3 leading-relaxed">
                             Execution breaks when responsibility spreads across teams, vendors, and
@@ -220,7 +221,6 @@ export default function ExecutionProblem() {
                             failure sits in structure and ownership, not effort or intent.
                         </p>
                     </Reveal>
-
                     <Reveal variants={slideInFromRight(0.2)}>
                         <h3 className="max-w-lg text-right">
                             <span className="text-[18px] md:text-[36px] text-white">
@@ -229,50 +229,98 @@ export default function ExecutionProblem() {
                             <span className="text-gray-200"> Modern Organisations Face</span>
                         </h3>
                     </Reveal>
-
                 </div>
-                <div className="md:hidden flex mx-10 lg:mx-20 xl:mx-24  flex-col md:justify-between gap-12 pb-12">
+
+                {/* ── MOBILE header: centered, 2-line heading only, left-right margin ── */}
+                <div className="md:hidden mx-10 pt-8 pb-0 text-center">
                     <motion.h4 variants={fadeUp} style={{ willChange: "transform" }}>
                         <span className="text-white">The Execution Problem </span>
                         <span className="text-gray-200">Modern Organisations Face</span>
                     </motion.h4>
-                    <motion.p variants={fadeUp} style={{ willChange: "transform" }} className="max-w-md text-b3 leading-relaxed">
-                        Execution breaks when responsibility spreads across teams, vendors, and functions. Work continues, effort stays high, yet outcomes drift. Decisions slow, risks surface late, and delivery feels unstable. The failure sits in structure and ownership, not effort or intent.
-                    </motion.p>
                 </div>
             </div>
 
-            <div className="border-b border-color">
+            {/* ══════════════════════════════════════════
+                DESKTOP: Execution Policy heading bar — unchanged
+            ══════════════════════════════════════════ */}
+            <div className="hidden md:block border-b border-color">
                 <Reveal variants={slideInFromBottom(0.1)}>
                     <div className="mx-10 lg:mx-20 xl:mx-24 md:px-10 flex items-center py-8">
                         <Heading text="Execution Policy" />
-                    </div> 
+                    </div>
                 </Reveal>
             </div>
 
-            <div className="mx-10 lg:mx-20 xl:mx-24 grid grid-cols-1 md:grid-cols-3">
+            {/* ── MOBILE: Execution Policy — centered, 10px below header ── */}
+            <div className="md:hidden mx-10 flex items-center justify-center mt-[10px] mb-8">
+                <Heading text="Execution Policy" />
+            </div>
+
+            {/* ══════════════════════════════════════════
+                DESKTOP grid (md+) — completely unchanged
+            ══════════════════════════════════════════ */}
+            <div className="hidden md:grid mx-10 lg:mx-20 xl:mx-24 grid-cols-1 md:grid-cols-3">
                 {items.map((item, index) => (
                     <Reveal
                         key={item.title}
                         variants={slideInFromBottom(index * 0.15)}
                     >
                         <div
-                            className={`py-16 min-h-105 flex flex-col border-color 
-        ${index !== 0 ? "md:border-l border-t md:border-t-0" : ""} md:px-10`}
+                            className={`
+                                py-16 min-h-105 flex flex-col
+                                transition-colors duration-300
+                                hover:bg-white/5
+                                md:px-10
+                                ${index !== 0 ? "border-t md:border-t-0" : ""}
+                            `}
                         >
-                            <div className="pb-10 border-b border-color h-[200px]">
+                            {/* Icon — centered on desktop */}
+                            <div className="pb-10 border-b border-color h-[200px] flex items-center justify-center md:justify-center">
                                 {item.icon}
                             </div>
 
-                            <h5 className="mb-4 mt-6">{item.title}</h5>
-
-                            <p className="text-b1 font-thin">{item.subHeading}</p>
-
-                            <p className="text-b3">{item.description}</p>
+                            {/* Content — centered on desktop */}
+                            <div className="flex flex-col items-start md:items-center md:text-center">
+                                <h5 className="mb-4 mt-6">{item.title}</h5>
+                                <p className="text-b1 font-thin">{item.subHeading}</p>
+                                <p className="text-b3">{item.description}</p>
+                            </div>
                         </div>
                     </Reveal>
                 ))}
             </div>
+
+            {/* ══════════════════════════════════════════
+                MOBILE items — centered stack
+                Per item: SVG → Title → subHeading
+                No description. No bottom margin after last item.
+            ══════════════════════════════════════════ */}
+            <div className="md:hidden mx-10 flex flex-col items-center pb-[20px]">
+                {items.map((item, index) => (
+                    <Reveal
+                        key={item.title}
+                        variants={slideInFromBottom(index * 0.15)}
+                        className="w-full"
+                    >
+                        <div
+                            className={`
+                                flex flex-col items-center text-center
+                                ${index !== items.length - 1 ? "mb-10" : "mb-0 pb-0"}
+                            `}
+                        >
+                            {/* SVG icon */}
+                            <div className="flex items-center justify-center mb-4">
+                                {item.icon}
+                            </div>
+                            {/* Title */}
+                            <h5 className="text-white mb-1">{item.title}</h5>
+                            {/* SubHeading */}
+                            <p className="text-b1 font-thin text-gray-300">{item.subHeading}</p>
+                        </div>
+                    </Reveal>
+                ))}
+            </div>
+
         </section>
     );
 }

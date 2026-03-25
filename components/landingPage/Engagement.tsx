@@ -214,7 +214,7 @@ function GlobeCanvas() {
       const H = rect.height
       ctx.clearRect(0, 0, W, H)
 
-      t += 0.0008
+      t += 0.003
       const rotY = -(t * (180 / Math.PI) * 0.45)
       const cx = W / 2
       const cy = H / 2
@@ -307,63 +307,64 @@ export default function Engagement() {
 
       <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-10 border-x border-color">
 
-        {/*
-          ── TOP ROW: Heading (left) + Contact (right) ──
-          md+  → flex-row: heading left, contact right (pinned to form column width)
-          mobile → only heading shown (contact appears inline in info cards below)
-        */}
+        {/* ── Heading row: left-aligned on desktop, 2-line forced on mobile ── */}
         <Reveal variants={slideInFromBottom(0.1)} className="flex items-start justify-between mb-8 md:mb-10">
-          {/* Heading — always left-aligned, sits above the left (globe) column */}
-          <h1 className="uppercase text-[24px] lg:text-[36px] text-gray-200 text-thin text-left leading-tight">
-            <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
+          <h1 className="
+            uppercase text-gray-200 font-thin text-left leading-tight
+            text-[20px] w-full
+            md:text-[28px] md:w-auto md:max-w-[60%] md:pl-[12%]
+            lg:text-[36px] lg:pl-[15%]
+            xl:pl-[18%]
+          ">
+            {/* Mobile: forced 2-line via <br> — hidden on md+ */}
+            <span className="block md:hidden">
+              <span className="text-white">Initiate an</span>{' '}
+              alignment-led<br />engagement process.
+            </span>
+            {/* Desktop: original layout — hidden on mobile */}
+            <span className="hidden md:block">
+              <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
+            </span>
           </h1>
-          {/* Contact — right-aligned, hidden on mobile, visible md+ above the form */}
-          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4">
+          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4 md:mr-[50px]">
             <Link href={"mailto:hello@ascella.group"}>hello@ascella.group</Link>
             <p>+91 16045 10860</p>
           </div>
         </Reveal>
 
-        {/*
-          ── MAIN TWO-COLUMN ROW ──
-          mobile  → stacked (flex-col), items centered
-          md+     → side-by-side (flex-row), items start (top-aligned)
-        */}
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-20">
 
           {/* ── Left column: Globe + Info cards ── */}
           <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
 
-            {/* Globe */}
-            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px]">
+            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px] mx-auto md:mx-0 md:ml-[100px]">
               <GlobeCanvas />
             </div>
 
             {/* Info cards */}
             <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 md:px-0 gap-8 xm:gap-20 md:gap-4 w-full">
-              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                <h3 className="text-[14px] text-left leading-tight min-h-10">Not sure where <br /> to begin?</h3>
-                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">Initial engagement focuses on alignment, not sales discussions.</p>
-                {/* Mobile-only: contact shown here */}
+             <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1 md:bg-[#111111] md:border md:border-[#2a2a2a] md:rounded-xl md:p-3 md:gap-2">
+                <h3 className="text-[14px] text-left leading-tight min-h-10 md:min-h-0">Not sure where to begin?</h3>
+                <p className=" leading-tight text-xs sm:text-sm min-h-10 md:min-h-0 md:text-gray-200">Initial engagement focuses on alignment, not sales discussions.</p>
                 <Link href={"mailto:hello@ascella.group"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
               </div>
-              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1">
-                <h3 className="text-[14px] text-left leading-tight min-h-10">Begin alignment Execution follows.</h3>
-                <p className="font-thin leading-tight text-xs sm:text-sm min-h-10">The first step focuses on clarity and fit.</p>
-                {/* Mobile-only: phone shown here */}
+              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1 md:bg-[#111111] md:border md:border-[#2a2a2a] md:rounded-xl md:p-3 md:gap-2">
+                <h3 className="text-[14px] text-left leading-tight min-h-10 md:min-h-0">Begin alignment Execution follows.</h3>
+                <p className="leading-tight text-xs sm:text-sm min-h-10 md:min-h-0  md:text-gray-200">The first step focuses on clarity and fit.</p>
                 <p className="block md:hidden text-xs sm:text-sm">+91 16045 10860</p>
               </div>
             </Reveal>
+
           </div>
 
           {/* ── Right column: Form ── */}
-          <div className="w-full md:max-w-md space-y-2 md:space-y-">
+          <div className="w-full md:max-w-md space-y-2 md:space-y- md:-ml-[50px] md:mr-[50px]">
 
             <Reveal variants={slideInFromBottom(0.1)}>
               <label className={lbl}>Full Name</label>
               <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                 placeholder="Enter your name" autoComplete="name"
-                className={`${inp} ${submitted && errors.fullName ? 'border border-red-500' : ''}`} />
+                className={`${inp} rounded-lg ${submitted && errors.fullName ? 'border border-red-500' : 'border border-gray-300'}`} />
               {err('fullName')}
             </Reveal>
 
@@ -371,12 +372,12 @@ export default function Engagement() {
               <label className={lbl}>Organisation</label>
               <input type="text" value={orgName} onChange={e => setOrgName(e.target.value)}
                 placeholder="Organisation name" autoComplete="organization"
-                className={`${inp} ${submitted && errors.orgName ? 'border border-red-500' : ''}`} />
+                className={`${inp}  rounded-lg ${submitted && errors.orgName ? 'border border-red-500' : 'border border-gray-300 '}`} />
               {err('orgName')}
             </Reveal>
 
             <Reveal variants={slideInFromBottom(0.1)}>
-              <label className={lbl}>Role / Position</label>
+              <label className={lbl }  >Role / Position</label>
               <RoleDropdown value={role} onChange={setRole} error={submitted && !!errors.role} />
               {err('role')}
             </Reveal>
@@ -385,7 +386,7 @@ export default function Engagement() {
               <label className={lbl}>Email Address</label>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="you@company.com" autoComplete="email"
-                className={`${inp} ${submitted && errors.email ? 'border border-red-500' : ''}`} />
+                className={`${inp}  rounded-lg ${submitted && errors.email ? 'border border-red-500' : 'border border-gray-300'}`} />
               {err('email')}
             </Reveal>
 
@@ -407,7 +408,7 @@ export default function Engagement() {
               </label>
               <textarea rows={2} value={challenge} onChange={e => setChallenge(e.target.value)}
                 placeholder="Describe your current execution or operating challenge..."
-                className="w-full bg-gray-500 px-3 py-1.5 resize-none focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm" />
+                className="w-full bg-gray-500 px-3 py-1.5 resize-none  rounded-lg focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm" />
             </Reveal>
 
             <button

@@ -174,7 +174,7 @@ function WorkforceReadinessSVG({ className }: { className?: string }) {
   );
 }
 
-// ─── OwnershipSection — DESKTOP VARIANT (full h-screen slide with bg) ─────────
+// ─── OwnershipSection — DESKTOP VARIANT ──────────────────────────────────────
 function OwnershipSectionDesktop({
   title, description, tag, image, svgComponent,
 }: {
@@ -190,13 +190,10 @@ function OwnershipSectionDesktop({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        padding: 'clamp(1.5rem, 3vh, 3rem) clamp(1.5rem, 3vw, 3rem)',
-        gap: 'clamp(1rem, 2.5vh, 2rem)',
         overflow: 'hidden',
         boxSizing: 'border-box',
       }}
     >
-      {/* Visual — responsive: 45vh tall, max 420px, never overflows */}
       <motion.div
         variants={fadeUp} initial="hidden" whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -205,14 +202,12 @@ function OwnershipSectionDesktop({
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          // Take up remaining space above text, but cap it
           flex: '1 1 auto',
           minHeight: 0,
           overflow: 'visible',
         }}
       >
         <div style={{
-          // Size = min of 45vh or 420px or 80% of container width
           width:  'min(45vh, 420px, 80%)',
           height: 'min(45vh, 420px)',
           flexShrink: 0,
@@ -227,25 +222,54 @@ function OwnershipSectionDesktop({
         </div>
       </motion.div>
 
-      {/* Text — fixed height slot at bottom, never pushed out */}
       <motion.div
         variants={fadeUpDelayed} initial="hidden" whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
         style={{
           flexShrink: 0,
           width: '100%',
-          maxWidth: '560px',
+          paddingLeft: 'clamp(2rem, 5vw, 4rem)',
+          paddingRight: 'clamp(2rem, 5vw, 4rem)',
+          paddingBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
+          marginTop: '16px',
         }}
       >
-        <h3 style={{ fontWeight: 300, letterSpacing: '-0.02em', fontSize: 'clamp(1.25rem, 2.5vw, 2rem)', marginBottom: 'clamp(0.5rem, 1.2vh, 1rem)', lineHeight: 1.2 }}>{title}</h3>
-        <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, fontSize: 'clamp(0.8rem, 1.2vw, 1rem)', marginBottom: '0.5rem' }}>{description}</p>
-        {tag && <div style={{ fontSize: 'clamp(0.65rem, 0.9vw, 0.8rem)', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.8)' }}>#{tag}</div>}
+        <h3 style={{
+          fontWeight: 300,
+          letterSpacing: '-0.02em',
+          fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
+          marginBottom: 'clamp(0.3rem, 0.8vh, 0.6rem)',
+          lineHeight: 1.2,
+        }}>
+          {title}
+        </h3>
+        <p style={{
+          color: 'rgba(255,255,255,0.5)',
+          lineHeight: 1.6,
+          fontSize: 'clamp(0.75rem, 1.05vw, 0.9rem)',
+          marginBottom: '0.4rem',
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical' as any,
+          overflow: 'hidden',
+        }}>
+          {description}
+        </p>
+        {tag && (
+          <div style={{
+            fontSize: 'clamp(0.65rem, 0.9vw, 0.8rem)',
+            letterSpacing: '0.15em',
+            color: 'rgba(255,255,255,0.8)',
+          }}>
+            #{tag}
+          </div>
+        )}
       </motion.div>
     </div>
   );
 }
 
-// ─── OwnershipSection — MOBILE/TABLET VARIANT (original unchanged) ────────────
+// ─── OwnershipSection — MOBILE/TABLET VARIANT ────────────────────────────────
 function OwnershipSection({
   title, description, tag, image, svgComponent, isLast, index, setActiveIndex,
 }: {
@@ -286,21 +310,23 @@ function OwnershipSection({
 }
 
 
-// ─── DesktopSlideshowMain — isolated wheel hijack slideshow ──────────────────
+// ─── DesktopSlideshowMain ─────────────────────────────────────────────────────
 function DesktopSlideshowMain({
-  sections, activeIndex, setActiveIndex, onGoToRef,
+  sections, activeIndex, setActiveIndex, onGoToRef, onResetRef,
 }: {
   sections: { title: string; description: string; tag?: string; image?: string; svgComponent?: React.ReactNode }[];
   activeIndex: number;
   setActiveIndex: (n: number) => void;
   onGoToRef: React.MutableRefObject<((i: number) => void) | null>;
+  onResetRef: React.MutableRefObject<(() => void) | null>;
 }) {
-  const containerRef  = useRef<HTMLDivElement>(null);
-  const currentRef    = useRef(0);
-  const lastScrollTime = useRef(0);
-  // Track if user has seen all slides at least once
-  const seenAll = useRef(false);
-  const visitedRef = useRef<Set<number>>(new Set([0]));
+  const containerRef      = useRef<HTMLDivElement>(null);
+  const currentRef        = useRef(0);
+  const lastScrollTime    = useRef(0);
+  const seenAll           = useRef(false);
+  const visitedRef        = useRef<Set<number>>(new Set([0]));
+  const isTransitioning   = useRef(false);
+  const transitionTimer   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((next: number) => {
     const clamped = Math.max(0, Math.min(sections.length - 1, next));
@@ -308,15 +334,29 @@ function DesktopSlideshowMain({
     currentRef.current = clamped;
     visitedRef.current.add(clamped);
     if (visitedRef.current.size >= sections.length) seenAll.current = true;
+
+    isTransitioning.current = true;
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    transitionTimer.current = setTimeout(() => { isTransitioning.current = false; }, 850);
+
     setActiveIndex(clamped);
   }, [sections.length, setActiveIndex]);
 
-  // Expose goTo to parent so sidebar clicks trigger it directly
-  useEffect(() => {
-    onGoToRef.current = goTo;
-  }, [goTo, onGoToRef]);
+  const reset = useCallback(() => {
+    currentRef.current  = 0;
+    seenAll.current     = false;
+    visitedRef.current  = new Set([0]);
+    isTransitioning.current = false;
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    setActiveIndex(0);
+  }, [setActiveIndex]);
 
-  // Sync currentRef when activeIndex changes from outside (sidebar click)
+  useEffect(() => {
+    onGoToRef.current   = goTo;
+    onResetRef.current  = reset;
+    return () => { if (transitionTimer.current) clearTimeout(transitionTimer.current); };
+  }, [goTo, reset, onGoToRef, onResetRef]);
+
   useEffect(() => {
     currentRef.current = activeIndex;
   }, [activeIndex]);
@@ -331,19 +371,26 @@ function DesktopSlideshowMain({
       const isFirst = currentRef.current === 0;
       const isLast  = currentRef.current === sections.length - 1;
 
-      // First slide + scroll up → let page scroll up freely
-      if (isFirst && isScrollingUp) return;
-
-      // Last slide + scroll down:
-      // → Block until user has seen all slides, then allow page to scroll down
-      if (isLast && isScrollingDown) {
-        if (seenAll.current) return; // all seen → let page scroll
-        e.preventDefault();         // not all seen → block page, just stay on last
+      if (isTransitioning.current) {
+        e.preventDefault();
         e.stopPropagation();
         return;
       }
 
-      // Mid slides → block page, change slide
+      if (isFirst && isScrollingUp) {
+        if (seenAll.current) return;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (isLast && isScrollingDown) {
+        if (seenAll.current) return;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -359,7 +406,7 @@ function DesktopSlideshowMain({
 
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [goTo]);
+  }, [goTo, sections.length]);
 
   return (
     <main
@@ -386,9 +433,7 @@ function DesktopSlideshowMain({
             backgroundColor: '#000',
           }}
         >
-          <OwnershipSectionDesktop
-            {...item}
-          />
+          <OwnershipSectionDesktop {...item} />
         </div>
       ))}
     </main>
@@ -396,20 +441,23 @@ function DesktopSlideshowMain({
 }
 
 
-// ─── MobileSlideshowMain — same wheel/touch logic for mobile ─────────────────
+// ─── MobileSlideshowMain ──────────────────────────────────────────────────────
 function MobileSlideshowMain({
-  sections, activeIndex, setActiveIndex,
+  sections, activeIndex, setActiveIndex, onResetRef,
 }: {
   sections: { title: string; description: string; tag?: string; image?: string; svgComponent?: React.ReactNode }[];
   activeIndex: number;
   setActiveIndex: (n: number) => void;
+  onResetRef: React.MutableRefObject<(() => void) | null>;
 }) {
-  const containerRef   = useRef<HTMLDivElement>(null);
-  const currentRef     = useRef(0);
-  const lastScrollTime = useRef(0);
-  const seenAll        = useRef(false);
-  const visitedRef     = useRef<Set<number>>(new Set([0]));
-  const touchStartY    = useRef(0);
+  const containerRef    = useRef<HTMLDivElement>(null);
+  const currentRef      = useRef(0);
+  const lastScrollTime  = useRef(0);
+  const seenAll         = useRef(false);
+  const visitedRef      = useRef<Set<number>>(new Set([0]));
+  const touchStartY     = useRef(0);
+  const isTransitioning = useRef(false);
+  const transitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((next: number) => {
     const clamped = Math.max(0, Math.min(sections.length - 1, next));
@@ -417,8 +465,27 @@ function MobileSlideshowMain({
     currentRef.current = clamped;
     visitedRef.current.add(clamped);
     if (visitedRef.current.size >= sections.length) seenAll.current = true;
+
+    isTransitioning.current = true;
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    transitionTimer.current = setTimeout(() => { isTransitioning.current = false; }, 850);
+
     setActiveIndex(clamped);
   }, [sections.length, setActiveIndex]);
+
+  const reset = useCallback(() => {
+    currentRef.current      = 0;
+    seenAll.current         = false;
+    visitedRef.current      = new Set([0]);
+    isTransitioning.current = false;
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    setActiveIndex(0);
+  }, [setActiveIndex]);
+
+  useEffect(() => {
+    onResetRef.current = reset;
+    return () => { if (transitionTimer.current) clearTimeout(transitionTimer.current); };
+  }, [reset, onResetRef]);
 
   useEffect(() => { currentRef.current = activeIndex; }, [activeIndex]);
 
@@ -427,13 +494,33 @@ function MobileSlideshowMain({
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
-      const isDown = e.deltaY > 0;
-      const isUp   = e.deltaY < 0;
+      const isDown  = e.deltaY > 0;
+      const isUp    = e.deltaY < 0;
       const isFirst = currentRef.current === 0;
       const isLast  = currentRef.current === sections.length - 1;
-      if (isFirst && isUp) return;
-      if (isLast && isDown) { if (seenAll.current) return; e.preventDefault(); e.stopPropagation(); return; }
-      e.preventDefault(); e.stopPropagation();
+
+      if (isTransitioning.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (isFirst && isUp) {
+        if (seenAll.current) return;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      if (isLast && isDown) {
+        if (seenAll.current) return;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
       const now = Date.now();
       if (now - lastScrollTime.current < 900) return;
       if (Math.abs(e.deltaY) < 10) return;
@@ -444,13 +531,20 @@ function MobileSlideshowMain({
 
     const onTouchStart = (e: TouchEvent) => { touchStartY.current = e.touches[0].clientY; };
     const onTouchEnd   = (e: TouchEvent) => {
-      const diff = touchStartY.current - e.changedTouches[0].clientY;
+      if (isTransitioning.current) return;
+      const diff    = touchStartY.current - e.changedTouches[0].clientY;
       if (Math.abs(diff) < 40) return;
       const isDown  = diff > 0;
       const isFirst = currentRef.current === 0;
       const isLast  = currentRef.current === sections.length - 1;
-      if (isFirst && !isDown) return;
+
+      if (isFirst && !isDown) {
+        if (seenAll.current) return;
+        return;
+      }
+
       if (isLast && isDown && seenAll.current) return;
+
       const now = Date.now();
       if (now - lastScrollTime.current < 900) return;
       lastScrollTime.current = now;
@@ -502,7 +596,24 @@ function MobileSlideshowMain({
 // ─── Ownership (main export) ──────────────────────────────────────────────────
 export default function Ownership() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const goToRef = useRef<((i: number) => void) | null>(null);
+  const goToRef   = useRef<((i: number) => void) | null>(null);
+  const resetRef  = useRef<(() => void) | null>(null);
+  const sectionEl = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionEl.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          if (resetRef.current) resetRef.current();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const sections: { title: string; description: string; tag?: string; image?: string; svgComponent?: React.ReactNode }[] = [
     { title: "Security & Risk Posture", description: "Security and risk posture focuses on keeping organisational risk visible and controlled. Security decisions link directly to business priorities and acceptable risk levels. Each control has a clear owner, review cycle, and response plan. This reduces surprises and limits the impact of incidents when issues occur.", svgComponent: <SecurityWaveSVG /> },
@@ -517,8 +628,8 @@ export default function Ownership() {
   };
 
   return (
-    <section className="relative">
-      <div className="sticky top-0 z-50 h-px w-full mt-30 border-t border-color bg-black">
+    <section ref={sectionEl} className="relative">
+      <div className="sticky top-0 z-50 h-px w-full md:mt-30 border-t border-color bg-black">
         <div className="mx-10 lg:mx-20 xl:mx-24 h-full" />
       </div>
 
@@ -527,20 +638,33 @@ export default function Ownership() {
         {/* ══ DESKTOP lg+ ══ */}
         <div className="hidden lg:flex lg:flex-row relative border-x border-color">
 
-          {/* ── LEFT SIDEBAR — completely untouched ── */}
+          {/* ── LEFT SIDEBAR ── */}
           <div className="w-[32%] shrink-0 relative">
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
-            <aside className="sticky top-0 h-screen z-10 px-10 py-10 flex flex-col">
-              <PlusHeading text="OWNERSHIP" />
+            <aside className="sticky top-0 h-screen z-10 px-10 flex flex-col" style={{ paddingTop: 0 }}>
+              <div style={{ paddingTop: 'clamp(3.5rem, 8vh, 6rem)' }}>
+                <PlusHeading text="OWNERSHIP" />
+              </div>
               <ul className="mt-20 space-y-6">
                 {sections.map((item, idx) => (
-                  <li key={idx} onClick={() => scrollToSection(idx)} className={`text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${activeIndex === idx ? "text-white font-medium" : "text-white/40 hover:text-white/70"}`}>
+                  <li
+                    key={idx}
+                    onClick={() => scrollToSection(idx)}
+                    className={`text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${activeIndex === idx ? "text-white font-medium" : "text-white/40 hover:text-white/70"}`}
+                  >
                     {item.title}
                   </li>
                 ))}
               </ul>
               <div className="flex-1 flex items-center justify-center">
-                <div className="relative overflow-hidden" style={{ width: '200px', height: '100px', WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)', maskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)' }}>
+                <div
+                  className="relative overflow-hidden"
+                  style={{
+                    width: '200px', height: '100px',
+                    WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                    maskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                  }}
+                >
                   <IsometricHoverGrid cellW={80} cellH={48} interactive={true} />
                   <IsoBox cellW={80} cellH={48} col={1} row={2} opacity={0.55} />
                   <IsoBox cellW={80} cellH={48} col={2} row={2} opacity={0.9}  />
@@ -552,30 +676,44 @@ export default function Ownership() {
             </aside>
           </div>
 
-          {/* ── RIGHT MAIN — isolated wheel scroll slideshow ── */}
+          {/* ── RIGHT MAIN ── */}
           <DesktopSlideshowMain
             sections={sections}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
             onGoToRef={goToRef}
+            onResetRef={resetRef}
           />
         </div>
 
-        {/* ══ TABLET sm–lg — completely untouched ══ */}
+        {/* ══ TABLET sm–lg ══ */}
         <div className="hidden sm:flex lg:hidden flex-row relative border-x border-color">
           <div className="w-[30%] shrink-0 relative">
             <div className="absolute inset-0 border-r border-color pointer-events-none" />
-            <aside className="sticky top-0 h-screen z-10 px-6 pt-10 pb-6 flex flex-col">
-              <PlusHeading text="OWNERSHIP" />
+            <aside className="sticky top-0 h-screen z-10 px-6 pb-6 flex flex-col" style={{ paddingTop: 0 }}>
+              <div style={{ paddingTop: 'clamp(2.5rem, 6vh, 4rem)' }}>
+                <PlusHeading text="OWNERSHIP" />
+              </div>
               <ul className="mt-10 space-y-4">
                 {sections.map((item, idx) => (
-                  <li key={idx} onClick={() => scrollToSection(idx)} className={`text-xs uppercase tracking-widest transition-all duration-300 cursor-pointer ${activeIndex === idx ? "text-white font-medium" : "text-white/40 hover:text-white/70"}`}>
+                  <li
+                    key={idx}
+                    onClick={() => scrollToSection(idx)}
+                    className={`text-xs uppercase tracking-widest transition-all duration-300 cursor-pointer ${activeIndex === idx ? "text-white font-medium" : "text-white/40 hover:text-white/70"}`}
+                  >
                     {item.title}
                   </li>
                 ))}
               </ul>
               <div className="flex-1 flex items-center justify-center">
-                <div className="relative overflow-hidden" style={{ width: '140px', height: '80px', WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)', maskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)' }}>
+                <div
+                  className="relative overflow-hidden"
+                  style={{
+                    width: '140px', height: '80px',
+                    WebkitMaskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                    maskImage: 'radial-gradient(ellipse 82% 75% at 50% 55%, black 25%, transparent 100%)',
+                  }}
+                >
                   <IsometricHoverGrid cellW={60} cellH={36} interactive={true} />
                   <IsoBox cellW={60} cellH={36} col={1} row={2} opacity={0.55} />
                   <IsoBox cellW={60} cellH={36} col={2} row={2} opacity={0.9}  />
@@ -595,23 +733,43 @@ export default function Ownership() {
           </main>
         </div>
 
-        {/* ══ MOBILE <sm — same sticky scroll as desktop ══ */}
-        <div className="sm:hidden border-x border-color">
-          <div className="w-full border-b border-white/10 px-4 pt-8 pb-4 sticky top-0 z-20 bg-black">
+        {/* ══ MOBILE <sm ══
+            CHANGES (only 2):
+            1. pt-0 instead of pt-8 — removes top margin above OWNERSHIP
+            2. flex justify-center — centers the OWNERSHIP heading
+        */}
+        <div className="sm:hidden">
+          <div className="w-full border-b border-white/10 px-4 pt-[10px] pb-4 flex justify-center">
             <PlusHeading text="OWNERSHIP" />
           </div>
-          <MobileSlideshowMain
-            sections={sections}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-          />
+          <div>
+            {sections.map((item, index) => (
+              <div
+                key={item.title}
+                className="border-b border-white/10 px-5 pt-8 pb-6 flex flex-col items-center gap-4"
+              >
+                <div style={{ width: '68vw', height: '56vw', maxWidth: 280, maxHeight: 240, flexShrink: 0 }}>
+                  {item.svgComponent ? (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {item.svgComponent}
+                    </div>
+                  ) : item.image ? (
+                    <ParticleImage src={item.image} alt={item.title} useRipple={false} className="w-full h-full" />
+                  ) : null}
+                </div>
+                <div className="w-full">
+                  <h3 className="font-light tracking-tight text-xl mb-3 leading-snug">{item.title}</h3>
+                  <p className="text-white/50 leading-relaxed text-sm">{item.description}</p>
+                  {item.tag && <div className="mt-3 text-xs tracking-widest text-white/70">#{item.tag}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>
 
-      <div className="relative h-px w-full bg-white/10 sm:bg-transparent">
-        <div className="hidden sm:block mx-10 h-full bg-white/10" />
-      </div>
+      <div className="relative h-px w-full bg-white/10" />
     </section>
   );
 }
