@@ -239,7 +239,7 @@ function Sidebar({
   scrollToSection: React.MutableRefObject<((i: number) => void) | null>;
 }) {
   return (
-    <aside className="sticky top-0 h-screen px-10 flex flex-col bg-gray-500">
+    <aside className="sticky top-0 h-screen pl-10  flex flex-col bg-gray-500 border-r border-color">
       <div className="pt-[clamp(3.5rem,8vh,6rem)]">
         <PlusHeading text="OWNERSHIP" />
       </div>
@@ -269,7 +269,7 @@ function Sidebar({
 
       <div className="mb-12">
         <Link href="/execution-arms">
-          <PartialOutlineBtn text="Explore Execution Arms" bgColor="white" />
+          <PartialOutlineBtn text="Explore Execution Arms" bgColor="bg-white" textColor="text-black" borderColor="border-white" />
         </Link>
       </div>
     </aside>
@@ -296,10 +296,10 @@ export default function Ownership() {
   return (
     <section ref={sectionEl} className="relative my-20 md:border-y border-color">
 
-      <div className="mx-10 lg:mx-20 xl:mx-24 relative md:bg-gray-500">
+      <div className="mx-10 lg:mx-20 xl:mx-24 relative">
 
         {/* ══ DESKTOP lg+ ══ */}
-        <div className="hidden md:grid grid-cols-[300px_1fr] lg:grid-cols-[400px_1fr] border-x border-color">
+        <div className="hidden md:grid grid-cols-[200px_1fr] lg:grid-cols-[400px_1fr] border-x border-color">
 
           {/* LEFT */}
           <div >
