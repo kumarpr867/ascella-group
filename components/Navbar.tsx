@@ -188,7 +188,7 @@ const Navbar = () => {
         <div className="mx-10 lg:mx-20 xl:mx-24 h-15">
           <div className="flex justify-between items-center h-full">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Ascella Logo" width={90} height={32} priority className="w-20 sm:w-24 h-auto" />
+              <Image src="/logo.svg" alt="Logo" width={90} height={32} priority unoptimized className="w-20 sm:w-24 h-auto" />
             </Link>
 
             {/* Desktop Nav */}
@@ -299,7 +299,7 @@ const Navbar = () => {
         {/* Top bar */}
         <div className="flex items-center justify-between px-7 pt-7 pb-6">
           <Link href="/" onClick={closeMenu}>
-            <Image src="/logo.png" alt="Ascella Logo" width={90} height={32} className="w-20 h-auto" />
+            <Image src="/logo.svg" alt="Logo" width={90} height={32} unoptimized className="w-20 h-auto" />
           </Link>
           <button onClick={closeMenu} className="w-9 h-9 flex items-center justify-center">
             <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
