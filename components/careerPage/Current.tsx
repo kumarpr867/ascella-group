@@ -126,7 +126,7 @@ const CurrentOpenings = () => {
                 className={`p-6 w-[260px] h-[220px] flex flex-col justify-between transition-all duration-300 ${
                   item.empty
                     ? "bg-transparent"
-                    : "bg-black/60 backdrop-blur-md border border-neutral-800"
+                    : "bg-black/60 backdrop-blur-md border border-neutral-800 hover:bg-gray-700/40" 
                 }`}
               >
                 {!item.empty && (
