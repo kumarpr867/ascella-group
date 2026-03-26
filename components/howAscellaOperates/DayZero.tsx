@@ -110,15 +110,15 @@ export default function DayZero() {
           <Reveal
             variants={slideInFromBottom(0.1)}
             key={item.title}
-            className={`p-10 mx-10 lg:mx-0 flex flex-col justify-center items-center text-center border border-color rounded-xl lg:rounded-none ${index !== 0 ? "lg:border-l" : ""}`}>
+            className={`group md:p-10 p-5 mx-10 lg:mx-0 flex flex-col justify-center items-center text-center border border-color rounded-xl lg:rounded-none ${index !== 0 ? "lg:border-l" : ""} hover:bg-gray-500 hover:scale-105 transition-all duration-300`}>
 
-            <div className="pb-5 h-42">{item.icon}</div>
+            <div className="h-36 lg:h-42">{item.icon}</div>
 
             <h5 className="mb-4 mt-2">
               {item.title}
             </h5>
 
-            <p className="text-b2 leading-tight font-extralight">
+            <p className="text-[12px] lg:text-[14px] text-gray-200 leading-tight group-hover:text-white transition-colors duration-300">
               {item.description}
             </p>
           </Reveal>

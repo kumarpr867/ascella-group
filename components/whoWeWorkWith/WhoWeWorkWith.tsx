@@ -67,12 +67,12 @@ export default function WhoWeWorkWith() {
       </section>
 
 
-      <section className="flex flex-col items-center lg:hidden">
+      <section className="flex flex-col items-center lg:hidden mt-10">
 
-        <Reveal variants={(slideInFromBottom(0.1))} className="px-10 flex flex-col items-center justify-center">
+        <Reveal variants={(slideInFromBottom(0.1))} className="px-10 flex flex-col">
           <h3>Who We</h3>
           <h3 className="text-gray-200"> Work With</h3>
-          <p className="mt-6 text-b2 font-light text-center max-w-xl">
+          <p className="mt-6 text-b2 max-w-xl">
             Ascella partners with organisations where execution quality, governance discipline, and accountable ownership are business-critical rather than optional.
           </p>
         </Reveal>
@@ -80,14 +80,9 @@ export default function WhoWeWorkWith() {
         <Reveal variants={slideInFromBottom(0.2)} className="flex items-center justify-center">
           <EnterpriseStartupSystem />
         </Reveal>
-        <Reveal variants={slideInFromBottom(0.3)} className="text-b3 px-10 text-center"> Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.</Reveal>
-        <Reveal variants={slideInFromBottom(0.4)} className="border border-color p-3 m-10 flex items-center justify-center gap-4 bg-gray-500">
-          <button onClick={() => router.push("/engageWithUs")} className="flex flex-center border border-white4 p-3 rounded-4xl hover:scale-110 transition">
-            <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="1" />
-            </svg>
-          </button>
-          <p className="text-[14px]">Engagements are selective by design.</p>
+        <Reveal variants={slideInFromBottom(0.3)} className=" px-10 text-center">
+          <p className="text-b2">Engagements are selective by design.</p>
+          <p className="text-b3 text-gray-200">Work begins only where leadership recognises that structure, oversight, and measurable control determine long-term outcomes.</p>
         </Reveal>
       </section>
     </>

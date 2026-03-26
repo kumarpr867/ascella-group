@@ -1,11 +1,10 @@
 "use client";
 
+import OutlineBtn from "@/components/btns/OutlineBtn";
 import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 import Image from "next/image";
-import PartialOutlineBtn from "../btns/PartialOutlineBtn";
 import { useRouter } from "next/navigation";
-import OutlineBtn from "../btns/OutlineBtn";
 
 export default function ApplicationForm() {
     const router = useRouter();
