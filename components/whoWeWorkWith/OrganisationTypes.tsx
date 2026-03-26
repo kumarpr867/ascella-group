@@ -83,28 +83,27 @@ export default function OrganisationTypes() {
   const router = useRouter();
 
   const [activeRow, setActiveRow] = useState<number | null>(null);
-  //by default first row is active
   useEffect(() => {
     setActiveRow(0);
   }, []);
 
   return (
-    <section className="mx-10 xl:mx-24">
+    <section className="lg:mx-10 xl:mx-24">
       <div className="lg:my-32 ">
-        <div className="mb-20 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-6 lg:gap-10 items-center md:items-start lg:items-center text-center md:text-left ">
+        <div className="mb-4 lg:mb-20 px-10 lg:px-0 flex flex-col lg:flex-row flex-start w-full lg:justify-between gap-6 lg:gap-10 items-center md:items-start lg:items-center text-center md:text-left ">
           {/* <Reveal variants={slideInFromLeft(0.2)} className="hidden lg:block ">
             <p className="text-[16px] max-w-xs leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
             </p>
           </Reveal> */}
-          <Reveal variants={slideInFromRight(0.2)}>
+          <Reveal variants={slideInFromRight(0.2)} className="flex flex-col items-center justify-center">
             <Heading text="ORGANISATION TYPES" />
-            <p className="text-[20px] md:text-[24px] lg:text-[36px] md:max-w-4xl leading-6 lg:leading-10 mt-6">
+            <p className="text-[16px] md:text-[24px] lg:text-[36px] md:max-w-4xl leading-5 lg:leading-10 mt-6">
               Ascella partners with organisations where exec  ution depends on disciplined operating design, defined authority, and structured accountability across functions and leadership.
             </p>
           </Reveal>
           <Reveal variants={slideInFromLeft(0.2)}>
-            <p className="text-[12px] md:max-w-xs leading-snug">
+            <p className="text-[12px] text-gray-200 md:max-w-xs  leading-snug">
               These organisations prioritise governance architecture, coordinated delivery models, and measurable oversight to sustain performance under scale, complexity, and regulatory pressure.
             </p>
           </Reveal>
@@ -187,7 +186,7 @@ export default function OrganisationTypes() {
 
             return (
               <Reveal variants={slideInFromLeft(0.2 * index)} key={type.title}
-                className="border-t border-color py-6"
+                className={`border-b border-color px-10 py-6 ${isActive ? "bg-gray-500" : ""}`}
               >
                 {/* Header */}
                 <button
@@ -207,7 +206,7 @@ export default function OrganisationTypes() {
 
                   {/* Expand Icon */}
                   <span
-                    className={`text-2xl leading-none transition-transform duration-300 ${isActive ? "rotate-45" : ""
+                    className={`text-[24px] md:text-[32px] leading-none transition-transform duration-300 ${isActive ? "rotate-45" : ""
                       }`}
                   >
                     +
@@ -223,7 +222,7 @@ export default function OrganisationTypes() {
                 >
                   <div className="flex flex-col md:flex-row gap-8">
 
-                    <div className="relative w-full md:w-[220px] h-[400px] md:h-[250px] shrink-0 ">
+                    <div className="relative w-full md:w-[220px] h-[200px] md:h-[250px] shrink-0 ">
                       <Image
                         src={type.img}
                         alt=""
@@ -263,7 +262,6 @@ export default function OrganisationTypes() {
             );
           })}
 
-          <div className="border-t border-color" />
           <div className="py-5 justify-center flex">
             <PartialOutlineBtn
               onClick={() => {
@@ -272,6 +270,8 @@ export default function OrganisationTypes() {
               text="View Startup Programme"
             />
           </div>
+
+          <div className="border-b border-color w-full h-1" />
         </div>
       </div>
     </section>

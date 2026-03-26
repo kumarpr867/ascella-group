@@ -72,7 +72,7 @@ export default function Em3() {
 
     return (
         <section className="mx-10 lg:mx-20 xl:mx-24">
-            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-6 items-center lg:items-start lg:w-[75%] mb-16 lg:mb-20">
+            <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col gap-4 lg:gap-6 items-center lg:items-start lg:w-[75%] mb-4 md:mb-10 lg:mb-20">
                 <Heading text="ENGAGEMENT MODELS" />
                 <h1 className="text-[24px] lg:text-[36px] text-center lg:text-left">
                     Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.
@@ -86,14 +86,14 @@ export default function Em3() {
             <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col items-center gap-8 md:hidden">
 
                 {/* Menu */}
-                <nav className="flex flex-col gap-2 text-lg">
+                <nav className="flex flex-col gap-2">
                     {MENU_ITEMS.map((item, index) => (
                         <button
                             key={item}
                             onClick={() => handleClick(item)}
                             className={`text-left transition-colors ${active === item
-                                ? "text-white"
-                                : "text-gray-400"
+                                ? "text-white text-[14px]"
+                                : "text-gray-300 text-[12px]"
                                 }`}
                         >
                             [{String(index + 1).padStart(2, "0")}] {item}
@@ -111,7 +111,7 @@ export default function Em3() {
                         transition={{ duration: 0.4 }}
                         className="flex flex-col items-center gap-6 text-center"
                     >
-                        <div className="relative w-full h-[260px]">
+                        <div className="relative w-full h-[200px]">
                             <Image
                                 src={section.image}
                                 alt={section.title}
@@ -122,7 +122,7 @@ export default function Em3() {
 
                         <div className="flex flex-col gap-4 max-w-md">
                             <h2 className="text-xl">{section.title}</h2>
-                            <p className="text-sm text-gray-300">
+                            <p className="text-b3 text-gray-200">
                                 {section.description}
                             </p>
                         </div>

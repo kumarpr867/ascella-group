@@ -304,16 +304,16 @@ export default function Prog() {
                 DESKTOP LAYOUT (lg+): left text grid + right SVG
             ══════════════════════════════════════════ */}
             <div className="hidden lg:block mx-10 lg:mx-20 xl:mx-24 border-x border-color overflow-hidden">
-                <div className="flex flex-row">
+                <div className="grid grid-cols-[1.3fr_1fr]">
                     {/* Left: text items grid */}
-                    <div className="grid grid-cols-1 border-r border-color lg:w-1/2">
+                    <div className="grid grid-cols-1 border-r border-color">
                         {items.map((item, i) => (
                             <div
                                 key={i}
                                 onMouseEnter={() => setHoveredIndex(i)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                                 className={`
-                                    relative transition-all duration-500 ease-out border-b border-color p-6 lg:p-10 last:border-0
+                                    relative transition-all duration-500 ease-out border-b border-color p-6 last:border-0
                                     ${hoveredIndex === i ? 'bg-white/10 scale-[1.02] z-10 shadow-[0_0_30px_rgba(255,255,255,0.1)]' : 'bg-transparent'}
                                 `}
                             >
@@ -321,10 +321,10 @@ export default function Prog() {
                                     <h5 className={`text-[16px] md:text-[20px] transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-100'}`}>
                                         {item.title}
                                     </h5>
-                                    <p className={`text-b2 md:pr-40 transition-colors duration-300 mt-2 ${hoveredIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                                    <p className={`text-b2 lg:pr-40 transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-300'}`}>
                                         {item.subtitle}
                                     </p>
-                                    <p className={`text-b3 transition-colors duration-300 mt-4 ${hoveredIndex === i ? 'text-gray-100 font-light' : 'text-gray-400'}`}>
+                                    <p className={`text-b3 transition-colors duration-300 ${hoveredIndex === i ? 'text-gray-100 font-light' : 'text-gray-400'}`}>
                                         {item.body}
                                     </p>
                                 </Reveal>
@@ -332,8 +332,7 @@ export default function Prog() {
                         ))}
                     </div>
 
-                    {/* Right: SVG */}
-                    <Reveal variants={slideInFromBottom(0.1)} className="flex lg:w-2/3 items-center justify-center">
+                    <Reveal variants={slideInFromBottom(0.1)} className="flex items-center justify-center">
                         <InteractiveSVG />
                     </Reveal>
                 </div>
