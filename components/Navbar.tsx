@@ -53,6 +53,11 @@ const PageLoadingBar = memo(() => {
     if (prevPathname.current !== pathname) {
       prevPathname.current = pathname;
       if (loading) {
+        if (completeTimeout.current) clearTimeout(completeTimeout.current);
+        completeTimeout.current = setTimeout(() => {
+          completeLoading();
+        }, 50);
+      } else {
         completeLoading();
       }
     }
@@ -106,7 +111,7 @@ const Navbar = () => {
   const _isPending = useTransition()[0];
   const desktopRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
-  const scrollTimeout = useRef<number | null>(null);
+  const scrollTimeout = useRef<NodeJS.Timeout | number | null>(null);
 
   // Hide navbar while the user is actively scrolling; show it after short pause
   const handleScroll = useCallback(() => {
@@ -356,7 +361,11 @@ const Navbar = () => {
                             <Link
                               key={child.href}
                               href={child.href}
-                              onClick={closeMenu}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                closeMenu();
+                                window.location.href = child.href;
+                              }}
                               className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href ? "text-white bg-white/10" : "text-gray-400 hover:text-white"}`}
                             >
                               {child.label}

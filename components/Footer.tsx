@@ -229,11 +229,12 @@ const Footer = () => {
                         <div className="flex flex-col items-start lg:items-end gap-4">
                             <Link href="/" className="flex items-center gap-2">
                                 <Image
-                                    src="/logo.png"
-                                    alt="Ascella Logo"
+                                    src="/logo.svg"
+                                    alt="Logo"
                                     width={96}
                                     height={32}
                                     priority
+                                    unoptimized
                                     className="w-20 sm:w-24 h-auto"
                                 />
                             </Link>
