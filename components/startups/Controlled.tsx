@@ -5,7 +5,6 @@ import { motion } from 'motion/react';
 
 // --- Reveal Animation Variants ---
 
-
 const containerVariants = {
   hidden: {},
   visible: {
@@ -145,6 +144,7 @@ function WaveCanvas({ imgEl }: { imgEl: HTMLImageElement | null }) {
 const styles = `
   .ctrl-section { position:relative; width:100%; background:#000; color:#fff; }
 
+  /* ── DESKTOP (641px+) ── */
   @media (min-width:641px) {
     .ctrl-section {
       display:flex;
@@ -154,11 +154,11 @@ const styles = `
     }
     .d-gl-top   { position:absolute; top:0; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
     .d-gl-foot  { position:absolute; bottom:100px; left:0; right:0; height:1px; background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-left  { position:absolute; top:0; bottom:0; left:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
-    .d-gl-right { position:absolute; top:0; bottom:0; right:96px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-left  { position:absolute; top:0; bottom:0; left:80px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
+    .d-gl-right { position:absolute; top:0; bottom:0; right:80px; width:1px; background:rgba(255,255,255,.2); z-index:50; }
     .d-globe-container {
       position:absolute;
-      left:96px; bottom:100px; top:0; right:50%;
+      left:80px; bottom:100px; top:0; right:50%;
       overflow:hidden; z-index:10;
     }
     .d-globe-wrapper {
@@ -176,7 +176,7 @@ const styles = `
     .d-main {
       flex:1; display:flex; flex-direction:column;
       justify-content:center; align-items:flex-end;
-      padding:0 160px;
+      padding:0 80px;
     }
     .d-inner { max-width:900px; padding-right:176px; }
     .d-h2 {
@@ -201,10 +201,13 @@ const styles = `
       transition:background .7s, color .7s;
     }
     .d-subrow:hover .d-arrow { background:#fff; color:#000; }
+
+    /* Footer: left/right padding = line position (80px) + 30px gap */
     .d-footer {
       height:100px; flex-shrink:0;
       display:flex; align-items:center; justify-content:space-between;
-      padding:0 128px; pointer-events:auto;
+      padding:0 110px;
+      pointer-events:auto;
       position:relative; z-index:50;
     }
     .d-engage {
@@ -221,31 +224,36 @@ const styles = `
     .d-engage:hover svg { fill:#fff; }
     .d-ascella {
       font-size:9px; letter-spacing:.1em;
-      max-width:220px; text-align:left;
+      max-width:220px; text-align:right;
       line-height:1.5; color:rgba(255,255,255,.45);
     }
     .m-layout { display:none !important; }
   }
 
+  /* ── TABLET (641–1023px) ── */
   @media (min-width:641px) and (max-width:1023px) {
-    .d-gl-left  { left:40px; }
-    .d-gl-right { right:40px; }
-    .d-globe-container { left:40px; right:55%; bottom:100px; top:0; }
+    .d-gl-left  { left:80px; }
+    .d-gl-right { right:80px; }
+    .d-globe-container { left:80px; right:55%; bottom:100px; top:0; }
     .d-globe-wrapper   { width:560px; height:500px; bottom:-40px; left:-220px; }
-    .d-main  { padding:0 60px; }
+    .d-main  { padding:0 80px; }
     .d-inner { padding-right:40px; }
     .d-indent { padding-left:60px; }
-    .d-footer { padding:0 48px; }
+    .d-footer { padding:0 110px; }
   }
 
+  /* ── LARGE (1440px+) ── */
   @media (min-width:1440px) {
-    .d-gl-left  { left:120px; }
-    .d-gl-right { right:120px; }
-    .d-globe-container { left:120px; right:50%; bottom:100px; top:0; }
+    .d-gl-left  { left:96px; }
+    .d-gl-right { right:96px; }
+    .d-globe-container { left:96px; right:50%; bottom:100px; top:0; }
     .d-globe-wrapper   { width:900px; height:800px; bottom:-280px; left:-380px; }
-    .d-footer { padding:0 160px; }
+    .d-main  { padding:0 96px; }
+    /* line at 96px + 30px gap = 126px */
+    .d-footer { padding:0 126px; }
   }
 
+  /* ── MOBILE (max 640px) ── */
   @media (max-width:640px) {
     .d-gl-top, .d-gl-foot, .d-gl-left, .d-gl-right,
     .d-globe-container, .d-content, .d-footer { display:none !important; }
@@ -292,10 +300,8 @@ const styles = `
       border:1px solid rgba(0,0,0,.15);
       font-size:8px; letter-spacing:.38em;
       text-transform:uppercase;
-      background:#ffffff;
-      color:#000000;
-      opacity:1;
-      cursor:pointer; white-space:nowrap;
+      background:#ffffff; color:#000000;
+      opacity:1; cursor:pointer; white-space:nowrap;
       transition:background .3s, color .3s, border-color .3s;
       box-shadow:0 0 0 1px rgba(0,0,0,.06);
     }

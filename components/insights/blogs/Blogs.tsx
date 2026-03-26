@@ -19,6 +19,7 @@ const categories = [
     "Marketing",
     "Sales",
 ];
+
 export default function Blogs() {
 
     const filterRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,8 @@ export default function Blogs() {
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showAllFeatured, setShowAllFeatured] = useState(false);
+    const [showAllBlogs, setShowAllBlogs] = useState(false);
     const BLOGS_PER_PAGE = 6;
 
     const filtered = blogs.filter((item) => {
@@ -46,47 +49,53 @@ export default function Blogs() {
 
     const totalPages = Math.ceil(dataToPaginate.length / BLOGS_PER_PAGE);
 
-    const paginatedBlogs = dataToPaginate.slice(
-        (currentPage - 1) * BLOGS_PER_PAGE,
-        currentPage * BLOGS_PER_PAGE
-    );
-useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-        const el = filterRef.current;
-        if (!el) return;
-
-        if (!el.contains(event.target as Node)) {
-            setShowFilter(false);
-        }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-    };
-}, []);
+    const paginatedBlogs = showAllBlogs
+        ? dataToPaginate
+        : dataToPaginate.slice(
+            (currentPage - 1) * BLOGS_PER_PAGE,
+            currentPage * BLOGS_PER_PAGE
+        );
 
     useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" })
-    }, [currentPage])
+        const handleClickOutside = (event: MouseEvent) => {
+            const el = filterRef.current;
+            if (!el) return;
+
+            if (!el.contains(event.target as Node)) {
+                setShowFilter(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     useEffect(() => {
         setCurrentPage(1);
+        setShowAllBlogs(false);
+        setShowAllFeatured(false);
     }, [search, category]);
+
     return (
         <section className="mb-20">
 
             {/* Top Search + Filter */}
+            {/* CHANGE 2: search box aur filter dono right side mein, filter icon ke pehle search box */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
-                <div className=" mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-between items-center w-full">
-                    {/* search bar */}
-                    <div className="relative w-52 md:w-72  ">
+                <div className="mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-end items-center gap-4 w-full">
+
+                    {/* search bar — right side, filter ke pehle */}
+                    <div className="relative w-52 md:w-72">
                         <input
                             type="text"
                             placeholder="Search by Title"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-gray-500 backdrop-blur-md text-white text-sm pr-10 pl-4 py-2 placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/40 transition-all duration-300" />
+                            className="w-full bg-gray-500 backdrop-blur-md text-white text-sm pr-10 pl-4 py-2 placeholder-gray-100 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/40 transition-all duration-300"
+                        />
 
                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-100 cursor-pointer">
                             <svg
@@ -106,7 +115,7 @@ useEffect(() => {
                         </span>
                     </div>
 
-                    {/* filter */}
+                    {/* filter — right side */}
                     <div ref={filterRef} className="relative">
 
                         <button
@@ -169,84 +178,113 @@ useEffect(() => {
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (
                     <>
-                        <h2 className="text-lg mb-8">Featured Blogs</h2>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10 border-b border-color  ">
-                            {featured.map((item) => (
-                                <CaseCard key={item.id} item={item} variant="featured" />
-                            ))}
+                        {/* Header: title left, View All right (mobile only) */}
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-lg">Featured Blogs</h2>
+                            <button
+                                onClick={() => setShowAllFeatured((prev) => !prev)}
+                                className="md:hidden text-xs text-white/60 hover:text-white transition underline underline-offset-2"
+                            >
+                                {showAllFeatured ? "Show Less" : "View All"}
+                            </button>
                         </div>
 
+                        {/* CHANGE 3: border-b ko Reveal wrapper ke bahar -mx-10 lg:-mx-20 xl:-mx-24 se edge-to-edge banaya */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10">
+                            {featured.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    className={
+                                        index >= 3 && !showAllFeatured
+                                            ? "hidden md:block"
+                                            : "block"
+                                    }
+                                >
+                                    <BlogCard item={item} variant="featured" />
+                                </div>
+                            ))}
+                        </div>
+                        {/* Edge-to-edge horizontal line */}
+                        <div className="-mx-10 lg:-mx-20 xl:-mx-24 border-b border-color mb-10" />
                     </>
                 )}
 
-                {/* All Blogs */}
-                <h2 className="text-lg mb-8">
-                    {isFilteredCategory ? `${category} Blogs` : "All Blogs"}
-                </h2>
+                {/* All Blogs header — View All mobile only */}
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-lg">
+                        {isFilteredCategory ? `${category} Blogs` : "All Blogs"}
+                    </h2>
+                    {totalPages > 1 && (
+                        <button
+                            onClick={() => setShowAllBlogs((prev) => !prev)}
+                            className="md:hidden text-xs text-white/60 hover:text-white transition underline underline-offset-2"
+                        >
+                            {showAllBlogs ? "Show Less" : "View All"}
+                        </button>
+                    )}
+                </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+                {/* Mobile: 2 cols; md: 2 cols; lg: 3 cols */}
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16">
                     {paginatedBlogs.map((item) => (
-                        <CaseCard key={item.id} item={item} variant="default" />
+                        <BlogCard key={item.id} item={item} variant="default" />
                     ))}
                 </div>
+
                 {paginatedBlogs.length === 0 && (
                     <p className="text-center text-white mt-10">
                         No blogs found.
                     </p>
                 )}
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-6 mt-20 text-sm text-white/60">
-
-                        {/* Previous */}
-                        <button
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage((p) => p - 1)}
-                            className="flex items-center gap-2 hover:text-white disabled:opacity-30"
-                        >
-                            ← Previous
-                        </button>
-
-                        {/* Page numbers */}
-                        <div className="flex items-center gap-3">
-                            {getPagination(currentPage, totalPages).map((page, index) =>
-                                page === "..." ? (
-                                    <span key={index}>...</span>
-                                ) : (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentPage(page as number)}
-                                        className={`transition ${currentPage === page
-                                            ? "text-white"
-                                            : "hover:text-white"
-                                            }`}
-                                    >
-                                        {page}
-                                    </button>
-                                )
-                            )}
-                        </div>
-
-                        {/* Next */}
-                        <button
-                            disabled={currentPage === totalPages}
-                            onClick={() => setCurrentPage((p) => p + 1)}
-                            className="flex items-center gap-2 hover:text-white disabled:opacity-30"
-                        >
-                            Next →
-                        </button>
-
-                    </div>
-                )}
-
             </Reveal>
+
+            {/* Pagination — all devices, no scroll on click */}
+            {!showAllBlogs && totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 md:gap-6 mt-20 text-sm text-white/60">
+
+                    <button
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((p) => p - 1)}
+                        className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                    >
+                        ← Previous
+                    </button>
+
+                    <div className="flex items-center gap-3">
+                        {getPagination(currentPage, totalPages).map((page, index) =>
+                            page === "..." ? (
+                                <span key={index}>...</span>
+                            ) : (
+                                <button
+                                    key={index}
+                                    onClick={() => setCurrentPage(page as number)}
+                                    className={`transition ${currentPage === page
+                                        ? "text-white"
+                                        : "hover:text-white"
+                                        }`}
+                                >
+                                    {page}
+                                </button>
+                            )
+                        )}
+                    </div>
+
+                    <button
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage((p) => p + 1)}
+                        className="flex items-center gap-2 hover:text-white disabled:opacity-30"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+            )}
         </section>
     );
 }
 
-function CaseCard({
+function BlogCard({
     item,
     variant = "default",
 }: {
@@ -260,56 +298,108 @@ function CaseCard({
         <motion.div
             whileHover={{ y: -8 }}
             transition={{ duration: 0.3 }}
-            className={`group ${isFeatured ? "flex gap-4 md:block" : "block"}`}
+            className="group block"
         >
-
-            {/* Image */}
-            <div className={`relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
-                <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-110"
-                />
-            </div>
+            {/* Image — clicking navigates to blog page */}
+            <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                <div className={`relative overflow-hidden border border-color cursor-pointer ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-32 md:h-56 mb-2 md:mb-4"}`}>
+                    <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition duration-500 group-hover:scale-110"
+                    />
+                </div>
+            </Link>
 
             {/* Content */}
-            <div className="flex flex-col justify-between flex-1">
+            <div className="flex flex-col flex-1">
 
+                {/* ── DESKTOP layout ── */}
                 {/* Title + Date */}
-                <div className="flex justify-between gap-6 mb-2">
-                    <p className="md:w-2/3 text-[14px] md:text-[16px] line-clamp-2">
+                <div className="hidden md:flex justify-between gap-6 mb-2">
+                    <p className="w-2/3 text-[16px] line-clamp-2">
                         {item.title}
                     </p>
-
-                    <span className="hidden md:block text-[12px]">
+                    <span className="text-[12px] text-white/60 shrink-0">
                         {item.date}
                     </span>
                 </div>
 
-                {/* Description */}
-                <p className="text-gray-200 text-[12px] md:text-[14px] line-clamp-2 md:line-clamp-3 mb-3">
-                    {item.description}
-                </p>
+                {/* Description — desktop only, max 3 lines */}
+                <div className="hidden md:block mb-3">
+                    <p
+                        className="text-gray-200 text-[14px]"
+                        style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                        }}
+                    >
+                        {item.description}
+                    </p>
+                </div>
 
-                {/* Button */}
-                <div className="flex justify-between items-center">
+                {/* CHANGE 1: Read Now button — desktop: default bg-white text-black, hover/active bg-black text-white */}
+                <div className="hidden md:flex">
                     <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                        <button className="self-start text-xs border border-white/40 px-2 md:px-4 py-1 md:py-2 hover:bg-white hover:text-black transition">
+                        <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white active:bg-black active:text-white transition">
                             Read Now
                         </button>
                     </Link>
-
-
-                    <span className="md:hidden text-[12px] whitespace-nowrap">
-                        {item.date}
-                    </span>
                 </div>
+
+                {/* ── MOBILE layout ── */}
+                {/* CHANGE 4: Featured card mobile — image left (85x98) + title & read now right, stacked */}
+                {isFeatured ? (
+                    <div className="flex md:hidden items-start gap-3 mt-1">
+                        {/* Image — 85x98 fixed */}
+                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
+                            <div className="relative w-[85px] h-[98px] overflow-hidden border border-color">
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </Link>
+
+                        {/* Title + Read Now stacked */}
+                        <div className="flex flex-col justify-start gap-2 flex-1">
+                            <p className="text-[11px] line-clamp-2">
+                                {item.title}
+                            </p>
+                            <p className="text-[10px] text-white/60 line-clamp-2">
+                                {item.description}
+                            </p>
+                            <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                                <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap w-fit">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                ) : (
+                    /* Non-featured mobile layout — unchanged */
+                    <div className="flex md:hidden items-start justify-between gap-2 mt-1">
+                        <p className="text-[11px] line-clamp-2 flex-1">
+                            {item.title}
+                        </p>
+                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
+                            <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap">
+                                Read Now
+                            </button>
+                        </Link>
+                    </div>
+                )}
 
             </div>
         </motion.div>
     )
 }
+
 function getPagination(current: number, total: number) {
     const delta = 1
     const range: (number | string)[] = []

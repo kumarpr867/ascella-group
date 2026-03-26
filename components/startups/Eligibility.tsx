@@ -302,147 +302,146 @@ export default function Eligibility() {
   ];
 
   return (
-    <section className="w-full bg-black text-white flex flex-col lg:flex-row items-start lg:items-center
-      px-10 md:px-12 lg:px-24
-      py-4 md:py-12
-    ">
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start lg:items-center justify-items-center">
+    <section className="w-full bg-black text-white">
+      <div className="mx-10 lg:mx-20 xl:mx-24" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-16 items-start lg:items-center justify-items-center
+          pt-8 pb-8 md:py-12
+        ">
 
-        {/* ── Left: SVG Graphic (Slide from Left) ── */}
-        <motion.div 
-          className="hidden lg:flex flex-col gap-2 lg:gap-8"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={leftReveal}
-        >
-          <div className="mx-auto lg:mx-0" style={{ flexShrink: 0 }}>
-            <GeometricSVG />
-          </div>
-          <p className="text-gray-400 text-base md:text-xl pt-2 lg:pt-[85px]">
-            <span className="text-white">Engagement</span>{" "}
-            is selective by design.
-          </p>
-        </motion.div>
-
-        {/* ── Right: Content (Slide from Right) ── */}
-        <motion.div 
-          className="flex flex-col space-y-4 md:space-y-8"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={rightReveal}
-        >
-
-          {/* Label */}
-          <motion.div variants={itemFadeUp} className="flex items-center gap-1 text-xs tracking-[0.2em] mx-auto lg:ml-0 justify-center">
-            <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
-              <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
-              <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-              <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
-            </svg>
-            <span>ELIGIBILITY CRITERIA</span>
-          </motion.div>
-
-          {/* Heading */}
-          <motion.h3 variants={itemFadeUp} className="text-xl md:text-3xl leading-tight max-w-xl">
-            The programme is designed{" "}
-            <span className="text-gray-400">for startups
-            preparing for structured, accountable execution at scale.
-            </span>
-          </motion.h3>
-
-          {/* Card */}
-         <motion.div
-            variants={itemFadeUp}
-            className="backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-2xl"
-            style={{
-              background: "white",
-              border: "1px solid rgba(0,0,0,0.08)",
-            }}
+          {/* ── Left: SVG Graphic (Slide from Left) ── */}
+          <motion.div 
+            className="hidden lg:flex flex-col gap-2 lg:gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={leftReveal}
           >
-            <div className="flex gap-4 mb-5 md:mb-8">
-              <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="14" y="14" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="35" y="14" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="28" y="6" width="7" height="7" fill="#3D3D3D"/>
-                <rect y="21" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="7" y="21" width="7" height="7" fill="#3D3D3D"/>
-                <rect y="7" width="7" height="7" fill="#3D3D3D"/>
-                <rect x="7" width="7" height="7" fill="#3D3D3D"/>
-              </svg>
-              <h5 className="text-xs md:text-base text-black leading-relaxed">
-                To qualify for the Ascella for Startups program,{" "}
-                <br className="hidden md:block" />
-                your startup should meet the following:
-              </h5>
+            <div className="mx-auto lg:mx-0" style={{ flexShrink: 0 }}>
+              <GeometricSVG />
             </div>
-
-            <div className="space-y-0">
-              {criteria.map((item, index) => (
-                <div
-                  key={item.id}
-                  onMouseEnter={() => setHoveredRow(index)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                  className={`flex items-center py-4 md:py-6 relative overflow-hidden ${
-                    index !== criteria.length - 1 ? "border-b" : ""
-                  }`}
-                  style={{
-                    borderColor: "rgba(0,0,0,0.08)",
-                    paddingLeft: hoveredRow === index ? "10px" : "0px",
-                    cursor: "default",
-                    transition: "padding-left 0.35s cubic-bezier(0.16,1,0.3,1)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(90deg, rgba(0,0,0,0.05) 0%, transparent 80%)",
-                      transform: hoveredRow === index ? "translateX(0)" : "translateX(-100%)",
-                      transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-                    }}
-                  />
-                  <span
-                    className="text-sm relative"
-                    style={{
-                      width: "36px",
-                      flexShrink: 0,
-                      color: hoveredRow === index ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.3)",
-                      // background, padding, borderRadius property removed from here 
-                      transition: "color 0.3s ease",
-                    }}
-                  >
-                    {item.id}
-                  </span>
-                  <span
-                    className="text-sm md:text-lg relative"
-                    style={{
-                      color: hoveredRow === index ? "black" : "rgba(0,0,0,0.75)",
-                      transition: "color 0.3s ease",
-                    }}
-                  >
-                    {item.text}
-                  </span>
-                  <span
-                    className="ml-auto relative font-mono text-xs"
-                    style={{
-                      color: hoveredRow === index ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0)",
-                      transform: hoveredRow === index ? "translateX(0)" : "translateX(-8px)",
-                      transition: "color 0.3s ease, transform 0.3s ease",
-                    }}
-                  >
-                    
-                  </span>
-                </div>
-              ))}
-            </div>
+            <p className="text-gray-400 text-base md:text-xl pt-2 lg:pt-[85px]">
+              <span className="text-white">Engagement</span>{" "}
+              is selective by design.
+            </p>
           </motion.div>
-        </motion.div>
 
+          {/* ── Right: Content (Slide from Right) ── */}
+          <motion.div 
+            className="flex flex-col space-y-3 md:space-y-8 w-full"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={rightReveal}
+          >
+
+            {/* Label */}
+            <motion.div variants={itemFadeUp} className="flex items-center gap-1 text-xs tracking-[0.2em] mx-auto lg:ml-0 justify-center">
+              <svg width="12" height="12" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10.833" width="4.33333" height="10.8333" fill="white"/>
+                <rect x="10.833" y="15.1666" width="4.33333" height="10.8333" fill="white"/>
+                <rect x="15.167" y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+                <rect y="10.8334" width="10.8333" height="4.33333" fill="white"/>
+              </svg>
+              <span>ELIGIBILITY CRITERIA</span>
+            </motion.div>
+
+            {/* Heading */}
+            <motion.h3 variants={itemFadeUp} className="text-xl md:text-3xl leading-tight max-w-xl">
+              The programme is designed{" "}
+              <span className="text-gray-400">for startups
+              preparing for structured, accountable execution at scale.
+              </span>
+            </motion.h3>
+
+            {/* Card — subtle gray background */}
+            <motion.div
+              variants={itemFadeUp}
+              className="backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-2xl"
+              style={{
+                background: "white",
+                border: "1px solid rgba(0,0,0,0.08)",
+              }}
+            >
+              <div className="flex gap-4 mb-5 md:mb-8">
+                <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="14" y="14" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="35" y="14" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="28" y="6" width="7" height="7" fill="#3D3D3D"/>
+                  <rect y="21" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="7" y="21" width="7" height="7" fill="#3D3D3D"/>
+                  <rect y="7" width="7" height="7" fill="#3D3D3D"/>
+                  <rect x="7" width="7" height="7" fill="#3D3D3D"/>
+                </svg>
+                <h5 className="text-xs md:text-base text-black leading-relaxed">
+                  To qualify for the Ascella for Startups program,{" "}
+                  <br className="hidden md:block" />
+                  your startup should meet the following:
+                </h5>
+              </div>
+
+              <div className="space-y-0">
+                {criteria.map((item, index) => (
+                  <div
+                    key={item.id}
+                    onMouseEnter={() => setHoveredRow(index)}
+                    onMouseLeave={() => setHoveredRow(null)}
+                    className={`flex items-center py-4 md:py-6 relative overflow-hidden ${
+                      index !== criteria.length - 1 ? "border-b" : ""
+                    }`}
+                    style={{
+                      borderColor: "rgba(0,0,0,0.08)",
+                      paddingLeft: hoveredRow === index ? "10px" : "0px",
+                      cursor: "default",
+                      transition: "padding-left 0.35s cubic-bezier(0.16,1,0.3,1)",
+                    }}
+                  >
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: "linear-gradient(90deg, rgba(0,0,0,0.05) 0%, transparent 80%)",
+                        transform: hoveredRow === index ? "translateX(0)" : "translateX(-100%)",
+                        transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+                      }}
+                    />
+                    <span
+                      className="text-sm relative"
+                      style={{
+                        width: "36px",
+                        flexShrink: 0,
+                        color: hoveredRow === index ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.3)",
+                        transition: "color 0.3s ease",
+                      }}
+                    >
+                      {item.id}
+                    </span>
+                    <span
+                      className="text-sm md:text-lg relative"
+                      style={{
+                        color: hoveredRow === index ? "black" : "rgba(0,0,0,0.75)",
+                        transition: "color 0.3s ease",
+                      }}
+                    >
+                      {item.text}
+                    </span>
+                    <span
+                      className="ml-auto relative font-mono text-xs"
+                      style={{
+                        color: hoveredRow === index ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0)",
+                        transform: hoveredRow === index ? "translateX(0)" : "translateX(-8px)",
+                        transition: "color 0.3s ease, transform 0.3s ease",
+                      }}
+                    >
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+
+        </div>
       </div>
     </section>
   );

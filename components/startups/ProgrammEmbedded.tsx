@@ -175,7 +175,10 @@ const mobileSlides: MobileSlide[] = [
 
 // ── Main Component ─────────────────────────────────────────────────────────────
 const ProgramEmbedded = () => {
-  const boxClass = "w-[450px] h-[450px] border-r border-b border-[#3D3D3D] p-15 flex flex-col justify-end relative bg-black";
+  // Base box class — used for Box 1 and Box 3 (with hover bg)
+  const boxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] p-10 xl:p-12 flex flex-col justify-end relative bg-black transition-colors duration-300 hover:bg-[#1a1a1a]";
+  // Image box — no hover bg change
+  const imageBoxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] flex flex-col justify-end relative bg-black";
 
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -186,15 +189,53 @@ const ProgramEmbedded = () => {
   const currentSlide: MobileSlide = mobileSlides[activeSlide];
 
   return (
-    <section className="relative w-full min-h-screen bg-black text-white flex flex-col items-center">
+    <section className="relative w-full bg-black text-white flex flex-col items-center">
 
       {/* Top horizontal line - Edge to Edge */}
       <div className="w-full border-t border-[#3D3D3D]" />
 
       {/* ══════════════════════════════════════════════
-          DESKTOP / MAC LAYOUT (hidden on mobile)
+          DESKTOP LAYOUT
+          Matches Controlled.tsx: 641px+ = 80px, 1440px+ = 96px
       ══════════════════════════════════════════════ */}
-      <div className="hidden md:block w-[1292px] border-l border-[#3D3D3D] relative z-10">
+      <div
+        className="hidden border-l border-[#3D3D3D] relative z-10 w-full"
+        style={{ display: 'none' }}
+      />
+
+      {/* Use inline style for breakpoint-accurate margin matching Controlled.tsx */}
+      <style>{`
+        .prog-desktop {
+          display: none;
+          border-left: 1px solid #3D3D3D;
+          position: relative;
+          z-index: 10;
+        }
+        @media (min-width: 641px) {
+          .prog-desktop {
+            display: block;
+            margin-left: 80px;
+            margin-right: 80px;
+          }
+          .prog-mobile { display: none !important; }
+        }
+        @media (min-width: 1440px) {
+          .prog-desktop {
+            margin-left: 96px;
+            margin-right: 96px;
+          }
+        }
+        @media (max-width: 640px) {
+          .prog-desktop { display: none !important; }
+          .prog-mobile  { display: flex !important; }
+        }
+        @keyframes fadeSlide {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <div className="prog-desktop">
 
         {/* --- TOP ROW (Hero Section) --- */}
         <div className="relative w-full h-[450px] border-b border-r border-[#3D3D3D] flex flex-col justify-end p-12 overflow-hidden">
@@ -264,7 +305,7 @@ const ProgramEmbedded = () => {
           variants={containerVariants}
         >
 
-          {/* Box 1 */}
+          {/* Box 1 — hover bg */}
           <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
@@ -281,21 +322,21 @@ const ProgramEmbedded = () => {
             </div>
           </motion.div>
 
-          {/* Box 2 (Image Box) */}
-          <motion.div variants={itemVariants} className={boxClass}>
+          {/* Box 2 — Image box, no hover */}
+          <motion.div variants={itemVariants} className={imageBoxClass}>
             <img
               src="/Rectangle 9444.png"
               className="absolute inset-0 w-full h-full object-cover opacity-80"
               alt="Execution structure"
             />
-            <div className="relative z-10">
+            <div className="relative z-10 p-10 xl:p-12">
               <h5 className="text-[20px] border-white/40 pl-7">
                 Early structure prevents <br /> later execution debt.
               </h5>
             </div>
           </motion.div>
 
-          {/* Box 3 */}
+          {/* Box 3 — hover bg */}
           <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
@@ -316,16 +357,15 @@ const ProgramEmbedded = () => {
       </div>
 
       {/* ══════════════════════════════════════════════
-          MOBILE LAYOUT (visible only on small screens)
+          MOBILE LAYOUT (max-width: 640px only)
       ══════════════════════════════════════════════ */}
-      <div className="flex md:hidden flex-col w-full relative z-10">
+      <div className="prog-mobile flex-col w-full relative z-10" style={{ display: 'none' }}>
 
         {/* ── MOBILE HERO SECTION ── */}
         <div
           className="relative w-full overflow-hidden bg-black"
-          style={{ minHeight: '260px' }}
+          style={{ minHeight: '200px' }}
         >
-          {/* Isometric Grid BG */}
           <div
             className="absolute inset-0"
             style={{
@@ -335,41 +375,19 @@ const ProgramEmbedded = () => {
             }}
           >
             <IsometricHoverGrid />
-
-            <img
-              src="/vector 55.png" alt=""
-              style={{
-                position: 'absolute', left: '50%', top: '95px',
-                width: '100px', height: '60px',
-                transform: 'translate(-160px, -50%)',
-                objectFit: 'fill', opacity: 0.3,
-                pointerEvents: 'none', mixBlendMode: 'screen',
-              }}
+            <img src="/vector 55.png" alt=""
+              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-160px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }}
             />
-            <img
-              src="/vector 55.png" alt=""
-              style={{
-                position: 'absolute', left: '50%', top: '95px',
-                width: '100px', height: '60px',
-                transform: 'translate(-50%, -50%)',
-                objectFit: 'fill', opacity: 0.7,
-                pointerEvents: 'none', mixBlendMode: 'screen',
-              }}
+            <img src="/vector 55.png" alt=""
+              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.7, pointerEvents: 'none', mixBlendMode: 'screen' }}
             />
-            <img
-              src="/vector 55.png" alt=""
-              style={{
-                position: 'absolute', left: '50%', top: '95px',
-                width: '100px', height: '60px',
-                transform: 'translate(60px, -50%)',
-                objectFit: 'fill', opacity: 0.3,
-                pointerEvents: 'none', mixBlendMode: 'screen',
-              }}
+            <img src="/vector 55.png" alt=""
+              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(60px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }}
             />
           </div>
 
           <motion.div 
-            className="relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-[150px]"
+            className="relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-16"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -397,49 +415,26 @@ const ProgramEmbedded = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <div
-            className="absolute top-0 bottom-0 border-l border-[#3D3D3D] z-10"
-            style={{ left: '40px' }}
-          />
-          <div
-            className="absolute top-0 bottom-0 border-r border-[#3D3D3D] z-10"
-            style={{ right: '40px' }}
-          />
+          <div className="absolute top-0 bottom-0 border-l border-[#3D3D3D] z-10" style={{ left: '40px' }} />
+          <div className="absolute top-0 bottom-0 border-r border-[#3D3D3D] z-10" style={{ right: '40px' }} />
 
-          {/* ── IMAGE SLIDE ── */}
+          {/* IMAGE SLIDE */}
           {currentSlide.type === 'image' && (
-            <div
-              className="relative z-20 flex flex-col justify-between h-full"
+            <div className="relative z-20 flex flex-col justify-between h-full"
               style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
             >
               <div className="absolute inset-0" style={{ left: '40px', right: '40px', top: 0, bottom: 0, overflow: 'hidden' }}>
-                <img
-                  src={(currentSlide as ImageSlide).image}
-                  alt="slide visual"
-                  className="w-full h-full object-cover opacity-80"
-                />
+                <img src={(currentSlide as ImageSlide).image} alt="slide visual" className="w-full h-full object-cover opacity-80" />
               </div>
-
               <div className="relative z-10 flex flex-col justify-between h-full" style={{ minHeight: '340px' }}>
                 <div />
                 <div>
-                  <p className="text-[15px] border-white pl-4 text-white">
-                    {(currentSlide as ImageSlide).quote}
-                  </p>
+                  <p className="text-[15px] border-white pl-4 text-white">{(currentSlide as ImageSlide).quote}</p>
                 </div>
                 <div className="flex items-center gap-2 mt-6">
                   {mobileSlides.map((_, i) => (
-                    <div
-                      key={i}
-                      onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
-                      style={{
-                        width:           i === activeSlide ? '18px' : '6px',
-                        height:          '6px',
-                        borderRadius:    '3px',
-                        backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)',
-                        transition:      'all 0.3s ease',
-                        cursor:          'pointer',
-                      }}
+                    <div key={i} onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
+                      style={{ width: i === activeSlide ? '18px' : '6px', height: '6px', borderRadius: '3px', backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', transition: 'all 0.3s ease', cursor: 'pointer' }}
                     />
                   ))}
                 </div>
@@ -447,44 +442,24 @@ const ProgramEmbedded = () => {
             </div>
           )}
 
-          {/* ── TEXT SLIDE ── */}
+          {/* TEXT SLIDE */}
           {currentSlide.type === 'text' && (
-            <div
-              className="relative z-20 flex flex-col justify-between h-full"
+            <div className="relative z-20 flex flex-col justify-between h-full"
               style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
             >
               <div>
-                <img
-                  src={(currentSlide as TextSlide).icon}
-                  alt="icon"
-                  className="w-6 h-6"
-                />
+                <img src={(currentSlide as TextSlide).icon} alt="icon" className="w-6 h-6" />
               </div>
-
               <div className="flex flex-col space-y-4 mt-6 flex-1">
-                <h5 className="text-[17px] font-light leading-snug text-white">
-                  {(currentSlide as TextSlide).title}
-                </h5>
+                <h5 className="text-[17px] font-light leading-snug text-white">{(currentSlide as TextSlide).title}</h5>
                 <div className="text-[12px] text-white/40 space-y-3 leading-relaxed">
-                  {(currentSlide as TextSlide).paragraphs.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
+                  {(currentSlide as TextSlide).paragraphs.map((p, i) => <p key={i}>{p}</p>)}
                 </div>
               </div>
-
               <div className="flex items-center gap-2 mt-6 pt-2">
                 {mobileSlides.map((_, i) => (
-                  <div
-                    key={i}
-                    onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
-                    style={{
-                      width:           i === activeSlide ? '18px' : '6px',
-                      height:          '6px',
-                      borderRadius:    '3px',
-                      backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)',
-                      transition:      'all 0.3s ease',
-                      cursor:          'pointer',
-                    }}
+                  <div key={i} onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
+                    style={{ width: i === activeSlide ? '18px' : '6px', height: '6px', borderRadius: '3px', backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', transition: 'all 0.3s ease', cursor: 'pointer' }}
                   />
                 ))}
               </div>
@@ -498,14 +473,13 @@ const ProgramEmbedded = () => {
       </div>
 
       {/* Bottom horizontal line - Edge to Edge (desktop) */}
-      <div className="hidden md:block w-full border-t border-[#3D3D3D]" />
-
+      <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'none' }} />
       <style>{`
-        @keyframes fadeSlide {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @media (min-width: 641px) {
+          .prog-bottom-line { display: block !important; }
         }
       `}</style>
+      <div className="prog-bottom-line w-full border-t border-[#3D3D3D]" style={{ display: 'none' }} />
 
     </section>
   );

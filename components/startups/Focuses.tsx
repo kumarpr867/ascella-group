@@ -112,7 +112,6 @@ export default function Focuses() {
           letter-spacing: 0.1em;
           line-height: 1.4;
           color: white;
-    
           max-width: 320px;
           font-weight: 300;
           margin-top: 15px;
@@ -146,9 +145,23 @@ export default function Focuses() {
         .accordion-item:hover { background: rgba(255,255,255,0.02); }
 
         .accordion-content-wrapper {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0 48px;
+          margin: 0 40px;
+          padding: 0 20px;
+        
+        }
+
+        @media (min-width: 1024px) {
+          .accordion-content-wrapper {
+            margin: 0 80px;
+            padding: 0 20px;
+          }
+        }
+
+        @media (min-width: 1280px) {
+          .accordion-content-wrapper {
+            margin: 0 96px;
+            padding: 0 20px;
+          }
         }
 
         .accordion-row {
@@ -272,8 +285,6 @@ export default function Focuses() {
             margin-right: 0;
             font-size: clamp(17px, 5vw, 26px);
           }
-
-          .accordion-content-wrapper { padding: 0 40px; }
 
           .accordion-row {
             position: static;

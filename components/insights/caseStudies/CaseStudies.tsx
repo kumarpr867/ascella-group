@@ -32,6 +32,8 @@ export default function CaseStudies() {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
+    const [showAllFeatured, setShowAllFeatured] = useState(false);
+    const [showAllCases, setShowAllCases] = useState(false);
 
     const filtered = caseStudies.filter((item) => {
         const matchesSearch = item.title
@@ -50,10 +52,13 @@ export default function CaseStudies() {
 
     const totalPages = Math.ceil(dataToPaginate.length / CASES_PER_PAGE);
 
-    const paginatedStudies = dataToPaginate.slice(
-        (currentPage - 1) * CASES_PER_PAGE,
-        currentPage * CASES_PER_PAGE
-    );
+    const paginatedStudies = showAllCases
+        ? dataToPaginate
+        : dataToPaginate.slice(
+            (currentPage - 1) * CASES_PER_PAGE,
+            currentPage * CASES_PER_PAGE
+        );
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const el = filterRef.current;
@@ -73,142 +78,178 @@ export default function CaseStudies() {
 
     useEffect(() => {
         setCurrentPage(1);
+        setShowAllCases(false);
+        setShowAllFeatured(false);
     }, [search, category]);
-    // Scroll to top when page changes
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [currentPage]);
 
     return (
         <section className="mb-20">
 
             {/* Top Search + Filter */}
+            {/* CHANGE 2: Search box aur filter dono right side mein ek saath, filter icon se pehle search */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
-                <div className=" mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-between items-center w-full">
-                    {/* search bar */}
-                    <div className="relative w-52 md:w-72  ">
-                        <input
-                            type="text"
-                            placeholder="Search by Title"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-gray-500 backdrop-blur-md  
-                   text-white text-sm pr-10 pl-4 py-2  
-                   placeholder-gray-100
-                   focus:outline-none focus:ring-2 focus:ring-white/20 
-                   focus:border-white/40
-                   transition-all duration-300"
-                        />
+                <div className="mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-end items-center w-full">
+                    {/* search bar + filter — right side mein ek saath */}
+                    <div className="flex items-center gap-4">
+                        {/* search bar */}
+                        <div className="relative w-52 md:w-72">
+                            <input
+                                type="text"
+                                placeholder="Search by Title"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full bg-gray-500 backdrop-blur-md  
+                       text-white text-sm pr-10 pl-4 py-2  
+                       placeholder-gray-100
+                       focus:outline-none focus:ring-2 focus:ring-white/20 
+                       focus:border-white/40
+                       transition-all duration-300"
+                            />
 
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-100 cursor-pointer">
-                            <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 13 13"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M7.60243 0C10.4044 0 12.6765 2.27134 12.6766 5.07324L12.6698 5.33496C12.5338 8.0155 10.3168 10.1475 7.60243 10.1475L7.34168 10.1406C6.22226 10.0839 5.19933 9.66332 4.38661 8.99609L0.853402 12.5303C0.658178 12.7253 0.341595 12.7253 0.146371 12.5303C-0.0488408 12.3351 -0.0487399 12.0185 0.146371 11.8232L3.67957 8.28906C2.9612 7.41355 2.52918 6.29405 2.52918 5.07324C2.52934 2.27144 4.80062 0.000152035 7.60243 0ZM7.60243 1C5.3529 1.00015 3.52934 2.82372 3.52918 5.07324C3.52918 7.32289 5.35281 9.14731 7.60243 9.14746C9.85217 9.14746 11.6766 7.32299 11.6766 5.07324C11.6765 2.82363 9.85208 1 7.60243 1Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-                        </span>
-                    </div>
-
-                    {/* filter */}
-                    <div ref={filterRef} className="relative">
-
-                        <button
-                            onClick={() => setShowFilter(!showFilter)}
-                            className="flex items-center gap-2 text-sm text-white/80 hover:text-white"
-                        >
-                            <span className="flex items-center justify-center">
-                                <span className="hidden md:inline">Filter by Category</span>
-                                <span className="md:hidden">Filter</span>
-
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-100 cursor-pointer">
                                 <svg
-                                    className="ml-2"
                                     width="14"
                                     height="14"
-                                    viewBox="0 0 14 13"
+                                    viewBox="0 0 13 13"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        d="M12.6829 6.20798H4.44628M1.53894 6.20798H0.349609M1.53894 6.20798C1.53894 5.82253 1.69206 5.45287 1.96461 5.18031C2.23717 4.90776 2.60683 4.75464 2.99228 4.75464C3.37772 4.75464 3.74739 4.90776 4.01994 5.18031C4.29249 5.45287 4.44561 5.82253 4.44561 6.20798C4.44561 6.59342 4.29249 6.96308 4.01994 7.23564C3.74739 7.50819 3.37772 7.66131 2.99228 7.66131C2.60683 7.66131 2.23717 7.50819 1.96461 7.23564C1.69206 6.96308 1.53894 6.59342 1.53894 6.20798ZM12.6829 10.6126H8.85094M8.85094 10.6126C8.85094 10.9982 8.69746 11.3683 8.42484 11.6409C8.15223 11.9135 7.78248 12.0666 7.39694 12.0666C7.01149 12.0666 6.64183 11.9129 6.36928 11.6403C6.09673 11.3678 5.94361 10.9981 5.94361 10.6126M8.85094 10.6126C8.85094 10.2271 8.69746 9.85769 8.42484 9.58508C8.15223 9.31246 7.78248 9.15931 7.39694 9.15931C7.01149 9.15931 6.64183 9.31243 6.36928 9.58498C6.09673 9.85753 5.94361 10.2272 5.94361 10.6126M5.94361 10.6126H0.349609M12.6829 1.80331H10.6129M7.70561 1.80331H0.349609M7.70561 1.80331C7.70561 1.41786 7.85873 1.0482 8.13128 0.775647C8.40383 0.503094 8.77349 0.349976 9.15894 0.349976C9.3498 0.349976 9.53878 0.387567 9.71511 0.460604C9.89144 0.533641 10.0517 0.640693 10.1866 0.775647C10.3216 0.910602 10.4286 1.07082 10.5016 1.24714C10.5747 1.42347 10.6123 1.61245 10.6123 1.80331C10.6123 1.99416 10.5747 2.18315 10.5016 2.35948C10.4286 2.5358 10.3216 2.69602 10.1866 2.83097C10.0517 2.96593 9.89144 3.07298 9.71511 3.14601C9.53878 3.21905 9.3498 3.25664 9.15894 3.25664C8.77349 3.25664 8.40383 3.10352 8.13128 2.83097C7.85873 2.55842 7.70561 2.18876 7.70561 1.80331Z"
-                                        stroke="white"
-                                        strokeWidth="0.7"
-                                        strokeMiterlimit="10"
-                                        strokeLinecap="round"
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M7.60243 0C10.4044 0 12.6765 2.27134 12.6766 5.07324L12.6698 5.33496C12.5338 8.0155 10.3168 10.1475 7.60243 10.1475L7.34168 10.1406C6.22226 10.0839 5.19933 9.66332 4.38661 8.99609L0.853402 12.5303C0.658178 12.7253 0.341595 12.7253 0.146371 12.5303C-0.0488408 12.3351 -0.0487399 12.0185 0.146371 11.8232L3.67957 8.28906C2.9612 7.41355 2.52918 6.29405 2.52918 5.07324C2.52934 2.27144 4.80062 0.000152035 7.60243 0ZM7.60243 1C5.3529 1.00015 3.52934 2.82372 3.52918 5.07324C3.52918 7.32289 5.35281 9.14731 7.60243 9.14746C9.85217 9.14746 11.6766 7.32299 11.6766 5.07324C11.6765 2.82363 9.85208 1 7.60243 1Z"
+                                        fill="currentColor"
                                     />
                                 </svg>
                             </span>
-                        </button>
+                        </div>
 
-                        <AnimatePresence>
-                            {showFilter && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.25 }}
-                                    className="absolute right-0 mt-4 px-4 w-52 bg-gray-500 backdrop-blur-md border border-color rounded-2xl shadow-2xl overflow-hidden z-50">
-                                    {categories.map((cat, index) => (
-                                        <button
-                                            key={cat}
-                                            onClick={() => {
-                                                setCategory(cat);
-                                                setShowFilter(false);
-                                            }}
-                                            className={`w-full text-center py-2 text-[16px] text-lg transition-all duration-200 ${index !== categories.length - 1 ? "border-b border-white/10" : ""} 
+                        {/* filter — search ke baad same line mein */}
+                        <div ref={filterRef} className="relative">
+
+                            <button
+                                onClick={() => setShowFilter(!showFilter)}
+                                className="flex items-center gap-2 text-sm text-white/80 hover:text-white"
+                            >
+                                <span className="flex items-center justify-center">
+                                    <span className="hidden md:inline">Filter by Category</span>
+                                    <span className="md:hidden">Filter</span>
+
+                                    <svg
+                                        className="ml-2"
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 14 13"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M12.6829 6.20798H4.44628M1.53894 6.20798H0.349609M1.53894 6.20798C1.53894 5.82253 1.69206 5.45287 1.96461 5.18031C2.23717 4.90776 2.60683 4.75464 2.99228 4.75464C3.37772 4.75464 3.74739 4.90776 4.01994 5.18031C4.29249 5.45287 4.44561 5.82253 4.44561 6.20798C4.44561 6.59342 4.29249 6.96308 4.01994 7.23564C3.74739 7.50819 3.37772 7.66131 2.99228 7.66131C2.60683 7.66131 2.23717 7.50819 1.96461 7.23564C1.69206 6.96308 1.53894 6.59342 1.53894 6.20798ZM12.6829 10.6126H8.85094M8.85094 10.6126C8.85094 10.9982 8.69746 11.3683 8.42484 11.6409C8.15223 11.9135 7.78248 12.0666 7.39694 12.0666C7.01149 12.0666 6.64183 11.9129 6.36928 11.6403C6.09673 11.3678 5.94361 10.9981 5.94361 10.6126M8.85094 10.6126C8.85094 10.2271 8.69746 9.85769 8.42484 9.58508C8.15223 9.31246 7.78248 9.15931 7.39694 9.15931C7.01149 9.15931 6.64183 9.31243 6.36928 9.58498C6.09673 9.85753 5.94361 10.2272 5.94361 10.6126M5.94361 10.6126H0.349609M12.6829 1.80331H10.6129M7.70561 1.80331H0.349609M7.70561 1.80331C7.70561 1.41786 7.85873 1.0482 8.13128 0.775647C8.40383 0.503094 8.77349 0.349976 9.15894 0.349976C9.3498 0.349976 9.53878 0.387567 9.71511 0.460604C9.89144 0.533641 10.0517 0.640693 10.1866 0.775647C10.3216 0.910602 10.4286 1.07082 10.5016 1.24714C10.5747 1.42347 10.6123 1.61245 10.6123 1.80331C10.6123 1.99416 10.5747 2.18315 10.5016 2.35948C10.4286 2.5358 10.3216 2.69602 10.1866 2.83097C10.0517 2.96593 9.89144 3.07298 9.71511 3.14601C9.53878 3.21905 9.3498 3.25664 9.15894 3.25664C8.77349 3.25664 8.40383 3.10352 8.13128 2.83097C7.85873 2.55842 7.70561 2.18876 7.70561 1.80331Z"
+                                            stroke="white"
+                                            strokeWidth="0.7"
+                                            strokeMiterlimit="10"
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                </span>
+                            </button>
+
+                            <AnimatePresence>
+                                {showFilter && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.25 }}
+                                        className="absolute right-0 mt-4 px-4 w-52 bg-gray-500 backdrop-blur-md border border-color rounded-2xl shadow-2xl overflow-hidden z-50">
+                                        {categories.map((cat, index) => (
+                                            <button
+                                                key={cat}
+                                                onClick={() => {
+                                                    setCategory(cat);
+                                                    setShowFilter(false);
+                                                }}
+                                                className={`w-full text-center py-2 text-[16px] text-lg transition-all duration-200 ${index !== categories.length - 1 ? "border-b border-white/10" : ""} 
                                             ${category === cat ? "text-white" : "text-white/35 hover:text-white"}`}>
-                                            {cat}
-                                        </button>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                                {cat}
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
+                        </div>
                     </div>
                 </div>
             </Reveal>
 
-            <Reveal variants={slideInFromBottom(0.6)} className=" mx-10 lg:mx-20 xl:mx-24">
+            <Reveal variants={slideInFromBottom(0.6)} className="mx-10 lg:mx-20 xl:mx-24">
 
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (
                     <>
-                        <h2 className="text-lg mb-8">Featured Case Studies</h2>
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-lg">Featured Case Studies</h2>
+                            <button
+                                onClick={() => setShowAllFeatured((prev) => !prev)}
+                                className="md:hidden text-xs text-white/60 hover:text-white transition underline underline-offset-2"
+                            >
+                                {showAllFeatured ? "Show Less" : "View All"}
+                            </button>
+                        </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10 border-b border-color  ">
-                            {featured.map((item) => (
-                                <CaseCard key={item.id} item={item} variant="featured" />
+                        {/* CHANGE 3: border-b ko -mx-10 lg:-mx-20 xl:-mx-24 se edge to edge kiya */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10">
+                            {featured.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    className={
+                                        index >= 3 && !showAllFeatured
+                                            ? "hidden md:block"
+                                            : "block"
+                                    }
+                                >
+                                    <CaseCard item={item} variant="featured" />
+                                </div>
                             ))}
                         </div>
+                        {/* Edge to edge border line */}
+                        <div className="-mx-10 lg:-mx-20 xl:-mx-24 border-b border-color mb-10" />
                     </>
                 )}
 
-                {/* All Case Studies */}
-                <h2 className="text-lg mb-8">
-                    {isFilteredCategory ? `${category} Case Studies` : "All Case Studies"}
-                </h2>
+                {/* All Case Studies header — View All mobile only */}
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-lg">
+                        {isFilteredCategory ? `${category} Case Studies` : "All Case Studies"}
+                    </h2>
+                    {totalPages > 1 && (
+                        <button
+                            onClick={() => setShowAllCases((prev) => !prev)}
+                            className="md:hidden text-xs text-white/60 hover:text-white transition underline underline-offset-2"
+                        >
+                            {showAllCases ? "Show Less" : "View All"}
+                        </button>
+                    )}
+                </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-15 ">
+                {/* Mobile: 2 cols; md+: 2 cols; lg+: 3 cols */}
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-15">
                     {paginatedStudies.map((item) => (
                         <CaseCard key={item.id} item={item} variant="default" />
                     ))}
                 </div>
+
                 {paginatedStudies.length === 0 && (
                     <p className="text-center text-white mt-10">
                         No case studies found.
                     </p>
                 )}
             </Reveal>
-            {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-6 mt-20 text-sm text-white/60">
+
+            {/* Pagination — all devices, no scroll on click */}
+            {!showAllCases && totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 md:gap-6 mt-20 text-sm text-white/60">
 
                     <button
                         disabled={currentPage === 1}
@@ -265,53 +306,143 @@ function CaseCard({
         <motion.div
             whileHover={{ y: -8 }}
             transition={{ duration: 0.3 }}
-            className={`group ${isFeatured ? "flex gap-4 md:block" : "block"}`}
+            className="group block"
         >
+            {/* CHANGE 4: Mobile featured card — horizontal layout (image left ~85x98, content right) */}
+            {isFeatured ? (
+                <>
+                    {/* Desktop: original vertical layout */}
+                    <div className="hidden md:block">
+                        <Link href={`/insights/case-studies/${slugify(item.title)}`}>
+                            <div className="relative overflow-hidden border border-color cursor-pointer w-full h-56 mb-4">
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition duration-500 group-hover:scale-110"
+                                />
+                            </div>
+                        </Link>
+                        <div className="flex flex-col flex-1">
+                            <div className="hidden md:flex justify-between gap-6 mb-2">
+                                <p className="w-2/3 text-[16px] line-clamp-2">{item.title}</p>
+                                <span className="text-[12px] text-white/60 shrink-0">{item.date}</span>
+                            </div>
+                            <div className="hidden md:block mb-3">
+                                <p
+                                    className="text-gray-200 text-[14px]"
+                                    style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    {item.description}
+                                </p>
+                            </div>
+                            {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
+                            <div className="hidden md:flex">
+                                <Link href={`/insights/case-studies/${slugify(item.title)}`}>
+                                    <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
+                                        Read Now
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
 
-            {/* Image */}
-            <div className={`group relative overflow-hidden border border-color ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-56 mb-4"}`}>
-                <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-110"
-                />
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col justify-between flex-1">
-
-                {/* Title + Date */}
-                <div className="flex justify-between gap-6 mb-2">
-                    <p className="md:w-2/3 text-[14px] md:text-[16px] line-clamp-2">
-                        {item.title}
-                    </p>
-
-                    <span className="hidden md:block text-[12px]">
-                        {item.date}
-                    </span>
-                </div>
-
-                {/* Description */}
-                <p className="text-gray-200 text-[12px] md:text-[14px] line-clamp-2 md:line-clamp-3 mb-3">
-                    {item.description}
-                </p>
-
-                {/* Button */}
-                <div className="flex justify-between items-center">
+                    {/* Mobile: horizontal layout — image left, content right */}
+                    <div className="flex md:hidden gap-3">
+                        {/* Image — ~85x98 */}
+                        <Link href={`/insights/case-studies/${slugify(item.title)}`} className="shrink-0">
+                            <div className="relative overflow-hidden border border-color cursor-pointer" style={{ width: 85, height: 98 }}>
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition duration-500 group-hover:scale-110"
+                                />
+                            </div>
+                        </Link>
+                        {/* Content — title, description (2 lines), read now */}
+                        <div className="flex flex-col justify-between flex-1 py-0.5">
+                            <p className="text-[11px] line-clamp-2 leading-snug">{item.title}</p>
+                            <p
+                                className="text-[10px] text-white/60 mt-1"
+                                style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                }}
+                            >
+                                {item.description}
+                            </p>
+                            <Link href={`/insights/case-studies/${slugify(item.title)}`} className="mt-2">
+                                {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
+                                <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                /* Default (non-featured) card — original structure preserved */
+                <>
                     <Link href={`/insights/case-studies/${slugify(item.title)}`}>
-                        <button className="self-start text-xs border border-white/40 px-2 md:px-4 py-1 md:py-2 hover:bg-white hover:text-black transition">
-                            Read Now
-                        </button>
+                        <div className="relative overflow-hidden border border-color cursor-pointer w-full h-32 md:h-56 mb-2 md:mb-4">
+                            <Image
+                                src={item.image}
+                                alt={item.title}
+                                fill
+                                className="object-cover transition duration-500 group-hover:scale-110"
+                            />
+                        </div>
                     </Link>
 
+                    <div className="flex flex-col flex-1">
+                        {/* Desktop layout */}
+                        <div className="hidden md:flex justify-between gap-6 mb-2">
+                            <p className="w-2/3 text-[16px] line-clamp-2">{item.title}</p>
+                            <span className="text-[12px] text-white/60 shrink-0">{item.date}</span>
+                        </div>
+                        <div className="hidden md:block mb-3">
+                            <p
+                                className="text-gray-200 text-[14px]"
+                                style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 3,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                }}
+                            >
+                                {item.description}
+                            </p>
+                        </div>
+                        {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
+                        <div className="hidden md:flex">
+                            <Link href={`/insights/case-studies/${slugify(item.title)}`}>
+                                <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
 
-                    <span className="md:hidden text-[12px] whitespace-nowrap">
-                        {item.date}
-                    </span>
-                </div>
-
-            </div>
+                        {/* Mobile layout */}
+                        <div className="flex md:hidden items-start justify-between gap-2 mt-1">
+                            <p className="text-[11px] line-clamp-2 flex-1">{item.title}</p>
+                            <Link href={`/insights/case-studies/${slugify(item.title)}`} className="shrink-0">
+                                {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
+                                <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </>
+            )}
         </motion.div>
     )
 }

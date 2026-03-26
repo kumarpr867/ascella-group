@@ -216,7 +216,7 @@ export default function WhoWeWorkWith() {
   return (
     <motion.section
       ref={sectionRef}
-      className="relative my-10 border-y border-color py-20 overflow-hidden"
+      className="relative  border-y border-color  overflow-hidden"
       initial={{ opacity: 0, y: 80 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] as any }}

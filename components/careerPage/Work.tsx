@@ -53,16 +53,17 @@ export default function Work() {
                   Work within a governance-led
                 </h2>
 
-                <div className="flex items-center justify-start gap-3 pl-30 mt-1 group">
+                <div className="flex items-center justify-start gap-3  mt-1 group">
+                  
+                  <span className="text-[#6E6E6E] text-[36px] lg:text-[48px] font-medium leading-[1.1] tracking-tight group-hover:text-white transition-colors">
+                    operating environment
+                  </span>
                   <div className="border border-white/20 rounded-full p-2 md:p-3 shrink-0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
                       <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
                   </div>
-                  <span className="text-[#6E6E6E] text-[36px] lg:text-[48px] font-medium leading-[1.1] tracking-tight group-hover:text-white transition-colors">
-                    operating environment
-                  </span>
                 </div>
               </motion.div>
 
@@ -91,12 +92,7 @@ export default function Work() {
             >
               <h4>Work within a governance-led operating environment</h4>
               <div className="flex gap-2 items-center">
-                <div className="w-24">
-                  <svg viewBox="0 0 61 61" fill="true" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="60.4576" y="30.4056" width="42.5" height="42.5" rx="21.25" transform="rotate(135 60.4576 30.4056)" stroke="white" strokeOpacity="0.5" strokeWidth="0.5" />
-                    <path d="M30.9059 21.4056L31.1129 40.3051M31.1129 40.3051L41.9059 30.9056M31.1129 40.3051L19.9059 30.9056" stroke="white" strokeWidth="0.5" />
-                  </svg>
-                </div>
+                
                 <p className="text-b3 pr-10">Ascella roles operate inside defined accountability, structured execution, and central oversight frameworks.</p>
               </div>
             </motion.div>

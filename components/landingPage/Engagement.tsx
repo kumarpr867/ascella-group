@@ -159,8 +159,8 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; err
         onFocus={() => setOpen(true)}
         onChange={e => { setQuery(e.target.value); onChange(''); setOpen(true); }}
         autoComplete="off"
-        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm
-          ${error && !value ? 'border border-red-500' : 'border-transparent'}`}
+        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm rounded-lg
+          ${error && !value ? 'border border-red-500' : 'border border-gray-300'}`}
       />
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" style={{ fontSize: '10px' }}>▾</span>
       {open && filtered.length > 0 && (
@@ -301,20 +301,19 @@ export default function Engagement() {
   return (
     <section className="flex flex-col">
 
-      <div className="border-y border-color">
-        <div className="mx-10 lg:mx-20 xl:mx-24 py-15 border-x border-color"></div>
-      </div>
+      {/* Full-width top border */}
+      <div className="border-t border-color w-full"></div>
 
       <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-10 border-x border-color">
 
         {/* ── Heading row: left-aligned on desktop, 2-line forced on mobile ── */}
+        {/* FIX 1: Removed md:pl-[12%], lg:pl-[15%], xl:pl-[18%] — heading now left-aligns with content */}
         <Reveal variants={slideInFromBottom(0.1)} className="flex items-start justify-between mb-8 md:mb-10">
           <h1 className="
             uppercase text-gray-200 font-thin text-left leading-tight
             text-[20px] w-full
-            md:text-[28px] md:w-auto md:max-w-[60%] md:pl-[12%]
-            lg:text-[36px] lg:pl-[15%]
-            xl:pl-[18%]
+            md:text-[28px] md:w-auto md:max-w-[60%]
+            lg:text-[36px]
           ">
             {/* Mobile: forced 2-line via <br> — hidden on md+ */}
             <span className="block md:hidden">
@@ -326,7 +325,7 @@ export default function Engagement() {
               <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
             </span>
           </h1>
-          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4 md:mr-[50px]">
+          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4">
             <Link href={"mailto:hello@ascella.group"}>hello@ascella.group</Link>
             <p>+91 16045 10860</p>
           </div>
@@ -335,9 +334,9 @@ export default function Engagement() {
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-20">
 
           {/* ── Left column: Globe + Info cards ── */}
-          <div className="w-full xl:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:items-start md:justify-between">
+          <div className="w-full md:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:justify-between">
 
-            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px] mx-auto md:mx-0 md:ml-[100px]">
+            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px] mx-auto">
               <GlobeCanvas />
             </div>
 
@@ -358,7 +357,7 @@ export default function Engagement() {
           </div>
 
           {/* ── Right column: Form ── */}
-          <div className="w-full md:max-w-md space-y-2 md:space-y- md:-ml-[50px] md:mr-[50px]">
+          <div className="w-full md:w-1/2 md:max-w-md space-y-2 md:space-y-">
 
             <Reveal variants={slideInFromBottom(0.1)}>
               <label className={lbl}>Full Name</label>
@@ -376,8 +375,9 @@ export default function Engagement() {
               {err('orgName')}
             </Reveal>
 
+            {/* FIX 2: RoleDropdown now has border border-gray-300 (same as other inputs) via updated className inside RoleDropdown */}
             <Reveal variants={slideInFromBottom(0.1)}>
-              <label className={lbl }  >Role / Position</label>
+              <label className={lbl}  >Role / Position</label>
               <RoleDropdown value={role} onChange={setRole} error={submitted && !!errors.role} />
               {err('role')}
             </Reveal>
@@ -424,9 +424,8 @@ export default function Engagement() {
         </div>
       </div>
 
-      <div className="border-t border-color">
-        <div className="mx-10 lg:mx-20 xl:mx-24 py-15 border-x border-color"></div>
-      </div>
+      {/* Full-width bottom border */}
+      <div className="border-t border-color w-full"></div>
     </section>
   )
 }

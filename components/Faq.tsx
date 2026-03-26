@@ -64,7 +64,7 @@ export default function Faq({ faqs, description }: Props) {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="hidden md:grid mx-10 lg:mx-20 xl:mx-24 py-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]"
+        className="hidden md:grid mx-10 lg:mx-20 xl:mx-24 py-8 md:py-16 lg:py-16 xl:py-16 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[0.5fr]"
       >
         <Reveal variants={slideInFromBottom(0.3)}
           className="flex flex-col gap-4 py-6 row-span-2 max-w-md md:max-w-xs"
