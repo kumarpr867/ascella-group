@@ -231,7 +231,7 @@ const Footer = () => {
                                 <Image
                                     src="/logo.png"
                                     alt="Ascella Logo"
-                                    width={90}
+                                    width={96}
                                     height={32}
                                     priority
                                     className="w-20 sm:w-24 h-auto"
@@ -248,12 +248,12 @@ const Footer = () => {
                                         className="flex-1 bg-white text-black px-4 py-2 text-xs md:text-sm outline-none placeholder:text-gray-400"
                                     />
                                     <PartialOutlineBtn
-                                        text="Subscribe"
-                                        textColor="text-black"
-                                        bgColor="bg-white"
+                                        text="Join Us"
+                                        textColor="text-white"
+                                        bgColor="bg-black"
                                         borderColor="border-black"
-                                        hoverBgColor="hover:bg-black"
-                                        hoverTextColor="hover:text-white"
+                                        hoverBgColor="hover:bg-white"
+                                        hoverTextColor="hover:text-black"
                                     />
                                 </div>
                             </div>

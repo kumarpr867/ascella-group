@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
     BufferGeometry,
     BufferAttribute,
@@ -151,7 +151,7 @@ const generateParticles = (features: any[]): Float32Array => {
         }
     });
 
-    console.log(`Generated ${positions.length / 3} particles`);
+    // Remove console.log to prevent performance issues
     return new Float32Array(positions);
 };
 
@@ -264,7 +264,6 @@ const material = useMemo(() => {
 
         // Auto rotate
         if (rotationSpeed) groupRef.current.rotation.y += rotationSpeed * delta * 60;
-
         // Raycast for hover (update hoverPoint)
         if (sphereRef.current) {
             raycaster.setFromCamera(mouse.current, camera);

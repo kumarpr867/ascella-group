@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useTransition, memo } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import OutlineBtn from "./btns/OutlineBtn";
@@ -28,7 +28,7 @@ const navLinks = [
 ];
 
 // ── Page Loading Bar ──
-const PageLoadingBar = () => {
+const PageLoadingBar = memo(() => {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -36,43 +36,27 @@ const PageLoadingBar = () => {
   const progressInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const completeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const startLoading = () => {
+  const startLoading = useCallback(() => {
     setLoading(true);
-    setProgress(0);
+    setProgress(40);
+  }, []);
 
-    let current = 0;
-    progressInterval.current = setInterval(() => {
-      current += Math.random() * 8 + 2;
-      if (current >= 85) {
-        current = 85;
-        if (progressInterval.current) clearInterval(progressInterval.current);
-      }
-      setProgress(current);
-    }, 120);
-  };
-
-  const completeLoading = () => {
+  const completeLoading = useCallback(() => {
     if (progressInterval.current) clearInterval(progressInterval.current);
+    if (completeTimeout.current) clearTimeout(completeTimeout.current);
     setProgress(100);
-    completeTimeout.current = setTimeout(() => {
-      setLoading(false);
-      setProgress(0);
-    }, 400);
-  };
+    setLoading(false);
+    setProgress(0);
+  }, []);
 
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       prevPathname.current = pathname;
       if (loading) {
-        if (completeTimeout.current) clearTimeout(completeTimeout.current);
-        completeTimeout.current = setTimeout(() => {
-          completeLoading();
-        }, 80);
-      } else {
         completeLoading();
       }
     }
-  }, [pathname, loading]);
+  }, [pathname, loading, completeLoading]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -85,9 +69,9 @@ const PageLoadingBar = () => {
       if (href === pathname) return;
       startLoading();
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
-  }, [pathname]);
+    document.addEventListener("click", handleClick, true);
+    return () => document.removeEventListener("click", handleClick, true);
+  }, [pathname, startLoading]);
 
   useEffect(() => {
     return () => {
@@ -99,64 +83,92 @@ const PageLoadingBar = () => {
   if (!loading && progress === 0) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full pointer-events-none" style={{ height: "2px" }}>
-      <div className="absolute inset-0 bg-transparent" />
+    <div className="fixed top-0 left-0 w-full pointer-events-none" style={{ height: "2px", zIndex: 9999 }}>
       <div
         style={{
           width: `${progress}%`,
           height: "100%",
-          transition: progress === 100 ? "width 0.2s ease-out" : "width 0.12s ease-out",
+          transition: progress === 100 ? "width 0.15s ease-out" : "width 0.1s ease-out",
           background: "linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa)",
           boxShadow: "0 0 10px 1px rgba(59,130,246,0.7)",
-          position: "relative",
         }}
-      >
-        <div style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", width: "80px", height: "4px", background: "linear-gradient(90deg, transparent, rgba(147,197,253,0.9))", borderRadius: "2px", filter: "blur(2px)" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(255,255,255,0.12) 18px, rgba(255,255,255,0.12) 19px)" }} />
-      </div>
-      {progress === 100 && (
-        <div style={{ position: "absolute", inset: 0, animation: "fadeOut 0.4s ease-out forwards" }} />
-      )}
-      <style>{`@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }`}</style>
+      />
     </div>
   );
-};
+});
 
 const Navbar = () => {
   const [openDesktopDropdown, setOpenDesktopDropdown] = useState<string | null>(null);
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-  const lastScrollY = useRef(0);
+
+  const _isPending = useTransition()[0];
   const desktopRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current && currentScrollY > 80) setShowNavbar(false);
-      else setShowNavbar(true);
-      lastScrollY.current = currentScrollY;
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  // Hide navbar while the user is actively scrolling; show it after short pause
+  const handleScroll = useCallback(() => {
+    setShowNavbar(false);
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = window.setTimeout(() => {
+      setShowNavbar(true);
+    }, 220); // show on scroll stop after 220ms
+  }, []);
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (desktopRef.current && !desktopRef.current.contains(event.target as Node)) setOpenDesktopDropdown(null);
+  }, []);
+
+  const handleDesktopDropdown = useCallback((label: string, hasChildren: boolean) => {
+    if (!hasChildren) return;
+    setOpenDesktopDropdown((prev) => (prev === label ? null : label));
+  }, []);
+
+  const handleMobileDropdown = useCallback((label: string) => {
+    setOpenMobileDropdown((prev) => (prev === label ? null : label));
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    setOpenMobileDropdown(null);
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    setMenuOpen((prev) => !prev);
   }, []);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (desktopRef.current && !desktopRef.current.contains(event.target as Node)) setOpenDesktopDropdown(null);
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [handleClickOutside]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
+    
+    // Cleanup: Always reset on unmount
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) setOpenMobileDropdown(null);
   }, [menuOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      // Emergency reset if component unmounts
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   return (
     <>
@@ -186,7 +198,7 @@ const Navbar = () => {
                     ref={isOpen ? desktopRef : null}
                   >
                     <button
-                      onClick={() => link.children ? setOpenDesktopDropdown(isOpen ? null : link.label) : null}
+                      onClick={() => handleDesktopDropdown(link.label, !!link.children)}
                       className={`px-2 text-b2 flex items-center gap-1 transition-colors ${isActive ? "text-white" : "text-gray-200 hover:text-white"}`}
                       aria-haspopup={link.children ? "menu" : undefined}
                       aria-expanded={link.children ? isOpen : undefined}
@@ -220,7 +232,10 @@ const Navbar = () => {
                                 <Link
                                   key={child.href}
                                   href={child.href}
-                                  onClick={() => setOpenDesktopDropdown(null)}
+                                  prefetch={true}
+                                  onClick={() => {
+                                    setOpenDesktopDropdown(null);
+                                  }}
                                   className={`block px-5 py-3 text-sm transition-colors ${
                                     childActive
                                       ? "text-white bg-white/10"
@@ -253,7 +268,7 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <button className="lg:hidden flex items-center px-2 py-1 text-white" onClick={() => setMenuOpen(true)}>
+            <button className="lg:hidden flex items-center px-2 py-1 text-white" onClick={toggleMenu}>
               <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <line x1="10.25" y1="0" x2="10.25" y2="7" stroke="white" strokeWidth="0.5" />
@@ -271,17 +286,17 @@ const Navbar = () => {
         </div>
       </motion.header>
 
-      <div onClick={() => setMenuOpen(false)} className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
+      <div onClick={closeMenu} className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
 
       {/* Drawer Panel - Right side */}
       <div className={`fixed top-0 right-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
 
         {/* Top bar */}
         <div className="flex items-center justify-between px-7 pt-7 pb-6">
-          <Link href="/" onClick={() => setMenuOpen(false)}>
+          <Link href="/" onClick={closeMenu}>
             <Image src="/logo.png" alt="Ascella Logo" width={90} height={32} className="w-20 h-auto" />
           </Link>
-          <button onClick={() => setMenuOpen(false)} className="w-9 h-9 flex items-center justify-center">
+          <button onClick={closeMenu} className="w-9 h-9 flex items-center justify-center">
             <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
               <svg viewBox="0 0 29 29" fill="true">
                 <path d="M7.24773 7.35784L14.5001 14.61" stroke="white" strokeWidth="0.8" />
@@ -314,7 +329,7 @@ const Navbar = () => {
             return (
               <div key={link.label} className={`border-b border-color transition-colors ${isActive ? "bg-white/10" : ""}`}>
                 {link.href && !link.children ? (
-                  <Link href={link.href} onClick={() => setMenuOpen(false)} className="flex items-center justify-between py-4 text-left">
+                  <Link href={link.href} onClick={closeMenu} className="flex items-center justify-between py-4 text-left">
                     <span className={`text-[16px] font-light tracking-tight ${isActive ? "text-white" : "text-gray-200"}`}>{link.label}</span>
                     <svg width="12" height="12" viewBox="0 0 15 16" fill="none">
                       <path d="M1.5 14.25L14 0.25M14 0.25H0M14 0.25V15.25" stroke="white" strokeWidth="0.5" />
@@ -322,7 +337,7 @@ const Navbar = () => {
                   </Link>
                 ) : (
                   <div className="py-4">
-                    <button onClick={() => setOpenMobileDropdown(isOpen ? null : link.label)} className="w-full flex items-center justify-between text-left">
+                    <button onClick={() => handleMobileDropdown(link.label)} className="w-full flex items-center justify-between text-left">
                       <span className={`text-[16px] font-light tracking-tight ${isActive ? "text-white" : "text-gray-200"}`}>{link.label}</span>
                       <svg className={`w-4 h-4 text-white transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 7l5 6 5-6H5z" />
@@ -341,7 +356,11 @@ const Navbar = () => {
                             <Link
                               key={child.href}
                               href={child.href}
-                              onClick={() => { setMenuOpen(false); setOpenMobileDropdown(null); }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                closeMenu();
+                                window.location.href = child.href;
+                              }}
                               className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href ? "text-white bg-white/10" : "text-gray-400 hover:text-white"}`}
                             >
                               {child.label}
@@ -365,4 +384,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

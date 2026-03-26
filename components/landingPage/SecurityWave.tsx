@@ -58,7 +58,7 @@ export default function AnimatedSVG() {
                                 : 0,
 
                             // Only animate dash for dotted layers
-                            strokeDashoffset: isTopLayer ? 0 : [0, 40],
+                            strokeDashoffset: isTopLayer ? 0 : [40, 0],
                         }}
                         transition={{
                             y: {

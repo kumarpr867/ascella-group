@@ -140,28 +140,39 @@ function DesktopScroll({
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = sectionRefs.current.findIndex(
-              (el) => el === entry.target
-            );
-            if (index !== -1) setActiveIndex(index);
-          }
-        });
-      },
-      {
-        threshold: [0.3, 0.6, 0.9], // IMPORTANT
-        rootMargin: "-20% 0px -20% 0px",
-      }
-    );
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const viewportH = window.innerHeight;
+      const mid = scrollY + viewportH / 2;
 
-    sectionRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
+      // Each sticky section occupies one "slot" of height = viewportH
+      // containerRef top tells us where the scroll zone starts
+      const containerTop = containerRef.current?.getBoundingClientRect().top ?? 0;
+      const containerOffsetTop = scrollY + containerTop;
 
-    return () => observer.disconnect();
+      let best = 0;
+      let bestDist = Infinity;
+
+      sectionRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        // The "logical" center of each section slot
+        const slotTop = containerOffsetTop + idx * viewportH;
+        const slotCenter = slotTop + viewportH / 2;
+        const dist = Math.abs(mid - slotCenter);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = idx;
+        }
+      });
+
+      setActiveIndex(best);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once on mount to set correct initial state
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {

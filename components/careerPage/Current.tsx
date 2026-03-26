@@ -71,7 +71,7 @@ const CurrentOpenings = () => {
   return (
     <div className="overflow-hidden bg-black text-white">
       {/* ================= DESKTOP ================= */}
-      <div className="hidden lg:flex h-screen px-10 flex-col justify-center relative -mt-20">
+      <div className="hidden lg:flex min-h-screen px-10 flex-col justify-center relative -mt-20">
         
         {/* Background Image - Reveal Left */}
         <motion.div 
