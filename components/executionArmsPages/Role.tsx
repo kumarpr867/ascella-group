@@ -237,18 +237,18 @@ export default function Role() {
             <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
               <AnimatePresence mode="wait">
                 <motion.div key={current} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5 }} style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '44px 48px', color: '#fff' }}>
-                  <h2 style={{ fontSize: 'clamp(24px, 2.8vw, 40px)', fontWeight: 300, letterSpacing: '-0.02em', margin: '0 0 18px', lineHeight: 1.2, fontFamily: 'Georgia, serif' }}>{activeData.mainTitle}</h2>
-                  <p style={{ fontSize: '13px', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', maxWidth: '440px', fontFamily: 'system-ui, sans-serif' }}>{activeData.mainDesc}</p>
+                  <h2 style={{ fontSize: 'clamp(24px, 2.8vw, 40px)', fontWeight: 300, letterSpacing: '-0.02em', margin: '0 0 18px', lineHeight: 1.2 }}>{activeData.mainTitle}</h2>
+                  <p style={{ fontSize: '12px', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', maxWidth: '440px' }}>{activeData.mainDesc}</p>
                   <div style={{ marginBottom: '24px' }}>
                     <SectionHeader title="Role" />
-                    <p style={{ fontSize: '13.5px', lineHeight: 1.65, margin: 0, fontFamily: 'system-ui, sans-serif' }}>
+                    <p style={{ fontSize: '13.5px', lineHeight: 1.65, margin: 0 }}>
                       <span style={{ fontWeight: 700, color: '#fff' }}>{activeData.roleTitle.split(' ').slice(0, 5).join(' ')} </span>
                       <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>{activeData.roleTitle.split(' ').slice(5).join(' ')}</span>
                     </p>
                   </div>
                   <div style={{ marginTop: 'auto', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '3px', padding: '18px 22px' }}>
                     <SectionHeader title="When it's deployed" />
-                    <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', margin: 0, fontFamily: 'system-ui, sans-serif' }}>{activeData.deployedText}</p>
+                    <p style={{ fontSize: '12px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', margin: 0 }}>{activeData.deployedText}</p>
                   </div>
                 </motion.div>
               </AnimatePresence>

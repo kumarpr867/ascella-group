@@ -149,8 +149,8 @@ const IMAGE_CELLS = [
 // ── Isometric Hover Grid ──────────────────────────────────────────────────────
 function IsometricHoverGrid() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
-  const rafRef    = useRef<number | null>(null);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -159,7 +159,7 @@ function IsometricHoverGrid() {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth;
+      canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
     resize();
@@ -184,15 +184,15 @@ function IsometricHoverGrid() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      const cols    = Math.ceil(W / CELL_W) + 2;
-      const rows    = Math.ceil(H / (CELL_H / 2)) + 2;
+      const cols = Math.ceil(W / CELL_W) + 2;
+      const rows = Math.ceil(H / (CELL_H / 2)) + 2;
       const offsetX = -CELL_W / 2;
       const offsetY = -CELL_H / 2;
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const cx  = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
-          const cy  = offsetY + row * (CELL_H / 2);
+          const cx = offsetX + col * CELL_W + (row % 2 === 0 ? 0 : CELL_W / 2);
+          const cy = offsetY + row * (CELL_H / 2);
           const key = `${col},${row}`;
 
           const hovered =
@@ -200,36 +200,36 @@ function IsometricHoverGrid() {
             Math.abs(my - cy) / (CELL_H / 2) <= 1;
 
           // Only hovered cell = 1, everything else decays to 0
-          const target  = hovered ? 1 : 0;
-          const prev    = alphaMap.get(key) ?? 0;
-          const speed   = target > prev ? 0.18 : 0.07;
+          const target = hovered ? 1 : 0;
+          const prev = alphaMap.get(key) ?? 0;
+          const speed = target > prev ? 0.18 : 0.07;
           const current = prev + (target - prev) * speed;
           alphaMap.set(key, current);
 
           ctx.beginPath();
-          ctx.moveTo(cx,              cy - CELL_H / 2);
+          ctx.moveTo(cx, cy - CELL_H / 2);
           ctx.lineTo(cx + CELL_W / 2, cy);
-          ctx.lineTo(cx,              cy + CELL_H / 2);
+          ctx.lineTo(cx, cy + CELL_H / 2);
           ctx.lineTo(cx - CELL_W / 2, cy);
           ctx.closePath();
 
           // Base stroke for all cells
           ctx.strokeStyle = `rgba(255,255,255,${0.06 + current * 0.12})`;
-          ctx.lineWidth   = 0.5;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
 
           // Glow fill ONLY on hovered cell — radial gradient for smooth glow
           if (current > 0.005) {
             const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, CELL_W / 1.8);
-            grad.addColorStop(0,   `rgba(255,255,255,${current * 0.2})`);
+            grad.addColorStop(0, `rgba(255,255,255,${current * 0.2})`);
             grad.addColorStop(0.5, `rgba(200,200,255,${current * 0.03})`);
-            grad.addColorStop(1,   `rgba(160, 160, 160, 0)`);
+            grad.addColorStop(1, `rgba(160, 160, 160, 0)`);
             ctx.fillStyle = grad;
             ctx.fill();
 
             // Bright border on hovered cell only
             ctx.strokeStyle = `rgba(255,255,255,${current * 0.3})`;
-            ctx.lineWidth   = 1.2;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
           }
         }
@@ -253,25 +253,25 @@ function IsometricHoverGrid() {
       <canvas
         ref={canvasRef}
         style={{
-          position:      "absolute",
-          inset:         0,
-          width:         "100%",
-          height:        "100%",
-          display:       "block",
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          display: "block",
           pointerEvents: "auto",
-          cursor:        "crosshair",
+          cursor: "crosshair",
         }}
       />
 
       {/* vector55.png snapped to exact isometric cells, diamond-clipped */}
       <svg
         style={{
-          position:      "absolute",
-          inset:         0,
-          width:         "100%",
-          height:        "100%",
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
           pointerEvents: "none",
-          overflow:      "visible",
+          overflow: "visible",
         }}
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -345,6 +345,16 @@ function AccordionItem({
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640); // sm breakpoint
+    check();
+
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <motion.div
       layout
@@ -353,8 +363,8 @@ function AccordionItem({
     >
       <motion.button
         onClick={() => onToggle(item.id)}
-        onMouseEnter={handleHover}
-        onMouseLeave={cancelHover}
+        onMouseEnter={!isMobile ? handleHover : undefined}
+        onMouseLeave={!isMobile ? cancelHover : undefined}
         className={`group w-full text-left p-4 transition-colors duration-300 ${titleClass} flex justify-between items-center`}
         whileTap={{ scale: 0.98 }}
       >
@@ -394,9 +404,9 @@ function AccordionItem({
               animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
               exit={{ height: 0, opacity: 0, y: -6, filter: "blur(4px)" }}
               transition={{
-                height:  { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+                height: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
                 opacity: { duration: 0.25 },
-                y:       { duration: 0.35 },
+                y: { duration: 0.35 },
               }}
               className="overflow-hidden bg-gray-500"
             >
@@ -431,32 +441,32 @@ export default function Accountability() {
           <div
             aria-hidden="true"
             style={{
-              position:      "absolute",
-              top:           "50%",
-              left:          "20%",           // roughly where middle col starts
-              transform:     "translate(-50%, -50%)",
-              width:         "420px",         // tight around the diamond shapes
-              height:        "300px",
+              position: "absolute",
+              top: "50%",
+              left: "20%",           // roughly where middle col starts
+              transform: "translate(-50%, -50%)",
+              width: "420px",         // tight around the diamond shapes
+              height: "300px",
               pointerEvents: "none",
-              zIndex:        11,
+              zIndex: 11,
             }}
           >
             {/* Overflow container — gives canvas its pixel size */}
             <div
               style={{
-                position:      "relative",
-                width:         "100%",
-                height:        "100%",
-                overflow:      "hidden",
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
                 pointerEvents: "none",
               }}
             >
               {/* Mask wrapper — separate from overflow so getBoundingClientRect is stable */}
               <div
                 style={{
-                  position:            "absolute",
-                  inset:               0,
-                  pointerEvents:       "none",
+                  position: "absolute",
+                  inset: 0,
+                  pointerEvents: "none",
                   WebkitMaskImage: [
                     "linear-gradient(to right,  transparent 0%, black 15%, black 85%, transparent 100%)",
                     "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
@@ -466,7 +476,7 @@ export default function Accountability() {
                     "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
                   ].join(", "),
                   WebkitMaskComposite: "destination-in",
-                  maskComposite:       "intersect",
+                  maskComposite: "intersect",
                 }}
               >
                 <IsometricHoverGrid />

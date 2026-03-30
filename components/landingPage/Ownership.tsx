@@ -205,7 +205,7 @@ function DesktopScroll({
               <h2 className="text-[24px] lg:text-[36px] font-light mb-4">
                 {section.title}
               </h2>
-              <p className="text-b1 text-gray-300">
+              <p className="text-b1 text-gray-200">
                 {section.description}
               </p>
             </div>
@@ -262,7 +262,7 @@ function Sidebar({
             onClick={() => scrollToSection.current?.(idx)}
             className={`text-[16px] uppercase cursor-pointer transition ${activeIndex === idx
               ? "text-white"
-              : "text-gray-300 hover:text-gray-200 hover:scale-105"
+              : "text-gray-200 hover:text-gray-100"
               }`}
           >
             {item.title}
@@ -310,7 +310,7 @@ export default function Ownership() {
       <div className="mx-10 lg:mx-20 xl:mx-24 relative">
 
         {/* ══ DESKTOP lg+ ══ */}
-        <div className="hidden md:grid grid-cols-[200px_1fr] lg:grid-cols-[400px_1fr] border-x border-color">
+        <div className="hidden md:grid grid-cols-[250px_1fr] lg:grid-cols-[400px_1fr] border-x border-color">
 
           {/* LEFT */}
           <div >
@@ -351,7 +351,7 @@ export default function Ownership() {
                 </div>
                 <div className="flex flex-col items-center">
                   <h3 className="font-light tracking-tight text-xl mb-3 leading-snug">{item.title}</h3>
-                  <p className="text-white/50 text-center leading-relaxed text-[12px]">{item.description}</p>
+                  <p className="text-gray-200 text-center text-[12px]">{item.description}</p>
                 </div>
               </div>
             ))}

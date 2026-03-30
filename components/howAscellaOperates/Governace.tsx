@@ -171,13 +171,13 @@ export default function Governace() {
                         <div className="flex-center relative md:w-16 md:h-16">
                             <Image src={"/OperatingStructure/GovernaceStar.svg"} alt="starimage" fill />
                         </div>
-                        <h5 className="text-gray-200" >Governance is designed in, not <br /> enforced later.</h5>
+                        <h5 className="text-gray-200" >Discipline is built in, <br /> not introduced later.</h5>
                     </div>
                 </Reveal>
                 <Reveal variants={slideInFromRight(0.1)} className="flex flex-col justify-between items-center md:items-start">
                     <h3 className="text-[24px] md:text-[36px]">Before execution</h3>
                     <p className="text-gray-200 font-light max-w-lg">
-                        Begins, Ascella establishes
+                        Ascella establishes
                     </p>
                     {/* Desktop Grid */}
                     <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 mt-4 lg:mt-12">
@@ -250,7 +250,7 @@ export default function Governace() {
             <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center">
                 <div className="w-full h-0.5 border-t border-gray-400 md:w-0.5 md:h-10 md:border-t-0 md:border-l md:border-gray-400">
                 </div>
-                <p className="md:hidden my-6 text-center text-b2 text-gray-300 px-10" >Governance is designed in, not enforced later.</p>
+                <p className="md:hidden my-6 text-center text-b2 text-gray-300 px-10" > Discipline is built in, not introduced later</p>
                 <OutlineBtn text="Explore With Us"
                     onClick={() => router.push("/execution-arms")} />
             </Reveal>

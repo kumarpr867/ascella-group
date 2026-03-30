@@ -216,7 +216,7 @@ export default function WhoWeWorkWith() {
   return (
     <motion.section
       ref={sectionRef}
-      className="relative  border-y border-color  overflow-hidden"
+      className="relative  border-y border-color overflow-hidden pt-24"
       initial={{ opacity: 0, y: 80 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] as any }}
@@ -224,9 +224,8 @@ export default function WhoWeWorkWith() {
 
       <div className="relative z-10 flex flex-col h-auto lg:min-h-screen">
 
-        {/* ── Header (no grid here) ── */}
         <motion.div
-          className="flex flex-col items-center text-center px-4 pt-12 sm:pt-16 lg:pt-20 pb-10"
+          className="flex flex-col items-center text-center px-4 pb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.4, duration: 0.8 }}
@@ -247,7 +246,7 @@ export default function WhoWeWorkWith() {
           This wrapper starts right after the button.
           Grid is absolute inside this, card content is relative z-10 on top.
         */}
-        <div className="relative flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-8 pb-4">
+        <div className="relative flex-1 flex items-start sm:items-center justify-center">
 
           {/* Isometric grid — absolute, fills only this bottom area */}
           <div

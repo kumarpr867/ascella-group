@@ -6,8 +6,8 @@ import Image from "next/image";
 
 const slides = [
     {
-        title: "Engagements begin with clearly defined operating alignment and accountability structures.",
-        desc: "Before any execution starts, expectations, decision rights, and oversight mechanisms are established to prevent ambiguity later in delivery.",
+        title: "Work begins with defined authority and operating clarity",
+        desc: "Scope, decision rights, escalation paths, and accountability structures are established upfront to eliminate ambiguity. This ensures every stakeholder understands their role, decisions move without friction, and coordination does not replace ownership as delivery progresses.",
         img: "/whoWeWorkWith/one.png",
         icon: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
@@ -21,8 +21,8 @@ const slides = [
         </svg>
     },
     {
-        title: "Engagements are formed where complexity demands control",
-        desc: "Multi-team coordination, regulatory pressure, distributed vendors, or rapid growth create environments where informal execution introduces measurable risk.",
+        title: "Complex environments require structured control",
+        desc: "Multi-team coordination, regulatory pressure, distributed vendors, and rapid growth introduce layers of complexity that cannot be managed informally. Structured control ensures alignment across functions, reduces operational risk, and maintains consistency in how decisions are made and executed.",
         img: "/whoWeWorkWith/two.png",
         icon: <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" width="7" height="7" className="fill-gray-400" />
@@ -36,8 +36,8 @@ const slides = [
         </svg>
     },
     {
-        title: "Engagements are built for durable control, not temporary support",
-        desc: "Operating frameworks are designed to remain effective as scale increases, ensuring stability and continuity over time.",
+        title: "Built for durability, not temporary support",
+        desc: "Operating structures are designed to remain effective as scale increases, ensuring stability, resilience, and continuity over time. The focus is on systems that hold under pressure, adapt without breaking, and sustain performance beyond immediate delivery cycles.",
         img: "/whoWeWorkWith/three.png",
         icon: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
@@ -54,11 +54,15 @@ const slides = [
 export default function EngPrincMob() {
     const [index, setIndex] = useState(0);
 
+    const [direction, setDirection] = useState(1); // 1 = next, -1 = prev
+
     const next = () => {
+        setDirection(1);
         setIndex((prev) => (prev + 1) % slides.length);
     };
 
     const prev = () => {
+        setDirection(-1);
         setIndex((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
@@ -69,10 +73,14 @@ export default function EngPrincMob() {
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={index}
-                        initial={{ x: 100, opacity: 0 }}
+                        initial={{ x: direction === 1 ? 100 : -100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: -100, opacity: 0 }}
-                        transition={{ duration: 0.4 }}
+                        exit={{ x: direction === 1 ? -100 : 100, opacity: 0 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
+                        }}
                         drag="x"
                         dragConstraints={{ left: 0, right: 0 }}
                         onDragEnd={(e, info) => {

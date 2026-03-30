@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom } from "@/utils/motion";
+import Heading from '../headings/Heading';
 
 // ── Isometric Grid with Per-Cell Hover (CODE PRESERVED) ──────────────────────
 function IsometricHoverGrid() {
@@ -277,7 +278,6 @@ function MobileCardCarousel({ executionArms }: { executionArms: { id: string; na
           {/* Top row: number left, icon right */}
           <div className="flex justify-between items-start w-full">
             <span
-              className="font-mono"
               style={{ fontSize: 11, letterSpacing: '0.15em', color: '#555' }}
             >
               {arm.id}
@@ -382,7 +382,7 @@ const ExecutionTogether = () => {
     return (
       <div
         className="bg-black text-white flex flex-col items-center relative overflow-hidden w-full"
-        style={{ fontFamily: 'sans-serif', paddingTop: 36, paddingBottom: 24 }}
+        style={{ paddingTop: 36, paddingBottom: 24 }}
       >
         {/* Header */}
         <div className="flex flex-col items-center text-center w-full" style={{ paddingLeft: 24, paddingRight: 24, marginBottom: 24 }}>
@@ -391,8 +391,7 @@ const ExecutionTogether = () => {
               className="flex items-center justify-center gap-2 text-white uppercase"
               style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: 20 }}
             >
-              <Plus size={14} strokeWidth={1.5} />
-              How Execution Arms Work Together
+              <Heading text="How Execution Arms Work Together" size={14} />
             </div>
           </Reveal>
 
@@ -490,7 +489,6 @@ const ExecutionTogether = () => {
     <div
       className="bg-black text-white flex flex-col items-center relative overflow-hidden"
       style={{
-        fontFamily: 'sans-serif',
         paddingTop: 48,
         paddingBottom: 48,
         paddingLeft: 40,
@@ -507,8 +505,7 @@ const ExecutionTogether = () => {
             className="flex items-center justify-center gap-2 text-white uppercase"
             style={{ fontSize: 10, letterSpacing: '0.3em', marginBottom: 32 }}
           >
-            <Plus size={18} strokeWidth={1.5} />
-            How Execution Arms Work Together
+            <Heading text="How Execution Arms Work Together"/>
           </div>
         </Reveal>
 

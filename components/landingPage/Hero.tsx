@@ -117,8 +117,6 @@ export default function Hero() {
               <p className="text-[14px] shrink-0 tracking-widest uppercase">
                 Clear Ownership
               </p>
-
-              {/* FIX 2: Reduced height from 40 → 24 for tighter heading-to-subheading gap */}
               <motion.div
                 variants={{
                   rest: { height: 0, opacity: 0 },
@@ -128,14 +126,13 @@ export default function Hero() {
                 className="border-l border-color overflow-hidden"
               />
 
-              {/* FIX 1: Changed text-gray-100 → text-white opacity-90 for WCAG AA contrast compliance */}
               <motion.p
                 variants={{
                   rest: { opacity: 0, y: -6 },
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 text-justify pr-32 text-white opacity-90 leading-snug"
+                className="text-b3 pr-32 text-white opacity-90 leading-snug"
               >
                 Defined responsibilities across teams ensure accountability at every
                 stage, reducing confusion and accelerating decision-making.
@@ -171,7 +168,7 @@ export default function Hero() {
                   hover: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.45, ease: EASE }}
-                className="text-b3 text-justify text-white opacity-90 leading-snug"
+                className="text-b3 text-right text-white opacity-90 leading-snug"
               >
                 Integrated oversight across strategy, technology, and operations
                 provides a single source of truth and stronger organizational alignment.
@@ -191,13 +188,13 @@ export default function Hero() {
         >
           <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col md:flex-row justify-between gap-5">
 
-            <motion.h2 variants={fadeUp} className="text-gray-100 text-[36px] xl:text-[48px]">
+            <motion.h1 variants={fadeUp} className="text-gray-300 text-[36px] md:text-[36px] lg:text-[64px]">
               A Unified <br />
               <span className="text-white">Operating Group</span>
-            </motion.h2>
+            </motion.h1>
 
            <motion.div variants={fadeUp} className="flex flex-col justify-end gap-4 max-w-[460px] z-5">
-  <p className="text-b3 text-justify leading-tight line-clamp-4">
+  <p className="text-b3 text-right leading-tight line-clamp-4">
                 Complex organisations slow down when execution scatters across teams
                 and vendors. Control weakens as decisions lose a clear owner and
                 accountability spreads thin. Ascella Group brings structure to
@@ -226,7 +223,7 @@ export default function Hero() {
                       delay: 2.5,
                     }}
                   />
-                  <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+                  <OutlineBtn text="Start a Conversation" onClick={() => router.push("/engageWithUs")} />
                 </div>
               </div>
             </motion.div>
@@ -273,7 +270,7 @@ export default function Hero() {
         <motion.div variants={container} initial="hidden" animate="visible">
           <div className="mx-auto max-w-7xl px-10 flex flex-col gap-5">
 
-            <motion.h2 variants={fadeUp} className="text-gray-100 text-[36px]">
+            <motion.h2 variants={fadeUp} className="text-gray-300 text-[36px]">
               A Unified <br />
               <span className="text-white">Operating Group</span>
             </motion.h2>
@@ -321,7 +318,7 @@ export default function Hero() {
                 delay: 2.5,
               }}
             />
-            <OutlineBtn text="Engage With Us" onClick={() => router.push("/engageWithUs")} />
+            <OutlineBtn text="Start a Conversation" onClick={() => router.push("/engageWithUs")} />
           </div>
         </motion.div>
 

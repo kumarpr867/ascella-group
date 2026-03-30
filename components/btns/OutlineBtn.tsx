@@ -1,7 +1,7 @@
 interface Props {
   text?: string;
   size?: "sm" | "md" | "lg";
-  color?: string; 
+  color?: string;
   className?: string;
   onClick?: () => void;
 }
@@ -9,7 +9,7 @@ interface Props {
 export default function OutlineBtn({
   text = "Button",
   size = "md",
-  color = "var(--color-white)", 
+  color = "var(--color-white)",
   className = "",
   onClick,
 }: Props) {
@@ -21,12 +21,12 @@ export default function OutlineBtn({
 
   return (
     <button
-    onClick={onClick}
+      onClick={onClick}
       className={`
-        group flex items-center gap-3 border
-        transition-all duration-200
-        ${sizes[size]} ${className}
-      `}
+  group flex items-center gap-3 border
+  transition-all duration-300 ease-out hover:shadow-lg hover:scale-105 hover:font-extrabold
+  ${sizes[size]} ${className}
+`}
       style={{
         borderColor: 'var(--color-gray-100)',
         backgroundColor: color,
@@ -34,13 +34,11 @@ export default function OutlineBtn({
       }}
       onMouseEnter={(e) => {
         const root = getComputedStyle(document.documentElement);
-        e.currentTarget.style.backgroundColor = root.getPropertyValue('--color-white') || 'var(--color-white)';
-        e.currentTarget.style.color = root.getPropertyValue('--color-black') || 'var(--color-black)';
+        e.currentTarget.style.backgroundColor = root.getPropertyValue('--color-white');
       }}
+
       onMouseLeave={(e) => {
         e.currentTarget.style.backgroundColor = color;
-        const root = getComputedStyle(document.documentElement);
-        e.currentTarget.style.color = root.getPropertyValue('--color-black') || 'var(--color-black)';
       }}
     >
       {text}
