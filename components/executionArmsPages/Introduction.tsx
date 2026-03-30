@@ -183,7 +183,7 @@ const Icon2 = () => (
 
 const Introduction = () => {
   return (
-    <div className="bg-black text-white font-sans">
+    <div className="bg-black text-white">
 
       {/* ── DESKTOP LAYOUT ── */}
       <div className="hidden lg:block">

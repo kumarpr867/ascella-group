@@ -65,7 +65,7 @@ export default function Arms() {
         </h2>
       </Reveal>
 
-      <Reveal variants={slideInFromBottom(0.4)} className="w-full bg-white rounded-lg overflow-hidden shadow-2xl p-2">
+      <Reveal variants={slideInFromBottom(0.4)} className="w-full max-w-7xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
         <div className="flex flex-col lg:flex-row min-h-auto lg:h-[550px]">
 

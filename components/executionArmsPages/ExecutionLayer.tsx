@@ -123,7 +123,7 @@ const ExecutionLayer = () => {
   const imageSrc = "/Rectangle 5046.svg";
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white font-sans overflow-hidden">
+    <div className="relative w-full min-h-screen bg-black text-white overflow-hidden">
 
       {/* MOBILE LAYOUT (< md) */}
       <div className="flex flex-col md:hidden min-h-screen">
@@ -192,15 +192,15 @@ const ExecutionLayer = () => {
           <div className="grid grid-cols-3 border-b border-white/10" style={{ flexShrink: 0 }}>
             <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
               <span className="text-xl font-light">5</span>
-              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
+              <span className="text-[8px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Execution Arms</span>
             </div>
             <div className="flex flex-col justify-center px-3 py-5 border-r border-white/10">
               <span className="text-xl">Single</span>
-              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Governance Authority</span>
+              <span className="text-[8px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Operating Ownership</span>
             </div>
             <div className="flex flex-col justify-center px-3 py-5">
               <span className="text-xl">Continuous</span>
-              <span className="text-[7px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
+              <span className="text-[8px] uppercase mt-1 text-white/50 tracking-wider leading-tight">Oversight &amp; Accountability</span>
             </div>
           </div>
 
@@ -317,15 +317,15 @@ const ExecutionLayer = () => {
           <div className="border-t border-r border-white/10 grid grid-cols-3 h-full">
             <div className="flex flex-col justify-center px-2 lg:px-4 border-r border-white/10">
               <span className="text-lg xl:text-xl text-gray-300">5</span>
-              <span className="text-[7px] lg:text-[8px] uppercase mt-1">Execution Arms</span>
+              <span className="text-[8px] lg:text-[8px] uppercase mt-1">Execution Arms</span>
             </div>
             <div className="flex flex-col justify-center px-2 lg:px-4 border-r border-white/10">
               <span className="text-lg xl:text-xl text-gray-300 ">Single</span>
-              <span className="text-[7px] lg:text-[8px] uppercase mt-1">Governance Authority</span>
+              <span className="text-[8px] lg:text-[8px] uppercase mt-1">Operating Ownership</span>
             </div>
             <div className="flex flex-col justify-center px-2 lg:px-2">
               <span className="text-gray-300 xl:text-xl">Continuous</span>
-              <span className="text-[7px] lg:text-[9px] uppercase mt-1 leading-tight">Oversight & Accountability</span>
+              <span className="text-[8px] lg:text-[9px] uppercase mt-1 leading-tight">Oversight & Accountability</span>
             </div>
           </div>
           <div className="border-t border-white/10"></div>

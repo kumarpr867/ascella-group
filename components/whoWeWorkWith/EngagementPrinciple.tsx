@@ -9,7 +9,7 @@ export default function EngagementPrinciple() {
     <section className="my-20">
       <Reveal variants={slideInFromLeft(0.1)} className="mx-10 xl:mx-24 md:pb-12 lg:pb-24">
         <div className="flex justify-center md:justify-start">
-        <Heading text="Engagement Principle" />
+          <Heading text="Engagement Principle" />
         </div>
 
         <h3 className="mt-6 leading-tight xl:pr-96 text-[16px] md:text-[24px] lg:text-[36px] text-center md:text-left">
@@ -34,10 +34,10 @@ export default function EngagementPrinciple() {
             <rect x="14" width="7" height="7" className="fill-gray-400" />
           </svg>
           <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
-            Engagements start with defined authority and operating clarity
+            Work begins with defined authority and operating clarity
           </h5>
           <p className="text-b3 text-gray-200 md:max-w-xs">
-            Scope, decision rights, escalation paths, and accountability structures are established before delivery begins to eliminate ambiguity and prevent fragmented execution.
+            Scope, decision rights, escalation paths, and accountability structures are established upfront to eliminate ambiguity. This ensures every stakeholder understands their role, decisions move without friction, and coordination does not replace ownership as delivery progresses.
           </p>
         </Reveal>
 
@@ -62,12 +62,10 @@ export default function EngagementPrinciple() {
           </svg>
 
           <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
-            Engagements are formed where complexity demands control
-
+            Complex environments require structured control
           </h5>
           <p className="text-b3 text-gray-200 md:max-w-xs">
-            Multi-team coordination, regulatory pressure, distributed vendors, or rapid growth create environments where informal execution introduces measurable risk.
-
+            Multi-team coordination, regulatory pressure, distributed vendors, and rapid growth introduce layers of complexity that cannot be managed informally. Structured control ensures alignment across functions, reduces operational risk, and maintains consistency in how decisions are made and executed.
           </p>
         </Reveal>
 
@@ -94,10 +92,10 @@ export default function EngagementPrinciple() {
 
 
           <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
-            Engagements are built for durable control, not temporary support
+            Built for durability, not temporary support
           </h5>
           <p className="text-b3 text-gray-200 md:max-w-xs">
-            Operating frameworks are designed to remain effective as scale increases, ensuring stability, resilience, and performance continuity over time.
+            Operating structures are designed to remain effective as scale increases, ensuring stability, resilience, and continuity over time. The focus is on systems that hold under pressure, adapt without breaking, and sustain performance beyond immediate delivery cycles.
           </p>
         </Reveal>
 

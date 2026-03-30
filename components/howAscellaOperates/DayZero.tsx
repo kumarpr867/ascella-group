@@ -65,7 +65,7 @@ export default function DayZero() {
     <section className="lg:mx-20 xl:mx-24 my-24 flex flex-col gap-10 flex-center">
       <Reveal variants={slideInFromBottom(0.1)} className="flex flex-col flex-center gap-6 text-center">
         <div className="">
-          <Heading text="SECURITY FROM DAY ZERO" />
+          <Heading text="Security as a Foundational Principle" className="capitalize"/>
         </div>
         <h3 className="text-[20px] lg:text-[36px] font-light px-5">Security operates as a core design principle embedded into governance, delivery, and oversight from the start.</h3>
         <p className="font-light leading-tight px-16 ">Protection is structured into decision paths, system design, and operational workflows before execution begins so risk does not accumulate silently as scale increases.</p>

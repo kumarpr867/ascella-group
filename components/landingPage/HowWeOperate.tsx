@@ -134,8 +134,8 @@ export default function HowWeOperate() {
   }, []);
 
   return (
-    <section className="mx-10 lg:mx-20 xl:mx-24 py-12 sm:py-16 lg:py-24">
-      <div className="hidden lg:flex items-center gap-16 xl:gap-24">
+    <section className="mx-10 lg:mx-20 xl:mx-24 py-10 my-20">
+      <div className="hidden md:flex items-center gap-16 xl:gap-24 overflow-hidden">
         <Reveal variants={slideInFromLeft(0.1)} className="flex-shrink-0 flex items-center justify-center">
           <Image src="/HowWeOperate.png" alt="How We Operate" width={500} height={500} className="w-[420px] xl:w-[500px]" />
         </Reveal>
@@ -153,16 +153,11 @@ export default function HowWeOperate() {
             </div>
           </Reveal>
 
-          <motion.ul
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-            className="grid grid-cols-2 gap-5"
+          <ul
+            className="grid grid-cols-1 lg:grid-cols-2 gap-5"
           >
             {points.map((point, index) => (
-              <motion.li
-                key={index}
-                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }}
+              <li
                 className="flex flex-col gap-2.5 bg-gray-500 p-5 xl:p-6 rounded-2xl cursor-default transition-all duration-300 hover:scale-[1.03] group"
               >
                 <div className="flex justify-between w-full items-start">
@@ -171,14 +166,14 @@ export default function HowWeOperate() {
                 </div>
                 <h4 className="leading-tight font-light text-[14px] md:text-[20px] transition-colors duration-300 group-hover:text-white">{point.heading}</h4>
                 <p className="text-gray-300 text-[12px] transition-colors duration-300 group-hover:text-gray-100">{point.description}</p>
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
         </div>
       </div>
 
       {/* MOBILE VIEW */}
-      <div className="flex flex-col gap-6 lg:hidden">
+      <div className="flex flex-col gap-6 md:hidden">
         <Reveal variants={slideInFromBottom(0.02)} className="flex flex-col gap-3">
           <Heading text="How We Operate" />
           <p className="font-light text-3xl text-white leading-tight">Control is built before<br /> work begins</p>

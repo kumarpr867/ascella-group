@@ -212,7 +212,7 @@ export default function ExecutionProblem() {
                 DESKTOP header (md+) — completely unchanged
             ══════════════════════════════════════════ */}
             <div className="md:border-b border-color">
-                <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 flex-col md:flex-row md:justify-between gap-12 pb-12">
+                <div className="hidden md:flex mx-10 lg:mx-20 xl:mx-24 flex-col md:flex-row md:justify-between gap-12 pb-12 overflow-x-hidden">
                     <Reveal variants={slideInFromLeft(0.1)}>
                         <p className="max-w-md text-b3 leading-relaxed">
                             Execution breaks when responsibility spreads across teams, vendors, and
@@ -267,11 +267,12 @@ export default function ExecutionProblem() {
                     >
                         <div
                             className={`
-                                py-16 min-h-105 flex flex-col
+                                flex flex-col
                                 transition-colors duration-300
                                 hover:bg-white/5
                                 md:px-10
-                                ${index !== 0 ? "border-t md:border-t-0" : ""}
+                                py-10                                
+                                ${index !== 2 ? "border-r md:border-r-0 border-color" : ""}
                             `}
                         >
                             {/* Icon — centered on desktop */}
@@ -280,7 +281,7 @@ export default function ExecutionProblem() {
                             </div>
 
                             {/* Content — centered on desktop */}
-                            <div className="flex flex-col items-start md:items-center md:text-center">
+                            <div className="flex flex-col items-start md:items-center md:text-center gap-4">
                                 <h5 className="mb-4 mt-6">{item.title}</h5>
                                 <p className="text-b1 font-thin">{item.subHeading}</p>
                                 <p className="text-b3">{item.description}</p>

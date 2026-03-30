@@ -39,11 +39,11 @@ async function syncToGoogleSheets(entry: FormSubmission): Promise<void> {
 // ── Validation helpers ────────────────────────────────────────────────────────
 const validate = {
   fullName: (v: string) => !v.trim() ? 'Full name is required' : v.trim().length < 2 ? 'Enter a valid name' : !/^[a-zA-Z\s'.\-]+$/.test(v.trim()) ? 'Name should only contain letters' : '',
-  orgName:  (v: string) => !v.trim() ? 'Organisation name is required' : '',
-  role:     (v: string) => !v.trim() ? 'Please select a role or position' : '',
-  email:    (v: string) => !v.trim() ? 'Email address is required' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address' : '',
-  orgSize:  (v: string) => !v ? 'Please select an organisation size' : '',
-  needs:    (v: string[]) => v.length === 0 ? 'Select at least one operating need' : '',
+  orgName: (v: string) => !v.trim() ? 'Organisation name is required' : '',
+  role: (v: string) => !v.trim() ? 'Please select a role or position' : '',
+  email: (v: string) => !v.trim() ? 'Email address is required' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address' : '',
+  orgSize: (v: string) => !v ? 'Please select an organisation size' : '',
+  needs: (v: string[]) => v.length === 0 ? 'Select at least one operating need' : '',
 };
 
 // ── Org Size Selector ─────────────────────────────────────────────────────────
@@ -57,10 +57,10 @@ const OrgSizeSelector: React.FC<{ value: string; onChange: (v: string) => void; 
       const sel = value === size;
       return (
         <button key={size} type="button" onClick={() => onChange(size)}
-          className={`px-2 py-1 text-[10px] transition-all duration-200 rounded border tracking-wide
+          className={`px-3 py-1.5 text-[10px] transition-all duration-200 rounded border tracking-wide
             ${sel ? 'border-white bg-white text-black'
               : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-white hover:text-white hover:bg-white/10'
-              : 'border-[#3D3D3D] bg-transparent text-gray-300 hover:border-white hover:text-white hover:bg-white/10'}`}>
+                : 'border-color bg-transparent text-gray-200 hover:border-white hover:text-white hover:bg-white/10'}`}>
           {size}
         </button>
       );
@@ -82,10 +82,10 @@ const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]
         const checked = values.includes(need);
         return (
           <label key={need} className="flex items-center gap-1.5 cursor-pointer group" onClick={() => toggle(need)}>
-              <span className={`flex-shrink-0 w-3 h-3 rounded-sm border transition-all duration-150
+            <span className={`flex-shrink-0 w-3 h-3 rounded-sm border transition-all duration-150
               ${checked ? 'border-white bg-white'
                 : error ? 'border-red-500 bg-transparent group-hover:border-white group-hover:bg-white/10'
-                : 'border-[#3D3D3D] bg-transparent group-hover:border-gray-300 group-hover:bg-white/10'}`}
+                  : 'border-color bg-transparent group-hover:border-gray-300 group-hover:bg-white/10'}`}
               style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
               {checked && (
                 <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
@@ -128,8 +128,8 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; err
   value, onChange, error = false,
 }) => {
   const [query, setQuery] = useState(value);
-  const [open, setOpen]   = useState(false);
-  const ref               = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => { if (!value) setQuery(''); }, [value]);
 
@@ -159,16 +159,16 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; err
         onFocus={() => setOpen(true)}
         onChange={e => { setQuery(e.target.value); onChange(''); setOpen(true); }}
         autoComplete="off"
-        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm rounded-lg
-          ${error && !value ? 'border border-red-500' : 'border border-gray-300'}`}
+        className={`w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-300 text-sm rounded-lg
+          ${error && !value ? 'border border-red-500' : 'border border-gray-400'}`}
       />
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" style={{ fontSize: '10px' }}>▾</span>
       {open && filtered.length > 0 && (
-        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-[#1a1a1a] border border-[#3D3D3D] overflow-y-auto" style={{ maxHeight: '160px' }}>
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-gray-500 border border-[#3D3D3D] overflow-y-auto" style={{ maxHeight: '160px' }}>
           {filtered.map(role => (
             <div key={role} onMouseDown={() => select(role)}
               className={`px-4 py-2 text-[12px] cursor-pointer transition-colors
-                ${role === value ? 'bg-white text-black' : 'text-gray-300 hover:bg-[#2a2a2a] hover:text-white'}`}>
+                ${role === value ? 'bg-white text-black' : 'text-gray-200 hover:bg-[#2a2a2a] hover:text-white'}`}>
               {role}
             </div>
           ))}
@@ -253,16 +253,16 @@ function GlobeCanvas() {
 
 // ── Engagement ────────────────────────────────────────────────────────────────
 export default function Engagement() {
-  const [fullName,  setFullName]  = useState('');
-  const [orgName,   setOrgName]   = useState('');
-  const [role,      setRole]      = useState('');
-  const [email,     setEmail]     = useState('');
-  const [orgSize,   setOrgSize]   = useState('');
-  const [needs,     setNeeds]     = useState<string[]>([]);
+  const [fullName, setFullName] = useState('');
+  const [orgName, setOrgName] = useState('');
+  const [role, setRole] = useState('');
+  const [email, setEmail] = useState('');
+  const [orgSize, setOrgSize] = useState('');
+  const [needs, setNeeds] = useState<string[]>([]);
   const [challenge, setChallenge] = useState('');
-  const [errors,    setErrors]    = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [loading,   setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const err = (k: string) => submitted && errors[k]
     ? <p className="text-[10px] text-red-400 mt-0.5">{errors[k]}</p> : null;
@@ -271,8 +271,8 @@ export default function Engagement() {
     setSubmitted(true);
     const errs = {
       fullName: validate.fullName(fullName), orgName: validate.orgName(orgName),
-      role:     validate.role(role),         email:   validate.email(email),
-      orgSize:  validate.orgSize(orgSize),   needs:   validate.needs(needs),
+      role: validate.role(role), email: validate.email(email),
+      orgSize: validate.orgSize(orgSize), needs: validate.needs(needs),
     };
     setErrors(errs);
     if (Object.values(errs).some(Boolean)) return;
@@ -296,53 +296,33 @@ export default function Engagement() {
   };
 
   const lbl = "block text-b2 mb-0.5";
-  const inp = `w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm`;
+  const inp = `w-full bg-gray-500 px-3 py-2 focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-300 text-sm`;
 
   return (
-    <section className="flex flex-col">
-
-      {/* Full-width top border */}
-      <div className="border-t border-color w-full"></div>
-
-      <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-10 border-x border-color">
+    <section className="flex flex-col border-t border-color mt-20">
+      <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col py-4 px-5 md:p-20 border-x border-color">
 
         {/* ── Heading row: left-aligned on desktop, 2-line forced on mobile ── */}
         {/* FIX 1: Removed md:pl-[12%], lg:pl-[15%], xl:pl-[18%] — heading now left-aligns with content */}
-        <Reveal variants={slideInFromBottom(0.1)} className="flex items-start justify-between mb-8 md:mb-10">
-          <h1 className="
-            uppercase text-gray-200 font-thin text-left leading-tight
-            text-[20px] w-full
-            md:text-[28px] md:w-auto md:max-w-[60%]
-            lg:text-[36px]
-          ">
-            {/* Mobile: forced 2-line via <br> — hidden on md+ */}
-            <span className="block md:hidden">
-              <span className="text-white">Initiate an</span>{' '}
-              alignment-led<br />engagement process.
-            </span>
-            {/* Desktop: original layout — hidden on mobile */}
-            <span className="hidden md:block">
-              <span className="text-white">Initiate an</span> alignment-led <br /> engagement process.
-            </span>
-          </h1>
-          <div className="hidden md:flex flex-col font-light text-right flex-shrink-0 ml-4">
-            <Link href={"mailto:hello@ascella.group"}>hello@ascella.group</Link>
-            <p>+91 16045 10860</p>
-          </div>
-        </Reveal>
 
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 md:gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center md:items-start justify-between gap-10 md:gap-20">
 
           {/* ── Left column: Globe + Info cards ── */}
-          <div className="w-full md:w-1/2 flex flex-col gap-10 md:gap-20 items-center md:justify-between">
-
-            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[370px] lg:h-[370px] mx-auto">
+          <div className=" flex flex-col gap-10 md:gap-16  items-center md:justify-between">
+            <h1 className="
+            uppercase text-[20px] 
+            md:text-[28px] 
+            lg:text-[36px]
+          ">Initiate an <span className="text-gray-200">alignment-led <br />
+                engagement process.</span>
+            </h1>
+            <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[350px] lg:h-[270px] mx-auto">
               <GlobeCanvas />
             </div>
 
             {/* Info cards */}
             <Reveal variants={slideInFromBottom(0.1)} className="grid grid-cols-2 justify-between sm:px-6 md:px-0 gap-8 xm:gap-20 md:gap-4 w-full">
-             <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1 md:bg-[#111111] md:border md:border-[#2a2a2a] md:rounded-xl md:p-3 md:gap-2">
+              <div className="flex flex-col text-left gap-3 sm:gap-5 flex-1 md:bg-[#111111] md:border md:border-[#2a2a2a] md:rounded-xl md:p-3 md:gap-2">
                 <h3 className="text-[14px] text-left leading-tight min-h-10 md:min-h-0">Not sure where to begin?</h3>
                 <p className=" leading-tight text-xs sm:text-sm min-h-10 md:min-h-0 md:text-gray-200">Initial engagement focuses on alignment, not sales discussions.</p>
                 <Link href={"mailto:hello@ascella.group"} className="block md:hidden text-xs sm:text-sm">hello@ascella.group</Link>
@@ -357,13 +337,13 @@ export default function Engagement() {
           </div>
 
           {/* ── Right column: Form ── */}
-          <div className="w-full md:w-1/2 md:max-w-md space-y-2 md:space-y-">
+          <div className="flex flex-col justify-between h-full gap-4">
 
             <Reveal variants={slideInFromBottom(0.1)}>
               <label className={lbl}>Full Name</label>
               <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                 placeholder="Enter your name" autoComplete="name"
-                className={`${inp} rounded-lg ${submitted && errors.fullName ? 'border border-red-500' : 'border border-gray-300'}`} />
+                className={`${inp} rounded-lg ${submitted && errors.fullName ? 'border border-red-500' : 'border border-gray-400'}`} />
               {err('fullName')}
             </Reveal>
 
@@ -371,11 +351,11 @@ export default function Engagement() {
               <label className={lbl}>Organisation</label>
               <input type="text" value={orgName} onChange={e => setOrgName(e.target.value)}
                 placeholder="Organisation name" autoComplete="organization"
-                className={`${inp}  rounded-lg ${submitted && errors.orgName ? 'border border-red-500' : 'border border-gray-300 '}`} />
+                className={`${inp}  rounded-lg ${submitted && errors.orgName ? 'border border-red-500' : 'border border-gray-400 '}`} />
               {err('orgName')}
             </Reveal>
 
-            {/* FIX 2: RoleDropdown now has border border-gray-300 (same as other inputs) via updated className inside RoleDropdown */}
+            {/* FIX 2: RoleDropdown now has border border-gray-400 (same as other inputs) via updated className inside RoleDropdown */}
             <Reveal variants={slideInFromBottom(0.1)}>
               <label className={lbl}  >Role / Position</label>
               <RoleDropdown value={role} onChange={setRole} error={submitted && !!errors.role} />
@@ -386,7 +366,7 @@ export default function Engagement() {
               <label className={lbl}>Email Address</label>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="you@company.com" autoComplete="email"
-                className={`${inp}  rounded-lg ${submitted && errors.email ? 'border border-red-500' : 'border border-gray-300'}`} />
+                className={`${inp}  rounded-lg ${submitted && errors.email ? 'border border-red-500' : 'border border-gray-400'}`} />
               {err('email')}
             </Reveal>
 
@@ -408,7 +388,7 @@ export default function Engagement() {
               </label>
               <textarea rows={2} value={challenge} onChange={e => setChallenge(e.target.value)}
                 placeholder="Describe your current execution or operating challenge..."
-                className="w-full bg-gray-500 px-3 py-1.5 resize-none  rounded-lg focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-400 text-sm" />
+                className="w-full bg-gray-500 px-3 py-1.5 resize-none  rounded-lg focus:outline-none focus:border-white hover:bg-gray-400 hover:border hover:border-white/30 hover:placeholder-white transition-all duration-200 text-white placeholder-gray-300 text-sm border border-gray-400" />
             </Reveal>
 
             <button
@@ -423,9 +403,6 @@ export default function Engagement() {
           </div>
         </div>
       </div>
-
-      {/* Full-width bottom border */}
-      <div className="border-t border-color w-full"></div>
     </section>
   )
 }

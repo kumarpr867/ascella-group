@@ -35,7 +35,7 @@ const footerSections: FooterSection[] = [
         title: "Contact",
         items: [
             { label: "hello@ascella.group", href: "mailto:hello@ascella.group" },
-            { label: "Ascella.in", href: "https://ascella.group" },
+            { label: "ascella.group", href: "https://ascella.group" },
             { label: "+91 16045 10860", href: "tel:+911604510860" },
         ],
         bordered: true,

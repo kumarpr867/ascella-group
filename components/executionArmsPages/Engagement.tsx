@@ -3,8 +3,10 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import Link from 'next/link';
-import Reveal from "@/utils/Reveal"; 
+import Reveal from "@/utils/Reveal";
 import { slideInFromBottom } from "@/utils/motion";
+import OutlineBtn from '../btns/OutlineBtn';
+import { useRouter } from 'next/navigation';
 
 function Scene() {
   const points = useRef<THREE.Points>(null);
@@ -48,9 +50,11 @@ function Scene() {
 export default function Engagement() {
   const bgImage = "/engagement-bg.png";
 
+  const router = useRouter();
+
   return (
     <section className="relative w-full bg-black text-white overflow-hidden border-t border-white/20">
-      
+
       {/* V-LINES ALIGNMENT - Matches Footer Margins */}
       <div className="absolute inset-0 pointer-events-none z-20">
         <div className="mx-10 lg:mx-20 xl:mx-24 h-full border-x border-white/20" />
@@ -88,10 +92,10 @@ export default function Engagement() {
 
             {/* UI Content Wrapper */}
             <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[460px] md:min-h-[583px] px-6 md:px-10 py-12 md:py-16">
-              
+
               {/* Inner Container */}
               <div className="max-w-4xl flex flex-col items-start text-left">
-                
+
                 <div className="mb-3 md:mb-4">
                   <Reveal variants={slideInFromBottom(0.1)}>
                     <h5 className="text-xs md:text-base text-white/70 tracking-widest uppercase">
@@ -103,9 +107,9 @@ export default function Engagement() {
                 <div className="mb-2 md:mb-4">
                   <Reveal variants={slideInFromBottom(0.2)}>
                     <h3 className="lg:max-w-[651px] text-[24px] md:text-[30px] lg:text-[32px] leading-[1.2] tracking-tight">
-                      Engagement begins with{' '}
-                      <span className="text-white/30">
-                        alignment of operating structure and accountability.
+                      Ascella brings {' '}
+                      <span className="text-gray-200">
+                        ownership, structure, and discipline to how work moves forward.
                       </span>
                     </h3>
                   </Reveal>
@@ -114,22 +118,7 @@ export default function Engagement() {
                 {/* Button */}
                 <div className="mt-4 md:mt-2">
                   <Reveal variants={slideInFromBottom(0.3)}>
-                    <Link href="/engageWithUs">
-                      <button className="group relative px-3 md:px-4 py-3 md:py-2 border border-white/30 text-[9px] md:text-[10px] tracking-[0.4em] uppercase hover:bg-white hover:text-black transition-all duration-500">
-                        Engage With Us
-                        <span className="inline-block ml-3 md:ml-4 text-base md:text-lg group-hover:translate-x-2 transition-transform duration-300">
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="2" height="2" fill="currentColor"/>
-                            <rect y="6" width="2" height="2" fill="currentColor"/>
-                            <rect x="6" y="6" width="2" height="2" fill="currentColor"/>
-                            <rect x="6" width="2" height="2" fill="currentColor"/>
-                            <rect x="12" y="6" width="2" height="2" fill="currentColor"/>
-                            <rect x="6" y="12" width="2" height="2" fill="currentColor"/>
-                            <rect x="12" y="12" width="2" height="2" fill="currentColor"/>
-                          </svg>
-                        </span>
-                      </button>
-                    </Link>
+                    <OutlineBtn text='Take Control' onClick={() => router.push('/engageWithUs')} />
                   </Reveal>
                 </div>
 

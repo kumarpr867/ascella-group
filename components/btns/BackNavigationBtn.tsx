@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation"
 
 type Props = {
-  textColor?: string // Tailwind class, e.g., "text-gray-200"
-  textSize?: string  // Tailwind class, e.g., "text-b2"
+  textColor?: string 
+  textSize?: string  
 }
 
 export default function BackNavigationBtn({ textColor = "text-gray-200", textSize = "text-b2" }: Props) {

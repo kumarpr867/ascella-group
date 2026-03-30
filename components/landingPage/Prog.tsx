@@ -321,10 +321,10 @@ export default function Prog() {
                                     <h5 className={`text-[16px] md:text-[20px] transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-100'}`}>
                                         {item.title}
                                     </h5>
-                                    <p className={`text-b2 lg:pr-40 transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-300'}`}>
+                                    <p className={`text-b2 lg:pr-40 transition-colors duration-300 ${hoveredIndex === i ? 'text-white' : 'text-gray-200'}`}>
                                         {item.subtitle}
                                     </p>
-                                    <p className={`text-b3 transition-colors duration-300 ${hoveredIndex === i ? 'text-gray-100 font-light' : 'text-gray-400'}`}>
+                                    <p className={`text-b3 transition-colors duration-300 ${hoveredIndex === i ? 'text-gray-100' : 'text-gray-200'}`}>
                                         {item.body}
                                     </p>
                                 </Reveal>
