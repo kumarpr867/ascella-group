@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Heading from "../headings/Heading";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
@@ -14,15 +14,17 @@ const variants = {
   }),
   center: {
     x: 0,
-    opacity: 1
+    opacity: 1,
+    transition: { x: { type: "spring", stiffness: 220, damping: 30 }, opacity: { duration: 0.25 } }
   },
   exit: (direction: number) => ({
     x: direction < 0 ? "100%" : "-100%",
-    opacity: 0
+    opacity: 0,
+    transition: { x: { type: "spring", stiffness: 220, damping: 30 }, opacity: { duration: 0.2 } }
   })
 };
 
-// ── Points data (Updated with Hover effect on SVGs) ──────────────────────────
+// ── Points data ───────────────────────────────────────────────────────────────
 const points = [
   {
     svg: (
@@ -99,42 +101,74 @@ const points = [
 export default function HowWeOperate() {
   const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const isPausedRef = useRef(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const isDragging = useRef(false);
 
-  const paginate = (dir: number) => {
+  const paginate = useCallback((dir: number) => {
     setPage(([prev]) => [(prev + dir + points.length) % points.length, dir]);
-  };
-
-  const startAutoSlide = () => {
-    stopAutoSlide();
-    timerRef.current = setInterval(() => {
-      if (!isPausedRef.current) paginate(1);
-    }, 5000);
-  };
-
-  const stopAutoSlide = () => {
-    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-  };
-
-  // Pause on touch/click, resume when touch ends
-  const handleTouchStart = () => {
-    isPausedRef.current = true;
-  };
-
-  const handleTouchEnd = () => {
-    // Small delay before resuming so user can finish reading
-    setTimeout(() => {
-      isPausedRef.current = false;
-    }, 3000);
-  };
-
-  useEffect(() => {
-    startAutoSlide();
-    return stopAutoSlide;
   }, []);
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => paginate(1), 5000);
+  }, [paginate]);
+
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  }, []);
+
+  // Auto-play on mount
+  useEffect(() => {
+    if (window.innerWidth < 1024) startTimer();
+    return stopTimer;
+  }, []);
+
+  // Click on card → pause / resume toggle
+  const handleCardClick = useCallback(() => {
+    if (window.innerWidth >= 1024) return;
+    if (isDragging.current) return; // swipe ke baad click fire na ho
+    if (!isPaused) {
+      stopTimer();
+      setIsPaused(true);
+    } else {
+      startTimer();
+      setIsPaused(false);
+    }
+  }, [isPaused, startTimer, stopTimer]);
+
+  // Touch swipe handlers (left = next, right = prev)
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = false;
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    if (Math.abs(e.touches[0].clientX - touchStartX.current) > 10) {
+      isDragging.current = true;
+    }
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) paginate(1);   // swipe left → next
+      else paginate(-1);            // swipe right → prev
+      // resume auto-play after swipe
+      setIsPaused(false);
+      startTimer();
+    }
+    touchStartX.current = null;
+    // reset isDragging after a tiny delay so click handler sees it
+    setTimeout(() => { isDragging.current = false; }, 50);
+  }, [paginate, startTimer]);
 
   return (
     <section className="mx-10 lg:mx-20 xl:mx-24 py-10 my-20">
+
+      {/* ── DESKTOP / TABLET (md+) — unchanged ── */}
       <div className="hidden md:flex items-center gap-16 xl:gap-24 overflow-hidden">
         <Reveal variants={slideInFromLeft(0.1)} className="flex-shrink-0 flex items-center justify-center">
           <Image src="/HowWeOperate.png" alt="How We Operate" width={500} height={500} className="w-[420px] xl:w-[500px]" />
@@ -153,11 +187,10 @@ export default function HowWeOperate() {
             </div>
           </Reveal>
 
-          <ul
-            className="grid grid-cols-1 lg:grid-cols-2 gap-5"
-          >
+          <ul className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {points.map((point, index) => (
               <li
+                key={index}
                 className="flex flex-col gap-2.5 bg-gray-500 p-5 xl:p-6 rounded-2xl cursor-default transition-all duration-300 hover:scale-[1.03] group"
               >
                 <div className="flex justify-between w-full items-start">
@@ -172,7 +205,7 @@ export default function HowWeOperate() {
         </div>
       </div>
 
-      {/* MOBILE VIEW */}
+      {/* ── MOBILE (max md) ── */}
       <div className="flex flex-col gap-6 md:hidden">
         <Reveal variants={slideInFromBottom(0.02)} className="flex flex-col gap-3">
           <Heading text="How We Operate" />
@@ -184,7 +217,14 @@ export default function HowWeOperate() {
           <Image src="/HowWeOperate.png" alt="How We Operate" width={400} height={400} className="w-full max-w-xs" />
         </div>
 
-        <div className="relative overflow-hidden">
+        {/* Carousel */}
+        <div
+          className="relative overflow-hidden"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          onClick={handleCardClick}
+        >
           <AnimatePresence mode="wait" initial={false} custom={direction}>
             <motion.div
               key={page}
@@ -193,43 +233,43 @@ export default function HowWeOperate() {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ x: { type: "spring", stiffness: 220, damping: 30 }, opacity: { duration: 0.25 } }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragStart={handleTouchStart}
-              onDragEnd={(e, info) => {
-                handleTouchEnd();
-                if (info.offset.x < -50) paginate(1);
-                else if (info.offset.x > 50) paginate(-1);
-              }}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              className="w-full bg-gray-500 p-6 rounded-2xl flex flex-col gap-3 transition-all duration-300 hover:scale-[1.02] group cursor-grab active:cursor-grabbing"
+              className="w-full bg-gray-500 p-6 rounded-2xl flex flex-col gap-3 group cursor-pointer select-none"
             >
               <div className="flex justify-between items-start">
                 {points[page].svg}
-                <span className="text-lg font-thin transition-colors duration-300 group-hover:text-white">{points[page].count}</span>
+                <span className="text-lg font-thin transition-colors duration-300 group-hover:text-white">
+                  {points[page].count}
+                </span>
               </div>
-              <h4 className="text-xl font-light transition-colors duration-300 group-hover:text-white">{points[page].heading}</h4>
-              <p className="text-gray-300 text-sm transition-colors duration-300 group-hover:text-gray-100">{points[page].description}</p>
+              <h4 className="text-xl font-light transition-colors duration-300 group-hover:text-white">
+                {points[page].heading}
+              </h4>
+              <p className="text-gray-300 text-sm transition-colors duration-300 group-hover:text-gray-100">
+                {points[page].description}
+              </p>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        <div className="flex justify-center gap-2 mt-4">
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-2">
           {points.map((_, i) => (
             <button
               key={i}
-              onClick={() => {
-                handleTouchStart();
+              onClick={(e) => {
+                e.stopPropagation();
                 setPage([i, i > page ? 1 : -1]);
-                handleTouchEnd();
+                setIsPaused(false);
+                startTimer();
               }}
-              className={`h-2 rounded-full transition-all duration-300 ${i === page ? "w-6 bg-white" : "w-2 bg-gray-500"}`}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === page ? "w-6 bg-white" : "w-2 bg-gray-500"
+              }`}
             />
           ))}
         </div>
       </div>
+
     </section>
   );
 }

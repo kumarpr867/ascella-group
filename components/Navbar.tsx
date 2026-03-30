@@ -16,6 +16,7 @@ const navLinks = [
     children: [
       { label: "Case Studies", href: "/insights/case-studies" },
       { label: "Blogs", href: "/insights/blogs" },
+      {label: "Resources", href: "/insights/resources"},
     ],
   },
   {

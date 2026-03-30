@@ -364,56 +364,8 @@ export default function OperatingStructure() {
             </div>
           </Reveal>
 
-          {/* ── 5 Middle Boxes — segments 2 → 6 ── */}
-          {/*
-            Single top + bottom line spans the FULL grid width.
-            background-position moves with beamPos → one smooth unbroken sweep.
-          */}
+         
           <div className="relative">
-
-            {/* ── Unified top glow line ── */}
-            <div style={{
-              position: 'absolute',
-              top: 75,         // aligns with box top border
-              left: 0,
-              right: 0,
-              height: '1px',
-              pointerEvents: 'none',
-              zIndex: 20,
-              // Narrow bright spot; position tracks beamPos mapped to box area (segs 2-6)
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
-              backgroundSize: '40% 100%',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: (() => {
-                // beamPos 0.25 (seg2) → 0%, beamPos 0.75 (seg6) → 100%
-                const p = Math.max(0, Math.min(1, (beamPos - 0.25) / 0.5)) * 100;
-                return `${p}% 0`;
-              })(),
-              opacity: beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
-              transition: 'opacity 0.15s ease',
-              boxShadow: '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
-            }} />
-
-            {/* ── Unified bottom glow line ── */}
-            <div style={{
-              position: 'absolute',
-              bottom: 31,         // aligns with box bottom border
-              left: 0,
-              right: 0,
-              height: '1px',
-              pointerEvents: 'none',
-              zIndex: 20,
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 70%, transparent 100%)',
-              backgroundSize: '40% 100%',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: (() => {
-                const p = Math.max(0, Math.min(1, (beamPos - 0.25) / 0.5)) * 100;
-                return `${p}% 0`;
-              })(),
-              opacity: beamPos >= 0.2 && beamPos <= 0.82 ? 1 : 0,
-              transition: 'opacity 0.15s ease',
-              boxShadow: '0 0 10px 4px rgba(255,255,255,0.45), 0 0 24px 8px rgba(255,255,255,0.2)',
-            }} />
 
             <div className="grid grid-cols-5 text-center bg-black z-10">
               {items.map((item, index) => {
