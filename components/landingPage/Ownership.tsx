@@ -267,8 +267,8 @@ function Sidebar({
         </div>
       </div>
 
-      <div className="mb-12">
-        <Link href="/execution-arms">
+      <div className="mb-12 hover:scale-105 transition-all duration-300">
+        <Link href="/execution-arms" >
           <PartialOutlineBtn text="Explore Execution Arms" bgColor="bg-white" textColor="text-black" borderColor="border-white" />
         </Link>
       </div>
