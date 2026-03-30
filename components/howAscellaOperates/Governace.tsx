@@ -164,7 +164,7 @@ export default function Governace() {
                 </Reveal>
             </div>
 
-            <div className="mx-10 lg:mx-20 xl:mx-24 flex md:flex-row flex-col flex-center leading-tight gap-15 lg:gap-40 md:border-y border-color py-15">
+            <div className="mx-10 lg:mx-20 xl:mx-24 flex md:flex-row flex-col flex-center leading-tight gap-15 lg:gap-40 md:border-y border-color py-15 overflow-x-hidden">
                 <Reveal variants={slideInFromLeft(0.1)} className="hidden md:flex flex-col">
                     <Image src="/HowWeOperate.png" alt="How We Operate" width={450} height={250} />
                     <div className="hidden md:flex items-center gap-5">

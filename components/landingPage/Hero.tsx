@@ -1,7 +1,7 @@
 "use client";
 import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
-import { PixelWorld } from "./glowEffect";
+import { PixelWorld } from "./globe";
 import PlusText from "../headings/PlusText";
 import { useRouter } from "next/navigation";
 
@@ -186,9 +186,9 @@ export default function Hero() {
           animate="visible"
           className="absolute inset-x-0 md:bottom-[22vh] z-5"
         >
-          <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col md:flex-row justify-between gap-5">
+          <div className="mx-10 lg:mx-20 xl:mx-24 flex flex-col md:flex-row justify-between gap-5 pointer-events-none">
 
-            <motion.h1 variants={fadeUp} className="text-gray-300 text-[36px] md:text-[36px] lg:text-[64px]">
+            <motion.h1 variants={fadeUp} className="text-gray-300 text-[36px] md:text-[36px] lg:text-[48px] font-medium">
               A Unified <br />
               <span className="text-white">Operating Group</span>
             </motion.h1>

@@ -292,7 +292,7 @@ export default function OperatingStructure() {
       cursor: 'pointer',
       pointerEvents: 'auto',
       filter: g > 0.01
-        ? `brightness(${1 + g * 9}) drop-shadow(0 0 ${g * 10}px rgba(255,255,255,${g})) drop-shadow(0 0 ${g * 24}px rgba(255,255,255,${g * 0.7}))`
+        ? `brightness(${1 + g * 9}) drop-shadow(0 0 ${g * 10}px rgba(255,255,255,${g})) drop-shadow(0 0 ${g * 14}px rgba(255,255,255,${g * 0.1}))`
         : 'none',
     };
   };
@@ -366,7 +366,6 @@ export default function OperatingStructure() {
 
          
           <div className="relative">
-
             <div className="grid grid-cols-5 text-center bg-black z-10">
               {items.map((item, index) => {
                 const seg = index + 2; // 2, 3, 4, 5, 6

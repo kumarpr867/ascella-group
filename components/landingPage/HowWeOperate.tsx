@@ -1,13 +1,13 @@
 'use client';
 
 import Image from "next/image";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Heading from "../headings/Heading";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
 
-const variants = {
+const variants: Variants = {
   enter: (direction: number) => ({
     x: direction > 0 ? "100%" : "-100%",
     opacity: 0
@@ -100,7 +100,7 @@ const points = [
 
 export default function HowWeOperate() {
   const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const isDragging = useRef(false);
@@ -122,7 +122,7 @@ export default function HowWeOperate() {
   useEffect(() => {
     if (window.innerWidth < 1024) startTimer();
     return stopTimer;
-  }, []);
+  }, [startTimer, stopTimer]);
 
   // Click on card → pause / resume toggle
   const handleCardClick = useCallback(() => {

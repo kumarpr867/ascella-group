@@ -31,7 +31,7 @@ const GLOBE_CONFIG = {
 
     // Grid & density
     pointsPerDegree: 0.7,          // Grid resolution
-    clusterChance: 0.6,          // Chance to place a cluster
+    clusterChance: 0.86,          // Chance to place a cluster
 
     // Cluster sizes (min/max)
     minClusterSize: 2,           // Minimum pixels per cluster
@@ -55,10 +55,13 @@ interface PixelGlobeProps {
 }
 
 // Convert lat/lon to 3D coordinates
-const latLonToPosition = (lat: number, lon: number, radius: number = 7): [number, number, number] => {
-    // INCREASED radius from 6 to 7 for even larger globe
+const latLonToPosition = (
+    lat: number,
+    lon: number,
+    radius: number = 7
+): [number, number, number] => {
     const phi = (90 - lat) * Math.PI / 180;
-    const theta = lon * Math.PI / 180;
+    const theta = -lon * Math.PI / 180; // ✅ FIXED
 
     return [
         radius * Math.sin(phi) * Math.cos(theta),
@@ -170,23 +173,23 @@ const PixelGlobe = ({
     );
 
     const originalPositions = useRef(new Float32Array(particles));
-const geometry = useMemo(() => {
-  const geo = new BufferGeometry();
-  geo.setAttribute("position", new BufferAttribute(particles, 3));
+    const geometry = useMemo(() => {
+        const geo = new BufferGeometry();
+        geo.setAttribute("position", new BufferAttribute(particles, 3));
 
-  // Create color buffer (r,g,b)
-  const colors = new Float32Array((particles.length / 3) * 3);
+        // Create color buffer (r,g,b)
+        const colors = new Float32Array((particles.length / 3) * 3);
 
-  for (let i = 0; i < colors.length; i += 3) {
-    colors[i] = 1;     // R
-    colors[i + 1] = 1; // G
-    colors[i + 2] = 1; // B
-  }
+        for (let i = 0; i < colors.length; i += 3) {
+            colors[i] = 1;     // R
+            colors[i + 1] = 1; // G
+            colors[i + 2] = 1; // B
+        }
 
-  geo.setAttribute("color", new BufferAttribute(colors, 3));
+        geo.setAttribute("color", new BufferAttribute(colors, 3));
 
-  return geo;
-}, [particles]);
+        return geo;
+    }, [particles]);
 
     const texture = useMemo(() => {
         const canvas = document.createElement("canvas");
@@ -198,42 +201,22 @@ const geometry = useMemo(() => {
         return new CanvasTexture(canvas);
     }, []);
 
-const material = useMemo(() => {
-  return new PointsMaterial({
-    size: particleSize,
-    sizeAttenuation: true,
-    map: texture,
-    blending: AdditiveBlending,
-    transparent: true,
-    depthWrite: false,
-    depthTest: false,
-    vertexColors: true, // IMPORTANT
-  });
-}, [particleSize, texture]);
-
+    const material = useMemo(() => {
+        return new PointsMaterial({
+            size: particleSize,
+            sizeAttenuation: true,
+            map: texture,
+            blending: AdditiveBlending,
+            transparent: true,
+            depthWrite: false,
+            depthTest: false,
+            vertexColors: true, // IMPORTANT
+        });
+    }, [particleSize, texture]);
+    const isMouseOverGlobe = useRef(false);
     const raycaster = useMemo(() => new Raycaster(), []);
     const mouse = useRef(new Vector2());
     const hoverPoint = useRef<Vector3 | null>(null);
-
-    useEffect(() => {
-        const handleMove = (e: MouseEvent) => {
-            const rect = gl.domElement.getBoundingClientRect();
-
-            mouse.current.x =
-                ((e.clientX - rect.left) / rect.width) * 2 - 1;
-
-            mouse.current.y =
-                -((e.clientY - rect.top) / rect.height) * 2 + 1;
-        };
-
-        window.addEventListener("mousemove", handleMove);
-
-        return () => {
-            window.removeEventListener("mousemove", handleMove);
-        };
-    }, [gl]);
-    
-    const isMouseOverGlobe = useRef(false);
 
     useEffect(() => {
         const handleMove = (e: MouseEvent) => {
@@ -249,12 +232,10 @@ const material = useMemo(() => {
         };
 
         window.addEventListener("mousemove", handleMove);
-        window.addEventListener("mouseout", handleLeave);
         window.addEventListener("mouseleave", handleLeave);
 
         return () => {
             window.removeEventListener("mousemove", handleMove);
-            window.removeEventListener("mouseout", handleLeave);
             window.removeEventListener("mouseleave", handleLeave);
         };
     }, [gl]);
@@ -284,18 +265,22 @@ const material = useMemo(() => {
         const positions = geometry.attributes.position.array as Float32Array;
         const originals = originalPositions.current;
         const temp = new Vector3();
-        
+
         // Get camera direction to determine front/back faces
         const cameraPosition = camera.position.clone();
         groupRef.current.worldToLocal(cameraPosition);
-        
-        for (let i = 0; i < positions.length; i += 3) {
-            temp.set(originals[i], originals[i + 1], originals[i + 2]);
-            temp.normalize().multiplyScalar(7);
-            positions[i] = temp.x;
-            positions[i + 1] = temp.y;
-            positions[i + 2] = temp.z;
-        }
+
+        //---------------------------------------------------------------
+
+        // for (let i = 0; i < positions.length; i += 3) {
+        //     temp.set(originals[i], originals[i + 1], originals[i + 2]);
+        //     temp.normalize().multiplyScalar(7);
+        //     positions[i] = temp.x;
+        //     positions[i + 1] = temp.y;
+        //     positions[i + 2] = temp.z;
+        // }
+
+        //---------------------------------------------------------------
         geometry.attributes.position.needsUpdate = true;
 
         // Set base opacity
@@ -304,7 +289,7 @@ const material = useMemo(() => {
 
         // Calculate average camera direction relative to particles
         const cameraDir = cameraPosition.clone().normalize();
-        
+
         // Adjust overall opacity based on camera angle
         // When camera is looking at front (dot product > 0), keep full opacity
         // When looking at back (dot product < 0), reduce opacity
@@ -314,7 +299,8 @@ const material = useMemo(() => {
             const samplePos = new Vector3(positions[0], positions[1], positions[2]);
             const sampleDir = samplePos.clone().normalize();
             const dotWithCamera = sampleDir.dot(cameraDir);
-            
+
+
             // If the dot product is negative, the sample particle is pointing away from camera
             // which means we're looking at the back side of the globe
             if (dotWithCamera < 0) {

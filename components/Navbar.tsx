@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect, useCallback, useTransition, memo } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import OutlineBtn from "./btns/OutlineBtn";
 
@@ -66,12 +66,10 @@ const PageLoadingBar = memo(() => {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest("a");
-      if (!target) return;
-      const href = target.getAttribute("href");
-      if (!href) return;
-      const isInternal = href.startsWith("/") && !href.startsWith("//");
-      if (!isInternal) return;
+      const targetLink = (e.target as HTMLElement)?.closest("a");
+      if (!targetLink) return;
+      const href = targetLink.getAttribute("href");
+      if (!href || href.startsWith("https://") || href.startsWith("http://") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
       if (href === pathname) return;
       startLoading();
     };
@@ -112,15 +110,16 @@ const Navbar = () => {
   const _isPending = useTransition()[0];
   const desktopRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const scrollTimeout = useRef<NodeJS.Timeout | number | null>(null);
 
   // Hide navbar while the user is actively scrolling; show it after short pause
   const handleScroll = useCallback(() => {
-    setShowNavbar(false);
+    setShowNavbar((prev) => (prev ? false : prev));
     if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     scrollTimeout.current = window.setTimeout(() => {
       setShowNavbar(true);
-    }, 220); // show on scroll stop after 220ms
+    }, 220);
   }, []);
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -365,7 +364,7 @@ const Navbar = () => {
                               onClick={(e) => {
                                 e.preventDefault();
                                 closeMenu();
-                                window.location.href = child.href;
+                                router.push(child.href);
                               }}
                               className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href ? "text-white bg-white/10" : "text-gray-400 hover:text-white"}`}
                             >
