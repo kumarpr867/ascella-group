@@ -2,6 +2,7 @@ import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/mo
 import Reveal from "@/utils/Reveal";
 import Heading from "../headings/Heading";
 import Image from "next/image";
+import Flowchart from "./flowchart";
 
 export default function OperatingGroup() {
     return (
@@ -33,12 +34,7 @@ export default function OperatingGroup() {
                 </Reveal>
                 <Reveal variants={slideInFromBottom(0.1)} className="relative hidden lg:block  mx-10 lg:mx-20 xl:mx-24 mt-6 lg:py-10 flex flex-col md:flex-row items-center border border-color">
                     <div className="relative w-full h-[300px] lg:h-[400px] xl:h-[500px]">
-                        <Image
-                            src="/howAscellaOperates/f2.png"
-                            alt="Operating model diagram"
-                            fill
-                            className="object-contain"
-                        />
+                        <Flowchart />
                     </div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-between w-full px-10 xl:px-24">
                         <div className="text-b2 text-center">Ascella Group holds <br /> operating authority</div>

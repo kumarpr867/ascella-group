@@ -61,7 +61,7 @@ const latLonToPosition = (
     radius: number = 7
 ): [number, number, number] => {
     const phi = (90 - lat) * Math.PI / 180;
-    const theta = -lon * Math.PI / 180; // ✅ FIXED
+    const theta = -lon * Math.PI / 180; 
 
     return [
         radius * Math.sin(phi) * Math.cos(theta),
