@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { LayoutGrid, Target, Settings, ShieldCheck } from "lucide-react";
+
 import { motion } from "motion/react";
 
 const CurrentOpenings = () => {
@@ -11,21 +11,52 @@ const CurrentOpenings = () => {
     {
       id: 2,
       title: "Scope of responsibility",
-      icon: <Target className="w-6 h-6 text-gray-200" />,
+      icon: <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="8.26562" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="24.7979" y="28" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="8.26562" y="14" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect y="7" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="8.26562" y="28" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" y="7" width="8.26621" height="7" fill="#3D3D3D"/>
+</svg>
+,
       description:
         "The outcomes the role owns, the decisions it is accountable for, and the execution areas it governs.",
     },
     {
       id: 3,
       title: "Accountability expectations",
-      icon: <ShieldCheck className="w-6 h-6 text-gray-200" />,
+      icon: <svg width="42" height="28" viewBox="0 0 42 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="24.7988" y="7" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="24.7988" y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" y="14" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="33.0654" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect y="14" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="8.2666" y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" width="8.26621" height="7" fill="#3D3D3D"/>
+</svg>
+,
       description:
         "How responsibility is measured, how delivery is reviewed, and how performance aligns with operating objectives.",
     },
     {
       id: 4,
       title: "Operating context",
-      icon: <LayoutGrid className="w-6 h-6 text-gray-200" />,
+      icon: <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="8.26562" y="14" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" y="14" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="24.7979" y="28" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="24.7979" y="7" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="16.5322" y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect y="21" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect y="7" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="8.26562" y="28" width="8.26621" height="7" fill="#3D3D3D"/>
+<rect x="8.26562" width="8.26621" height="7" fill="#3D3D3D"/>
+</svg>
+,
       description:
         "The execution environment, pod structure, and cross-functional dependencies in which the role operates.",
     },
@@ -33,7 +64,18 @@ const CurrentOpenings = () => {
     {
       id: 6,
       title: "Reporting and governance structure",
-      icon: <Settings className="w-6 h-6 text-gray-200" />,
+      icon: <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="14" y="21" width="7" height="7" fill="#3D3D3D"/>
+<rect x="21" y="7" width="7" height="7" fill="#3D3D3D"/>
+<rect x="21" y="14" width="7" height="7" fill="#3D3D3D"/>
+<rect x="28" y="7" width="7" height="7" fill="#3D3D3D"/>
+<rect x="7" y="14" width="7" height="7" fill="#3D3D3D"/>
+<rect y="14" width="7" height="7" fill="#3D3D3D"/>
+<rect x="7" width="7" height="7" fill="#3D3D3D"/>
+<rect x="14" y="7" width="7" height="7" fill="#3D3D3D"/>
+<rect x="21" width="7" height="7" fill="#3D3D3D"/>
+</svg>
+,
       description:
         "How the role fits within Ascella's oversight framework, including escalation paths and decision authority.",
     },
@@ -71,7 +113,7 @@ const CurrentOpenings = () => {
   return (
     <div className="overflow-hidden bg-black text-white">
       {/* ================= DESKTOP ================= */}
-      <div className="hidden lg:flex h-screen px-10 flex-col justify-center relative -mt-20">
+      <div className="hidden lg:flex min-h-screen px-10 flex-col justify-center relative -mt-20">
         
         {/* Background Image - Reveal Left */}
         <motion.div 
@@ -126,7 +168,7 @@ const CurrentOpenings = () => {
                 className={`p-6 w-[260px] h-[220px] flex flex-col justify-between transition-all duration-300 ${
                   item.empty
                     ? "bg-transparent"
-                    : "bg-black/60 backdrop-blur-md border border-neutral-800"
+                    : "bg-black/60 backdrop-blur-md border border-neutral-800 hover:bg-gray-700/40" 
                 }`}
               >
                 {!item.empty && (

@@ -67,24 +67,24 @@ export default function Arms() {
 
       <Reveal variants={slideInFromBottom(0.4)} className="w-full max-w-7xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
-        <div className="flex flex-col lg:flex-row min-h-auto lg:h-[550px]">
+        <div className="flex flex-col md:flex-row min-h-auto md:h-[550px]">
 
           {/* Navigation Sidebar */}
           <aside className="w-full md:w-[320px] px-6  md:p-8 flex flex-col  md:gap-0 md:justify-between">
             <div>
-              {/* Desktop: "Execution Arms" heading */}
-              <h5 className="hidden lg:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
+              {/* Desktop/Tablet: "Execution Arms" heading */}
+              <h5 className="hidden md:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
                 Execution Arms
               </h5>
 
               {/* Mobile only: Dynamic counter in white sidebar */}
-              <div className="lg:hidden text-[28px] font-light mb-6">
+              <div className="md:hidden text-[28px] font-light mb-6">
                 <span className="text-black">0{index + 1}</span>
                 <span className="text-black/20">/0{total}</span>
               </div>
 
-              {/* Nav */}
-              <nav className=" hidden lg:flex flex-col gap-4 md:gap-6">
+              {/* Nav for Tablet/Desktop */}
+              <nav className="hidden md:flex flex-col gap-4 md:gap-6">
                 {content.map((item, i) => (
                   <button
                     key={item.id}
@@ -100,8 +100,8 @@ export default function Arms() {
               </nav>
             </div>
 
-            {/* Bottom section — desktop only */}
-            <div className="hidden lg:flex flex-col gap-6 mt-auto">
+            {/* Bottom section — tablet+ desktop */}
+            <div className="hidden md:flex flex-col gap-6 mt-auto">
               <p className="text-[12px] leading-relaxed text-gray-400 max-w-[240px]">
                 All execution arms operate under{" "}
                 <span className="text-black font-medium">Ascella Group governance</span>.

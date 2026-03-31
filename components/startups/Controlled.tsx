@@ -232,14 +232,32 @@ const styles = `
 
   /* ── TABLET (641–1023px) ── */
   @media (min-width:641px) and (max-width:1023px) {
-    .d-gl-left  { left:80px; }
-    .d-gl-right { right:80px; }
-    .d-globe-container { left:80px; right:55%; bottom:100px; top:0; }
-    .d-globe-wrapper   { width:560px; height:500px; bottom:-40px; left:-220px; }
-    .d-main  { padding:0 80px; }
-    .d-inner { padding-right:40px; }
-    .d-indent { padding-left:60px; }
-    .d-footer { padding:0 110px; }
+    /* Match footer mx-10 = 40px on tablet */
+    .d-gl-left  { left:40px; }
+    .d-gl-right { right:40px; }
+    .d-globe-container { left:40px; right:52%; bottom:100px; top:0; }
+    .d-globe-wrapper   { width:480px; height:430px; bottom:-40px; left:-180px; }
+
+    /* Tighter vertical: remove flex:1 stretch, center naturally */
+    .d-content {
+      height:calc(100vh - 80px - 100px);
+      justify-content:center;
+    }
+    .d-main {
+      flex:none;
+      justify-content:center;
+      align-items:flex-end;
+      padding:0 40px;
+      margin-top:0;
+    }
+    .d-inner { padding-right:16px; max-width:520px; }
+    .d-indent { padding-left:40px; }
+    .d-h2 { font-size:clamp(24px,3vw,34px); }
+    .d-subrow { margin-top:20px; gap:20px; }
+
+    /* Footer: match footer mx-10 (40px) + px-5 (20px) = 60px, add small gap = 60px */
+    .d-footer { padding:0 60px; }
+    .d-ascella { max-width:200px; }
   }
 
   /* ── LARGE (1440px+) ── */

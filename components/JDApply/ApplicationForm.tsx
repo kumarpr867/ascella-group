@@ -253,4 +253,3 @@ function Section({ title, children }: SectionProps) {
         </section>
     );
 }
-

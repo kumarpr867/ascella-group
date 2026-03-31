@@ -8,11 +8,27 @@ export default function CustomCursor() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const smoothX = useSpring(mouseX, { stiffness: 500, damping: 40 });
   const smoothY = useSpring(mouseY, { stiffness: 500, damping: 40 });
 
   useEffect(() => {
+    // Check if device is desktop (high-precision pointer & hover support) and not small viewport
+    const checkIfDesktop = () => {
+      const prefersFinePointer = window.matchMedia?.("(pointer: fine) and (hover: hover)").matches;
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+      const isSmallScreen = window.innerWidth < 768; // only hide on phone
+      return prefersFinePointer && !isMobileUserAgent && !isSmallScreen;
+    };
+
+    const desktop = checkIfDesktop();
+    setIsDesktop(desktop);
+
+    if (!desktop) return;
+
     setMounted(true);
 
     // Hide the native cursor globally while this custom cursor is active.
@@ -23,7 +39,7 @@ export default function CustomCursor() {
 
     const styleEl = document.createElement("style");
     styleEl.id = "custom-cursor-hide-native";
-    styleEl.textContent = "html, body, * { cursor: none !important; }";
+    styleEl.textContent = "html, body, *, *::before, *::after, a, button, input, textarea, select { cursor: none !important; }";
     document.head.appendChild(styleEl);
 
     const move = (e: MouseEvent) => {
@@ -42,7 +58,20 @@ export default function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
-  if (!mounted) return null;
+  // Keep desktop/mobile status updated on resize as well
+  useEffect(() => {
+    const resizeListener = () => {
+      const desktop = window.matchMedia?.("(pointer: fine) and (hover: hover)").matches
+        && !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        && window.innerWidth >= 1024;
+      setIsDesktop(desktop);
+    };
+
+    window.addEventListener("resize", resizeListener);
+    return () => window.removeEventListener("resize", resizeListener);
+  }, []);
+
+  if (!mounted || !isDesktop) return null;
 
   return createPortal(
     <>

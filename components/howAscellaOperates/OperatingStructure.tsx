@@ -364,11 +364,7 @@ export default function OperatingStructure() {
             </div>
           </Reveal>
 
-          {/* ── 5 Middle Boxes — segments 2 → 6 ── */}
-          {/*
-            Single top + bottom line spans the FULL grid width.
-            background-position moves with beamPos → one smooth unbroken sweep.
-          */}
+         
           <div className="relative">
             <div className="grid grid-cols-5 text-center bg-black z-10">
               {items.map((item, index) => {

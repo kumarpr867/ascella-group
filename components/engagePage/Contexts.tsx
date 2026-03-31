@@ -765,7 +765,7 @@ const ContextsPage = () => {
             */}
             <motion.div initial="hidden" animate="visible" variants={slideFromLeft}
               className="bg-black border-r border-[#3D3D3D] flex-shrink-0" style={{ width: '40%' }}>
-              <div className="sticky top-0 h-screen flex flex-col" style={{ overflow: 'hidden' }}>
+              <div className="sticky top-0 min-h-screen flex flex-col">
                 <style>{`.lfc::-webkit-scrollbar{display:none}.lfc{scrollbar-width:none}`}</style>
 
                 {/* CHANGE 3: 64px top spacer + horizontal grid line */}

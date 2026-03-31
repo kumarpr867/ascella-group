@@ -222,7 +222,7 @@ export default function WhoWeWorkWith() {
       transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] as any }}
     >
 
-      <div className="relative z-10 flex flex-col h-auto lg:h-screen">
+      <div className="relative z-10 flex flex-col h-auto lg:min-h-screen">
 
         <motion.div
           className="flex flex-col items-center text-center px-4 pb-10"

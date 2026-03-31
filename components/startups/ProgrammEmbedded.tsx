@@ -131,7 +131,7 @@ function IsometricHoverGrid() {
   );
 }
 
-// ── Mobile Slide Data ──────────────────────────────────────────────────────────
+// ── Slide Data ─────────────────────────────────────────────────────────────────
 type TextSlide = {
   type: 'text';
   icon: string;
@@ -143,9 +143,9 @@ type ImageSlide = {
   image: string;
   quote: string;
 };
-type MobileSlide = TextSlide | ImageSlide;
+type Slide = TextSlide | ImageSlide;
 
-const mobileSlides: MobileSlide[] = [
+const slides: Slide[] = [
   {
     type: 'text',
     icon: '/Group 1665 (2).svg',
@@ -173,51 +173,160 @@ const mobileSlides: MobileSlide[] = [
   },
 ];
 
-// ── Main Component ─────────────────────────────────────────────────────────────
-const ProgramEmbedded = () => {
-  // Base box class — used for Box 1 and Box 3 (with hover bg)
-  const boxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] p-10 xl:p-12 flex flex-col justify-end relative bg-black transition-colors duration-300 hover:bg-[#1a1a1a]";
-  // Image box — no hover bg change
-  const imageBoxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] flex flex-col justify-end relative bg-black";
-
+// ── Shared Carousel (used on mobile + tablet) ──────────────────────────────────
+function SlidesCarousel() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handleSlideClick = () => {
-    setActiveSlide((prev) => (prev + 1) % mobileSlides.length);
+  const next = () => setActiveSlide((p) => (p + 1) % slides.length);
+
+  const startTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(next, 3000);
   };
 
-  const currentSlide: MobileSlide = mobileSlides[activeSlide];
+  const stopTimer = () => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  };
+
+  useEffect(() => {
+    startTimer();
+    return () => stopTimer();
+  }, []);
+
+  // Click → playing: pause | paused: resume from current slide
+  const handleClick = () => {
+    if (!isPaused) {
+      stopTimer();
+      setIsPaused(true);
+    } else {
+      startTimer();
+      setIsPaused(false);
+    }
+  };
+
+  // Swipe → always go right, resume if paused
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = Math.abs(touchStartX.current - e.changedTouches[0].clientX);
+    if (diff > 30) {
+      next();
+      setIsPaused(false);
+      startTimer();
+    }
+    touchStartX.current = null;
+  };
+
+  const goTo = (i: number) => setActiveSlide(i);
+
+  const current = slides[activeSlide];
+
+  return (
+    <div
+      className="relative w-full bg-black overflow-hidden select-none cursor-pointer"
+      style={{ minHeight: '340px' }}
+      onClick={handleClick}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+
+      {/* Side border lines */}
+      <div className="absolute top-0 bottom-0 border-l border-[#3D3D3D] z-10" style={{ left: '40px' }} />
+      <div className="absolute top-0 bottom-0 border-r border-[#3D3D3D] z-10" style={{ right: '40px' }} />
+
+      {/* Slide content */}
+      <motion.div
+        key={activeSlide}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.35, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="relative z-20 flex flex-col justify-between h-full"
+        style={{ padding: '32px 52px 28px 52px', minHeight: '340px' }}
+      >
+        {/* IMAGE SLIDE */}
+        {current.type === 'image' && (
+          <>
+            <div className="absolute inset-0" style={{ left: '40px', right: '40px', top: 0, bottom: 0, overflow: 'hidden' }}>
+              <img src={(current as ImageSlide).image} alt="slide visual" className="w-full h-full object-cover opacity-80" />
+            </div>
+            <div className="relative z-10 flex flex-col justify-between h-full" style={{ minHeight: '340px' }}>
+              <div />
+              <p className="text-[15px] pl-4 border-l border-white/40 text-white">{(current as ImageSlide).quote}</p>
+              <Dots activeSlide={activeSlide} goTo={goTo} />
+            </div>
+          </>
+        )}
+
+        {/* TEXT SLIDE */}
+        {current.type === 'text' && (
+          <div className="relative z-10 flex flex-col justify-between h-full" style={{ minHeight: '340px' }}>
+            <img src={(current as TextSlide).icon} alt="icon" className="w-6 h-6" />
+            <div className="flex flex-col space-y-4 mt-6 flex-1">
+              <h5 className="text-[17px] font-light leading-snug text-white">{(current as TextSlide).title}</h5>
+              <div className="text-[12px] text-white/40 space-y-3 leading-relaxed">
+                {(current as TextSlide).paragraphs.map((p, i) => <p key={i}>{p}</p>)}
+              </div>
+            </div>
+            <Dots activeSlide={activeSlide} goTo={goTo} />
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
+function Dots({ activeSlide, goTo }: { activeSlide: number; goTo: (i: number) => void }) {
+  return (
+    <div className="flex items-center gap-2 mt-6 pt-2">
+      {slides.map((_, i) => (
+        <div
+          key={i}
+          onClick={(e) => { e.stopPropagation(); goTo(i); }}
+          style={{
+            width: i === activeSlide ? '18px' : '6px',
+            height: '6px',
+            borderRadius: '3px',
+            backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ── Main Component ─────────────────────────────────────────────────────────────
+const ProgramEmbedded = () => {
+  const boxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] p-10 xl:p-12 flex flex-col justify-end relative bg-black transition-colors duration-300 hover:bg-[#1a1a1a]";
+  const imageBoxClass = "flex-1 h-[450px] border-r border-b border-[#3D3D3D] flex flex-col justify-end relative bg-black";
 
   return (
     <section className="relative w-full bg-black text-white flex flex-col items-center">
 
-      {/* Top horizontal line - Edge to Edge */}
+      {/* Top horizontal line */}
       <div className="w-full border-t border-[#3D3D3D]" />
 
-      {/* ══════════════════════════════════════════════
-          DESKTOP LAYOUT
-          Matches Controlled.tsx: 641px+ = 80px, 1440px+ = 96px
-      ══════════════════════════════════════════════ */}
-      <div
-        className="hidden border-l border-[#3D3D3D] relative z-10 w-full"
-        style={{ display: 'none' }}
-      />
-
-      {/* Use inline style for breakpoint-accurate margin matching Controlled.tsx */}
       <style>{`
+        /* ── Desktop (1024px+): full 3-column grid layout ── */
         .prog-desktop {
           display: none;
-          border-left: 1px solid #3D3D3D;
-          position: relative;
-          z-index: 10;
         }
-        @media (min-width: 641px) {
+        @media (min-width: 1024px) {
           .prog-desktop {
             display: block;
+            border-left: 1px solid #3D3D3D;
+            position: relative;
+            z-index: 10;
             margin-left: 80px;
             margin-right: 80px;
           }
-          .prog-mobile { display: none !important; }
+          .prog-carousel-layout { display: none !important; }
         }
         @media (min-width: 1440px) {
           .prog-desktop {
@@ -225,21 +334,36 @@ const ProgramEmbedded = () => {
             margin-right: 96px;
           }
         }
-        @media (max-width: 640px) {
-          .prog-desktop { display: none !important; }
-          .prog-mobile  { display: flex !important; }
+
+        /* ── Mobile + Tablet (up to 1023px): carousel layout ── */
+        .prog-carousel-layout {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          position: relative;
+          z-index: 10;
         }
-        @keyframes fadeSlide {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @media (min-width: 1024px) {
+          .prog-carousel-layout { display: none !important; }
+        }
+
+        /* Tablet hero adjustments */
+        @media (min-width: 641px) and (max-width: 1023px) {
+          .carousel-hero-text { font-size: 28px !important; }
+          .carousel-hero-padding { padding: 48px 80px 32px 80px !important; }
+          .carousel-slide-padding { padding: 40px 100px 36px 100px !important; }
+          .carousel-side-line-left { left: 80px !important; }
+          .carousel-side-line-right { right: 80px !important; }
         }
       `}</style>
 
+      {/* ══════════════════════════════════════════════
+          DESKTOP LAYOUT (1024px+) — unchanged 3-column grid
+      ══════════════════════════════════════════════ */}
       <div className="prog-desktop">
 
-        {/* --- TOP ROW (Hero Section) --- */}
+        {/* TOP ROW */}
         <div className="relative w-full h-[450px] border-b border-r border-[#3D3D3D] flex flex-col justify-end p-12 overflow-hidden">
-
           <div
             className="absolute"
             style={{
@@ -250,43 +374,15 @@ const ProgramEmbedded = () => {
             }}
           >
             <IsometricHoverGrid />
-
-            <img
-              src="/vector 55.png" alt=""
-              style={{
-                position: 'absolute', left: '150px', top: '90px',
-                width: '100px', height: '60px',
-                transform: 'translate(-50%, -50%)',
-                objectFit: 'fill', opacity: 0.5,
-                pointerEvents: 'none', mixBlendMode: 'screen',
-              }}
-            />
-            <img
-              src="/vector 55.png" alt=""
-              style={{
-                position: 'absolute', left: '350px', top: '90px',
-                width: '100px', height: '60px',
-                transform: 'translate(-50%, -50%)',
-                objectFit: 'fill', opacity: 10,
-                pointerEvents: 'none', mixBlendMode: 'screen',
-              }}
-            />
+            <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '150px', top: '90px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.5, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+            <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '350px', top: '90px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 10, pointerEvents: 'none', mixBlendMode: 'screen' }} />
           </div>
 
           <div className="absolute top-0 right-0 w-[300px] h-[200px] border-l border-b border-[#3D3D3D] z-20 pointer-events-none">
-            <img
-              src="/Rectangle 9440.png" alt="Grid Visual"
-              className="w-full h-full object-cover opacity-60"
-            />
+            <img src="/Rectangle 9440.png" alt="Grid Visual" className="w-full h-full object-cover opacity-60" />
           </div>
 
-          <motion.div 
-            className="max-w-2xl mb-4 relative z-30"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-          >
+          <motion.div className="max-w-2xl mb-4 relative z-30" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}>
             <motion.h3 variants={itemVariants} className="text-[36px] text-regular leading-[1.1] tracking-tight">
               The Startups Programme embeds
               <span className="block text-white/40">
@@ -296,24 +392,15 @@ const ProgramEmbedded = () => {
           </motion.div>
         </div>
 
-        {/* --- BOTTOM ROW (3 BOXES) --- */}
-        <motion.div 
-          className="flex w-full"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={containerVariants}
-        >
+        {/* BOTTOM ROW — 3 BOXES */}
+        <motion.div className="flex w-full" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={containerVariants}>
 
-          {/* Box 1 — hover bg */}
           <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1665 (2).svg" alt="icon" className="w-6 h-6" />
             </div>
             <div className="space-y-5">
-              <h5 className="text-[20px] leading-tight">
-                Why operating structure is introduced early
-              </h5>
+              <h5 className="text-[20px] leading-tight">Why operating structure is introduced early</h5>
               <div className="text-b3 text-[10px] text-white/40 space-y-2 max-w-[360px]">
                 <p>Most early stage companies prioritise product, growth, and funding.</p>
                 <p>Operating structure governance, accountability, and execution control is often deferred until complexity forces reactive changes.</p>
@@ -322,29 +409,19 @@ const ProgramEmbedded = () => {
             </div>
           </motion.div>
 
-          {/* Box 2 — Image box, no hover */}
           <motion.div variants={itemVariants} className={imageBoxClass}>
-            <img
-              src="/Rectangle 9444.png"
-              className="absolute inset-0 w-full h-full object-cover opacity-80"
-              alt="Execution structure"
-            />
+            <img src="/Rectangle 9444.png" className="absolute inset-0 w-full h-full object-cover opacity-80" alt="Execution structure" />
             <div className="relative z-10 p-10 xl:p-12">
-              <h5 className="text-[20px] border-white/40 pl-7">
-                Early structure prevents <br /> later execution debt.
-              </h5>
+              <h5 className="text-[20px] border-white/40 pl-7">Early structure prevents <br /> later execution debt.</h5>
             </div>
           </motion.div>
 
-          {/* Box 3 — hover bg */}
           <motion.div variants={itemVariants} className={boxClass}>
             <div className="absolute top-10 left-10">
               <img src="/Group 1670.svg" alt="icon" className="w-6 h-6" />
             </div>
             <div className="space-y-5">
-              <h5 className="text-[20px] leading-tight">
-                How the programme supports controlled scale
-              </h5>
+              <h5 className="text-[20px] leading-tight">How the programme supports controlled scale</h5>
               <div className="text-B2 text-[10px] text-white/40 space-y-4 leading-relaxed max-w-[320px]">
                 <p>The Startups Programme introduces governance models and execution discipline from the beginning.</p>
                 <p>This ensures teams and systems remain aligned as the organisation grows.</p>
@@ -357,15 +434,12 @@ const ProgramEmbedded = () => {
       </div>
 
       {/* ══════════════════════════════════════════════
-          MOBILE LAYOUT (max-width: 640px only)
+          MOBILE + TABLET LAYOUT (up to 1023px) — carousel
       ══════════════════════════════════════════════ */}
-      <div className="prog-mobile flex-col w-full relative z-10" style={{ display: 'none' }}>
+      <div className="prog-carousel-layout">
 
-        {/* ── MOBILE HERO SECTION ── */}
-        <div
-          className="relative w-full overflow-hidden bg-black"
-          style={{ minHeight: '200px' }}
-        >
+        {/* Hero */}
+        <div className="relative w-full overflow-hidden bg-black" style={{ minHeight: '200px' }}>
           <div
             className="absolute inset-0"
             style={{
@@ -375,25 +449,16 @@ const ProgramEmbedded = () => {
             }}
           >
             <IsometricHoverGrid />
-            <img src="/vector 55.png" alt=""
-              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-160px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }}
-            />
-            <img src="/vector 55.png" alt=""
-              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.7, pointerEvents: 'none', mixBlendMode: 'screen' }}
-            />
-            <img src="/vector 55.png" alt=""
-              style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(60px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }}
-            />
+            <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-160px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+            <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(-50%, -50%)', objectFit: 'fill', opacity: 0.7, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+            <img src="/vector 55.png" alt="" style={{ position: 'absolute', left: '50%', top: '95px', width: '100px', height: '60px', transform: 'translate(60px, -50%)', objectFit: 'fill', opacity: 0.3, pointerEvents: 'none', mixBlendMode: 'screen' }} />
           </div>
 
-          <motion.div 
-            className="relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
+          <motion.div
+            className="carousel-hero-padding relative z-30 flex flex-col justify-end h-full px-10 pb-6 pt-16"
+            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}
           >
-            <motion.h3 variants={itemVariants} className="text-[20px] leading-[1.2] tracking-tight font-light">
+            <motion.h3 variants={itemVariants} className="carousel-hero-text text-[20px] leading-[1.2] tracking-tight font-light">
               The Startups Programme embeds
               <span className="block text-white/40">
                 operating structure, governance, and accountability before scale begins.
@@ -402,84 +467,20 @@ const ProgramEmbedded = () => {
           </motion.div>
         </div>
 
-        {/* ── MIDDLE HORIZONTAL LINE ── */}
+        {/* Divider */}
         <div className="w-full border-t border-[#3D3D3D]" />
 
-        {/* ── MOBILE CAROUSEL SECTION ── */}
-        <motion.div
-          className="relative w-full bg-black overflow-hidden cursor-pointer select-none"
-          style={{ minHeight: '340px' }}
-          onClick={handleSlideClick}
-          key={`slide-${activeSlide}`}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="absolute top-0 bottom-0 border-l border-[#3D3D3D] z-10" style={{ left: '40px' }} />
-          <div className="absolute top-0 bottom-0 border-r border-[#3D3D3D] z-10" style={{ right: '40px' }} />
+        {/* Carousel */}
+        <SlidesCarousel />
 
-          {/* IMAGE SLIDE */}
-          {currentSlide.type === 'image' && (
-            <div className="relative z-20 flex flex-col justify-between h-full"
-              style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
-            >
-              <div className="absolute inset-0" style={{ left: '40px', right: '40px', top: 0, bottom: 0, overflow: 'hidden' }}>
-                <img src={(currentSlide as ImageSlide).image} alt="slide visual" className="w-full h-full object-cover opacity-80" />
-              </div>
-              <div className="relative z-10 flex flex-col justify-between h-full" style={{ minHeight: '340px' }}>
-                <div />
-                <div>
-                  <p className="text-[15px] border-white pl-4 text-white">{(currentSlide as ImageSlide).quote}</p>
-                </div>
-                <div className="flex items-center gap-2 mt-6">
-                  {mobileSlides.map((_, i) => (
-                    <div key={i} onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
-                      style={{ width: i === activeSlide ? '18px' : '6px', height: '6px', borderRadius: '3px', backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', transition: 'all 0.3s ease', cursor: 'pointer' }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TEXT SLIDE */}
-          {currentSlide.type === 'text' && (
-            <div className="relative z-20 flex flex-col justify-between h-full"
-              style={{ padding: '32px 52px 28px 52px', minHeight: '340px', animation: 'fadeSlide 0.35s ease' }}
-            >
-              <div>
-                <img src={(currentSlide as TextSlide).icon} alt="icon" className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col space-y-4 mt-6 flex-1">
-                <h5 className="text-[17px] font-light leading-snug text-white">{(currentSlide as TextSlide).title}</h5>
-                <div className="text-[12px] text-white/40 space-y-3 leading-relaxed">
-                  {(currentSlide as TextSlide).paragraphs.map((p, i) => <p key={i}>{p}</p>)}
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mt-6 pt-2">
-                {mobileSlides.map((_, i) => (
-                  <div key={i} onClick={(e) => { e.stopPropagation(); setActiveSlide(i); }}
-                    style={{ width: i === activeSlide ? '18px' : '6px', height: '6px', borderRadius: '3px', backgroundColor: i === activeSlide ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', transition: 'all 0.3s ease', cursor: 'pointer' }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </motion.div>
-
-        {/* ── BOTTOM HORIZONTAL LINE ── */}
+        {/* Bottom line */}
         <div className="w-full border-t border-[#3D3D3D]" />
 
       </div>
 
-      {/* Bottom horizontal line - Edge to Edge (desktop) */}
-      <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'none' }} />
-      <style>{`
-        @media (min-width: 641px) {
-          .prog-bottom-line { display: block !important; }
-        }
-      `}</style>
-      <div className="prog-bottom-line w-full border-t border-[#3D3D3D]" style={{ display: 'none' }} />
+      {/* Bottom line (desktop) */}
+      <style>{`.prog-bottom-line { display: none; } @media (min-width: 1024px) { .prog-bottom-line { display: block; } }`}</style>
+      <div className="prog-bottom-line w-full border-t border-[#3D3D3D]" />
 
     </section>
   );

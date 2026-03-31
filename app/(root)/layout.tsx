@@ -21,11 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        {/* <CustomCursor /> */}
+        <CustomCursor />
         <Loader />
         <Navbar />
         <SmoothScroll>
-            <main className="pt-16 sm:pt-20">
+            <main className="pt-16 sm:pt-20 min-h-screen">
               {children}
             </main>
         </SmoothScroll>
