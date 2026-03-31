@@ -6,16 +6,17 @@ import PlusText from "../headings/PlusText"
 import { useRouter } from "next/navigation";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
+import { motion } from "motion/react";
 
 
 export default function WhoWeWorkWith() {
   const router = useRouter();
   return (
     <>
-      <section className="hidden lg:block border-y border-color">
+      <section className="hidden md:block border-y border-color">
         <div className="mx-10 xl:mx-24">
-          <div className="h-[90vh] grid grid-cols-1 lg:grid-cols-[60%_40%] xl:grid-cols-[55%_45%] border-x border-color">
-            <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-[55%_20%_25%] md:border-r border-color">
+          <div className="h-[90vh] grid grid-cols-2 lg:grid-cols-[60%_40%] xl:grid-cols-[55%_45%] border-x border-color">
+            <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-[55%_20%_25%] md:border-r border-color">
 
               <Reveal variants={slideInFromLeft(0.1)} className="border-b border-color flex flex-col lg:items-center justify-center px-6 ">
                 <h2 className="">
@@ -43,11 +44,37 @@ export default function WhoWeWorkWith() {
                 </p>
               </Reveal>
 
-              <Reveal variants={slideInFromLeft(0.5)} className="px-6 lg:pb-2 flex items-end opacity-50">
-                <PlusText text="Scroll Down" />
+              <Reveal
+                variants={slideInFromLeft(0.5)}
+                className="hidden lg:block px-6 opacity-50"
+              >
+                <div className="flex items-end h-full pb-4 gap-2">
+
+                  <motion.svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 23 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    animate={{ y: [10, 0, 10] }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <path
+                      d="M11.1606 0.00274594L11.3676 18.9022M11.3676 18.9022L22.1606 9.50275M11.3676 18.9022L0.160645 9.50275"
+                      stroke="white"
+                      strokeWidth="1.5"
+                    />
+                  </motion.svg>
+
+                  <p className="text-[14px]">Scroll Down</p>
+                </div>
               </Reveal>
 
-              <Reveal variants={slideInFromLeft(0.6)} className="relative lg:border-l border-color">
+              <Reveal variants={slideInFromLeft(0.6)} className="hidden lg:block relative lg:border-l border-color">
                 <Image
                   src="/whoWeWorkWith/map.svg"
                   alt="Map"
@@ -58,7 +85,21 @@ export default function WhoWeWorkWith() {
             </div>
 
 
-            <Reveal variants={slideInFromRight(0.7)} className="px-2 flex items-center justify-center h-full w-full">
+            <Reveal variants={slideInFromRight(0.7)} className="lg:hidden grid grid-cols-1 ">
+              <div className="flex items-center justify-center">
+                <EnterpriseStartupSystem />
+              </div>
+              <div className="relative w-full">
+                <Image
+                  src="/whoWeWorkWith/map.svg"
+                  alt="Map"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+            </Reveal>
+
+            <Reveal variants={slideInFromRight(0.7)} className="hidden lg:block px-2 flex items-center justify-center h-full w-full">
               <EnterpriseStartupSystem />
             </Reveal>
 
@@ -67,12 +108,12 @@ export default function WhoWeWorkWith() {
       </section>
 
 
-      <section className="flex flex-col items-center lg:hidden mt-10">
+      <section className="flex flex-col items-center md:hidden mt-10">
 
         <Reveal variants={(slideInFromBottom(0.1))} className="px-10 flex flex-col">
           <h3>Who We</h3>
           <h3 className="text-gray-200"> Work With</h3>
-          <p className="mt-6 text-b2 max-w-xl">
+          <p className="mt-6 text-b2 lg:max-w-xl">
             Ascella partners with organisations where execution quality, governance discipline, and accountable ownership are business-critical rather than optional.
           </p>
         </Reveal>

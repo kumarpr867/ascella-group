@@ -11,14 +11,13 @@ const CY = 211;
 const AnimatedSvg: React.FC = () => {
   return (
     <svg
-      width="200"
-      height="200"
+      className="w-[200px] h-[200px] xl:w-[300px] xl:h-[300px]"
       viewBox="0 0 500 500"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* ── Static geometry ──────────────────────────────────── */}
-      <circle cx="260.043" cy="211" r="210"     stroke="white" strokeWidth="2"   strokeDasharray="1 1" />
+      <circle cx="260.043" cy="211" r="210" stroke="white" strokeWidth="2" strokeDasharray="1 1" />
       <circle cx="260.043" cy="211" r="182.236" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
       <circle cx="260.043" cy="211" r="203.907" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
       <circle cx="260.043" cy="211" r="150.301" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
@@ -31,14 +30,14 @@ const AnimatedSvg: React.FC = () => {
         stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
 
       <circle cx="318.781" cy="366.684" r="41.3797" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
-      <circle cx="180.205" cy="85.5406"  r="31.6851" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <circle cx="180.205" cy="85.5406" r="31.6851" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
 
-      <path d="M292.549 211H468.192"          stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <path d="M292.549 211H468.192" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
       <path d="M260.043 242.935L260.043 418.578" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
-      <path d="M260.043 3.42139L260.043 179.065"  stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
-      <path d="M366.047 30.794L157.394 392.192"   stroke="white" strokeWidth="0.2" strokeDasharray="4 4" />
-      <path d="M114.182 63.9539L409.261 359.035"  stroke="white" strokeWidth="0.2" strokeDasharray="1 1" />
-      <path d="M52.4648 211H228.108"              stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <path d="M260.043 3.42139L260.043 179.065" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <path d="M366.047 30.794L157.394 392.192" stroke="white" strokeWidth="0.2" strokeDasharray="4 4" />
+      <path d="M114.182 63.9539L409.261 359.035" stroke="white" strokeWidth="0.2" strokeDasharray="1 1" />
+      <path d="M52.4648 211H228.108" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
 
       {/* Center filled circle (static) */}
       <circle cx="260.043" cy="211" r="31.6851" fill="black" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />

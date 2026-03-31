@@ -294,6 +294,7 @@ export default function Hero() {
               rotationSpeed={0.002}
               autoRotate={true}
               enableZoom={false}
+              isInteractive={false}
             />
           </div>
         </motion.div>

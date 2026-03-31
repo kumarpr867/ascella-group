@@ -164,7 +164,24 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; err
       />
       <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" style={{ fontSize: '10px' }}>▾</span>
       {open && filtered.length > 0 && (
-        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-gray-500 border border-[#3D3D3D] overflow-y-auto" style={{ maxHeight: '160px' }}>
+        <div
+          className="absolute z-50 left-0 right-0 top-full mt-1 bg-gray-500 border border-color overflow-y-auto scroll-smooth custom-scrollbar"
+          style={{ maxHeight: '160px' }}
+          onWheel={(e) => {
+            const el = e.currentTarget;
+
+            // ALWAYS stop page from scrolling when inside dropdown
+            e.stopPropagation();
+
+            const atTop = el.scrollTop === 0;
+            const atBottom = el.scrollHeight - el.scrollTop <= el.clientHeight;
+
+            // Prevent "scroll escape" at edges
+            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
+              e.preventDefault();
+            }
+          }}
+        >
           {filtered.map(role => (
             <div key={role} onMouseDown={() => select(role)}
               className={`px-4 py-2 text-[12px] cursor-pointer transition-colors
@@ -263,6 +280,7 @@ export default function Engagement() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const err = (k: string) => submitted && errors[k]
     ? <p className="text-[10px] text-red-400 mt-0.5">{errors[k]}</p> : null;
@@ -288,7 +306,8 @@ export default function Engagement() {
     await syncToGoogleSheets(entry);
     console.log('[Ascella] Form Submitted:', entry);
     setLoading(false);
-
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 6000);
     // Reset
     setFullName(''); setOrgName(''); setRole(''); setEmail('');
     setOrgSize(''); setNeeds([]); setChallenge('');
@@ -357,7 +376,7 @@ export default function Engagement() {
 
             {/* FIX 2: RoleDropdown now has border border-gray-400 (same as other inputs) via updated className inside RoleDropdown */}
             <Reveal variants={slideInFromBottom(0.1)}>
-              <label className={lbl}  >Role / Position</label>
+              <label className={lbl}> Role / Position</label>
               <RoleDropdown value={role} onChange={setRole} error={submitted && !!errors.role} />
               {err('role')}
             </Reveal>
@@ -394,10 +413,10 @@ export default function Engagement() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || success}
               className="border border-white px-6 py-2 text-sm hover:bg-white hover:text-black hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
             >
-              {loading ? 'Submitting...' : 'Consult Now'}
+              {loading ? 'Submitting...' : success ? 'Submitted' : 'Consult Now'}
             </button>
 
           </div>

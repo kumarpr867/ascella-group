@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 function CoreSphere() {
@@ -79,9 +79,20 @@ function StartupCluster() {
 
 
 export default function EnterpriseStartupSystem() {
+
+const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const check = () => setIsMobile(window.innerWidth < 768);
+  check();
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
+}, []);
+
   return (
     <div className="w-full h-[420px] lg:h-[600px]">
-      <Canvas camera={{ position: [0, 0, 7] }}>
+      <Canvas camera={{ position: [0, 0, 7] }}
+        style={{ touchAction: "pan-y" }}>
         <ambientLight intensity={0.6} />
 
         <group rotation={[0.6, 0.6, 0]}>
@@ -89,7 +100,9 @@ export default function EnterpriseStartupSystem() {
           <StartupCluster />
         </group>
 
-        <OrbitControls enableZoom={false} enablePan={false} />
+        {!isMobile && (
+          <OrbitControls enableZoom={false} enablePan={false} />
+        )}
       </Canvas>
     </div>
   )

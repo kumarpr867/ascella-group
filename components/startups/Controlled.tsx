@@ -402,7 +402,7 @@ const Controlled = () => {
               </motion.h2>
               <motion.div variants={itemVariants} className="d-subrow">
                 <p className="d-subtext">Early-stage execution succeeds or fails based on operating structure.</p>
-                <div className="d-arrow"><span style={{fontSize:'20px',fontWeight:300}}>↓</span></div>
+                <div className="d-arrow"><span style={{fontSize:'30px',fontWeight:300}}>↓</span></div>
               </motion.div>
             </motion.div>
           </div>

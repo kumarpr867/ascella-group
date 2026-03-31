@@ -22,7 +22,7 @@ export default function EngagementPrinciple() {
       <div className="hidden md:grid mx-10 xl:mx-24 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-color ">
 
         {/* 1st */}
-        <Reveal variants={slideInFromLeft(0.2)} className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
+        <Reveal variants={slideInFromLeft(0.2)} className="group border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10 hover:bg-gray-500 ">
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
@@ -33,10 +33,10 @@ export default function EngagementPrinciple() {
             <rect x="7" y="21" width="7" height="7" className="fill-gray-400" />
             <rect x="14" width="7" height="7" className="fill-gray-400" />
           </svg>
-          <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
+          <h5 className="mt-5 text-[16px] md:text-[16px] lg:text-[20px] group-hover:text-white transition">
             Work begins with defined authority and operating clarity
           </h5>
-          <p className="text-b3 text-gray-200 md:max-w-xs">
+          <p className="text-b3 text-gray-200 md:max-w-xs group-hover:text-white transition">
             Scope, decision rights, escalation paths, and accountability structures are established upfront to eliminate ambiguity. This ensures every stakeholder understands their role, decisions move without friction, and coordination does not replace ownership as delivery progresses.
           </p>
         </Reveal>
@@ -49,7 +49,7 @@ export default function EngagementPrinciple() {
           />
         </Reveal>
         {/* 2nd */}
-        <Reveal variants={slideInFromLeft(0.4)} className="border-b border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10">
+        <Reveal variants={slideInFromLeft(0.4)} className="group border-b border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 :p-10 hover:bg-gray-500 ">
           <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="14" width="7" height="7" className="fill-gray-400" />
@@ -61,10 +61,10 @@ export default function EngagementPrinciple() {
             <rect x="14" y="7" width="7" height="7" className="fill-gray-400" />
           </svg>
 
-          <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
+          <h5 className="tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px] group-hover:text-white transition">
             Complex environments require structured control
           </h5>
-          <p className="text-b3 text-gray-200 md:max-w-xs">
+          <p className="text-b3 text-gray-200 md:max-w-xs group-hover:text-white transition">
             Multi-team coordination, regulatory pressure, distributed vendors, and rapid growth introduce layers of complexity that cannot be managed informally. Structured control ensures alignment across functions, reduces operational risk, and maintains consistency in how decisions are made and executed.
           </p>
         </Reveal>
@@ -78,7 +78,7 @@ export default function EngagementPrinciple() {
         </Reveal>
 
         {/* 3rd */}
-        <Reveal variants={slideInFromLeft(0.6)} className="border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 lg:p-10">
+        <Reveal variants={slideInFromLeft(0.6)} className="group border-b lg:border-r border-color flex flex-col justify-center gap-2 px-10 py-10 md:p-8 lg:p-10 hover:bg-gray-500 ">
           <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="7" y="14" width="7" height="7" className="fill-gray-400" />
             <rect x="21" y="7" width="7" height="7" className="fill-gray-400" />
@@ -91,10 +91,10 @@ export default function EngagementPrinciple() {
           </svg>
 
 
-          <h5 className=" tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px]">
+          <h5 className="tracking-wide mt-5 text-[16px] md:text-[16px] lg:text-[20px] group-hover:text-white transition">
             Built for durability, not temporary support
           </h5>
-          <p className="text-b3 text-gray-200 md:max-w-xs">
+          <p className="text-b3 text-gray-200 md:max-w-xs group-hover:text-white transition">
             Operating structures are designed to remain effective as scale increases, ensuring stability, resilience, and continuity over time. The focus is on systems that hold under pressure, adapt without breaking, and sustain performance beyond immediate delivery cycles.
           </p>
         </Reveal>

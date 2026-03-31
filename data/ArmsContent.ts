@@ -6,7 +6,7 @@ export const content = [
     description: "Ascella Infosec focuses on protecting organisations from operational and regulatory risk. Security work stays tied to business priorities, not checklists. Controls, audits, and response plans sit under clear ownership and review cycles. Exposure reduces because risks surface early and decisions stay accountable.",
     subDescription: "Risk governance, security architecture, compliance readiness, and incident preparedness.",
     outcome: "Reduced exposure and regulatory confidence.",
-    image: "/images/infosec.svg" 
+    image: "/images/infosec.svg"
   },
   {
     id: "labs",
@@ -18,22 +18,22 @@ export const content = [
     image: "/images/labs2.png"
   },
   {
-    id: "engage",
-    number: "03",
-    title: "Ascella Engage",
-    description: "Ascella Engage supports growth work where execution and trust matter. Branding, marketing, and GTM operate under the same ownership and governance model. Activity stays aligned to delivery capacity and business priorities. Growth remains steady because coordination replaces noise.",
-    subDescription: "Stakeholder management, agile delivery, and digital communication strategies.",
-    outcome: "Enhanced client satisfaction and project outcomes.",
-    image: "/images/engage2.png"
-  },
-  {
     id: "staffing",
-    number: "04",
+    number: "03",
     title: "Ascella Staffing",
     description: "Ascella Staffing solves execution gaps caused by missing or misaligned roles. Talent placement focuses on responsibility, not resumes alone. Roles align to outcomes, escalation paths, and operating context. Teams perform better because accountability stays clear from day one.",
     subDescription: "Resource planning, recruitment, and onboarding for high-performing teams.",
     outcome: "Optimized team performance and scalability.",
     image: "/images/staffing2.png"
+  },
+  {
+    id: "engage",
+    number: "04",
+    title: "Ascella Engage",
+    description: "Ascella Engage supports growth work where execution and trust matter. Branding, marketing, and GTM operate under the same ownership and governance model. Activity stays aligned to delivery capacity and business priorities. Growth remains steady because coordination replaces noise.",
+    subDescription: "Stakeholder management, agile delivery, and digital communication strategies.",
+    outcome: "Enhanced client satisfaction and project outcomes.",
+    image: "/images/engage2.png"
   },
   {
     id: "forge",

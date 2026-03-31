@@ -52,6 +52,7 @@ extend({ Points, Mesh });
 interface PixelGlobeProps {
     particleSize?: number;
     rotationSpeed?: number;
+    isInteractive?: boolean;
 }
 
 // Convert lat/lon to 3D coordinates
@@ -61,7 +62,7 @@ const latLonToPosition = (
     radius: number = 7
 ): [number, number, number] => {
     const phi = (90 - lat) * Math.PI / 180;
-    const theta = -lon * Math.PI / 180; 
+    const theta = -lon * Math.PI / 180;
 
     return [
         radius * Math.sin(phi) * Math.cos(theta),
@@ -161,7 +162,8 @@ const generateParticles = (features: any[]): Float32Array => {
 // Main PixelGlobe component
 const PixelGlobe = ({
     particleSize = GLOBE_CONFIG.particleSize,
-    rotationSpeed = GLOBE_CONFIG.rotationSpeed
+    rotationSpeed = GLOBE_CONFIG.rotationSpeed,
+    isInteractive = true
 }: PixelGlobeProps) => {
     const groupRef = useRef<Group>(null);
     const sphereRef = useRef<Mesh>(null);
@@ -219,6 +221,9 @@ const PixelGlobe = ({
     const hoverPoint = useRef<Vector3 | null>(null);
 
     useEffect(() => {
+
+        if (!isInteractive) return;
+
         const handleMove = (e: MouseEvent) => {
             const rect = gl.domElement.getBoundingClientRect();
 
@@ -246,7 +251,7 @@ const PixelGlobe = ({
         // Auto rotate
         if (rotationSpeed) groupRef.current.rotation.y += rotationSpeed * delta * 60;
         // Raycast for hover (update hoverPoint)
-        if (sphereRef.current) {
+        if (isInteractive && sphereRef.current) {
             raycaster.setFromCamera(mouse.current, camera);
             const intersects = raycaster.intersectObject(sphereRef.current);
 
@@ -352,17 +357,24 @@ interface PixelWorldProps {
     rotationSpeed?: number;
     autoRotate?: boolean;
     enableZoom?: boolean;
+    isInteractive?: boolean;
 }
 
 const PixelWorld = ({
     particleSize = GLOBE_CONFIG.particleSize,
     rotationSpeed = GLOBE_CONFIG.rotationSpeed,
     autoRotate = true,
-    enableZoom = false
+    enableZoom = false,
+    isInteractive = true
 }: PixelWorldProps) => {
     return (
         <Canvas
-            style={{ width: "100%", height: "100%", background: "black" }}
+            style={{
+                width: "100%",
+                height: "100%",
+                background: "black",
+                touchAction: "pan-y"
+            }}
             gl={{ antialias: true, alpha: false }}
             camera={{ position: [0, 0, GLOBE_CONFIG.cameraDistance], fov: 45 }}
         >
@@ -371,12 +383,14 @@ const PixelWorld = ({
             <PixelGlobe
                 particleSize={particleSize}
                 rotationSpeed={autoRotate ? rotationSpeed : 0}
+                isInteractive={isInteractive}
             />
 
             <OrbitControls
                 enablePan={false}
                 enableZoom={enableZoom}
-                enableDamping
+                enableRotate={isInteractive}
+                enableDamping={isInteractive}
                 dampingFactor={0.05}
                 minDistance={GLOBE_CONFIG.cameraDistance - 2}
                 maxDistance={GLOBE_CONFIG.cameraDistance + 5}

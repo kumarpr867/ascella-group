@@ -28,7 +28,7 @@ function HeaderSection() {
   return (
     <div className="flex flex-col items-center text-center gap-6 mb-8 md:mb-20">
       <h3 className="text-[16px] sm:text-[24px] md:text-[36px] ">
-        WORKING AT ASCELLA IS <br /> STRUCTURED BY DESIGN.
+        WORKING AT ASCELLA IS STRUCTURED BY DESIGN.
       </h3>
       <p className="text-[12px] sm:text-[16px] md:max-w-xl mx-auto">
         All applications, candidate correspondence, and role coordination are handled through a single governance-led process to ensure consistency, discretion, and accountability.
@@ -83,8 +83,8 @@ function HorizontalText() {
           Single point of contact
         </motion.div>
 
-        <div className="absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-1/2 w-full -translate-y-6 xl:-translate-y-10 border-b border-color flex justify-between items-baseline">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideLeft}>
+        <div className="absolute lg:text-[16px] xl:text-[24px] left-0 top-1/2 w-full -translate-y-6 xl:-translate-y-10 border-b border-color flex justify-between items-baseline">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideLeft} className="uppercase">
             for career-related
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideRight} className="lg:text-[16px] xl:text-[24px]">
@@ -112,8 +112,8 @@ function HorizontalText() {
           <motion.div variants={slideRight}>for career-related <br />communication</motion.div>
         </motion.div>
 
-        <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full h-10 border-b border-color -translate-y-20">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideRight} className="flex items-end w-full justify-center h-full">
+        <div className="absolutetext-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full h-10 border-b border-color -translate-y-20">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideRight} className="flex items-end w-full justify-center h-full uppercase ">
             Email: careers@ascella.group
           </motion.div>
         </div>

@@ -37,9 +37,11 @@
   body {
     height: 100%;
   }
-html {
-  scroll-behavior: auto;
-}
+
+  html {
+    scroll-behavior: auto;
+  }
+
   body {
     @apply bg-black text-white antialiased;
     font-family: var(--font-montserrat), sans-serif;
@@ -110,6 +112,34 @@ html {
     font-weight: var(--font-weight-regular);
     line-height: var(--lh-body);
   }
+}
+
+
+.custom-scrollbar {
+  --sb-track-color: #181818be;
+  --sb-thumb-color: var(--color-gray-300);
+  --sb-size: 5px;
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 10px;
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
 }
 
 a {

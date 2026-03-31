@@ -77,13 +77,13 @@ const SubmitButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       className="relative w-max px-6 py-2 text-xs overflow-hidden transition-all duration-300"
       style={{ minWidth: '90px', color: hovered ? '#000' : '#fff', background: hovered ? '#fff' : 'transparent', border: 'none', outline: 'none' }}>
-      <span className="absolute top-0 left-0 border-t border-l border-white transition-all duration-300"
+      <span className="absolute top-0 left-0 border-t border-l border-gray-400 transition-all duration-300"
         style={{ width: hovered ? '0' : '8px', height: hovered ? '0' : '8px', pointerEvents: 'none' }} />
-      <span className="absolute top-0 right-0 border-t border-r border-white transition-all duration-300"
+      <span className="absolute top-0 right-0 border-t border-r border-gray-400 transition-all duration-300"
         style={{ width: hovered ? '0' : '8px', height: hovered ? '0' : '8px', pointerEvents: 'none' }} />
-      <span className="absolute bottom-0 left-0 border-b border-l border-white transition-all duration-300"
+      <span className="absolute bottom-0 left-0 border-b border-l border-gray-400 transition-all duration-300"
         style={{ width: hovered ? '0' : '8px', height: hovered ? '0' : '8px', pointerEvents: 'none' }} />
-      <span className="absolute bottom-0 right-0 border-b border-r border-white transition-all duration-300"
+      <span className="absolute bottom-0 right-0 border-b border-r border-gray-400 transition-all duration-300"
         style={{ width: hovered ? '0' : '8px', height: hovered ? '0' : '8px', pointerEvents: 'none' }} />
       <span className="relative z-10 tracking-wide">Submit</span>
     </button>
@@ -103,9 +103,9 @@ const OrgSizeSelector: React.FC<{ value: string; onChange: (v: string) => void; 
         <button key={size} type="button" onClick={() => onChange(size)}
           className={`transition-all duration-200 rounded border tracking-wide
             ${small ? 'px-2 py-1 text-[10px]' : 'px-2.5 py-1.5 text-[11px]'}
-            ${sel ? 'border-white bg-white text-black'
-              : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-white hover:text-white'
-              : 'border-[#3D3D3D] bg-transparent text-gray-300 hover:border-white hover:text-white'}`}>
+            ${sel ? 'border-gray-400 bg-white text-black'
+              : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-gray-400 hover:text-white'
+              : 'border-gray-400 bg-transparent text-gray-300 hover:border-gray-400 hover:text-white'}`}>
           {size}
         </button>
       );
@@ -129,9 +129,9 @@ const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]
           <label key={need} className="flex items-center gap-1.5 cursor-pointer group" onClick={() => toggle(need)}>
             <span className={`flex-shrink-0 rounded-sm border transition-all duration-150
               ${small ? 'w-3 h-3' : 'w-3.5 h-3.5'}
-              ${checked ? 'border-white bg-white'
-                : error ? 'border-red-500 bg-transparent group-hover:border-white'
-                : 'border-[#3D3D3D] bg-transparent group-hover:border-gray-300'}`}
+              ${checked ? 'border-gray-400 bg-white'
+                : error ? 'border-red-500 bg-transparent group-hover:border-gray-400'
+                : 'border-gray-400 bg-transparent group-hover:border-gray-300'}`}
               style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
               {checked && (
                 <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
@@ -210,12 +210,12 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; sma
         onFocus={() => setOpen(true)}
         onChange={e => { setQuery(e.target.value); onChange(''); setOpen(true); }}
         autoComplete="off"
-        className={`bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-600 transition-colors duration-200
-          ${error && !value ? 'border-red-500' : 'border-white'}`}
+        className={`bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-300 transition-colors duration-200
+          ${error && !value ? 'border-red-500' : 'border-gray-400'}`}
       />
       <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600" style={{ fontSize: '9px' }}>▾</span>
       {open && filtered.length > 0 && (
-        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-[#0d0d0d] border border-[#3D3D3D] rounded overflow-y-auto" style={{ maxHeight: '160px' }}>
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-[#0d0d0d] border border-gray-400 rounded overflow-y-auto" style={{ maxHeight: '160px' }}>
           {filtered.map(role => (
             <div key={role} onMouseDown={() => select(role)}
               className={`px-3 py-1.5 text-[11px] cursor-pointer transition-colors
@@ -253,8 +253,8 @@ const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }
   const [errors,     setErrors]     = useState<Record<string, string>>({});
   const [submitted,  setSubmitted]  = useState(false);
 
-  const lbl  = `${small ? 'text-xs' : 'text-[11px]'} text-white`;
-  const inp  = `bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-600 transition-colors duration-200`;
+  const lbl  = `${small ? 'text-xs' : 'text-[12px]'} text-white`;
+  const inp  = `bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-300 transition-colors duration-200`;
   const err  = (k: string) => submitted && errors[k]
     ? <p className="text-[10px] text-red-400 mt-0.5">{errors[k]}</p> : null;
 
@@ -281,7 +281,7 @@ const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }
         <label className={lbl}>Full Name <span className="text-red-300">*</span></label>
         <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
           placeholder="Enter your name" autoComplete="name"
-          className={`${inp} ${submitted && errors.fullName ? 'border-red-500' : 'border-white'}`} />
+          className={`${inp} ${submitted && errors.fullName ? 'border-red-500' : 'border-gray-400'}`} />
         {err('fullName')}
       </div>
 
@@ -290,7 +290,7 @@ const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }
         <label className={lbl}>Organisation name <span className="text-red-300">*</span></label>
         <input type="text" value={orgName} onChange={e => setOrgName(e.target.value)}
           placeholder="Organisation name" autoComplete="organization"
-          className={`${inp} ${submitted && errors.orgName ? 'border-red-500' : 'border-white'}`} />
+          className={`${inp} ${submitted && errors.orgName ? 'border-red-500' : 'border-gray-400'}`} />
         {err('orgName')}
       </div>
 
@@ -306,7 +306,7 @@ const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }
         <label className={lbl}>Email address <span className="text-red-300">*</span></label>
         <input type="email" value={email} onChange={e => setEmail(e.target.value)}
           placeholder="you@company.com" autoComplete="email"
-          className={`${inp} ${submitted && errors.email ? 'border-red-500' : 'border-white'}`} />
+          className={`${inp} ${submitted && errors.email ? 'border-red-500' : 'border-gray-400'}`} />
         {err('email')}
       </div>
 
@@ -332,7 +332,7 @@ const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }
         </label>
         <textarea placeholder="Describe your current execution or operating challenge..."
           value={challenge} onChange={e => setChallenge(e.target.value)}
-          className="bg-transparent border border-[#3D3D3D] px-2 py-2 rounded text-xs text-white focus:outline-none focus:border-white resize-none placeholder-gray-600 transition-colors duration-200"
+          className="bg-transparent border border-gray-400 px-2 py-2 rounded text-xs text-white focus:outline-none focus:border-gray-400 resize-none placeholder-gray-300 transition-colors duration-200"
           style={{ height: '68px' }} />
       </div>
 
@@ -447,8 +447,8 @@ type ContactSectionProps = {
   location?: { address: string; postalCode: string }; workHours?: { hours: string };
 };
 const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email, contact, location, workHours }) => (
-  <div className="w-full bg-black text-white font-sans overflow-hidden">
-    <div className="relative border-b border-[#3D3D3D] flex items-end overflow-hidden" style={{ height: '500px' }}>
+  <div className="w-full bg-black text-white overflow-hidden">
+    <div className="relative border-b border-gray-400 flex items-end overflow-hidden" style={{ height: '500px' }}>
       <div className="absolute inset-0" style={{ WebkitMaskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)', maskImage: 'radial-gradient(ellipse 75% 80% at 42% 48%, black 5%, transparent 75%)', pointerEvents: 'auto' }}>
         <IsometricHoverGrid cellW={100} cellH={60} interactive={true} />
       </div>
@@ -459,9 +459,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
         <p className="text-gray-300 text-lg max-w-sm">{subtitle}</p>
       </div>
     </div>
-    <div className="w-full flex bg-black border-b border-[#3D3D3D]">
+    <div className="w-full flex bg-black border-b border-gray-400">
       {/* Left info column */}
-      <div className="flex-1 border-r border-[#3D3D3D] flex flex-col overflow-hidden" style={{ height: '271px' }}>
+      <div className="flex-1 border-r border-gray-400 flex flex-col overflow-hidden" style={{ height: '271px' }}>
         {/* Email box */}
         <div
           className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
@@ -472,7 +472,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Email</span>
           <div className="text-[13px] truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
         </div>
-        <div className="w-full border-t border-[#3D3D3D]" />
+        <div className="w-full border-t border-gray-400" />
         {/* Contact box */}
         <div
           className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
@@ -485,7 +485,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
         </div>
       </div>
       {/* Center image */}
-      <div className="flex items-center justify-center border-r border-[#3D3D3D] bg-[#030303] flex-shrink-0" style={{ width: '256px', height: '271px' }}>
+      <div className="flex items-center justify-center border-r border-gray-400 bg-[#030303] flex-shrink-0" style={{ width: '256px', height: '271px' }}>
         <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </div>
       {/* Right info column */}
@@ -501,7 +501,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           <p className="text-[12px] leading-snug">{location?.address ?? ''}</p>
           <p className="text-[11px] mt-1">{location?.postalCode}</p>
         </div>
-        <div className="w-full border-t border-[#3D3D3D]" />
+        <div className="w-full border-t border-gray-400" />
         {/* Work Hours box */}
         <div
           className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
@@ -526,7 +526,7 @@ type MobileContactSectionProps = {
 };
 const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subtitle, email, contact, location, workHours, onSubmit }) => (
   <div className="block lg:hidden w-full bg-black text-white">
-    <div className="w-full border-b border-[#3D3D3D] overflow-hidden relative" style={{ height: '260px' }}>
+    <div className="w-full border-b border-gray-400 overflow-hidden relative" style={{ height: '260px' }}>
       <div className="absolute inset-0 z-0" style={{ WebkitMaskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)', maskImage: 'radial-gradient(ellipse 80% 85% at 42% 48%, black 5%, transparent 78%)', pointerEvents: 'none' }}>
         <IsometricHoverGrid cellW={60} cellH={36} interactive={false} />
       </div>
@@ -537,30 +537,30 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
         <p className="text-gray-400 text-[13px]">{subtitle}</p>
       </div>
     </div>
-    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
+    <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
       {(email?.value ?? '').split('\n').map((v, i) => <p key={i} className="text-[13px] font-light">{v}</p>)}
     </div>
-    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
+    <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
       {(contact?.values ?? []).map((v, i) => <p key={i} className="text-[13px] font-light">{v}</p>)}
     </div>
-    <div className="w-full border-b border-[#3D3D3D] bg-[#030303] overflow-hidden" style={{ height: '200px' }}>
+    <div className="w-full border-b border-gray-400 bg-[#030303] overflow-hidden" style={{ height: '200px' }}>
       <img src="/Rectangle 9476.svg" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
     </div>
-    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
+    <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Location</span>
       <p className="text-[13px] leading-snug">{location?.address ?? ''}</p>
       <p className="text-[12px] mt-1 text-gray-400">{location?.postalCode}</p>
     </div>
-    <div className="w-full border-b border-[#3D3D3D] px-5 py-5">
+    <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Work Hours</span>
       <p className="text-[13px] font-light">{workHours?.hours}</p>
     </div>
     <div className="w-full px-5 py-7">
       <h5 className="text-xl font-light mb-2">Provide operating context to initiate alignment.</h5>
       <p className="text-gray-400 text-xs mb-5">This form captures high-level operating information required to initiate an alignment conversation.</p>
-      <div className="border-t border-[#3D3D3D] w-[calc(100%+2.5rem)] -mx-5 mb-6" />
+      <div className="border-t border-gray-400 w-[calc(100%+2.5rem)] -mx-5 mb-6" />
       <AlignmentForm small onSubmit={onSubmit} />
     </div>
   </div>
@@ -569,7 +569,7 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
 // ── Desktop Accordion Item ────────────────────────────────────────────────────
 type AccordionItemProps = { title: string; index?: string; description?: string; open?: boolean; onMouseEnter?: () => void; };
 const AccordionItem: React.FC<AccordionItemProps> = ({ title, index, description, open = false, onMouseEnter }) => (
-  <div onMouseEnter={onMouseEnter} className={`border-b border-[#3D3D3D] py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${open ? ' ' : 'hover:bg-[#050505]'}`}>
+  <div onMouseEnter={onMouseEnter} className={`border-b border-gray-400 py-10 px-6 md:px-12 cursor-pointer transition-colors duration-500 ${open ? ' ' : 'hover:bg-[#050505]'}`}>
     <div className="flex justify-between items-start">
       <div className="max-w-xl">
         <h4 className={`text-xl md:text-2xl font-light transition-colors ${open ? 'text-white' : 'text-gray-300'}`}>
@@ -625,7 +625,7 @@ type AccordionData = { id: string; title: string; description: string };
 // ── Mobile Accordion Item ─────────────────────────────────────────────────────
 type MobileAccItemProps = { title: string; index?: string; description?: string; open?: boolean; onClick?: () => void; };
 const MobileAccItem: React.FC<MobileAccItemProps> = ({ title, index, description, open = false, onClick }) => (
-  <div onClick={onClick} className={`border-b border-[#3D3D3D] py-5 px-6 cursor-pointer transition-colors duration-300 ${open ? 'bg-[#0A0C10]' : ''}`}>
+  <div onClick={onClick} className={`border-b border-gray-400 py-5 px-6 cursor-pointer transition-colors duration-300 ${open ? 'bg-[#0A0C10]' : ''}`}>
     <div className="flex justify-between items-start gap-3">
       <div className="flex-1">
         <h4 className={`text-sm font-light leading-snug transition-colors ${open ? 'text-white' : 'text-gray-200'}`}>
@@ -666,13 +666,13 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
   return (
     <div className="block lg:hidden w-full">
       {/* Heading — centered, outside the grid box, above the image */}
-      <div className="w-full border-t border-[#3D3D3D] pt-8 pb-5 flex items-center justify-center">
+      <div className="w-full border-t border-gray-400 pt-8 pb-5 flex items-center justify-center">
         <h3 className="text-2xl font-light text-center">What alignment typically covers</h3>
       </div>
-      <div className="w-full border-t border-[#3D3D3D] overflow-hidden" style={{ height: '240px' }}>
+      <div className="w-full border-t border-gray-400 overflow-hidden" style={{ height: '240px' }}>
         <img src="/alignment2.png" alt="Alignment" className="w-full h-full object-cover" />
       </div>
-      <div className="w-full border-t border-[#3D3D3D] flex flex-col items-center justify-center py-10 gap-5"
+      <div className="w-full border-t border-gray-400 flex flex-col items-center justify-center py-10 gap-5"
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} style={{ minHeight: '180px' }}>
         <div className="flex flex-col items-center gap-5 w-full">
           <div className="flex items-center justify-center" key={`icon-${activeSlide}`}>{mobileSlidesData[activeSlide].icon}</div>
@@ -685,8 +685,8 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
           ))}
         </div>
       </div>
-      <div className="w-full border-t border-[#3D3D3D]" style={{ height: '44px' }} />
-      <div className="w-full border-t border-[#3D3D3D] px-5 pt-7 pb-7">
+      <div className="w-full border-t border-gray-400" style={{ height: '44px' }} />
+      <div className="w-full border-t border-gray-400 px-5 pt-7 pb-7">
         <div className="flex items-center gap-3 mb-4">
           <svg width="14" height="14" viewBox="0 0 26 26" fill="none">
             <rect x="10.833" width="4.33333" height="10.8333" fill="white" />
@@ -698,12 +698,12 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
         </div>
         <h3 className="text-[1.6rem] font-light leading-snug">Each engagement progresses through a defined alignment pathway.</h3>
       </div>
-      <div className="w-full border-t border-[#3D3D3D]">
+      <div className="w-full border-t border-gray-400">
         {accordionData.map((item) => (
           <MobileAccItem key={item.id} title={item.title} index={`[${item.id}]`} description={item.description}
             open={openItem === item.id} onClick={() => setOpenItem(p => p === item.id ? null : item.id)} />
         ))}
-        <div className="px-5 py-5 border-t border-[#3D3D3D]">
+        <div className="px-5 py-5 border-t border-gray-400">
           <p className="text-xs">No engagement proceeds without operating alignment.</p>
         </div>
       </div>
@@ -738,7 +738,7 @@ const ContextsPage = () => {
   };
 
   const textStyle   = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
-  const overlayCard = 'w-full md:w-[289px] rounded-[6px] border border-[#3D3D3D] bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
+  const overlayCard = 'w-full md:w-[289px] rounded-[6px] border border-gray-400 bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
 
   const accordionData: AccordionData[] = [
     { id: '01', title: 'Review and context assessment',  description: 'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
@@ -749,11 +749,11 @@ const ContextsPage = () => {
   return (
     <>
       <Toast show={showToast} />
-      <div className="min-h-screen bg-black text-white font-sans">
+      <div className="min-h-screen bg-black text-white">
 
         {/* ════════════ DESKTOP (lg+) ════════════ */}
         <div className="hidden lg:block mx-10 lg:mx-20 xl:mx-24 w-[calc(100%-4rem)] lg:w-[calc(100%-8rem)] xl:w-[calc(100%-12rem)]">
-          <div className="relative w-full border border-[#3D3D3D] flex"
+          <div className="relative w-full border border-gray-400 flex"
             style={{ backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`, backgroundSize: '40px 40px' }}>
 
             {/* ── LEFT COLUMN ──
@@ -764,13 +764,13 @@ const ContextsPage = () => {
                 - Removed the border-t divider that was above the bottom spacer
             */}
             <motion.div initial="hidden" animate="visible" variants={slideFromLeft}
-              className="bg-black border-r border-[#3D3D3D] flex-shrink-0" style={{ width: '40%' }}>
+              className="bg-black border-r border-gray-400 flex-shrink-0" style={{ width: '40%' }}>
               <div className="sticky top-0 min-h-screen flex flex-col">
                 <style>{`.lfc::-webkit-scrollbar{display:none}.lfc{scrollbar-width:none}`}</style>
 
                 {/* CHANGE 3: 64px top spacer + horizontal grid line */}
                 <div style={{ height: '64px', flexShrink: 0 }} />
-                <div className="border-b border-[#3D3D3D] w-full" style={{ flexShrink: 0 }} />
+                <div className="border-b border-gray-400 w-full" style={{ flexShrink: 0 }} />
 
                 {/* CHANGE 4: Ascella logo — links to home page, using Next.js Image like footer */}
                 <div style={{ flexShrink: 0 }} className="px-6 pt-5 pb-4">
@@ -793,7 +793,7 @@ const ContextsPage = () => {
                       <h5 className="text-xl mb-2 font-light leading-snug">Provide operating context to <br /> initiate alignment.</h5>
                       <p className="text-gray-300 text-xs mb-1">This form captures high-level operating information required to initiate an alignment conversation.</p>
                     </header>
-                    <div className="border-t border-[#3D3D3D] w-[calc(100%+3rem)] -mx-6 my-3" />
+                    <div className="border-t border-gray-400 w-[calc(100%+3rem)] -mx-6 my-3" />
                     <div className="pt-3">
                       <AlignmentForm onSubmit={handleFormSubmit} />
                     </div>
@@ -809,7 +809,7 @@ const ContextsPage = () => {
 
               {/* HERO */}
               <motion.div initial="hidden" animate="visible" variants={slideFromRight}
-                className="relative border-b border-[#3D3D3D] overflow-hidden flex-shrink-0" style={{ height: '87.8vh' }}>
+                className="relative border-b border-gray-400 overflow-hidden flex-shrink-0" style={{ height: '87.8vh' }}>
                 <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
                 <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-15">
                   <div className="mb-12 mt-50">
@@ -858,17 +858,17 @@ const ContextsPage = () => {
               </RevealOnScroll>
 
               {/* CHANGE 1: Alignment grid cells — boxes 2–6 get hover faded gray bg, box 1 (image) unchanged */}
-              <div className="w-full border-t border-[#3D3D3D]" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <div className="w-full border-t border-gray-400" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
 
                 {/* Box 1 — image cell, NO hover */}
-                <RevealOnScroll delay={0} className="relative border-r border-b border-[#3D3D3D] overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
+                <RevealOnScroll delay={0} className="relative border-r border-b border-gray-400 overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
                   <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
                   <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
                 </RevealOnScroll>
 
                 {/* Box 2 */}
                 <RevealOnScroll delay={0.1}
-                  className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8"
+                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
                   <div
@@ -882,7 +882,7 @@ const ContextsPage = () => {
 
                 {/* Box 3 */}
                 <RevealOnScroll delay={0.2}
-                  className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8"
+                  className="relative border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
                   <div
@@ -896,7 +896,7 @@ const ContextsPage = () => {
 
                 {/* Box 4 */}
                 <RevealOnScroll delay={0.3}
-                  className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8"
+                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
                   <div
@@ -910,7 +910,7 @@ const ContextsPage = () => {
 
                 {/* Box 5 */}
                 <RevealOnScroll delay={0.4}
-                  className="relative border-r border-b border-[#3D3D3D] flex flex-col justify-end p-8"
+                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
                   <div
@@ -924,7 +924,7 @@ const ContextsPage = () => {
 
                 {/* Box 6 */}
                 <RevealOnScroll delay={0.5}
-                  className="relative border-b border-[#3D3D3D] flex flex-col justify-end p-8"
+                  className="relative border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
                   <div
@@ -938,7 +938,7 @@ const ContextsPage = () => {
               </div>
 
               {/* What Happens Next */}
-              <RevealOnScroll className="border-t border-[#3D3D3D] w-full">
+              <RevealOnScroll className="border-t border-gray-400 w-full">
                 <div className="px-6 md:px-12 py-12">
                   <div className="flex items-center gap-4 text-xs mb-8">
                     <svg width="12" height="12" viewBox="0 0 26 26" fill="none">
@@ -951,7 +951,7 @@ const ContextsPage = () => {
                   </div>
                   <h3 className="text-3xl md:text-4xl max-w-2xl leading-[1.1]">Each engagement progresses through a defined alignment pathway.</h3>
                 </div>
-                <div className="border-t border-[#3D3D3D]">
+                <div className="border-t border-gray-400">
                   {accordionData.map((item, i) => (
                     <RevealOnScroll key={item.id} delay={i * 0.1}>
                       <AccordionItem title={item.title} index={`[${item.id}]`} description={item.description}
@@ -965,7 +965,7 @@ const ContextsPage = () => {
               </RevealOnScroll>
 
               {/* Contact */}
-              <RevealOnScroll className="border-t border-[#3D3D3D]">
+              <RevealOnScroll className="border-t border-gray-400">
                 <ContactSection
                   title="Single point of contact for engagement coordination"
                   subtitle="All engagement coordination is managed centrally."
@@ -982,9 +982,9 @@ const ContextsPage = () => {
 
         {/* ════════════ MOBILE (< lg) ════════════ */}
         {/* CHANGE 1: border-t line added right after the outer wrapper opens — navbar ke niche horizontal line */}
-        <div className="block lg:hidden mx-10 border-x border-[#3D3D3D]">
-          <div className="w-full border-t border-[#3D3D3D]" />
-          <div className="relative border-b border-[#3D3D3D] overflow-hidden">
+        <div className="block lg:hidden mx-10 border-x border-gray-400">
+          <div className="w-full border-t border-gray-400" />
+          <div className="relative border-b border-gray-400 overflow-hidden">
             <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
             <div className="relative z-10 px-6 pt-8 pb-6">
               <h2 className="text-4xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
@@ -1005,7 +1005,6 @@ const ContextsPage = () => {
           <MobileContactSection
             title="Single point of contact for engagement coordination"
             subtitle="All engagement coordination is managed centrally."
-            email={{ value: 'ag@ascella.in\nhello@ascellagroup.com' }}
             contact={{ values: ['+91 94545 10860', '+91 94699 40969'] }}
             location={{ address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode: '160022' }}
             workHours={{ hours: '24/7 availability' }}

@@ -28,7 +28,6 @@ export default function Resources() {
     const [category, setCategory] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [showAllFeatured, setShowAllFeatured] = useState(false);
     const [showAllBlogs, setShowAllBlogs] = useState(false);
     const BLOGS_PER_PAGE = 6;
 
@@ -43,9 +42,8 @@ export default function Resources() {
         return matchesSearch && matchesCategory;
     });
 
-    const featured = filtered.filter((item) => item.featured);
     const isFilteredCategory = category !== "All";
-    const dataToPaginate = filtered.filter((item) => !item.featured);
+    const dataToPaginate = filtered;
 
     const totalPages = Math.ceil(dataToPaginate.length / BLOGS_PER_PAGE);
 
@@ -76,7 +74,6 @@ export default function Resources() {
     useEffect(() => {
         setCurrentPage(1);
         setShowAllBlogs(false);
-        setShowAllFeatured(false);
     }, [search, category]);
 
     return (
@@ -175,44 +172,10 @@ export default function Resources() {
 
             <Reveal variants={slideInFromBottom(0.6)} className="mx-10 lg:mx-20 xl:mx-24">
 
-                {/* Featured Section */}
-                {!isFilteredCategory && featured.length > 0 && (
-                    <>
-                        {/* Header: title left, View All right (mobile only) */}
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="text-lg">Featured Blogs</h2>
-                            <button
-                                onClick={() => setShowAllFeatured((prev) => !prev)}
-                                className="md:hidden text-xs text-white/60 hover:text-white transition underline underline-offset-2"
-                            >
-                                {showAllFeatured ? "Show Less" : "View All"}
-                            </button>
-                        </div>
-
-                        {/* CHANGE 3: border-b ko Reveal wrapper ke bahar -mx-10 lg:-mx-20 xl:-mx-24 se edge-to-edge banaya */}
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10">
-                            {featured.map((item, index) => (
-                                <div
-                                    key={item.id}
-                                    className={
-                                        index >= 3 && !showAllFeatured
-                                            ? "hidden md:block"
-                                            : "block"
-                                    }
-                                >
-                                    <BlogCard item={item} variant="featured" />
-                                </div>
-                            ))}
-                        </div>
-                        {/* Edge-to-edge horizontal line */}
-                        <div className="-mx-10 lg:-mx-20 xl:-mx-24 border-b border-color mb-10" />
-                    </>
-                )}
-
-                {/* All Blogs header — View All mobile only */}
+                {/* All Resources header — View All mobile only */}
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-lg">
-                        {isFilteredCategory ? `${category} Blogs` : "All Blogs"}
+                        {isFilteredCategory ? `${category} Resources` : "All Resources"}
                     </h2>
                     {totalPages > 1 && (
                         <button
@@ -227,7 +190,7 @@ export default function Resources() {
                 {/* Mobile: 2 cols; md: 2 cols; lg: 3 cols */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16">
                     {paginatedBlogs.map((item) => (
-                        <BlogCard key={item.id} item={item} variant="default" />
+                        <BlogCard key={item.id} item={item} />
                     ))}
                 </div>
 
@@ -286,13 +249,9 @@ export default function Resources() {
 
 function BlogCard({
     item,
-    variant = "default",
 }: {
     item: (typeof blogs)[number]
-    variant?: "default" | "featured"
 }) {
-
-    const isFeatured = variant === "featured"
 
     return (
         <motion.div
@@ -302,7 +261,7 @@ function BlogCard({
         >
             {/* Image — clicking navigates to blog page */}
             <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                <div className={`relative overflow-hidden border border-color cursor-pointer ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-32 md:h-56 mb-2 md:mb-4"}`}>
+                <div className="relative w-full h-32 md:h-48 overflow-hidden border border-color cursor-pointer">
                     <Image
                         src={item.image}
                         alt={item.title}
@@ -351,49 +310,16 @@ function BlogCard({
                 </div>
 
                 {/* ── MOBILE layout ── */}
-                {/* CHANGE 4: Featured card mobile — image left (85x98) + title & read now right, stacked */}
-                {isFeatured ? (
-                    <div className="flex md:hidden items-start gap-3 mt-1">
-                        {/* Image — 85x98 fixed */}
-                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
-                            <div className="relative w-[85px] h-[98px] overflow-hidden border border-color">
-                                <Image
-                                    src={item.image}
-                                    alt={item.title}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                        </Link>
-
-                        {/* Title + Read Now stacked */}
-                        <div className="flex flex-col justify-start gap-2 flex-1">
-                            <p className="text-[11px] line-clamp-2">
-                                {item.title}
-                            </p>
-                            <p className="text-[10px] text-white/60 line-clamp-2">
-                                {item.description}
-                            </p>
-                            <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                                <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap w-fit">
-                                    Read Now
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                ) : (
-                    /* Non-featured mobile layout — unchanged */
-                    <div className="flex md:hidden items-start justify-between gap-2 mt-1">
-                        <p className="text-[11px] line-clamp-2 flex-1">
-                            {item.title}
-                        </p>
-                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
-                            <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap">
-                                Read Now
-                            </button>
-                        </Link>
-                    </div>
-                )}
+                <div className="flex md:hidden items-start justify-between gap-2 mt-1">
+                    <p className="text-[11px] line-clamp-2 flex-1">
+                        {item.title}
+                    </p>
+                    <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
+                        <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap">
+                            Read Now
+                        </button>
+                    </Link>
+                </div>
 
             </div>
         </motion.div>

@@ -17,7 +17,7 @@ export default function ResouceHero() {
             className="flex-1 bg-white text-black px-2 py-2 text-xs md:text-sm outline-none placeholder:text-gray-400"
           />
           <PartialOutlineBtn
-            text="Join Us"
+            text="Subscribe"
             textColor="text-black"
             bgColor="bg-white"
             borderColor="border-black"

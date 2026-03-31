@@ -12,12 +12,76 @@ export default function Arms() {
 
   const router = useRouter();
 
+  const [screen, setScreen] = useState<'sm' | 'md' | 'lg'>('lg');
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w < 768) setScreen('sm');
+      else if (w < 1024) setScreen('md');
+      else setScreen('lg');
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+
   const [index, setIndex] = useState(0);
   const total = content.length;
   const [direction, setDirection] = useState(1);
   const lastClickTime = useRef(0);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { amount: 0.3 });
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // md screen
+  useEffect(() => {
+  if (screen !== 'md') return;
+
+  let interval: NodeJS.Timeout;
+
+  if (!isPaused) {
+    interval = setInterval(() => {
+      setDirection(1);
+      setIndex((prev) => (prev + 1) % total);
+    }, 3500);
+  }
+
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [screen, isPaused, total]);
+
+ const handleTouchStart = (e: React.TouchEvent) => {
+  touchStartX.current = e.touches[0].clientX;
+  setIsPaused(true);
+};
+
+const handleTouchMove = (e: React.TouchEvent) => {
+  touchEndX.current = e.touches[0].clientX;
+};
+
+const handleTouchEnd = () => {
+  const diff = touchStartX.current - touchEndX.current;
+  const threshold = 60;
+
+  if (Math.abs(diff) < threshold) {
+    setIsPaused(false);
+    return;
+  }
+
+  if (diff > 0) {
+    goTo(index + 1);
+  } else {
+    goTo(index - 1);
+  }
+
+  setIsPaused(false);
+};
 
   useEffect(() => {
     if (isInView) {
@@ -65,33 +129,36 @@ export default function Arms() {
         </h2>
       </Reveal>
 
-      <Reveal variants={slideInFromBottom(0.4)} className="w-full max-w-7xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
+      <Reveal variants={slideInFromBottom(0.4)} className="w-full lg:max-w-7xl bg-white rounded-lg overflow-hidden shadow-2xl p-2">
 
-        <div className="flex flex-col md:flex-row min-h-auto md:h-[550px]">
+        <div className="flex flex-col lg:flex-row min-h-auto md:h-[550px]">
 
           {/* Navigation Sidebar */}
           <aside className="w-full md:w-[320px] px-6  md:p-8 flex flex-col  md:gap-0 md:justify-between">
             <div>
               {/* Desktop/Tablet: "Execution Arms" heading */}
-              <h5 className="hidden md:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
+              <h5 className="hidden lg:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
                 Execution Arms
               </h5>
 
               {/* Mobile only: Dynamic counter in white sidebar */}
-              <div className="md:hidden text-[28px] font-light mb-6">
+              <div className="lg:hidden text-[28px] font-light mb-6">
                 <span className="text-black">0{index + 1}</span>
                 <span className="text-black/20">/0{total}</span>
               </div>
 
               {/* Nav for Tablet/Desktop */}
-              <nav className="hidden md:flex flex-col gap-4 md:gap-6">
+              <nav className="hidden lg:flex flex-col gap-4 md:gap-6">
                 {content.map((item, i) => (
                   <button
                     key={item.id}
+                    onMouseEnter={() => {
+                      if (screen === 'lg') goTo(i);
+                    }}
                     onClick={() => goTo(i)}
                     className={`text-left text-[12px] md:text-[14px] transition-all duration-300 ${i === index
                       ? "text-black font-semibold md:translate-x-2"
-                      : "text-gray-400 hover:text-gray-900"
+                      : "text-gray-500 hover:text-gray-900"
                       }`}
                   >
                     {item.title}
@@ -101,7 +168,7 @@ export default function Arms() {
             </div>
 
             {/* Bottom section — tablet+ desktop */}
-            <div className="hidden md:flex flex-col gap-6 mt-auto">
+            <div className="hidden lg:flex flex-col gap-6 mt-auto">
               <p className="text-[12px] leading-relaxed text-gray-400 max-w-[240px]">
                 All execution arms operate under{" "}
                 <span className="text-black font-medium">Ascella Group governance</span>.
@@ -109,8 +176,8 @@ export default function Arms() {
 
               <button
                 onClick={() => router.push("/execution-arms")}
-                className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
-                See How Works Delivers
+                className="group flex items-center justify-between w-full border border-black rounded-sm px-5 py-3.5 text-[12px] font-bold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white">
+                See How It Is Delivered
                 <span className="opacity-80 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <rect width="2" height="2" fill="currentColor" />
@@ -128,11 +195,16 @@ export default function Arms() {
 
           {/* Content Area */}
           <div className="flex-1 bg-white flex p-1">
-            <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col md:flex-row">
+            <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col lg:flex-row ">
 
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={index}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  onTouchStart={() => setIsPaused(true)}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                   custom={direction}
                   variants={slideVariants}
                   initial="enter"
@@ -180,19 +252,25 @@ export default function Arms() {
                     <div
                       className="absolute inset-y-0 left-0 w-1/2 z-10 md:hidden"
                       style={{ cursor: 'w-resize' }}
-                      onClick={() => goTo(index - 1)}
+                      onClick={() => {
+                        if (screen !== 'sm') goTo(index + 1);
+                      }}
                     />
                     {/* Right half click → go forward (mobile) */}
                     <div
                       className="absolute inset-y-0 right-0 w-1/2 z-10 md:hidden"
                       style={{ cursor: 'e-resize' }}
-                      onClick={() => goTo(index + 1)}
+                      onClick={() => {
+                        if (screen !== 'sm') goTo(index + 1);
+                      }}
                     />
                     {/* Desktop: full area click → go forward */}
                     <div
                       className="absolute inset-0 hidden md:block"
                       style={{ cursor: 'e-resize' }}
-                      onClick={() => goTo(index + 1)}
+                      onClick={() => {
+                        if (screen !== 'sm') goTo(index + 1);
+                      }}
                     />
 
                     <div className="py-10 h-[300px] md:h-[400px] lg:h-[400px] flex items-center justify-center">
@@ -212,11 +290,10 @@ export default function Arms() {
                             e.stopPropagation();
                             goTo(i);
                           }}
-                          className={`rounded-full transition-all duration-300 ${
-                            i === index
-                              ? "bg-white w-4 h-2"
-                              : "bg-white/40 w-2 h-2"
-                          }`}
+                          className={`rounded-full transition-all duration-300 ${i === index
+                            ? "bg-white w-4 h-2"
+                            : "bg-white/40 w-2 h-2"
+                            }`}
                         />
                       ))}
                     </div>

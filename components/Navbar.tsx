@@ -16,7 +16,7 @@ const navLinks = [
     children: [
       { label: "Case Studies", href: "/insights/case-studies" },
       { label: "Blogs", href: "/insights/blogs" },
-      {label: "Resources", href: "/insights/resources"},
+      { label: "Resources", href: "/insights/resources" },
     ],
   },
   {
@@ -122,14 +122,6 @@ const Navbar = () => {
     }, 220);
   }, []);
 
-  const handleClickOutside = useCallback((event: MouseEvent) => {
-    if (desktopRef.current && !desktopRef.current.contains(event.target as Node)) setOpenDesktopDropdown(null);
-  }, []);
-
-  const handleDesktopDropdown = useCallback((label: string, hasChildren: boolean) => {
-    if (!hasChildren) return;
-    setOpenDesktopDropdown((prev) => (prev === label ? null : label));
-  }, []);
 
   const handleMobileDropdown = useCallback((label: string) => {
     setOpenMobileDropdown((prev) => (prev === label ? null : label));
@@ -150,13 +142,8 @@ const Navbar = () => {
   }, [handleScroll]);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [handleClickOutside]);
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
-    
+
     // Cleanup: Always reset on unmount
     return () => {
       document.body.style.overflow = "auto";
@@ -201,9 +188,14 @@ const Navbar = () => {
                     key={link.label}
                     className="relative flex items-center text-white"
                     ref={isOpen ? desktopRef : null}
+                    onMouseEnter={() => {
+                      if (link.children) setOpenDesktopDropdown(link.label);
+                    }}
+                    onMouseLeave={() => {
+                      if (link.children) setOpenDesktopDropdown(null);
+                    }}
                   >
                     <button
-                      onClick={() => handleDesktopDropdown(link.label, !!link.children)}
                       className={`px-2 text-b2 flex items-center gap-1 transition-colors ${isActive ? "text-white" : "text-gray-200 hover:text-white"}`}
                       aria-haspopup={link.children ? "menu" : undefined}
                       aria-expanded={link.children ? isOpen : undefined}
@@ -241,11 +233,10 @@ const Navbar = () => {
                                   onClick={() => {
                                     setOpenDesktopDropdown(null);
                                   }}
-                                  className={`block px-5 py-3 text-sm transition-colors ${
-                                    childActive
+                                  className={`block px-5 py-3 text-sm transition-colors ${childActive
                                       ? "text-white bg-white/10"
                                       : "text-gray-300 hover:text-white hover:bg-white/10"
-                                  }`}
+                                    }`}
                                 >
                                   {child.label}
                                 </Link>
