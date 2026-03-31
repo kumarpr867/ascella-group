@@ -3,8 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll } from 'motion/react';
 import Heading from '../headings/Heading';
-import Reveal from "@/utils/Reveal";
-import { slideInFromBottom } from "@/utils/motion";
 
 // Swiper imports
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,43 +15,87 @@ const SLIDES = [
     deployedText: "When organisations require security, resilience, and regulatory alignment embedded directly into execution environments rather than layered on afterward.",
     mainTitle: "Ascella Infosec",
     mainDesc: "Security architecture, risk governance frameworks, compliance readiness, and incident preparedness structures that remain aligned to regulatory and operational requirements.",
-    image: { src: "/images/rectangle-50233.png", rotate: -20, scale: 1.1 }
+    image: { src: "/images/rectangle-50233.png", rotate: -20, scale: 1.1 },
+    services: [
+      "Offensive Security",
+      "Defensive Security",
+      "GRC",
+      "vCISO",
+      "CAAS (Cybersecurity as a Service)"
+    ]
   },
   {
     roleTitle: "Technology and engineering execution arm responsible for building and maintaining secure, scalable systems.",
     deployedText: "Deployed during board-level restructuring or when defining multi-year security roadmaps.",
     mainTitle: "Ascella Software Labs",
     mainDesc: "Secure system architecture, application development, platform engineering, and infrastructure delivery designed to perform reliably under growth and complexity.",
-    image: { src: "/images/labs1.png", rotate: 5, scale: 1.2 }
+    image: { src: "/images/labs1.png", rotate: 5, scale: 1.2 },
+    services: [
+      "Custom software and web apps",
+      "Platform development",
+      "System design and architecture",
+      "DevOps and deployment"
+    ],
   },
   {
     roleTitle: "Workforce and talent execution arm responsible for embedding capability into operating structures.",
     deployedText: "When organisations require embedded expertise delivered through accountable structures, without creating internal dependency or unmanaged overhead.",
     mainTitle: "Ascella Staffing",
     mainDesc: "Role-aligned talent deployment, pod formation, team integration, and workforce performance alignment within Ascella's governance framework.",
-    image: { src: "/images/staffing1.png", rotate: -5.28, scale: .8 }
+    image: { src: "/images/staffing1.png", rotate: -5.28, scale: .8 },
+    services: [
+      "RPO",
+      "Contractual Staffing",
+      "HR Outsourcing"
+    ]
   },
   {
     roleTitle: "External execution arm coordinating structured market interaction and disciplined growth operations.",
     deployedText: "When organisations require controlled market activity and coordinated growth efforts without disrupting internal execution stability.",
     mainTitle: "Ascella Engage",
     mainDesc: "Market communication systems positioning clarity frameworks sales coordination models and revenue workflow alignment.",
-    image: { src: "/images/engage1.png", rotate: -30, scale: 0.6 }
+    image: { src: "/images/engage1.png", rotate: -30, scale: 0.6 },
+    services: [
+      "Brand positioning",
+      "Marketing execution",
+      "Content creation",
+      "Social media management",
+      "Marketing operations",
+      "Performance marketing"
+    ]
   },
   {
     roleTitle: "Revenue execution arm coordinating structured sales activity and disciplined pipeline development operations.",
     deployedText: "When organisations require consistent sales execution and pipeline development without disrupting internal operational focus.",
     mainTitle: "Ascella Forge",
     mainDesc: "Sales execution systems pipeline development frameworks deal progression structures and revenue workflow alignment.",
-    image: { src: "/images/forge1.png", rotate: -15, scale: 1.2 }
+    image: { src: "/images/forge1.png", rotate: -15, scale: 1.2 },
+    services: [
+      "Sales Enablement",
+      "Revenue operations",
+      "GTM"
+    ]
   }
 ];
 
 const TOTAL = SLIDES.length;
 
 const SectionHeader = ({ title }: { title: string }) => (
-  <div className="flex items-center gap-2 mb-3">
-    <Heading text={title} className="text-white" />
+  <h5 className="mb-3 font-normal">
+    {title}
+  </h5>
+);
+
+const ServicesList = ({ items }: { items: string[] }) => (
+  <div className="flex flex-wrap gap-2 mt-2">
+    {items.map((service, i) => (
+      <span
+        key={i}
+        className="text-[12px] px-2 py-1 border border-gray-400 text-gray-200 rounded-sm bg-gray-500"
+      >
+        {service}
+      </span>
+    ))}
   </div>
 );
 
@@ -114,12 +156,12 @@ export default function Role() {
       {SLIDES.map((_, i) => (
         <button
           key={i}
-          onClick={(e) => { 
-            e.stopPropagation(); 
+          onClick={(e) => {
+            e.stopPropagation();
             const section = containerRef.current;
-            if(section) {
-                const scrollPos = section.offsetTop + (i / TOTAL) * section.offsetHeight;
-                window.scrollTo({ top: scrollPos, behavior: 'smooth' });
+            if (section) {
+              const scrollPos = section.offsetTop + (i / TOTAL) * section.offsetHeight;
+              window.scrollTo({ top: scrollPos, behavior: 'smooth' });
             }
           }}
           className="relative flex items-center justify-center outline-none group w-4 h-4"
@@ -148,7 +190,7 @@ export default function Role() {
   return (
     <div ref={containerRef} className="relative w-full" style={{ height: isMobile ? 'auto' : `${TOTAL * 100}vh` }}>
       <div className={isMobile ? 'relative w-full overflow-visible flex flex-col' : 'sticky top-0 min-h-screen w-full overflow-hidden flex flex-col'} style={{ background: '#181818' }}>
-        
+
         <div style={{ height: '64px', background: '#000' }} />
         <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.10)' }} />
         <div style={{ height: '64px' }} />
@@ -182,6 +224,10 @@ export default function Role() {
                         <span className="font-bold text-white">{slide.roleTitle.split(' ').slice(0, 5).join(' ')} </span>
                         <span className="text-zinc-500 font-normal">{slide.roleTitle.split(' ').slice(5).join(' ')}</span>
                       </p>
+                    </div>
+                    <div className="mb-4">
+                      <SectionHeader title="Services" />
+                      <ServicesList items={slide.services} />
                     </div>
                     <div className="mt-auto">
                       <SectionHeader title="When it's deployed" />
@@ -228,9 +274,9 @@ export default function Role() {
               <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
               <AnimatePresence mode="wait">
                 <motion.div key={current} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }} transition={{ duration: 0.6 }} className="absolute inset-0">
-                   <div style={{ position: 'absolute', inset: 0, transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})` }}>
-                      <Image src={activeData.image.src} alt={activeData.mainTitle} fill className="object-contain grayscale brightness-110 opacity-90" priority />
-                   </div>
+                  <div style={{ position: 'absolute', inset: 0, transform: `rotate(${activeData.image.rotate}deg) scale(${activeData.image.scale})` }}>
+                    <Image src={activeData.image.src} alt={activeData.mainTitle} fill className="object-contain grayscale brightness-110 opacity-90" priority />
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -238,13 +284,26 @@ export default function Role() {
               <AnimatePresence mode="wait">
                 <motion.div key={current} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5 }} style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '44px 48px', color: '#fff' }}>
                   <h2 style={{ fontSize: 'clamp(24px, 2.8vw, 40px)', fontWeight: 300, letterSpacing: '-0.02em', margin: '0 0 18px', lineHeight: 1.2 }}>{activeData.mainTitle}</h2>
-                  <p style={{ fontSize: '12px', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', maxWidth: '440px' }}>{activeData.mainDesc}</p>
+                  <p style={{ fontSize: '14px', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px'}}>{activeData.mainDesc}</p>
                   <div style={{ marginBottom: '24px' }}>
                     <SectionHeader title="Role" />
-                    <p style={{ fontSize: '13.5px', lineHeight: 1.65, margin: 0 }}>
+                    <p style={{ fontSize: '14px', lineHeight: 1.65, margin: 0 }}>
                       <span style={{ fontWeight: 700, color: '#fff' }}>{activeData.roleTitle.split(' ').slice(0, 5).join(' ')} </span>
                       <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>{activeData.roleTitle.split(' ').slice(5).join(' ')}</span>
                     </p>
+                  </div>
+                  <div style={{ marginBottom: '24px' }}>
+                    <SectionHeader title="Services" />
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {activeData.services.map((service, i) => (
+                        <span
+                          key={i}
+                          className="text-[12px] px-2 py-1 border border-gray-400 text-gray-200 rounded-sm bg-gray-500"
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                   <div style={{ marginTop: 'auto', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '3px', padding: '18px 22px' }}>
                     <SectionHeader title="When it's deployed" />

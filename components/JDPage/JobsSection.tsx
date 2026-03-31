@@ -311,26 +311,26 @@
                           <div className="flex flex-col md:hidden flex-1">
                             {/* Job title — left aligned, max 2 lines */}
                             <h3
-                              className={`text-[13px] font-medium leading-tight line-clamp-2 mb-1 ${job.status === "Open position" ? "text-white" : "text-gray-400"
+                              className={`text-[13px] leading-tight line-clamp-2 mb-1 ${job.status === "Open position" ? "text-white" : "text-gray-400"
                                 }`}
                             >
                               {job.title}
                             </h3>
                             {/* Company name */}
-                            <p className="text-[11px] text-white/50 mb-3">{job.company}</p>
+                            <p className="text-[12px] text-white/50 mb-3">{job.company}</p>
 
                             {/* Apply button — small, white bg, black text */}
                             {job.status === "Open position" ? (
                               <button
                                 onClick={() => handleNavigateToApply(job)}
-                                className="self-start text-[11px] font-medium bg-white text-black px-3 py-1 rounded-sm hover:bg-white/90 transition"
+                                className="self-start text-[12px] bg-white text-black px-3 py-1 rounded-sm hover:bg-white/90 transition"
                               >
                                 Apply Now
                               </button>
                             ) : (
                               <button
                                 disabled
-                                className="self-start text-[11px] font-medium bg-white/10 text-white/40 px-3 py-1 rounded-sm cursor-not-allowed"
+                                className="self-start text-[12px] bg-white/10 text-white/40 px-3 py-1 rounded-sm cursor-not-allowed"
                               >
                                 Expired
                               </button>
@@ -363,10 +363,12 @@
                             </div>
 
                             {job.status === "Open position" ? (
-                              <PartialOutlineBtn
-                                text="Apply Now"
-                                onClick={() => handleNavigateToApply(job)}
-                              />
+                              <div className="w-1/2">
+                                <PartialOutlineBtn
+                                  text="Apply Now"
+                                  onClick={() => handleNavigateToApply(job)}
+                                />
+                              </div>
                             ) : (
                               <PartialOutlineBtn
                                 text="Expired"

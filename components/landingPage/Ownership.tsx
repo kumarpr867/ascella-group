@@ -310,7 +310,7 @@ export default function Ownership() {
       <div className="mx-10 lg:mx-20 xl:mx-24 relative">
 
         {/* ══ DESKTOP lg+ ══ */}
-        <div className="hidden md:grid grid-cols-[250px_1fr] lg:grid-cols-[400px_1fr] border-x border-color">
+        <div className="hidden md:grid grid-cols-[250px_1fr] lg:grid-cols-[300px_1fr] xl:grid-cols-[350px_1fr] border-x border-color">
 
           {/* LEFT */}
           <div >

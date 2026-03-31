@@ -40,7 +40,7 @@ const AnimatedSvg: React.FC = () => {
       <path d="M52.4648 211H228.108" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
 
       {/* Center filled circle (static) */}
-      <circle cx="260.043" cy="211" r="31.6851" fill="black" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <circle cx="260.043" cy="211" r="31.6851" fill="black" stroke="white" strokeWidth="1" strokeDasharray="1 1" />
 
       {/* ── Rotating dots ────────────────────────────────────────
           Each <circle> is wrapped in a <g> that uses animateTransform
@@ -77,10 +77,10 @@ const AnimatedSvg: React.FC = () => {
           type="rotate"
           from="0 260.043 211"
           to="-360 260.043 211"
-          dur="40s"
+          dur="20s"
           repeatCount="indefinite"
         />
-        <circle cx="164.238" cy="211" r="3.42162" fill="white" />
+        <circle cx="164.238" cy="211" r="5" fill="white" />
       </g>
 
       {/* dot3 — small white, orbit r≈182, slow CCW, 25s */}

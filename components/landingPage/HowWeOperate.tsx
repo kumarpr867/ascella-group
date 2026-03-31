@@ -182,7 +182,7 @@ export default function HowWeOperate() {
                 Control is designed in,<br /> not enforced later
               </h3>
               <p className="text-[12px] font-light max-w-md">
-                Ascella establishes governance, accountability, and measurement before execution begins—ensuring delivery remains controlled, predictable, and aligned as organisations scale.
+                Ascella establishes governance, accountability, and measurement before execution begins ensuring delivery remains controlled, predictable, and aligned as organisations scale.
               </p>
             </div>
           </Reveal>

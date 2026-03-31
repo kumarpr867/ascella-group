@@ -135,7 +135,7 @@ export default function Em3() {
                 ref={sectionRef}
                 className="relative h-[300vh] hidden md:block"
             >
-                <div className="sticky top-24 grid grid-cols-3 md:gap-16 lg:gap-32 w-full justify-center items-center">
+                <div className="sticky top-0 grid grid-cols-3 md:gap-16 lg:gap-32 w-full justify-center items-center h-screen">
 
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -151,8 +151,8 @@ export default function Em3() {
                             }}
                             className="max-w-sm flex flex-col gap-5"
                         >
-                            <h2 className="text-xl">{section.title}</h2>
-                            <p className="text-sm text-gray-300">
+                            <h4>{section.title}</h4>
+                            <p className="text-[14px] text-gray-200">
                                 {section.description}
                             </p>
                         </motion.div>
@@ -178,7 +178,7 @@ export default function Em3() {
                                 </h1>
                             </div>
 
-                            <div className="relative w-full h-[400px]">
+                            <div className="relative w-full h-[500px]">
                                 <Image
                                     src={section.image}
                                     alt={section.title}
@@ -189,14 +189,14 @@ export default function Em3() {
                         </motion.div>
                     </AnimatePresence>
 
-                    <nav className="text-2xl flex flex-col gap-2">
+                    <nav className="flex flex-col gap-2">
                         {MENU_ITEMS.map((item) => (
                             <button
                                 key={item}
                                 onClick={() => handleClick(item)}
                                 className={`text-left transition-colors ${active === item
-                                    ? "text-white"
-                                    : "text-gray-300 hover:text-gray-100"
+                                    ? "text-white lg:text-[36px] text-[24px]"
+                                    : "text-gray-300 hover:text-gray-100 lg:text-[24px] text-[16px]"
                                     }`}
                             >
                                 {item}

@@ -32,10 +32,8 @@ export default function OperatingGroup() {
                     </div>
                     <div className="text-b2 text-center w-xs">Execution arms <br /> deliver outcomes</div>
                 </Reveal>
-                <Reveal variants={slideInFromBottom(0.1)} className="relative hidden lg:block  mx-10 lg:mx-20 xl:mx-24 mt-6 lg:py-10 flex flex-col md:flex-row items-center border border-color">
-                    <div className="relative w-full h-[300px] lg:h-[400px] xl:h-[500px]">
-                        <Flowchart />
-                    </div>
+                <Reveal variants={slideInFromBottom(0.1)} className="relative hidden lg:block  mx-10 lg:mx-20 xl:mx-24 mt-6 lg:py-20 flex flex-col md:flex-row items-center border border-color">
+                    <Flowchart />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-between w-full px-10 xl:px-24">
                         <div className="text-b2 text-center">Ascella Group holds <br /> operating authority</div>
                         <div className="text-b2 text-center">Execution arms <br /> deliver outcomes</div>
