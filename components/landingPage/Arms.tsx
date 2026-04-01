@@ -27,7 +27,6 @@ export default function Arms() {
     return () => window.removeEventListener('resize', update);
   }, []);
 
-
   const [index, setIndex] = useState(0);
   const total = content.length;
   const [direction, setDirection] = useState(1);
@@ -38,50 +37,53 @@ export default function Arms() {
   const touchEndX = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // md screen
+  // md screen auto-play
   useEffect(() => {
-  if (screen !== 'md') return;
+    if (screen !== 'md') return;
 
-  let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout;
 
-  if (!isPaused) {
-    interval = setInterval(() => {
-      setDirection(1);
-      setIndex((prev) => (prev + 1) % total);
-    }, 3500);
-  }
+    if (!isPaused) {
+      interval = setInterval(() => {
+        setDirection(1);
+        setIndex((prev) => (prev + 1) % total);
+      }, 3500);
+    }
 
-  return () => {
-    if (interval) clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [screen, isPaused, total]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+    setIsPaused(true);
   };
-}, [screen, isPaused, total]);
 
- const handleTouchStart = (e: React.TouchEvent) => {
-  touchStartX.current = e.touches[0].clientX;
-  setIsPaused(true);
-};
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
 
-const handleTouchMove = (e: React.TouchEvent) => {
-  touchEndX.current = e.touches[0].clientX;
-};
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    // diff > 0 → finger moved LEFT → next slide
+    // diff < 0 → finger moved RIGHT → prev slide
+    const threshold = 60;
 
-const handleTouchEnd = () => {
-  const diff = touchStartX.current - touchEndX.current;
-  const threshold = 60;
+    if (Math.abs(diff) < threshold) {
+      setIsPaused(false);
+      return;
+    }
 
-  if (Math.abs(diff) < threshold) {
+    if (diff > 0) {
+      goTo(index + 1);
+    } else {
+      goTo(index - 1);
+    }
+
     setIsPaused(false);
-    return;
-  }
-
-  if (diff > 0) {
-    goTo(index + 1);
-  } else {
-    goTo(index - 1);
-  }
-
-  setIsPaused(false);
-};
+  };
 
   useEffect(() => {
     if (isInView) {
@@ -134,20 +136,19 @@ const handleTouchEnd = () => {
         <div className="flex flex-col lg:flex-row min-h-auto md:h-[550px]">
 
           {/* Navigation Sidebar */}
-          <aside className="w-full md:w-[320px] px-6  md:p-8 flex flex-col  md:gap-0 md:justify-between">
+          <aside className="w-full md:w-[320px] px-6 md:p-8 flex flex-col md:gap-0 md:justify-between">
             <div>
-              {/* Desktop/Tablet: "Execution Arms" heading */}
               <h5 className="hidden lg:block text-[20px] font-light text-black mb-6 md:mb-12 uppercase">
                 Execution Arms
               </h5>
 
-              {/* Mobile only: Dynamic counter in white sidebar */}
+              {/* Mobile only: Dynamic counter */}
               <div className="lg:hidden text-[28px] font-light mb-6">
                 <span className="text-black">0{index + 1}</span>
                 <span className="text-black/20">/0{total}</span>
               </div>
 
-              {/* Nav for Tablet/Desktop */}
+              {/* Nav for Desktop only */}
               <nav className="hidden lg:flex flex-col gap-4 md:gap-6">
                 {content.map((item, i) => (
                   <button
@@ -167,7 +168,7 @@ const handleTouchEnd = () => {
               </nav>
             </div>
 
-            {/* Bottom section — tablet+ desktop */}
+            {/* Bottom section — desktop only */}
             <div className="hidden lg:flex flex-col gap-6 mt-auto">
               <p className="text-[12px] leading-relaxed text-gray-400 max-w-[240px]">
                 All execution arms operate under{" "}
@@ -195,14 +196,14 @@ const handleTouchEnd = () => {
 
           {/* Content Area */}
           <div className="flex-1 bg-white flex p-1">
-            <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col lg:flex-row ">
+            <div className="relative w-full bg-gray-500 rounded-lg overflow-hidden flex flex-col lg:flex-row">
 
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={index}
                   onMouseEnter={() => setIsPaused(true)}
                   onMouseLeave={() => setIsPaused(false)}
-                  onTouchStart={() => setIsPaused(true)}
+                  onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
                   custom={direction}
@@ -215,17 +216,18 @@ const handleTouchEnd = () => {
                   {/* Left Side: Text Content */}
                   <div
                     className="w-full md:w-1/2 relative z-10 p-6 md:p-16 flex flex-col justify-between gap-6 md:gap-0"
-                    style={{ cursor: 'w-resize' }}
-                    onClick={() => goTo(index - 1)}
+                    style={{ cursor: screen === 'sm' ? 'default' : 'w-resize' }}
+                    onClick={() => {
+                      // ✅ Phone pe click disabled, sirf desktop/tablet pe kaam karta hai
+                      if (screen !== 'sm') goTo(index - 1);
+                    }}
                   >
-                    {/* Counter: always visible on desktop, hidden on mobile (shown in white sidebar) */}
                     <div className="hidden md:block text-2xl md:text-3xl font-light">
                       <span className="text-white">0{index + 1}</span>
                       <span className="text-white/20">/0{total}</span>
                     </div>
 
                     <div>
-                      {/* Title: always visible */}
                       <h3 className="text-[24px] md:text-[36px] font-normal text-white mb-4 md:mb-6 tracking-tight">
                         {content[index].title}
                       </h3>
@@ -248,23 +250,7 @@ const handleTouchEnd = () => {
                     className="flex-1 w-full flex bg-black items-center justify-center relative"
                     style={{ userSelect: 'none' }}
                   >
-                    {/* Left half click → go back (mobile) */}
-                    <div
-                      className="absolute inset-y-0 left-0 w-1/2 z-10 md:hidden"
-                      style={{ cursor: 'w-resize' }}
-                      onClick={() => {
-                        if (screen !== 'sm') goTo(index + 1);
-                      }}
-                    />
-                    {/* Right half click → go forward (mobile) */}
-                    <div
-                      className="absolute inset-y-0 right-0 w-1/2 z-10 md:hidden"
-                      style={{ cursor: 'e-resize' }}
-                      onClick={() => {
-                        if (screen !== 'sm') goTo(index + 1);
-                      }}
-                    />
-                    {/* Desktop: full area click → go forward */}
+                    {/* ✅ Desktop only click zone — phone pe koi click div nahi */}
                     <div
                       className="absolute inset-0 hidden md:block"
                       style={{ cursor: 'e-resize' }}
@@ -281,7 +267,7 @@ const handleTouchEnd = () => {
                       />
                     </div>
 
-                    {/* Mobile only: dots navigation */}
+                    {/* ✅ Dots — phone only, index ke saath move karte hain */}
                     <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 z-20 md:hidden">
                       {content.map((_, i) => (
                         <button
@@ -298,6 +284,7 @@ const handleTouchEnd = () => {
                       ))}
                     </div>
                   </div>
+
                 </motion.div>
               </AnimatePresence>
 

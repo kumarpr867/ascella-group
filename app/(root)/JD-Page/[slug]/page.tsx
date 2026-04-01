@@ -74,14 +74,20 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
   );
 }
 
+// ─── Field-level error map type ────────────────────────────────
+type FormErrors = Partial<Record<
+  "fullName" | "email" | "phoneNumber" | "currentLocation" | "currentRole" | "operatingBackground" | "whyApplying" | "cvLink",
+  string
+>>;
+
 // ───────────────────────────────────────────────────────────────
 
 export default function ApplicationForm() {
   const params = useParams();
   const slug = params?.slug as string;
-  const job = jobs.find((j) => j.slug === slug);
 
-  if (!slug || !job) return <div>Job not found</div>;
+  // FIX 1: Find job safely — avoids build-time undefined access on job.title
+  const job = jobs.find((j) => j.slug === slug) ?? null;
 
   const router = useRouter();
 
@@ -96,9 +102,37 @@ export default function ApplicationForm() {
   const [showToast, setShowToast] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // FIX 2: Field-level validation errors
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  // FIX 3: Guard render — keeps TypeScript happy, avoids build error
+  if (!slug || !job) return <div>Job not found</div>;
+
+  // ── Validate all required fields ────────────────────────────
+  function validate(): FormErrors {
+    const e: FormErrors = {};
+    if (!fullName.trim())             e.fullName            = "Full Name is mandatory";
+    if (!email.trim())                e.email               = "Email is mandatory";
+    if (!phoneNumber.trim())          e.phoneNumber         = "Phone Number is mandatory";
+    if (!currentLocation.trim())      e.currentLocation     = "Current Location is mandatory";
+    if (!currentRole.trim())          e.currentRole         = "Current Role is mandatory";
+    if (!operatingBackground.trim())  e.operatingBackground = "Operating Background is mandatory";
+    if (!whyApplying.trim())          e.whyApplying         = "This field is mandatory";
+    if (!cvLink.trim())               e.cvLink              = "CV Link is mandatory";
+    return e;
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!job) return;
+
+    // Run validation before anything else
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // Stop — don't submit
+    }
+
+    setErrors({});
     setIsSubmitting(true);
 
     try {
@@ -107,7 +141,7 @@ export default function ApplicationForm() {
         mode: "no-cors",
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
-          jobTitle: job.title,
+          jobTitle: job?.title ?? "Unknown Role",
           fullName,
           email,
           phoneNumber,
@@ -181,14 +215,40 @@ export default function ApplicationForm() {
 
                 <form onSubmit={handleSubmit} className="space-y-2 mt-4 lg:mt-0 lg:px-4 pt-4">
                   <Reveal variants={slideInFromBottom(0.4)} className="grid grid-cols-2 gap-2">
-                    <Input label="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                    <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <Input label="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                    <Input label="Current Location" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} />
+                    <Input
+                      label="Full Name"
+                      value={fullName}
+                      onChange={(e) => { setFullName(e.target.value); setErrors((prev) => ({ ...prev, fullName: undefined })); }}
+                      error={errors.fullName}
+                    />
+                    <Input
+                      label="Email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setErrors((prev) => ({ ...prev, email: undefined })); }}
+                      error={errors.email}
+                    />
+                    <Input
+                      label="Phone Number"
+                      value={phoneNumber}
+                      onChange={(e) => { setPhoneNumber(e.target.value); setErrors((prev) => ({ ...prev, phoneNumber: undefined })); }}
+                      error={errors.phoneNumber}
+                    />
+                    <Input
+                      label="Current Location"
+                      value={currentLocation}
+                      onChange={(e) => { setCurrentLocation(e.target.value); setErrors((prev) => ({ ...prev, currentLocation: undefined })); }}
+                      error={errors.currentLocation}
+                    />
                   </Reveal>
 
                   <Reveal variants={slideInFromBottom(0.6)}>
-                    <Input label="Current role / professional title" value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} />
+                    <Input
+                      label="Current role / professional title"
+                      value={currentRole}
+                      onChange={(e) => { setCurrentRole(e.target.value); setErrors((prev) => ({ ...prev, currentRole: undefined })); }}
+                      error={errors.currentRole}
+                    />
                   </Reveal>
 
                   <Reveal variants={slideInFromBottom(0.8)}>
@@ -196,7 +256,8 @@ export default function ApplicationForm() {
                       label="Operating background"
                       placeholder="Describe the operating environments you have worked within, including governance, accountability structures, and delivery models."
                       value={operatingBackground}
-                      onChange={(e) => setOperatingBackground(e.target.value)}
+                      onChange={(e) => { setOperatingBackground(e.target.value); setErrors((prev) => ({ ...prev, operatingBackground: undefined })); }}
+                      error={errors.operatingBackground}
                     />
                   </Reveal>
 
@@ -205,15 +266,21 @@ export default function ApplicationForm() {
                       label="Why are you applying for this role?"
                       placeholder="Explain how your experience aligns with the responsibilities and operating context of this role."
                       value={whyApplying}
-                      onChange={(e) => setWhyApplying(e.target.value)}
+                      onChange={(e) => { setWhyApplying(e.target.value); setErrors((prev) => ({ ...prev, whyApplying: undefined })); }}
+                      error={errors.whyApplying}
                     />
                   </Reveal>
 
                   <Reveal variants={slideInFromBottom(0.2)}>
-                    <Input label="CV Link" value={cvLink} onChange={(e) => setCvLink(e.target.value)} />
+                    <Input
+                      label="CV Link"
+                      value={cvLink}
+                      onChange={(e) => { setCvLink(e.target.value); setErrors((prev) => ({ ...prev, cvLink: undefined })); }}
+                      error={errors.cvLink}
+                    />
                   </Reveal>
 
-                  {/* ── Submit Button — small outline style, same as site's other buttons ── */}
+                  {/* ── Submit Button ── */}
                   <Reveal variants={slideInFromBottom(0.4)}>
                     <div className="pt-2">
                       <button
@@ -260,7 +327,7 @@ export default function ApplicationForm() {
                   </button>
                 </Reveal>
                 <Reveal variants={slideInFromBottom(0.4)} className="flex gap-2 sm:items-center justify-between mb-10">
-                  <h3 className="text-[20px] lg:text-[36px]">{job.title}</h3>
+                  <h3 className="text-[20px] lg:text-[36px]">{job?.title ?? "Unknown Role"}</h3>
                   <span className="text-b3 text-gray-200">
                     Posted on <span className="text-white">06 Feb 2026</span>
                   </span>
@@ -360,10 +427,11 @@ type InputProps = {
   label: string;
   type?: string;
   value?: string;
+  error?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-function Input({ label, type = "text", value, onChange }: InputProps) {
+function Input({ label, type = "text", value, onChange, error }: InputProps) {
   return (
     <div>
       <label className="block text-b3 mb-1">{label}</label>
@@ -371,8 +439,11 @@ function Input({ label, type = "text", value, onChange }: InputProps) {
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full bg-gray-500 border border-color rounded-lg p-2 text-b3 outline-none focus:border-gray-200 transition"
+        className={`w-full bg-gray-500 border rounded-lg p-2 text-b3 outline-none transition ${
+          error ? "border-red-500 focus:border-red-400" : "border-color focus:border-gray-200"
+        }`}
       />
+      {error && <p className="text-red-400 text-[11px] mt-1">{error}</p>}
     </div>
   );
 }
@@ -382,10 +453,11 @@ type TextareaProps = {
   label: string;
   placeholder?: string;
   value?: string;
+  error?: string;
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
-function Textarea({ label, placeholder, value, onChange }: TextareaProps) {
+function Textarea({ label, placeholder, value, onChange, error }: TextareaProps) {
   return (
     <div>
       <label className="block text-b3 mb-1">{label}</label>
@@ -394,8 +466,11 @@ function Textarea({ label, placeholder, value, onChange }: TextareaProps) {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full bg-gray-500 border border-color rounded-lg p-2 text-b3 text-gray-100 placeholder:text-gray-300 outline-none focus:border-gray-200 transition resize-none"
+        className={`w-full bg-gray-500 border rounded-lg p-2 text-b3 text-gray-100 placeholder:text-gray-300 outline-none transition resize-none ${
+          error ? "border-red-500 focus:border-red-400" : "border-color focus:border-gray-200"
+        }`}
       />
+      {error && <p className="text-red-400 text-[11px] mt-1">{error}</p>}
     </div>
   );
 }
