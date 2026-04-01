@@ -2,11 +2,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll } from 'motion/react';
-import Heading from '../headings/Heading';
 
 // Swiper imports
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
 const SLIDES = [
@@ -101,25 +99,17 @@ const ServicesList = ({ items }: { items: string[] }) => (
 
 export default function Role() {
   const [current, setCurrent] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [tapDirection, setTapDirection] = useState<"left" | "right" | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<any>(null);
 
-  // --- Device detection to avoid the sticky scroll lock on mobile ---
+  // --- Device detection ---
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  useEffect(() => {
-    if (!tapDirection) return;
-    const timeout = window.setTimeout(() => setTapDirection(null), 700);
-    return () => window.clearTimeout(timeout);
-  }, [tapDirection]);
 
   // --- Desktop Scroll Logic (UNTOUCHED) ---
   const { scrollYProgress } = useScroll({
@@ -139,18 +129,6 @@ export default function Role() {
 
   const activeData = SLIDES[current];
 
-  // --- Mobile Toggle Logic ---
-  const handleToggle = () => {
-    if (!swiperRef.current) return;
-    if (isPaused) {
-      swiperRef.current.autoplay.start();
-      setIsPaused(false);
-    } else {
-      swiperRef.current.autoplay.stop();
-      setIsPaused(true);
-    }
-  };
-
   const DotsRow = ({ vertical = false }: { vertical?: boolean }) => (
     <div className={`dots-container flex ${vertical ? 'flex-col' : 'flex-row'} gap-3 items-center justify-center relative z-50`}>
       {SLIDES.map((_, i) => (
@@ -158,10 +136,14 @@ export default function Role() {
           key={i}
           onClick={(e) => {
             e.stopPropagation();
-            const section = containerRef.current;
-            if (section) {
-              const scrollPos = section.offsetTop + (i / TOTAL) * section.offsetHeight;
-              window.scrollTo({ top: scrollPos, behavior: 'smooth' });
+            if (isMobile && swiperRef.current) {
+              swiperRef.current.slideTo(i);
+            } else {
+              const section = containerRef.current;
+              if (section) {
+                const scrollPos = section.offsetTop + (i / TOTAL) * section.offsetHeight;
+                window.scrollTo({ top: scrollPos, behavior: 'smooth' });
+              }
             }
           }}
           className="relative flex items-center justify-center outline-none group w-4 h-4"
@@ -180,34 +162,26 @@ export default function Role() {
     </div>
   );
 
-  const handleMobileNav = (direction: 'left' | 'right') => {
-    if (!swiperRef.current) return;
-    if (direction === 'left') swiperRef.current.slidePrev();
-    else swiperRef.current.slideNext();
-    setTapDirection(direction);
-  };
-
   return (
     <div ref={containerRef} className="relative w-full" style={{ height: isMobile ? 'auto' : `${TOTAL * 100}vh` }}>
-      <div className={isMobile ? 'relative w-full overflow-visible flex flex-col' : 'sticky top-0 min-h-screen w-full overflow-hidden flex flex-col'} style={{ background: '#181818' }}>
+      <div className={isMobile ? 'relative w-full overflow-visible flex flex-col' : 'sticky top-0 min-h-screen w-full overflow-visible flex flex-col'} style={{ background: '#181818' }}>
 
         <div style={{ height: '64px', background: '#000' }} />
         <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.10)' }} />
         <div style={{ height: '64px' }} />
 
         {/* ══ MOBILE (< lg) ══════════════════════════════════════════════════ */}
-        <div className="relative lg:hidden flex-1 px-4 pb-[16px]">
+        <div className="relative lg:hidden flex-1 px-4 pb-0">
           <Swiper
-            modules={[Autoplay]}
             spaceBetween={20}
-            loop={true} // 5 ke baad wapas 1 par aayega right side se
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            loop={false}
+            allowTouchMove={true}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
-            onSlideChange={(swiper) => setCurrent(swiper.realIndex)}
+            onSlideChange={(swiper) => setCurrent(swiper.activeIndex)}
             className="h-full w-full"
           >
             {SLIDES.map((slide, idx) => (
-              <SwiperSlide key={idx} onClick={handleToggle}>
+              <SwiperSlide key={idx}>
                 <div className="flex flex-col h-full bg-[#0d0d0d] border border-white/10 rounded-sm overflow-hidden">
                   <div className="relative w-full h-[220px] bg-[#080808] flex items-center justify-center">
                     <div style={{ position: 'relative', width: '85%', height: '85%', transform: `rotate(${slide.image.rotate}deg) scale(${slide.image.scale})` }}>
@@ -225,10 +199,7 @@ export default function Role() {
                         <span className="text-zinc-500 font-normal">{slide.roleTitle.split(' ').slice(5).join(' ')}</span>
                       </p>
                     </div>
-                    <div className="mb-4">
-                      <SectionHeader title="Services" />
-                      <ServicesList items={slide.services} />
-                    </div>
+                    {/* Services section REMOVED for mobile */}
                     <div className="mt-auto">
                       <SectionHeader title="When it's deployed" />
                       <div className="bg-black p-4 border border-white/5">
@@ -241,30 +212,12 @@ export default function Role() {
             ))}
           </Swiper>
 
-          <div className="absolute inset-0 z-40 grid grid-cols-2">
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); handleMobileNav('left'); }}
-              className="w-full h-full bg-transparent"
-              aria-label="Previous slide"
-            />
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); handleMobileNav('right'); }}
-              className="w-full h-full bg-transparent"
-              aria-label="Next slide"
-            />
+
+
+          {/* Mobile Dots - niche center mein */}
+          <div className="flex justify-center mt-2 pb-1 relative z-50">
+            <DotsRow vertical={false} />
           </div>
-
-          {tapDirection && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/70 text-white text-sm">
-                {tapDirection === 'left' ? '← Previous' : 'Next →'}
-              </div>
-            </div>
-          )}
-
-          {/* Mobile Dots hta diye gaye hain */}
         </div>
 
         {/* ══ DESKTOP (lg+) - ORIGINAL 100% SAME CODE ═══════════════════════ */}

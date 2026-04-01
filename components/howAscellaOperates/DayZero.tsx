@@ -1,6 +1,6 @@
 import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 
 type ProblemItem = {
   title: string;

@@ -30,13 +30,23 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       lenisRef.current = lenis;
 
       const frame = (time: number) => {
-        lenis.raf(time);
+        try { lenis.raf(time); } catch (_) {}
         rafRef.current = requestAnimationFrame(frame);
       };
+
+      const handleVisibility = () => {
+        document.hidden ? lenis.stop() : lenis.start();
+      };
+      document.addEventListener("visibilitychange", handleVisibility);
+      window.addEventListener("focus", handleVisibility);
+      window.addEventListener("blur", handleVisibility);
 
       rafRef.current = requestAnimationFrame(frame);
 
       return () => {
+        document.removeEventListener("visibilitychange", handleVisibility);
+        window.removeEventListener("focus", handleVisibility);
+        window.removeEventListener("blur", handleVisibility);
         if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
         try {
           if (lenisRef.current) {

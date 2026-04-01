@@ -96,9 +96,7 @@ function HorizontalText() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideLeft} className="text-white">
             communication
           </motion.div>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={slideRight} className="text-[16px]">
-            All career coordination is managed centrally.
-          </motion.div>
+          
         </div>
       </div>
 

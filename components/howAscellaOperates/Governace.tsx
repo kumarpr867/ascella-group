@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
 import OutlineBtn from "../btns/OutlineBtn";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import Image from "next/image"
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";

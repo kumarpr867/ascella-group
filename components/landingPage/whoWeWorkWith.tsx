@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence, animate, useInView } from "motion/react"
 import OutlineBtn from '../btns/OutlineBtn';
-import Heading from '@/components/headings/Heading';
+import Heading from '@/components/executionArmsPages/headings/Heading';
 import { useRouter } from "next/navigation";
 
 const cards = [

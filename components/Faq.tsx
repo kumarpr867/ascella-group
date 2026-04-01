@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Heading from "./headings/Heading";
+import Heading from "./executionArmsPages/headings/Heading";
 import ArrowButton from "./btns/Arrow";
 import { motion } from "framer-motion";
 import Reveal from "@/utils/Reveal";

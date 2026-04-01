@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useInView, type Variants } from "motion/react";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
-import PlusHeading from "../headings/Heading";
+import PlusHeading from "../executionArmsPages/headings/Heading";
 import SecurityWaveSVG from "./SecurityWave";
 import TechnologyExecution from "./TechonologyExecution";
 import RevenueEnablement from "./Revenue";

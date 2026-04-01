@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import { motion, type Variants } from "motion/react";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";

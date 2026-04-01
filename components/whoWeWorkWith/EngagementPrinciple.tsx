@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Heading from "../headings/Heading"
+import Heading from "../executionArmsPages/headings/Heading"
 import Reveal from "@/utils/Reveal"
 import { slideInFromLeft } from "@/utils/motion"
 import EngPrincMob from "./EngPrincMob"

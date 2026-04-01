@@ -1,7 +1,7 @@
 'use client'
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from "motion/react"
-import PlusHeading from "@/components/headings/Heading";
+import PlusHeading from "@/components/executionArmsPages/headings/Heading";
 import OutlineBtn from '../btns/OutlineBtn';
 
 const cards = [

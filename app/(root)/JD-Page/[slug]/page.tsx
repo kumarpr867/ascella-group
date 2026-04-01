@@ -98,6 +98,7 @@ export default function ApplicationForm() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!job) return;
     setIsSubmitting(true);
 
     try {

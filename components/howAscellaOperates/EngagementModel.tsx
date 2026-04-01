@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll } from "motion/react";
 import Image from "next/image";
 import { SECTIONS, EngagementLabel } from "../../data/EngagementModelData";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 

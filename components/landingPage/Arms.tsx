@@ -3,7 +3,7 @@
 import { motion, AnimatePresence, useInView } from "motion/react";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { content } from "../../data/ArmsContent";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import { useRouter } from "next/navigation";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom } from "@/utils/motion";

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // ── Google Sheets Web App URL ─────────────────────────────────────────────────
-// Replace this with your deployed Apps Script URL
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMj27RQ5tvoPHk4L_xN7pJ4XMxXOqKT7lYAXWvu7zaZI0561P3KE35PXAThEk-MaTL/exec';
 
 // ── LocalStorage helpers ──────────────────────────────────────────────────────
@@ -43,7 +42,7 @@ async function syncToGoogleSheets(entry: FormSubmission): Promise<void> {
   try {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // Required for Apps Script — no CORS headers returned
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(entry),
     });
@@ -152,13 +151,11 @@ const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]
 
 // ── Role Searchable Dropdown ──────────────────────────────────────────────────
 const ALL_ROLES = [
-  // Technology
   'Chief Technology Officer (CTO)', 'Chief Information Officer (CIO)', 'Chief Digital Officer (CDO)',
   'Chief Information Security Officer (CISO)', 'VP of Engineering', 'VP of Product',
   'Director of Technology', 'Director of IT', 'Head of Cybersecurity', 'Head of Cloud Infrastructure',
   'Head of Data Engineering', 'Head of Software Development', 'Software Engineering Manager',
   'Solutions Architect', 'Enterprise Architect', 'DevOps Lead', 'IT Manager', 'Systems Administrator',
-  // Business & Operations
   'Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Financial Officer (CFO)',
   'Chief Revenue Officer (CRO)', 'Chief Marketing Officer (CMO)', 'Chief People Officer (CPO)',
   'Chief Strategy Officer (CSO)', 'Managing Director', 'General Manager', 'VP of Operations',
@@ -168,10 +165,8 @@ const ALL_ROLES = [
   'Head of Strategy', 'Head of Partnerships', 'Head of Growth', 'Head of Customer Success',
   'Operations Manager', 'Business Development Manager', 'Sales Manager', 'Account Manager',
   'Project Manager', 'Program Manager', 'Product Manager', 'Marketing Manager',
-  // Consulting & Advisory
   'Principal Consultant', 'Senior Consultant', 'Management Consultant', 'Strategy Consultant',
   'Technology Consultant', 'Business Analyst', 'Data Analyst', 'Financial Analyst',
-  // Founders & Ownership
   'Founder', 'Co-Founder', 'Owner', 'Partner', 'Managing Partner',
 ];
 
@@ -440,7 +435,6 @@ const IsoBox: React.FC<IsoBoxProps> = ({ src = '/vector 55.png', cellW, cellH, c
 };
 
 // ── Contact Section (Desktop) ─────────────────────────────────────────────────
-// CHANGE 2: Added hover faded gray bg to all 4 info boxes in contact section
 type ContactSectionProps = {
   title: string; subtitle: string;
   email?: { value: string }; contact?: { values: string[] };
@@ -470,7 +464,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Email</span>
-          <div className="text-[13px] truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
+          <div className="text-[13px] font-light truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
         </div>
         <div className="w-full border-t border-gray-400" />
         {/* Contact box */}
@@ -481,7 +475,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Contact</span>
-          <div className="text-[13px] font-light space-y-0.5">{(contact?.values ?? []).slice(0, 2).map((v, i) => <p key={i}>{v}</p>)}</div>
+          <div className="space-y-1">{(contact?.values ?? []).slice(0, 2).map((v, i) => <p key={i} style={{ fontSize: '13px', fontWeight: 300, lineHeight: '1.4' }}>{v}</p>)}</div>
         </div>
       </div>
       {/* Center image */}
@@ -510,7 +504,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Work Hours</span>
-          <p className="text-[13px]">{workHours?.hours}</p>
+          <p style={{ fontSize: '13px', fontWeight: 300, lineHeight: '1.4' }}>{workHours?.hours}</p>
         </div>
       </div>
     </div>
@@ -537,10 +531,13 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
         <p className="text-gray-400 text-[13px]">{subtitle}</p>
       </div>
     </div>
+
+    {/* ✅ FIX: Email section — ab show hoga mobile pe */}
     <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
       {(email?.value ?? '').split('\n').map((v, i) => <p key={i} className="text-[13px] font-light">{v}</p>)}
     </div>
+
     <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Contact</span>
       {(contact?.values ?? []).map((v, i) => <p key={i} className="text-[13px] font-light">{v}</p>)}
@@ -649,7 +646,6 @@ const mobileSlidesData = [
   { icon: <Icon6 />, label: 'Readiness for governed execution' },
 ];
 
-// ── CHANGE 2: heading moved outside the grid, centered above image ────────────
 const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordionData }) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [openItem, setOpenItem]       = useState<string | null>(null);
@@ -665,7 +661,6 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
 
   return (
     <div className="block lg:hidden w-full">
-      {/* Heading — centered, outside the grid box, above the image */}
       <div className="w-full border-t border-gray-400 pt-8 pb-5 flex items-center justify-center">
         <h3 className="text-2xl font-light text-center">What alignment typically covers</h3>
       </div>
@@ -720,7 +715,6 @@ const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
   const [showToast, setShowToast]         = useState(false);
 
-  // ── Form submit handler with Google Sheets sync ───────────────────────────
   const handleFormSubmit = async (data: Omit<FormSubmission, 'id' | 'submittedAt'>) => {
     const entry: FormSubmission = {
       ...data,
@@ -756,23 +750,15 @@ const ContextsPage = () => {
           <div className="relative w-full border border-gray-400 flex"
             style={{ backgroundImage: `linear-gradient(rgba(61,61,61,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(61,61,61,0.3) 1px,transparent 1px)`, backgroundSize: '40px 40px' }}>
 
-            {/* ── LEFT COLUMN ──
-                CHANGES 3, 4, 5:
-                - Top 64px spacer (no content) + horizontal border-b grid line below it
-                - Ascella logo (links to home) below that line
-                - Full min-h-screen sticky so it never scrolls with right col
-                - Removed the border-t divider that was above the bottom spacer
-            */}
+            {/* ── LEFT COLUMN ── */}
             <motion.div initial="hidden" animate="visible" variants={slideFromLeft}
               className="bg-black border-r border-gray-400 flex-shrink-0" style={{ width: '40%' }}>
               <div className="sticky top-0 min-h-screen flex flex-col">
                 <style>{`.lfc::-webkit-scrollbar{display:none}.lfc{scrollbar-width:none}`}</style>
 
-                {/* CHANGE 3: 64px top spacer + horizontal grid line */}
                 <div style={{ height: '64px', flexShrink: 0 }} />
                 <div className="border-b border-gray-400 w-full" style={{ flexShrink: 0 }} />
 
-                {/* CHANGE 4: Ascella logo — links to home page, using Next.js Image like footer */}
                 <div style={{ flexShrink: 0 }} className="px-6 pt-5 pb-4">
                   <Link href="/" aria-label="Go to home page" className="inline-block">
                     <Image
@@ -786,7 +772,6 @@ const ContextsPage = () => {
                   </Link>
                 </div>
 
-                {/* CHANGE 5: scrollable form area fills remaining height — NO bottom border */}
                 <div className="lfc px-6 flex flex-col flex-1 overflow-y-auto">
                   <div>
                     <header className="max-w-md mt-6">
@@ -798,7 +783,6 @@ const ContextsPage = () => {
                       <AlignmentForm onSubmit={handleFormSubmit} />
                     </div>
                   </div>
-                  {/* Flex spacer pushes content up, no bottom border/divider */}
                   <div className="flex-1" />
                 </div>
               </div>
@@ -857,10 +841,10 @@ const ContextsPage = () => {
                 </div>
               </RevealOnScroll>
 
-              {/* CHANGE 1: Alignment grid cells — boxes 2–6 get hover faded gray bg, box 1 (image) unchanged */}
+              {/* Alignment grid */}
               <div className="w-full border-t border-gray-400" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
 
-                {/* Box 1 — image cell, NO hover */}
+                {/* Box 1 — image cell */}
                 <RevealOnScroll delay={0} className="relative border-r border-b border-gray-400 overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
                   <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
                   <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
@@ -871,12 +855,9 @@ const ContextsPage = () => {
                   className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
-                  <div
-                    className="absolute inset-0 transition-colors duration-300"
-                    style={{ zIndex: 0 }}
+                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  />
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
                   <div className="flex flex-col gap-6 relative z-10"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
                 </RevealOnScroll>
 
@@ -885,12 +866,9 @@ const ContextsPage = () => {
                   className="relative border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
-                  <div
-                    className="absolute inset-0 transition-colors duration-300"
-                    style={{ zIndex: 0 }}
+                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  />
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
                   <div className="flex flex-col gap-6 relative z-10"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
                 </RevealOnScroll>
 
@@ -899,12 +877,9 @@ const ContextsPage = () => {
                   className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
-                  <div
-                    className="absolute inset-0 transition-colors duration-300"
-                    style={{ zIndex: 0 }}
+                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  />
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
                   <div className="flex flex-col gap-6 relative z-10"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
                 </RevealOnScroll>
 
@@ -913,12 +888,9 @@ const ContextsPage = () => {
                   className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
-                  <div
-                    className="absolute inset-0 transition-colors duration-300"
-                    style={{ zIndex: 0 }}
+                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  />
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
                   <div className="flex flex-col gap-6 relative z-10"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
                 </RevealOnScroll>
 
@@ -927,12 +899,9 @@ const ContextsPage = () => {
                   className="relative border-b border-gray-400 flex flex-col justify-end p-8"
                   style={{ height: '257px' }}
                 >
-                  <div
-                    className="absolute inset-0 transition-colors duration-300"
-                    style={{ zIndex: 0 }}
+                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  />
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
                   <div className="flex flex-col gap-6 relative z-10"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
                 </RevealOnScroll>
               </div>
@@ -981,13 +950,12 @@ const ContextsPage = () => {
         </div>
 
         {/* ════════════ MOBILE (< lg) ════════════ */}
-        {/* CHANGE 1: border-t line added right after the outer wrapper opens — navbar ke niche horizontal line */}
         <div className="block lg:hidden mx-10 border-x border-gray-400">
           <div className="w-full border-t border-gray-400" />
           <div className="relative border-b border-gray-400 overflow-hidden">
             <img src="/engagement1.png" alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.15 }} />
             <div className="relative z-10 px-6 pt-8 pb-6">
-              <h2 className="text-4xl font-normal leading-tight">Engagement begins <br />with <span className="text-gray-400">operating alignment.</span></h2>
+              <h2 className="text-3xl font-normal leading-tight text-left">Engagement begins with <span className="text-gray-400">operating alignment.</span></h2>
               <p className="text-lg mt-3 font-light text-gray-400">Not delivery discussions.</p>
             </div>
             <div className="relative z-10 px-6 pb-8 flex flex-col gap-3">
@@ -1002,9 +970,12 @@ const ContextsPage = () => {
             </div>
           </div>
           <MobileSections accordionData={accordionData} />
+
+          {/* ✅ FIX: email prop ab pass ho raha hai */}
           <MobileContactSection
             title="Single point of contact for engagement coordination"
             subtitle="All engagement coordination is managed centrally."
+            email={{ value: 'hello@ascella.group' }}
             contact={{ values: ['+91 94545 10860', '+91 94699 40969'] }}
             location={{ address: '3rd Floor, SCO-5(S), Sector 34B, Chandigarh', postalCode: '160022' }}
             workHours={{ hours: '24/7 availability' }}

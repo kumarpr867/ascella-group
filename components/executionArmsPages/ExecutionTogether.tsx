@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom } from "@/utils/motion";
-import Heading from '../headings/Heading';
+import Heading from './headings/Heading';
 
 // ── Isometric Grid with Per-Cell Hover (CODE PRESERVED) ──────────────────────
 function IsometricHoverGrid() {

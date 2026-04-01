@@ -1,6 +1,6 @@
 "use client";
 
-import Heading from '../headings/Heading';
+import Heading from '../executionArmsPages/headings/Heading';
 import { motion } from 'motion/react';
 
 const Roles = () => {

@@ -44,7 +44,7 @@ const footerSections: FooterSection[] = [
         title: "Follow Us",
         items: [
             { label: "Instagram", href: "https://instagram.com" },
-            { label: "LinkedIn", href: "https://linkedin.com" },
+            { label: "LinkedIn", href: "https://www.linkedin.com/company/ascella-group/posts/?feedView=all" },
         ],
         bordered: true,
     },

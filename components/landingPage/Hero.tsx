@@ -2,7 +2,7 @@
 import OutlineBtn from "../btns/OutlineBtn";
 import { cubicBezier, motion, type Variants } from "motion/react";
 import { PixelWorld } from "./globe";
-import PlusText from "../headings/PlusText";
+import PlusText from "../executionArmsPages/headings/PlusText";
 import { useRouter } from "next/navigation";
 
 const EASE = cubicBezier(0.33, 1, 0.68, 1);

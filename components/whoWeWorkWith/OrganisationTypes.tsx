@@ -5,7 +5,7 @@ import Image from "next/image";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
 import PartialOutlineBtn from "../btns/PartialOutlineBtn";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import { useRouter } from "next/navigation";
 
 interface OrganisationType {

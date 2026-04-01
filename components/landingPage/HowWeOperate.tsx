@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useEffect, useRef, useState, useCallback } from "react";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";
 

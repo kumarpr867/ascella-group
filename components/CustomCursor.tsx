@@ -26,10 +26,16 @@ export default function CustomCursor() {
 
     const desktop = checkIfDesktop();
     setIsDesktop(desktop);
+    setMounted(desktop);
 
-    if (!desktop) return;
-
-    setMounted(true);
+    if (!desktop) {
+      // Cleanup stale cursor styles if prior desktop mode attached them
+      const existing = document.getElementById("custom-cursor-hide-native");
+      if (existing) existing.remove();
+      document.documentElement.style.removeProperty("cursor");
+      document.body.style.removeProperty("cursor");
+      return;
+    }
 
     // Hide the native cursor globally while this custom cursor is active.
     const originalHtmlCursor = document.documentElement.style.cursor;
@@ -55,8 +61,9 @@ export default function CustomCursor() {
       document.body.style.cursor = originalBodyCursor;
       const existing = document.getElementById("custom-cursor-hide-native");
       if (existing) existing.remove();
+      setMounted(false);
     };
-  }, [mouseX, mouseY]);
+  }, [isDesktop]);
 
   // Keep desktop/mobile status updated on resize as well
   useEffect(() => {

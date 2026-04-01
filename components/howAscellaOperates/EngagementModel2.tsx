@@ -6,7 +6,7 @@ import { SECTIONS } from "@/data/EngagementModelData";
 import { motion, AnimatePresence } from "framer-motion";
 import { slideInFromBottom } from "@/utils/motion";
 import Reveal from "@/utils/Reveal";
-import Heading from "../headings/Heading";
+import Heading from "../executionArmsPages/headings/Heading";
 
 export default function EngagementModels() {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -68,7 +68,7 @@ export default function EngagementModels() {
     variants={slideInFromBottom(0.1)}
     className="flex flex-col gap-4 lg:gap-6 items-center lg:items-start lg:w-[75%] mb-4 md:mb-10 lg:mb-20 px-10 lg:px-0 pt-10 pb-6"
   >
-    <Heading ="ENGAGEMENT MODELS" />
+    <Heading text="ENGAGEMENT MODELS" />
 
     <h1 className="text-[24px] lg:text-[36px] text-center lg:text-left">
       Engagement structures are shaped around operating alignment, shared accountability, and controlled execution rather than isolated task delivery.

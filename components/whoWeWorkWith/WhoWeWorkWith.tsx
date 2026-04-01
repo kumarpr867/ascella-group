@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import EnterpriseStartupSystem from "./EnterpriseStartupSystem"
-import PlusText from "../headings/PlusText"
+import PlusText from "../executionArmsPages/headings/PlusText"
 import { useRouter } from "next/navigation";
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom, slideInFromLeft, slideInFromRight } from "@/utils/motion";

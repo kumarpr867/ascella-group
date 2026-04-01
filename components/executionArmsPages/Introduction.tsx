@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { Plus } from 'lucide-react';
-import Heading from '../headings/Heading';
+import Heading from './headings/Heading';
 import Reveal from "@/utils/Reveal";
 import { slideInFromBottom } from "@/utils/motion";
 
