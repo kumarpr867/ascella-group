@@ -33,7 +33,7 @@ export default async function BlogPage({ params }: Props) {
   return (
     <div>
     <section className="relative border-y border-color mb-20">
-      <div className=" mx-10 lg:mx-20 xl:mx-24 lg:border-x border-color px-10 lg:px-0">
+      <div className="lg:mx-20 xl:mx-24 lg:border-x border-color px-10 lg:px-0">
         <div className="min-h-screen flex lg:flex-row justify-between flex-col">
 
           {/* MAIN CONTENT */}
