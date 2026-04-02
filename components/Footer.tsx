@@ -204,7 +204,7 @@ const Footer = () => {
             <Reveal variants={slideInFromBottom(0.1)} className="border-t border-color">
                 <div className="block lg:hidden mx-10 border-x border-color">
                     <div className="flex items-center justify-between px-5 py-4">
-                        <Image src={"/logo2.png"} alt={""} width={30} height={30} />
+                        <Image src="/logo.svg" alt="Ascella logo" width={90} height={32} className="w-20 h-auto" />
                         <p className="text-[12px] text-gray-100">
                             Copyright @ {year} Ascella Group
                         </p>
@@ -234,7 +234,6 @@ const Footer = () => {
                                     width={96}
                                     height={32}
                                     priority
-                                    unoptimized
                                     className="w-20 sm:w-24 h-auto"
                                 />
                             </Link>

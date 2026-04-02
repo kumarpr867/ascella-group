@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export default function CustomCursor() {
@@ -9,6 +9,8 @@ export default function CustomCursor() {
   const mouseY = useMotionValue(0);
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const targetRef = useRef({ x: 0, y: 0 });
+  const mouseMoveRaf = useRef<number | null>(null);
 
   const smoothX = useSpring(mouseX, { stiffness: 500, damping: 40 });
   const smoothY = useSpring(mouseY, { stiffness: 500, damping: 40 });
@@ -49,14 +51,24 @@ export default function CustomCursor() {
     document.head.appendChild(styleEl);
 
     const move = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      targetRef.current = { x: e.clientX, y: e.clientY };
+      if (mouseMoveRaf.current === null) {
+        mouseMoveRaf.current = requestAnimationFrame(() => {
+          mouseX.set(targetRef.current.x);
+          mouseY.set(targetRef.current.y);
+          mouseMoveRaf.current = null;
+        });
+      }
     };
 
-    window.addEventListener("mousemove", move);
+    window.addEventListener("mousemove", move, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", move);
+      if (mouseMoveRaf.current !== null) {
+        cancelAnimationFrame(mouseMoveRaf.current);
+        mouseMoveRaf.current = null;
+      }
       document.documentElement.style.cursor = originalHtmlCursor;
       document.body.style.cursor = originalBodyCursor;
       const existing = document.getElementById("custom-cursor-hide-native");
@@ -64,6 +76,20 @@ export default function CustomCursor() {
       setMounted(false);
     };
   }, [isDesktop]);
+
+  useEffect(() => {
+    const checkIfDesktop = () => {
+      const prefersFinePointer = window.matchMedia?.("(pointer: fine) and (hover: hover)").matches;
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 768;
+      setIsDesktop(prefersFinePointer && !isMobileUserAgent && !isSmallScreen);
+    };
+
+    checkIfDesktop();
+    window.addEventListener("resize", checkIfDesktop, { passive: true });
+
+    return () => window.removeEventListener("resize", checkIfDesktop);
+  }, []);
 
   // Keep desktop/mobile status updated on resize as well
   useEffect(() => {
@@ -91,6 +117,7 @@ export default function CustomCursor() {
           x: "-50%",
           y: "-50%",
           zIndex: 999998,
+          willChange: "transform, opacity",
         }}
       />
 
@@ -103,6 +130,7 @@ export default function CustomCursor() {
           x: "-50%",
           y: "-50%",
           zIndex: 999999,
+          willChange: "transform, opacity",
         }}
       />
     </>,

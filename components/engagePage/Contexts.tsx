@@ -104,7 +104,7 @@ const OrgSizeSelector: React.FC<{ value: string; onChange: (v: string) => void; 
             ${small ? 'px-2 py-1 text-[10px]' : 'px-2.5 py-1.5 text-[11px]'}
             ${sel ? 'border-gray-400 bg-white text-black'
               : error ? 'border-gray-400 text-gray-300 bg-transparent hover:border-gray-400 hover:text-white'
-              : 'border-gray-400 bg-transparent text-gray-300 hover:border-gray-400 hover:text-white'}`}>
+                : 'border-gray-400 bg-transparent text-gray-300 hover:border-gray-400 hover:text-white'}`}>
           {size}
         </button>
       );
@@ -130,7 +130,7 @@ const PrimaryNeedCheckboxes: React.FC<{ values: string[]; onChange: (v: string[]
               ${small ? 'w-3 h-3' : 'w-3.5 h-3.5'}
               ${checked ? 'border-gray-400 bg-white'
                 : error ? 'border-red-500 bg-transparent group-hover:border-gray-400'
-                : 'border-gray-400 bg-transparent group-hover:border-gray-300'}`}
+                  : 'border-gray-400 bg-transparent group-hover:border-gray-300'}`}
               style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
               {checked && (
                 <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
@@ -174,8 +174,8 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; sma
   value, onChange, small = false, error = false,
 }) => {
   const [query, setQuery] = useState(value);
-  const [open, setOpen]   = useState(false);
-  const ref               = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => { if (!value) setQuery(''); }, [value]);
 
@@ -227,38 +227,38 @@ const RoleDropdown: React.FC<{ value: string; onChange: (v: string) => void; sma
 // ── Validation helpers ────────────────────────────────────────────────────────
 const validate = {
   fullName: (v: string) => !v.trim() ? 'Full name is required' : v.trim().length < 2 ? 'Enter a valid name' : !/^[a-zA-Z\s'.\-]+$/.test(v.trim()) ? 'Name should only contain letters' : '',
-  orgName:  (v: string) => !v.trim() ? 'Organisation name is required' : '',
-  role:     (v: string) => !v.trim() ? 'Please select a role or position' : '',
-  email:    (v: string) => !v.trim() ? 'Email address is required' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address' : '',
-  orgSize:  (v: string) => !v ? 'Please select an organisation size' : '',
-  needs:    (v: string[]) => v.length === 0 ? 'Select at least one operating need' : '',
+  orgName: (v: string) => !v.trim() ? 'Organisation name is required' : '',
+  role: (v: string) => !v.trim() ? 'Please select a role or position' : '',
+  email: (v: string) => !v.trim() ? 'Email address is required' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address' : '',
+  orgSize: (v: string) => !v ? 'Please select an organisation size' : '',
+  needs: (v: string[]) => v.length === 0 ? 'Select at least one operating need' : '',
 };
 
 // ── Shared AlignmentForm ──────────────────────────────────────────────────────
 type AlignmentFormProps = { small?: boolean; onSubmit: (data: Omit<FormSubmission, 'id' | 'submittedAt'>) => void };
 
 const AlignmentForm: React.FC<AlignmentFormProps> = ({ small = false, onSubmit }) => {
-  const [fullName,   setFullName]   = useState('');
-  const [orgName,    setOrgName]    = useState('');
-  const [role,       setRole]       = useState('');
-  const [email,      setEmail]      = useState('');
-  const [orgSize,    setOrgSize]    = useState('');
-  const [needs,      setNeeds]      = useState<string[]>([]);
-  const [challenge,  setChallenge]  = useState('');
-  const [errors,     setErrors]     = useState<Record<string, string>>({});
-  const [submitted,  setSubmitted]  = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [orgName, setOrgName] = useState('');
+  const [role, setRole] = useState('');
+  const [email, setEmail] = useState('');
+  const [orgSize, setOrgSize] = useState('');
+  const [needs, setNeeds] = useState<string[]>([]);
+  const [challenge, setChallenge] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
 
-  const lbl  = `${small ? 'text-xs' : 'text-[12px]'} text-white`;
-  const inp  = `bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-300 transition-colors duration-200`;
-  const err  = (k: string) => submitted && errors[k]
+  const lbl = `${small ? 'text-xs' : 'text-[12px]'} text-white`;
+  const inp = `bg-transparent border px-2 py-1.5 rounded w-full focus:outline-none text-xs text-white placeholder-gray-300 transition-colors duration-200`;
+  const err = (k: string) => submitted && errors[k]
     ? <p className="text-[10px] text-red-400 mt-0.5">{errors[k]}</p> : null;
 
   const handleSubmit = () => {
     setSubmitted(true);
     const errs = {
       fullName: validate.fullName(fullName), orgName: validate.orgName(orgName),
-      role:     validate.role(role),         email:   validate.email(email),
-      orgSize:  validate.orgSize(orgSize),   needs:   validate.needs(needs),
+      role: validate.role(role), email: validate.email(email),
+      orgSize: validate.orgSize(orgSize), needs: validate.needs(needs),
     };
     setErrors(errs);
     if (Object.values(errs).some(Boolean)) return;
@@ -358,7 +358,7 @@ const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number; clas
 }) => {
   const direction = useScrollDirection();
   const variants = {
-    hidden:  { opacity: 0, y: direction === 'down' ? 50 : -50 },
+    hidden: { opacity: 0, y: direction === 'down' ? 50 : -50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as any, delay } },
   };
   return (
@@ -371,8 +371,8 @@ const RevealOnScroll: React.FC<{ children: React.ReactNode; delay?: number; clas
 // ── Isometric Grid ────────────────────────────────────────────────────────────
 function IsometricHoverGrid({ cellW = 100, cellH = 60, interactive = true }: { cellW?: number; cellH?: number; interactive?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef  = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
-  const rafRef    = useRef<number | null>(null);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: -9999, y: -9999 });
+  const rafRef = useRef<number | null>(null);
 
   const cellCenter = (col: number, row: number, oX: number, oY: number) => ({
     x: oX + col * cellW + (row % 2 === 0 ? 0 : cellW / 2),
@@ -387,7 +387,7 @@ function IsometricHoverGrid({ cellW = 100, cellH = 60, interactive = true }: { c
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
     resize();
     window.addEventListener('resize', resize);
-    const onMove  = (e: MouseEvent) => { const r = canvas.getBoundingClientRect(); mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    const onMove = (e: MouseEvent) => { const r = canvas.getBoundingClientRect(); mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top }; };
     const onLeave = () => { mouseRef.current = { x: -9999, y: -9999 }; };
     if (interactive) { canvas.addEventListener('mousemove', onMove); canvas.addEventListener('mouseleave', onLeave); }
 
@@ -403,7 +403,7 @@ function IsometricHoverGrid({ cellW = 100, cellH = 60, interactive = true }: { c
           const { x: cx, y: cy } = cellCenter(col, row, offsetX, offsetY);
           const key = `${col},${row}`;
           const hovered = interactive ? inDiamond(mx, my, cx, cy) : false;
-          const target  = hovered ? 1 : 0;
+          const target = hovered ? 1 : 0;
           const current = (alphaMap.get(key) ?? 0) + (target - (alphaMap.get(key) ?? 0)) * 0.1;
           alphaMap.set(key, current);
           ctx.beginPath();
@@ -653,11 +653,11 @@ const mobileSlidesData = [
 
 const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordionData }) => {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [openItem, setOpenItem]       = useState<string | null>(null);
+  const [openItem, setOpenItem] = useState<string | null>(null);
   const touchStartX = useRef<number | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
-  const handleTouchEnd   = (e: React.TouchEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) setActiveSlide(p => diff > 0 ? Math.min(p + 1, mobileSlidesData.length - 1) : Math.max(p - 1, 0));
@@ -712,13 +712,13 @@ const MobileSections: React.FC<{ accordionData: AccordionData[] }> = ({ accordio
 };
 
 // ── Entry Animations ──────────────────────────────────────────────────────────
-const slideFromLeft  = { hidden: { opacity: 0, x: -60 }, visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } } };
-const slideFromRight = { hidden: { opacity: 0, x: 60 },  visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } } };
+const slideFromLeft = { hidden: { opacity: 0, x: -60 }, visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } } };
+const slideFromRight = { hidden: { opacity: 0, x: 60 }, visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as any } } };
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 const ContextsPage = () => {
   const [openAccordion, setOpenAccordion] = useState<string>('01');
-  const [showToast, setShowToast]         = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleFormSubmit = async (data: Omit<FormSubmission, 'id' | 'submittedAt'>) => {
     const entry: FormSubmission = {
@@ -736,13 +736,13 @@ const ContextsPage = () => {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const textStyle   = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
+  const textStyle = "w-[164px] text-white font-['Montserrat'] text-[14px] font-normal leading-[16px] tracking-[-0.14px]";
   const overlayCard = 'w-full md:w-[289px] rounded-[6px] border border-gray-400 bg-[rgba(13,13,13,0.50)] backdrop-blur-[20.95px] p-4 flex flex-col justify-center';
 
   const accordionData: AccordionData[] = [
-    { id: '01', title: 'Review and context assessment',  description: 'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
-    { id: '02', title: 'Alignment conversation',         description: 'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
-    { id: '03', title: 'Engagement pathway definition',  description: 'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
+    { id: '01', title: 'Review and context assessment', description: 'Your submission is reviewed to understand operating complexity, execution readiness, and governance requirements.' },
+    { id: '02', title: 'Alignment conversation', description: 'Discussion with stakeholders to understand current state, challenges, and alignment requirements for execution.' },
+    { id: '03', title: 'Engagement pathway definition', description: 'Clear roadmap defining phases, milestones, deliverables, and engagement model for successful execution.' },
   ];
 
   return (
@@ -767,7 +767,7 @@ const ContextsPage = () => {
                 <div style={{ flexShrink: 0 }} className="px-6 pt-5 pb-4">
                   <Link href="/" aria-label="Go to home page" className="inline-block">
                     <Image
-                      src="/logo.png"
+                      src="/logo.svg"
                       alt="Ascella Logo"
                       width={90}
                       height={32}

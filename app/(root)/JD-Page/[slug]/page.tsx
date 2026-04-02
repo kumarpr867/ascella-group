@@ -327,7 +327,7 @@ export default function ApplicationForm() {
                   </button>
                 </Reveal>
                 <Reveal variants={slideInFromBottom(0.4)} className="flex gap-2 sm:items-center justify-between mb-10">
-                  <h3 className="text-[20px] lg:text-[36px]">{job?.title ?? "Unknown Role"}</h3>
+                  <h3 className="text-[20px] lg:text-[36px]">{job.title}</h3>
                   <span className="text-b3 text-gray-200">
                     Posted on <span className="text-white">06 Feb 2026</span>
                   </span>

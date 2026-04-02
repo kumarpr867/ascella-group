@@ -109,20 +109,37 @@ const Navbar = () => {
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const _isPending = useTransition()[0];
   const desktopRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const scrollTimeout = useRef<NodeJS.Timeout | number | null>(null);
+  const isScrollRafActive = useRef(false);
+  const scrollHideTimer = useRef<number | null>(null);
 
   const handleScroll = useCallback(() => {
-    setShowNavbar((prev) => (prev ? false : prev));
-    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-    scrollTimeout.current = window.setTimeout(() => {
+    if (prefersReducedMotion) {
       setShowNavbar(true);
-    }, 0);
-  }, []);
+      return;
+    }
+
+    if (scrollHideTimer.current) {
+      window.clearTimeout(scrollHideTimer.current);
+    }
+
+    if (!isScrollRafActive.current) {
+      isScrollRafActive.current = true;
+      requestAnimationFrame(() => {
+        setShowNavbar(false);
+        isScrollRafActive.current = false;
+      });
+    }
+
+    scrollHideTimer.current = window.setTimeout(() => {
+      requestAnimationFrame(() => setShowNavbar(true));
+    }, 0); // navbar shows immediately after scroll stops
+  }, [prefersReducedMotion]);
 
   const handleMobileDropdown = useCallback((label: string) => {
     setOpenMobileDropdown((prev) => (prev === label ? null : label));
@@ -138,8 +155,17 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(media.matches);
+    const listener = () => setPrefersReducedMotion(media.matches);
+    media.addEventListener("change", listener);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      media.removeEventListener("change", listener);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [handleScroll]);
 
   useEffect(() => {
@@ -155,7 +181,7 @@ const Navbar = () => {
 
   useEffect(() => {
     return () => {
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      if (scrollHideTimer.current) window.clearTimeout(scrollHideTimer.current);
       document.body.style.overflow = "auto";
     };
   }, []);
@@ -166,14 +192,15 @@ const Navbar = () => {
 
       <motion.header
         initial={{ y: 0 }}
-        animate={{ y: showNavbar ? 0 : -100 }}
-        transition={{ duration: 0.3 }}
+        animate={{ y: prefersReducedMotion ? 0 : showNavbar ? 0 : -100 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.3 }}
+        style={{ willChange: "transform" }}
         className="bg-black/20 fixed top-0 left-0 w-full z-50"
       >
         <div className="mx-10 lg:mx-20 xl:mx-24 h-15">
           <div className="flex justify-between items-center h-full">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="Logo" width={90} height={32} priority unoptimized className="w-20 sm:w-24 h-auto" />
+              <Image src="/logo.svg" alt="Logo" width={90} height={32} priority className="w-20 sm:w-24 h-auto" />
             </Link>
 
             {/* Desktop Nav */}
@@ -200,9 +227,8 @@ const Navbar = () => {
                     }}
                   >
                     <button
-                      className={`px-2 text-b2 flex items-center gap-1 transition-colors ${
-                        isActive ? "text-white" : "text-gray-200 hover:text-white"
-                      }`}
+                      className={`px-2 text-b2 flex items-center gap-1 transition-colors ${isActive ? "text-white" : "text-gray-200 hover:text-white"
+                        }`}
                       aria-haspopup={hasDesktopDropdown ? "menu" : undefined}
                       aria-expanded={hasDesktopDropdown ? isOpen : undefined}
                     >
@@ -241,11 +267,10 @@ const Navbar = () => {
                                   href={child.href}
                                   prefetch={true}
                                   onClick={() => setOpenDesktopDropdown(null)}
-                                  className={`block px-5 py-3 text-sm transition-colors ${
-                                    childActive
+                                  className={`block px-5 py-3 text-sm transition-colors ${childActive
                                       ? "text-white bg-white/10"
                                       : "text-gray-300 hover:text-white hover:bg-white/10"
-                                  }`}
+                                    }`}
                                 >
                                   {child.label}
                                 </Link>
@@ -305,21 +330,19 @@ const Navbar = () => {
 
       <div
         onClick={closeMenu}
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
       />
 
       {/* Drawer Panel - Right side */}
       <div
-        className={`fixed top-0 right-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 z-[70] h-full w-[85vw] max-w-[393px] bg-black flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Top bar */}
         <div className="flex items-center justify-between px-7 pt-7 pb-6">
           <Link href="/" onClick={closeMenu}>
-            <Image src="/logo.svg" alt="Logo" width={90} height={32} unoptimized className="w-20 h-auto" />
+            <Image src="/logo.svg" alt="Logo" width={90} height={32} className="w-20 h-auto" />
           </Link>
           <button onClick={closeMenu} className="w-9 h-9 flex items-center justify-center">
             <div style={{ width: 30, height: 30 }} className="relative flex items-center justify-center">
@@ -408,11 +431,10 @@ const Navbar = () => {
                                 closeMenu();
                                 router.push(child.href);
                               }}
-                              className={`block pl-6 py-3 text-[16px] transition-colors text-left ${
-                                pathname === child.href
+                              className={`block pl-6 py-3 text-[16px] transition-colors text-left ${pathname === child.href
                                   ? "text-white bg-white/10"
                                   : "text-gray-400 hover:text-white"
-                              }`}
+                                }`}
                             >
                               {child.label}
                             </Link>
