@@ -31,7 +31,7 @@ const PartialOutlineBtn = ({
     <button
       onClick={onClick}
       className={`
-        group relative inline-flex items-center
+        group relative inline-flex items-center whitespace-nowrap
         ${sizeClasses} tracking-wide
         ${bgColor} ${textColor}
         ${hoverBgColor} ${hoverTextColor}

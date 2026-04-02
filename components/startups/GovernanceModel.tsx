@@ -13,6 +13,26 @@ const GovernanceModel = () => {
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+        .gov-wrapper,
+        .gov-wrapper *,
+        .gov-wrapper h1,
+        .gov-wrapper h2,
+        .gov-wrapper h3,
+        .gov-wrapper h4,
+        .gov-wrapper h5,
+        .gov-wrapper h6,
+        .gov-wrapper p,
+        .gov-wrapper span,
+        .gov-wrapper div,
+        .gov-wrapper a,
+        .gov-wrapper button,
+        .gov-wrapper li,
+        .gov-wrapper label {
+          font-family: 'Montserrat', sans-serif !important;
+        }
+
         @media (max-width: 768px) {
           .gov-wrapper {
             overflow-x: hidden;
@@ -55,13 +75,13 @@ const GovernanceModel = () => {
         }
       `}</style>
 
-      <div className="gov-wrapper bg-black text-white min-h-screen w-full font-sans overflow-hidden relative">
+      <div className="gov-wrapper bg-black text-white min-h-screen w-full overflow-hidden relative">
 
         <Reveal variants={slideInFromBottom(0.1)} className="w-full">
           <div className="gov-top-banner w-full flex justify-center pt-24 pb-32">
             <div className="flex items-center space-x-6">
               <span className="bracket-left text-white text-6xl font-light opacity-80">[</span>
-              <p className="text-[13px] tracking-wide text-center font-sans text-gray-200 max-w-[280px] leading-relaxed">
+              <p className="text-[13px] tracking-wide text-center text-gray-200 max-w-[280px] leading-relaxed">
                 Support embeds execution discipline, <br />
                 not short-term delivery assistance.
               </p>
@@ -94,9 +114,9 @@ const GovernanceModel = () => {
             ></div>
           </div>
           <div className={`${colWidth} border-r border-gray-400`}></div>
-          <div className={`${colWidth} border-r border-gray-400 pt-30 pr-4 pl-4`}>
+          <div className={`${colWidth} border-r border-gray-400 flex flex-col justify-end pb-6 pr-4 pl-4 transition-colors duration-300 hover:bg-white/5`}>
             <Reveal variants={slideInFromBottom(0.3)}>
-              <h3 className="text-xl font-[20px] mb-6">Operating Framework</h3>
+              <h3 className="text-xl font-[20px] mb-3">Operating Framework</h3>
               <p className="text-gray-200 text-b3 leading-relaxed">
                 Startups in the programme operate within Ascella's governance framework from the outset. <br />
                 Decision rights, accountability paths, and escalation mechanisms are established before execution expands across teams, systems, or external partners.
@@ -117,15 +137,15 @@ const GovernanceModel = () => {
           <div className={`${colWidth} border-r border-gray-400 relative overflow-hidden p-8 flex flex-col justify-end`}>
             <div className={`${circleBaseClass} top-[-300px] left-[-100%]`}></div>
           </div>
-          <div className={`${colWidth} border-r border-gray-400 pt-30 pl-4`}>
+          <div className={`${colWidth} border-r border-gray-400 flex flex-col justify-end pb-6 pl-4 transition-colors duration-300 hover:bg-white/5`}>
             <Reveal variants={slideInFromBottom(0.4)} className="relative z-20">
-              <h3 className="text-xl font-normal mb-6">Progressive Introduction</h3>
+              <h3 className="text-xl font-normal mb-3">Progressive Introduction</h3>
               <p className="text-gray-200 text-b3 pr-3">
                 Governance structures are introduced gradually as scale increases. Early-stage flexibility is preserved while accountability and oversight mature in parallel with organisational growth.
               </p>
             </Reveal>
           </div>
-          <div className={`${colWidth} border-r border-gray-400 p-8 flex flex-col justify-end`}>
+          <div className={`${colWidth} border-r border-gray-400 p-6 flex flex-col justify-end transition-colors duration-300 hover:bg-white/5`}>
             <Reveal variants={slideInFromBottom(0.5)}>
               <span className="text-lg text-gray-300 leading-snug">
                 Execution remains adaptable to evolving startup environments. Accountability, ownership, and oversight remain clearly defined at every stage.
@@ -216,7 +236,7 @@ const GovernanceModel = () => {
               <p className="text-gray-300 text-xs leading-relaxed">
                 Startups in the programme operate within Ascella's governance framework from the outset.
               </p>
-              <p className="text-gray-300 text-xs text-montserrat leading-relaxed mt-3">
+              <p className="text-gray-300 text-xs leading-relaxed mt-3">
                 Decision rights, accountability paths, and escalation mechanisms are established before execution expands across teams, systems, or external partners.
               </p>
             </div>
@@ -231,7 +251,7 @@ const GovernanceModel = () => {
               className="relative z-10 py-8"
               style={{ paddingLeft: 'calc(12% + 16px)', paddingRight: 'calc(12% + 16px)' }}
             >
-              <h3 className="text-lg font-normal mb-4 text-white">Progressive Introduction.</h3>
+              <h3 className="text-lg mb-4 text-white">Progressive Introduction.</h3>
               <p className="text-gray-300 text-xs leading-relaxed">
                 Startups in the programme operate within Ascella's governance framework from the outset.
               </p>

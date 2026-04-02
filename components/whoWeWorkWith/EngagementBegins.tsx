@@ -66,36 +66,36 @@ function HorizontalText() {
       </div>
 
       <Reveal variants={slideInFromBottom(0.8)} className="lg:hidden block">
-        <div className="flex flex-col items-center absolute uppercase lg:text-[16px] xl:text-[24px] left-0 top-0 w-full">
-          <div className=" text-gray-200" >
-            OPERATING DESIGN FIRST.
-          </div>
-
-          <div>
-            CONTROLLED DELIVERY FOLLOWS.
-          </div>
+        {/* Top two texts — no border lines, just plain text at top */}
+        <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-0 w-full text-center z-10">
+          OPERATING DESIGN FIRST.
+        </div>
+        <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-[28px] w-full text-center z-10">
+          CONTROLLED DELIVERY FOLLOWS.
         </div>
 
-        <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full h-10 border-b border-color -translate-y-20" >
-          <div className="flex items-end w-full justify-center h-full z-1">
+        {/* READY TO ESTABLISH with border line */}
+        <div className="absolute uppercase text-[14px] sm:text-[16px] text-gray-200 left-0 top-1/2 w-full border-b border-color -translate-y-20 z-10">
+          <div className="flex items-end w-full justify-center h-10">
             READY TO ESTABLISH
           </div>
         </div>
-        <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-1/2 w-full -translate-y-6 border-b border-color flex ">
-          <div className="hidden sm:flex items-center w-full justify-center z-2">
+        {/* STRUCTURE AND ACCOUNTABILITY with border line */}
+        <div className="absolute uppercase text-[14px] sm:text-[16px] left-0 top-1/2 w-full -translate-y-6 border-b border-color flex z-10">
+          <div className="hidden sm:flex items-center w-full justify-center">
             STRUCTURE AND ACCOUNTABILITY AT SCALE?
           </div>
-          <div className="sm:hidden flex items-center w-full justify-center z-2">
+          <div className="sm:hidden flex items-center w-full justify-center">
             STRUCTURE AND ACCOUNTABILITY
           </div>
         </div>
-        <div className="absolute left-0 top-1/2 w-full h-8 sm:h-10 border-b border-color" >
-          <div className="sm:hidden uppercase flex items-center w-full justify-center z-2 text-[14px] sm:text-[16px]">
+        {/* AT SCALE? with border line */}
+        <div className="absolute left-0 top-1/2 w-full h-8 sm:h-10 border-b border-color z-10">
+          <div className="sm:hidden uppercase flex items-center w-full justify-center text-[14px] sm:text-[16px]">
             AT SCALE?
           </div>
         </div>
       </Reveal>
-
     </>
   );
 }

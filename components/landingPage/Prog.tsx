@@ -408,7 +408,13 @@ export default function Prog() {
                     <Reveal variants={slideInFromBottom(0.3)}>
                         <PartialOutlineBtn
                             text="See How It Works"
-                            size="sm"
+                            size="md"
+                            bgColor="bg-white"
+                            textColor="text-black"
+                            hoverBgColor="hover:bg-gray-200"
+                            hoverTextColor="hover:text-black"
+                            borderColor="border-black"
+                            hoverBorderColor="group-hover:border-black"
                             onClick={() => router.push("/how-ascella-operates")}
                         />
                     </Reveal>

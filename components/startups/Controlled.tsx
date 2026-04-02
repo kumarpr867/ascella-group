@@ -214,7 +214,7 @@ const styles = `
       display:inline-flex; align-items:center; gap:8px;
       padding:16px 32px;
       border:1px solid rgba(255,255,255,.15);
-      font-size:10px; letter-spacing:.4em;
+      font-size:10px; letter-spacing:.15em;
       text-transform:uppercase; background:#fff;
       color:#000; cursor:pointer; white-space:nowrap;
       transition:background .3s, color .3s;

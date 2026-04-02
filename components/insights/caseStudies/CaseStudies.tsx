@@ -86,12 +86,9 @@ export default function CaseStudies() {
         <section className="mb-20">
 
             {/* Top Search + Filter */}
-            {/* CHANGE 2: Search box aur filter dono right side mein ek saath, filter icon se pehle search */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
                 <div className="mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-end items-center w-full">
-                    {/* search bar + filter — right side mein ek saath */}
                     <div className="flex items-center gap-4">
-                        {/* search bar */}
                         <div className="relative w-52 md:w-72">
                             <input
                                 type="text"
@@ -124,7 +121,6 @@ export default function CaseStudies() {
                             </span>
                         </div>
 
-                        {/* filter — search ke baad same line mein */}
                         <div ref={filterRef} className="relative">
 
                             <button
@@ -198,7 +194,6 @@ export default function CaseStudies() {
                             </button>
                         </div>
 
-                        {/* CHANGE 3: border-b ko -mx-10 lg:-mx-20 xl:-mx-24 se edge to edge kiya */}
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10">
                             {featured.map((item, index) => (
                                 <div
@@ -213,12 +208,11 @@ export default function CaseStudies() {
                                 </div>
                             ))}
                         </div>
-                        {/* Edge to edge border line */}
                         <div className="-mx-10 lg:-mx-20 xl:-mx-24 border-b border-color mb-10" />
                     </>
                 )}
 
-                {/* All Case Studies header — View All mobile only */}
+                {/* All Case Studies header */}
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-lg">
                         {isFilteredCategory ? `${category} Case Studies` : "All Case Studies"}
@@ -233,7 +227,6 @@ export default function CaseStudies() {
                     )}
                 </div>
 
-                {/* Mobile: 2 cols; md+: 2 cols; lg+: 3 cols */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-15">
                     {paginatedStudies.map((item) => (
                         <CaseCard key={item.id} item={item} variant="default" />
@@ -247,7 +240,7 @@ export default function CaseStudies() {
                 )}
             </Reveal>
 
-            {/* Pagination — all devices, no scroll on click */}
+            {/* Pagination */}
             {!showAllCases && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 md:gap-6 mt-20 text-sm text-white/60">
 
@@ -308,10 +301,9 @@ function CaseCard({
             transition={{ duration: 0.3 }}
             className="group block"
         >
-            {/* CHANGE 4: Mobile featured card — horizontal layout (image left ~85x98, content right) */}
             {isFeatured ? (
                 <>
-                    {/* Desktop: original vertical layout */}
+                    {/* Desktop: original vertical layout — completely unchanged */}
                     <div className="hidden md:block">
                         <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                             <div className="relative overflow-hidden border border-color cursor-pointer w-full h-56 mb-4">
@@ -341,7 +333,6 @@ function CaseCard({
                                     {item.description}
                                 </p>
                             </div>
-                            {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
                             <div className="hidden md:flex">
                                 <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                                     <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
@@ -352,9 +343,8 @@ function CaseCard({
                         </div>
                     </div>
 
-                    {/* Mobile: horizontal layout — image left, content right */}
+                    {/* Mobile: original horizontal layout preserved — only text-[11px] → text-[12px], color to text-white and text-white/50 */}
                     <div className="flex md:hidden gap-3">
-                        {/* Image — ~85x98 */}
                         <Link href={`/insights/case-studies/${slugify(item.title)}`} className="shrink-0">
                             <div className="relative overflow-hidden border border-color cursor-pointer" style={{ width: 85, height: 98 }}>
                                 <Image
@@ -365,11 +355,10 @@ function CaseCard({
                                 />
                             </div>
                         </Link>
-                        {/* Content — title, description (2 lines), read now */}
                         <div className="flex flex-col justify-between flex-1 py-0.5">
-                            <p className="text-[11px] line-clamp-2 leading-snug">{item.title}</p>
+                            <p className="text-[12px] text-white line-clamp-2 leading-snug">{item.title}</p>
                             <p
-                                className="text-[10px] text-white/60 mt-1"
+                                className="text-[12px] text-white/50 mt-1"
                                 style={{
                                     display: "-webkit-box",
                                     WebkitLineClamp: 2,
@@ -380,7 +369,6 @@ function CaseCard({
                                 {item.description}
                             </p>
                             <Link href={`/insights/case-studies/${slugify(item.title)}`} className="mt-2">
-                                {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
                                 <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
                                     Read Now
                                 </button>
@@ -389,7 +377,7 @@ function CaseCard({
                     </div>
                 </>
             ) : (
-                /* Default (non-featured) card — original structure preserved */
+                /* Default (non-featured) card */
                 <>
                     <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                         <div className="relative overflow-hidden border border-color cursor-pointer w-full h-32 md:h-56 mb-2 md:mb-4">
@@ -403,7 +391,7 @@ function CaseCard({
                     </Link>
 
                     <div className="flex flex-col flex-1">
-                        {/* Desktop layout */}
+                        {/* Desktop layout — unchanged */}
                         <div className="hidden md:flex justify-between gap-6 mb-2">
                             <p className="w-2/3 text-[16px] line-clamp-2">{item.title}</p>
                             <span className="text-[12px] text-white/60 shrink-0">{item.date}</span>
@@ -421,7 +409,6 @@ function CaseCard({
                                 {item.description}
                             </p>
                         </div>
-                        {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
                         <div className="hidden md:flex">
                             <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                                 <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
@@ -430,11 +417,10 @@ function CaseCard({
                             </Link>
                         </div>
 
-                        {/* Mobile layout */}
-                        <div className="flex md:hidden items-start justify-between gap-2 mt-1">
-                            <p className="text-[11px] line-clamp-2 flex-1">{item.title}</p>
-                            <Link href={`/insights/case-studies/${slugify(item.title)}`} className="shrink-0">
-                                {/* CHANGE 1: Read Now default bg-white text-black, hover bg-black text-white */}
+                        {/* Mobile layout — title 2 lines left-aligned, Read Now below it */}
+                        <div className="flex md:hidden flex-col items-start gap-2 mt-1">
+                            <p className="text-[12px] text-white line-clamp-2 leading-snug">{item.title}</p>
+                            <Link href={`/insights/case-studies/${slugify(item.title)}`}>
                                 <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
                                     Read Now
                                 </button>

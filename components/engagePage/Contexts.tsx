@@ -434,6 +434,31 @@ const IsoBox: React.FC<IsoBoxProps> = ({ src = '/vector 55.png', cellW, cellH, c
   return <img src={src} alt="" style={{ position: 'absolute', left: cx, top: cy, width: cellW, height: cellH, transform: 'translate(-50%,-50%)', objectFit: 'fill', opacity, pointerEvents: 'none', mixBlendMode: 'screen', zIndex }} />;
 };
 
+// ── Hoverable Grid Cell ───────────────────────────────────────────────────────
+// FIX: React state se hover track karo — direct DOM manipulation ki jagah
+// Ye ensure karta hai ki motion.div ke saath bhi hover 100% reliable rahe
+const HoverCell: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ children, className = '', style = {} }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className={`relative ${className}`}
+      style={{
+        ...style,
+        background: hovered ? 'rgba(61,61,61,0.42)' : 'transparent',
+        transition: 'background 300ms ease',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </div>
+  );
+};
+
 // ── Contact Section (Desktop) ─────────────────────────────────────────────────
 type ContactSectionProps = {
   title: string; subtitle: string;
@@ -457,26 +482,16 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
       {/* Left info column */}
       <div className="flex-1 border-r border-gray-400 flex flex-col overflow-hidden" style={{ height: '271px' }}>
         {/* Email box */}
-        <div
-          className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
-          style={{ background: 'transparent' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-        >
+        <HoverCell className="flex-1 px-6 flex flex-col justify-center cursor-default">
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Email</span>
           <div className="text-[13px] font-light truncate">{email?.value ? email.value.split('\n')[0] : ''}</div>
-        </div>
+        </HoverCell>
         <div className="w-full border-t border-gray-400" />
         {/* Contact box */}
-        <div
-          className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
-          style={{ background: 'transparent' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-        >
+        <HoverCell className="flex-1 px-6 flex flex-col justify-center cursor-default">
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Contact</span>
           <div className="space-y-1">{(contact?.values ?? []).slice(0, 2).map((v, i) => <p key={i} style={{ fontSize: '13px', fontWeight: 300, lineHeight: '1.4' }}>{v}</p>)}</div>
-        </div>
+        </HoverCell>
       </div>
       {/* Center image */}
       <div className="flex items-center justify-center border-r border-gray-400 bg-[#030303] flex-shrink-0" style={{ width: '256px', height: '271px' }}>
@@ -485,27 +500,17 @@ const ContactSection: React.FC<ContactSectionProps> = ({ title, subtitle, email,
       {/* Right info column */}
       <div className="flex-1 flex flex-col overflow-hidden" style={{ height: '271px' }}>
         {/* Location box */}
-        <div
-          className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
-          style={{ background: 'transparent' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-        >
+        <HoverCell className="flex-1 px-6 flex flex-col justify-center cursor-default">
           <span className="text-[9px] uppercase text-gray-300 tracking-[0.2em] mb-2 block">Location</span>
           <p className="text-[12px] leading-snug">{location?.address ?? ''}</p>
           <p className="text-[11px] mt-1">{location?.postalCode}</p>
-        </div>
+        </HoverCell>
         <div className="w-full border-t border-gray-400" />
         {/* Work Hours box */}
-        <div
-          className="flex-1 px-6 flex flex-col justify-center transition-colors duration-300 cursor-default"
-          style={{ background: 'transparent' }}
-          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-        >
+        <HoverCell className="flex-1 px-6 flex flex-col justify-center cursor-default">
           <span className="text-[9px] uppercase tracking-[0.2em] text-gray-300 mb-2 block">Work Hours</span>
           <p style={{ fontSize: '13px', fontWeight: 300, lineHeight: '1.4' }}>{workHours?.hours}</p>
-        </div>
+        </HoverCell>
       </div>
     </div>
   </div>
@@ -532,7 +537,7 @@ const MobileContactSection: React.FC<MobileContactSectionProps> = ({ title, subt
       </div>
     </div>
 
-    {/* ✅ FIX: Email section — ab show hoga mobile pe */}
+    {/* Email section */}
     <div className="w-full border-b border-gray-400 px-5 py-5">
       <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 mb-2 block">Email</span>
       {(email?.value ?? '').split('\n').map((v, i) => <p key={i} className="text-[13px] font-light">{v}</p>)}
@@ -841,68 +846,48 @@ const ContextsPage = () => {
                 </div>
               </RevealOnScroll>
 
-              {/* Alignment grid */}
+              {/* Alignment grid — FIX: HoverCell use kiya har box mein */}
               <div className="w-full border-t border-gray-400" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
 
-                {/* Box 1 — image cell */}
+                {/* Box 1 — image cell (no hover needed) */}
                 <RevealOnScroll delay={0} className="relative border-r border-b border-gray-400 overflow-hidden" style={{ height: '257px', background: '#0a0a0a' }}>
                   <div className="absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(circle, rgba(60,60,60,0.55) 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
                   <img src="/alignment2.png" alt="Alignment Symbol" className="absolute inset-0 w-full h-full object-contain z-20" style={{ padding: '24px' }} />
                 </RevealOnScroll>
 
                 {/* Box 2 */}
-                <RevealOnScroll delay={0.1}
-                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
-                  style={{ height: '257px' }}
-                >
-                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
-                  <div className="flex flex-col gap-6 relative z-10"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
+                <RevealOnScroll delay={0.1} className="border-r border-b border-gray-400" style={{ height: '257px' }}>
+                  <HoverCell className="w-full h-full flex flex-col justify-end p-8">
+                    <div className="flex flex-col gap-6"><Icon2 /><p className={textStyle}>Operating structure and decision ownership</p></div>
+                  </HoverCell>
                 </RevealOnScroll>
 
                 {/* Box 3 */}
-                <RevealOnScroll delay={0.2}
-                  className="relative border-b border-gray-400 flex flex-col justify-end p-8"
-                  style={{ height: '257px' }}
-                >
-                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
-                  <div className="flex flex-col gap-6 relative z-10"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
+                <RevealOnScroll delay={0.2} className="border-b border-gray-400" style={{ height: '257px' }}>
+                  <HoverCell className="w-full h-full flex flex-col justify-end p-8">
+                    <div className="flex flex-col gap-6"><Icon4 /><p className={textStyle}>Accountability and escalation models</p></div>
+                  </HoverCell>
                 </RevealOnScroll>
 
                 {/* Box 4 */}
-                <RevealOnScroll delay={0.3}
-                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
-                  style={{ height: '257px' }}
-                >
-                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
-                  <div className="flex flex-col gap-6 relative z-10"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
+                <RevealOnScroll delay={0.3} className="border-r border-b border-gray-400" style={{ height: '257px' }}>
+                  <HoverCell className="w-full h-full flex flex-col justify-end p-8">
+                    <div className="flex flex-col gap-6"><Icon5 /><p className={textStyle}>Current execution challenges and constraints</p></div>
+                  </HoverCell>
                 </RevealOnScroll>
 
                 {/* Box 5 */}
-                <RevealOnScroll delay={0.4}
-                  className="relative border-r border-b border-gray-400 flex flex-col justify-end p-8"
-                  style={{ height: '257px' }}
-                >
-                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
-                  <div className="flex flex-col gap-6 relative z-10"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
+                <RevealOnScroll delay={0.4} className="border-r border-b border-gray-400" style={{ height: '257px' }}>
+                  <HoverCell className="w-full h-full flex flex-col justify-end p-8">
+                    <div className="flex flex-col gap-6"><Icon3 /><p className={textStyle}>Risk, regulatory, and security considerations</p></div>
+                  </HoverCell>
                 </RevealOnScroll>
 
                 {/* Box 6 */}
-                <RevealOnScroll delay={0.5}
-                  className="relative border-b border-gray-400 flex flex-col justify-end p-8"
-                  style={{ height: '257px' }}
-                >
-                  <div className="absolute inset-0 transition-colors duration-300" style={{ zIndex: 0 }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(61,61,61,0.42)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')} />
-                  <div className="flex flex-col gap-6 relative z-10"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
+                <RevealOnScroll delay={0.5} className="border-b border-gray-400" style={{ height: '257px' }}>
+                  <HoverCell className="w-full h-full flex flex-col justify-end p-8">
+                    <div className="flex flex-col gap-6"><Icon6 /><p className={textStyle}>Readiness for governed execution</p></div>
+                  </HoverCell>
                 </RevealOnScroll>
               </div>
 
@@ -971,7 +956,6 @@ const ContextsPage = () => {
           </div>
           <MobileSections accordionData={accordionData} />
 
-          {/* ✅ FIX: email prop ab pass ho raha hai */}
           <MobileContactSection
             title="Single point of contact for engagement coordination"
             subtitle="All engagement coordination is managed centrally."

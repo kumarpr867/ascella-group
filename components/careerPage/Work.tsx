@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "motion/react";
 
 export default function Work() {
-  // Animation Variants
   const revealLeft = {
     hidden: { opacity: 0, x: -50 },
     visible: { 
@@ -23,13 +23,10 @@ export default function Work() {
   };
 
   return (
-    <section className="overflow-hidden">
-      {/* Top Border */}
+    <section className="overflow-hidden" style={{ fontFamily: "'Montserrat', sans-serif" }}>
       <div className="border-t border-color">
 
-        {/* Text Section */}
         <div className="grid grid-cols-[60px_1fr_60px] md:grid-cols-[100px_1fr_100px]">
-          {/* Left Block */}
           <motion.div 
             className="sm:border-r border-color"
             initial="hidden"
@@ -49,13 +46,12 @@ export default function Work() {
                 viewport={{ once: true }}
                 variants={revealLeft}
               >
-                <h2 className="text-[36px] lg:text-[48px] leading-[1.1] tracking-tight">
+                <h2 className="text-[36px] lg:text-[48px] leading-[1.1] tracking-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Work within a governance-led
                 </h2>
 
-                <div className="flex items-center justify-start gap-3  mt-1 group">
-                  
-                  <span className="text-[#6E6E6E] text-[36px] lg:text-[48px] font-medium leading-[1.1] tracking-tight group-hover:text-white transition-colors">
+                <div className="flex items-center justify-start gap-3 mt-1 group">
+                  <span className="text-[#6E6E6E] text-[36px] lg:text-[48px] font-medium leading-[1.1] tracking-tight group-hover:text-white transition-colors" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                     operating environment
                   </span>
                   <div className="border border-white/20 rounded-full p-2 md:p-3 shrink-0">
@@ -67,15 +63,36 @@ export default function Work() {
                 </div>
               </motion.div>
 
-              {/* Right Side: Paragraph */}
+              {/* Right Side: CTA + Paragraph */}
               <motion.div 
-                className="md:w-[280px]"
+                className="md:w-[280px] flex flex-col gap-4 items-start"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={revealRight}
               >
-                <p className="text-[12px] md:text-[11px] tracking-widest leading-relaxed text-white/40 ">
+                {/* Explore Opportunities CTA */}
+                <Link
+                  href="/JD-Page"
+                  className="group inline-flex items-center gap-2 px-5 py-2.5 border border-white bg-white text-[10px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-black hover:border-white"
+                  style={{ fontFamily: "'Montserrat', sans-serif", color: '#000000' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#000000')}
+                >
+                  Explore Opportunities
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  >
+                    <path d="M1.5 12.5L12.5 1.5M12.5 1.5H4M12.5 1.5V10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </Link>
+
+                {/* Description */}
+                <p className="text-[12px] md:text-[11px] tracking-widest leading-relaxed text-white/40" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Ascella roles operate inside defined accountability,
                   structured execution, and central oversight frameworks.
                 </p>
@@ -90,17 +107,15 @@ export default function Work() {
               viewport={{ once: true }}
               variants={revealLeft}
             >
-              <h4>Work within a governance-led operating environment</h4>
-              <div className="flex gap-2 items-center">
-                
-                <p className="text-b3 pr-10">Ascella roles operate inside defined accountability, structured execution, and central oversight frameworks.</p>
-              </div>
+              <h4 style={{ fontFamily: "'Montserrat', sans-serif" }}>Work within a governance-led operating environment</h4>
+              <p className="text-b3 pr-10" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Ascella roles operate inside defined accountability, structured execution, and central oversight frameworks.
+              </p>
             </motion.div>
           </div>
           <div />
         </div>
 
-        {/* Horizontal Line */}
         <div className="border-t border-color" />
 
         {/* Image Section */}
@@ -132,7 +147,6 @@ export default function Work() {
           <div />
         </div>
 
-        {/* Bottom Border */}
         <div className="border-t border-color" />
       </div>
     </section>

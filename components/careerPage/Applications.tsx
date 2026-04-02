@@ -34,7 +34,10 @@ const lineVariants = {
 
 const Applications: React.FC = () => {
   return (
-    <div className="hidden lg:flex bg-black text-white min-h-screen font-sans flex-col items-center overflow-x-hidden">
+    <div
+      className="hidden lg:flex bg-black text-white min-h-screen flex-col items-center overflow-x-hidden"
+      style={{ fontFamily: "var(--font-montserrat, 'Montserrat')" }}
+    >
       {/* Top Border Line */}
       <div className="w-full h-[1px] bg-zinc-800/50 mb-10"></div>
 

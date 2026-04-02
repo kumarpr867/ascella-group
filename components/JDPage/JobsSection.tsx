@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 
   import { useState, useRef } from "react";
   import Image from "next/image";
@@ -43,7 +43,7 @@
     "All roles",
     "Ascella Group",
     "Ascella Infosec",
-    "Ascella Softwarelabs",
+    "Ascella Software labs",
     "Ascella Staffing",
     "Ascella Engage",
     "Ascella Forge",
@@ -88,7 +88,10 @@
 
     return (
       <section className="my-2">
-        <motion.div layout>
+        {/* FIX 1: Removed `layout` prop from this wrapper div — it was causing
+            the entire section (including the tab bar) to shift/animate whenever
+            the filter state changed. Now only the job cards area animates. */}
+        <div>
 
           {/* ─── DESKTOP TAB BAR ─── */}
           <div className="hidden lg:flex items-center border-b border-color py-2">
@@ -123,16 +126,20 @@
 
           {/* ─── MOBILE TAB BAR ─── */}
           <div className="flex lg:hidden items-center border-b border-color">
+            {/* FIX 2: Changed button to inline-flex with w-fit so the animated
+                underline (absolute element) only spans the text width, not the
+                full block-level button width. */}
             <button
               onClick={() => { setActiveCompany("All roles"); setShowFilter(false); }}
-              className={`relative shrink-0 whitespace-nowrap text-sm pb-3 pt-2 pl-6 pr-3 transition ${activeCompany === "All roles" ? "text-white" : "text-white/50"
+              className={`relative inline-flex w-fit shrink-0 whitespace-nowrap text-sm pb-3 pt-2 pl-6 pr-3 transition ${activeCompany === "All roles" ? "text-white" : "text-white/50"
                 }`}
             >
               All roles
               {activeCompany === "All roles" && (
                 <motion.div
                   layoutId="mobileActiveTab"
-                  className="absolute left-0 -bottom-[1px] h-0.5 w-full bg-white"
+                  className="absolute left-6 -bottom-[1px] h-0.5 bg-white"
+                  style={{ width: "calc(100% - 1.5rem - 0.75rem)" }}
                 />
               )}
             </button>
@@ -148,7 +155,7 @@
                 <button
                   key={company}
                   onClick={() => setActiveCompany(company)}
-                  className={`relative shrink-0 whitespace-nowrap text-sm transition ${activeCompany === company ? "text-white" : "text-white/50"
+                  className={`relative inline-flex w-fit shrink-0 whitespace-nowrap text-sm transition ${activeCompany === company ? "text-white" : "text-white/50"
                     }`}
                 >
                   {company}
@@ -176,7 +183,6 @@
           <AnimatePresence mode="popLayout">
             {showFilter && (
               <motion.div
-                layout
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -385,7 +391,7 @@
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
       </section>
     );
   }

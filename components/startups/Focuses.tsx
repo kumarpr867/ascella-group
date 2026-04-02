@@ -104,8 +104,8 @@ export default function Focuses() {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 32px;
-          padding: 56px 0 64px;
-          align-items: start;
+          padding: 56px 0 0;
+          align-items: end;
         }
         .header-left p {
           font-size: 14px;
@@ -116,6 +116,7 @@ export default function Focuses() {
           font-weight: 300;
           margin-top: 15px;
           margin-left: 75px;
+          padding-bottom: 64px;
         }
         .header-right { text-align: right; }
         .header-right h3 {
@@ -124,6 +125,7 @@ export default function Focuses() {
           letter-spacing: -0.04em;
           line-height: 1.08;
           margin-right: 70px;
+          padding-bottom: 64px;
         }
         .header-right .line-white { color: #fff; display: block; }
         .header-right .line-muted { color: #555; display: block; }
@@ -214,7 +216,7 @@ export default function Focuses() {
 
         .acc-dot {
           border-radius: 50%;
-          background: #22d3ee;
+          background: #ffffff;
           flex-shrink: 0;
           transition: transform 0.4s ease, opacity 0.4s ease,
                       width 0.4s ease, height 0.4s ease;
@@ -277,13 +279,14 @@ export default function Focuses() {
           .header-inner {
             grid-template-columns: 1fr;
             gap: 0;
-            padding: 32px 0 40px;
+            padding: 32px 0 0;
           }
           .header-left { display: none; }
           .header-right { text-align: left; }
           .header-right h3 {
             margin-right: 0;
             font-size: clamp(17px, 5vw, 26px);
+            padding-bottom: 40px;
           }
 
           .accordion-row {

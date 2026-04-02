@@ -309,7 +309,10 @@ const Alignments = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col items-center py-20 font-sans overflow-hidden relative">
+    <div
+      className="min-h-screen w-full bg-black text-white flex flex-col items-center py-20 overflow-hidden relative"
+      style={{ fontFamily: "var(--font-montserrat, 'Montserrat', sans-serif)" }}
+    >
 
       {/* Header Section */}
       <div className="flex flex-col items-center w-full max-w-[720px] text-center px-4 z-10 relative">
