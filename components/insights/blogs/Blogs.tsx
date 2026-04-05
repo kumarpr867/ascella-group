@@ -83,11 +83,9 @@ export default function Blogs() {
         <section className="mb-20">
 
             {/* Top Search + Filter */}
-            {/* CHANGE 2: search box aur filter dono right side mein, filter icon ke pehle search box */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
                 <div className="mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-end items-center gap-4 w-full">
 
-                    {/* search bar — right side, filter ke pehle */}
                     <div className="relative w-52 md:w-72">
                         <input
                             type="text"
@@ -115,7 +113,6 @@ export default function Blogs() {
                         </span>
                     </div>
 
-                    {/* filter — right side */}
                     <div ref={filterRef} className="relative">
 
                         <button
@@ -178,7 +175,6 @@ export default function Blogs() {
                 {/* Featured Section */}
                 {!isFilteredCategory && featured.length > 0 && (
                     <>
-                        {/* Header: title left, View All right (mobile only) */}
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="text-lg">Featured Blogs</h2>
                             <button
@@ -189,7 +185,6 @@ export default function Blogs() {
                             </button>
                         </div>
 
-                        {/* CHANGE 3: border-b ko Reveal wrapper ke bahar -mx-10 lg:-mx-20 xl:-mx-24 se edge-to-edge banaya */}
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 pb-10 mb-10">
                             {featured.map((item, index) => (
                                 <div
@@ -204,12 +199,11 @@ export default function Blogs() {
                                 </div>
                             ))}
                         </div>
-                        {/* Edge-to-edge horizontal line */}
                         <div className="-mx-10 lg:-mx-20 xl:-mx-24 border-b border-color mb-10" />
                     </>
                 )}
 
-                {/* All Blogs header — View All mobile only */}
+                {/* All Blogs header */}
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-lg">
                         {isFilteredCategory ? `${category} Blogs` : "All Blogs"}
@@ -224,7 +218,6 @@ export default function Blogs() {
                     )}
                 </div>
 
-                {/* Mobile: 2 cols; md: 2 cols; lg: 3 cols */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16">
                     {paginatedBlogs.map((item) => (
                         <BlogCard key={item.id} item={item} variant="default" />
@@ -239,7 +232,7 @@ export default function Blogs() {
 
             </Reveal>
 
-            {/* Pagination — all devices, no scroll on click */}
+            {/* Pagination */}
             {!showAllBlogs && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 md:gap-6 mt-20 text-sm text-white/60">
 
@@ -300,102 +293,134 @@ function BlogCard({
             transition={{ duration: 0.3 }}
             className="group block"
         >
-            {/* Image — clicking navigates to blog page */}
-            <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                <div className={`relative overflow-hidden border border-color cursor-pointer ${isFeatured ? "hidden md:block w-full h-56 mb-4" : "w-full h-32 md:h-56 mb-2 md:mb-4"}`}>
-                    <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover transition duration-500 group-hover:scale-110"
-                    />
-                </div>
-            </Link>
-
-            {/* Content */}
-            <div className="flex flex-col flex-1">
-
-                {/* ── DESKTOP layout ── */}
-                {/* Title + Date */}
-                <div className="hidden md:flex justify-between gap-6 mb-2">
-                    <p className="w-2/3 text-[16px] line-clamp-2">
-                        {item.title}
-                    </p>
-                    <span className="text-[12px] text-white/60 shrink-0">
-                        {item.date}
-                    </span>
-                </div>
-
-                {/* Description — desktop only, max 3 lines */}
-                <div className="hidden md:block mb-3">
-                    <p
-                        className="text-gray-200 text-[14px]"
-                        style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                        }}
-                    >
-                        {item.description}
-                    </p>
-                </div>
-
-                {/* CHANGE 1: Read Now button — desktop: default bg-white text-black, hover/active bg-black text-white */}
-                <div className="hidden md:flex">
-                    <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                        <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white active:bg-black active:text-white transition">
-                            Read Now
-                        </button>
-                    </Link>
-                </div>
-
-                {/* ── MOBILE layout ── */}
-                {/* CHANGE 4: Featured card mobile — image left (85x98) + title & read now right, stacked */}
-                {isFeatured ? (
-                    <div className="flex md:hidden items-start gap-3 mt-1">
-                        {/* Image — 85x98 fixed */}
-                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
-                            <div className="relative w-[85px] h-[98px] overflow-hidden border border-color">
+            {isFeatured ? (
+                <>
+                    {/* Desktop: vertical layout */}
+                    <div className="hidden md:block">
+                        <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                            <div className="relative overflow-hidden border border-color cursor-pointer w-full h-56 mb-4">
                                 <Image
                                     src={item.image}
                                     alt={item.title}
                                     fill
-                                    className="object-cover"
+                                    className="object-cover transition duration-500 group-hover:scale-110"
                                 />
                             </div>
                         </Link>
+                        <div className="flex flex-col flex-1">
+                            <div className="hidden md:flex justify-between gap-6 mb-2">
+                                <p className="w-2/3 text-[16px] line-clamp-2">{item.title}</p>
+                                <span className="text-[12px] text-white/60 shrink-0">{item.date}</span>
+                            </div>
+                            <div className="hidden md:block mb-3">
+                                <p
+                                    className="text-gray-200 text-[14px]"
+                                    style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    {item.description}
+                                </p>
+                            </div>
+                            <div className="hidden md:flex">
+                                <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                                    <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
+                                        Read Now
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
 
-                        {/* Title + Read Now stacked */}
-                        <div className="flex flex-col justify-start gap-2 flex-1">
-                            <p className="text-[11px] line-clamp-2">
-                                {item.title}
-                            </p>
-                            <p className="text-[10px] text-white/60 line-clamp-2">
+                    {/* Mobile: same vertical layout as case studies featured mobile */}
+                    <div className="flex md:hidden gap-3">
+                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
+                            <div className="relative overflow-hidden border border-color cursor-pointer" style={{ width: 85, height: 98 }}>
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover transition duration-500 group-hover:scale-110"
+                                />
+                            </div>
+                        </Link>
+                        <div className="flex flex-col justify-between flex-1 py-0.5">
+                            <p className="text-[12px] text-white line-clamp-2 leading-snug">{item.title}</p>
+                            <p
+                                className="text-[12px] text-white/50 mt-1"
+                                style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                }}
+                            >
                                 {item.description}
                             </p>
-                            <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                                <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap w-fit">
+                            <Link href={`/insights/blogs/${slugify(item.title)}`} className="mt-2">
+                                <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
                                     Read Now
                                 </button>
                             </Link>
                         </div>
                     </div>
-                ) : (
-                    /* Non-featured mobile layout — unchanged */
-                    <div className="flex md:hidden items-start justify-between gap-2 mt-1">
-                        <p className="text-[11px] line-clamp-2 flex-1">
-                            {item.title}
-                        </p>
-                        <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
-                            <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap">
-                                Read Now
-                            </button>
-                        </Link>
-                    </div>
-                )}
+                </>
+            ) : (
+                /* Default (non-featured) card — exactly matching case studies default */
+                <>
+                    <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                        <div className="relative overflow-hidden border border-color cursor-pointer w-full h-32 md:h-56 mb-2 md:mb-4">
+                            <Image
+                                src={item.image}
+                                alt={item.title}
+                                fill
+                                className="object-cover transition duration-500 group-hover:scale-110"
+                            />
+                        </div>
+                    </Link>
 
-            </div>
+                    <div className="flex flex-col flex-1">
+                        {/* Desktop layout */}
+                        <div className="hidden md:flex justify-between gap-6 mb-2">
+                            <p className="w-2/3 text-[16px] line-clamp-2">{item.title}</p>
+                            <span className="text-[12px] text-white/60 shrink-0">{item.date}</span>
+                        </div>
+                        <div className="hidden md:block mb-3">
+                            <p
+                                className="text-gray-200 text-[14px]"
+                                style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 3,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                }}
+                            >
+                                {item.description}
+                            </p>
+                        </div>
+                        <div className="hidden md:flex">
+                            <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                                <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Mobile layout — title 2 lines left-aligned, Read Now below it */}
+                        <div className="flex md:hidden flex-col items-start gap-2 mt-1">
+                            <p className="text-[12px] text-white line-clamp-2 leading-snug">{item.title}</p>
+                            <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                                <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
+                                    Read Now
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </>
+            )}
         </motion.div>
     )
 }

@@ -80,11 +80,9 @@ export default function Resources() {
         <section className="mb-20">
 
             {/* Top Search + Filter */}
-            {/* CHANGE 2: search box aur filter dono right side mein, filter icon ke pehle search box */}
             <Reveal variants={slideInFromBottom(0.4)} className="flex items-center justify-between border-b border-color mb-10">
                 <div className="mx-10 lg:mx-20 xl:mx-24 py-4 flex justify-end items-center gap-4 w-full">
 
-                    {/* search bar — right side, filter ke pehle */}
                     <div className="relative w-52 md:w-72">
                         <input
                             type="text"
@@ -112,7 +110,6 @@ export default function Resources() {
                         </span>
                     </div>
 
-                    {/* filter — right side */}
                     <div ref={filterRef} className="relative">
 
                         <button
@@ -172,7 +169,7 @@ export default function Resources() {
 
             <Reveal variants={slideInFromBottom(0.6)} className="mx-10 lg:mx-20 xl:mx-24">
 
-                {/* All Resources header — View All mobile only */}
+                {/* All Resources header */}
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-lg">
                         {isFilteredCategory ? `${category} Resources` : "All Resources"}
@@ -187,7 +184,6 @@ export default function Resources() {
                     )}
                 </div>
 
-                {/* Mobile: 2 cols; md: 2 cols; lg: 3 cols */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16">
                     {paginatedBlogs.map((item) => (
                         <BlogCard key={item.id} item={item} />
@@ -202,7 +198,7 @@ export default function Resources() {
 
             </Reveal>
 
-            {/* Pagination — all devices, no scroll on click */}
+            {/* Pagination */}
             {!showAllBlogs && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 md:gap-6 mt-20 text-sm text-white/60">
 
@@ -259,9 +255,8 @@ function BlogCard({
             transition={{ duration: 0.3 }}
             className="group block"
         >
-            {/* Image — clicking navigates to blog page */}
             <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                <div className="relative w-full h-32 md:h-48 overflow-hidden border border-color cursor-pointer">
+                <div className="relative w-full h-32 md:h-48 overflow-hidden border border-color cursor-pointer mb-2 md:mb-4">
                     <Image
                         src={item.image}
                         alt={item.title}
@@ -271,11 +266,9 @@ function BlogCard({
                 </div>
             </Link>
 
-            {/* Content */}
             <div className="flex flex-col flex-1">
 
-                {/* ── DESKTOP layout ── */}
-                {/* Title + Date */}
+                {/* Desktop layout */}
                 <div className="hidden md:flex justify-between gap-6 mb-2">
                     <p className="w-2/3 text-[16px] line-clamp-2">
                         {item.title}
@@ -285,7 +278,6 @@ function BlogCard({
                     </span>
                 </div>
 
-                {/* Description — desktop only, max 3 lines */}
                 <div className="hidden md:block mb-3">
                     <p
                         className="text-gray-200 text-[14px]"
@@ -300,22 +292,19 @@ function BlogCard({
                     </p>
                 </div>
 
-                {/* CHANGE 1: Read Now button — desktop: default bg-white text-black, hover/active bg-black text-white */}
                 <div className="hidden md:flex">
                     <Link href={`/insights/blogs/${slugify(item.title)}`}>
-                        <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white active:bg-black active:text-white transition">
+                        <button className="text-xs border border-white/40 px-4 py-2 bg-white text-black hover:bg-black hover:text-white transition">
                             Read Now
                         </button>
                     </Link>
                 </div>
 
-                {/* ── MOBILE layout ── */}
-                <div className="flex md:hidden items-start justify-between gap-2 mt-1">
-                    <p className="text-[11px] line-clamp-2 flex-1">
-                        {item.title}
-                    </p>
-                    <Link href={`/insights/blogs/${slugify(item.title)}`} className="shrink-0">
-                        <button className="text-[10px] border border-white/40 px-2 py-1 hover:bg-white hover:text-black transition whitespace-nowrap">
+                {/* Mobile layout — title below image, Read Now below title */}
+                <div className="flex md:hidden flex-col items-start gap-2 mt-1">
+                    <p className="text-[12px] text-white line-clamp-2 leading-snug">{item.title}</p>
+                    <Link href={`/insights/blogs/${slugify(item.title)}`}>
+                        <button className="text-[10px] border border-white/40 px-2 py-1 bg-white text-black hover:bg-black hover:text-white transition whitespace-nowrap">
                             Read Now
                         </button>
                     </Link>
