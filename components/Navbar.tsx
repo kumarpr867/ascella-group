@@ -11,14 +11,14 @@ const navLinks = [
   { label: "Execution Arms", href: "/execution-arms" },
   { label: "Organisations", href: "/who-we-work-with" },
   { label: "Startups", href: "/startups" },
-  {
-    label: "Insights",
-    children: [
-      { label: "Case Studies", href: "/insights/case-studies" },
-      { label: "Blogs", href: "/insights/blogs" },
-      { label: "Resources", href: "/insights/resources" },
-    ],
-  },
+//  {
+//    label: "Insights",
+ //   children: [
+//      { label: "Case Studies", href: "/insights/case-studies" },
+  //    { label: "Blogs", href: "/insights/blogs" },
+ //     { label: "Resources", href: "/insights/resources" },
+ //   ],
+//  },
   {
     label: "Careers",
     href: "/careers",
@@ -26,7 +26,7 @@ const navLinks = [
     mobileOnly: true,
     children: [
       { label: "Life at Ascella", href: "/careers" },
-      { label: "Explore Opportunities", href: "/JD-Page" },
+   //   { label: "Explore Opportunities", href: "/JD-Page" },
     ],
   },
 ];
