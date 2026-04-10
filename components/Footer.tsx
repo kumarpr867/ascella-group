@@ -26,7 +26,7 @@ const footerSections: FooterSection[] = [
             { label: "Organisations", href: "/who-we-work-with" },
             { label: "Execution Arms", href: "/execution-arms" },
             { label: "Startups", href: "/startups" },
-            { label: "Insights", href: "/insights/blogs" },
+       //     { label: "Insights", href: "/insights/blogs" },
             { label: "Careers", href: "/careers" },
         ],
         bordered: true,
